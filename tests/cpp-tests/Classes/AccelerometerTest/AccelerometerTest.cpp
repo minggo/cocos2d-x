@@ -20,7 +20,7 @@ AccelerometerTest::AccelerometerTest(void)
 
 AccelerometerTest::~AccelerometerTest(void)
 {
-    _ball->release();
+//    _ball->release();
     Device::setAccelerometerEnabled(false);
 }
 
@@ -45,7 +45,7 @@ void AccelerometerTest::onEnter()
     _ball->setPosition(Vec2(VisibleRect::center().x, VisibleRect::center().y));
     addChild(_ball);
 
-    _ball->retain();
+//    _ball->retain();
 }
 
 void AccelerometerTest::onAcceleration(Acceleration* acc, Event* event)
