@@ -54,6 +54,9 @@ THE SOFTWARE.
 #include "physics/CCPhysicsWorld.h"
 #endif
 
+#include "physics/CCPhysicsSystem.h"
+#include "physics/CCComponentPhysics2d.h"
+
 
 #if CC_NODE_RENDER_SUBPIXEL
 #define RENDER_IN_SUBPIXEL
@@ -2015,6 +2018,11 @@ bool Node::addComponent(Component *component)
     // lazy alloc
     if (!_componentContainer)
         _componentContainer = new (std::nothrow) ComponentContainer(this);
+    
+    // if it is a physics component, then need to add it to physics system
+    // TODO: refactor dynamic_cast with template function
+    if (dynamic_cast<ComponentPhysics2d*>(component) != nullptr)
+        Director::getInstance()->getSystemManager()->getSystem<PhysicsSystem>()->addComponent(static_cast<ComponentPhysics2d*>(component));
     
     return _componentContainer->add(component);
 }

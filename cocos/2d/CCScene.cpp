@@ -294,7 +294,7 @@ bool Scene::initWithPhysics()
         
         this->setContentSize(director->getWinSize());
 #if CC_USE_PHYSICS
-        CC_BREAK_IF(! (_physicsWorld = PhysicsWorld::construct(*this)));
+//        CC_BREAK_IF(! (_physicsWorld = PhysicsWorld::construct(*this)));
 #endif
         
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION

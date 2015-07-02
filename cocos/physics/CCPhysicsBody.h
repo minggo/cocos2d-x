@@ -559,6 +559,7 @@ protected:
     friend class Node;
     friend class Layer;
     friend class ProtectedNode;
+    friend class ComponentPhysics2d;
 };
 
 /** @} */

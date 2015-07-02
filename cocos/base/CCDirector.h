@@ -58,6 +58,7 @@ class EventListenerCustom;
 class TextureCache;
 class Renderer;
 class Camera;
+class SystemManager;
 
 class Console;
 namespace experimental
@@ -399,7 +400,7 @@ public:
     /** Gets the Scheduler associated with this director.
      * @since v2.0
      */
-    Scheduler* getScheduler() const { return _scheduler; }
+    Scheduler* getScheduler() const;
     
     /** Sets the Scheduler associated with this director.
      * @since v2.0
@@ -427,6 +428,8 @@ public:
      * @js NA
      */
     void setEventDispatcher(EventDispatcher* dispatcher);
+    
+    SystemManager* getSystemManager() const;
 
     /** Returns the Renderer associated with this director.
      * @since v3.0
@@ -516,11 +519,8 @@ protected:
     std::stack<Mat4> _modelViewMatrixStack;
     std::stack<Mat4> _projectionMatrixStack;
     std::stack<Mat4> _textureMatrixStack;
-
-    /** Scheduler associated with this director
-     @since v2.0
-     */
-    Scheduler *_scheduler;
+    
+    SystemManager *_systemManager;
     
     /** ActionManager associated with this director
      @since v2.0
