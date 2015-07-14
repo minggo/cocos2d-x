@@ -69,13 +69,18 @@ void PhysicsSystem::update(float dt)
 void PhysicsSystem::addComponent(ComponentPhysics2d* componentPhsics2d)
 {
     _components.push_back(componentPhsics2d);
+    
+    _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
 }
 
 void PhysicsSystem::removeComponent(ComponentPhysics2d* componentPhsics2d)
 {
     auto iter = std::find(_components.begin(), _components.end(), componentPhsics2d);
     if (iter != _components.end())
+    {
         _components.erase(iter);
+        _physicsWorld->removeBody(componentPhsics2d->getPhysicsBody());
+    }
 }
 
 PhysicsWorld* PhysicsSystem::getPhysicsWorld() const

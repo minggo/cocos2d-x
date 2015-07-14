@@ -50,14 +50,15 @@ CC_CONSTRUCTOR_ACCESS:
     
 private:
     // check if physics body is added to a running Node
-    bool inline checkState();
+    inline bool checkState();
     
-    Vec2 calculateOffset() const;
+    inline Vec3 calculateOffset() const;
     
 private:
     PhysicsBody *_physicsBody;
     // whether physics body is added to physics world
     bool _addedToPhysicsWorld;
+    Vec2 _physicsPositionBeforeSimulation;
 };
 
 NS_CC_END

@@ -60,23 +60,23 @@ void ComponentPhysics2d::beforeSimulation()
     // update physics body's position
     
     auto&& nodeToWorldTransform = _owner->getNodeToWorldTransform();
-    // set scale
     Vec3 scale;
-    nodeToWorldTransform.getScale(&scale);
+    Quaternion rotation;
+    nodeToWorldTransform.decompose(&scale, &rotation, nullptr);
+    
+    // set scale
     _physicsBody->setScale(scale.x, scale.y);
     
     // set rotation
-    Quaternion quaternion;
-    nodeToWorldTransform.getRotation(&quaternion);
-    Vec3 rotation;
-    quaternion.toAxisAngle(&rotation);
-    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(rotation.x));
+    Vec3 zAxis(0, 0, 1);
+    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(rotation.toAxisAngle(&zAxis)));
     
     // set position
-    Vec3 pos;
-    nodeToWorldTransform.getTranslation(&pos);
-    auto&& offset = calculateOffset();
-    _physicsBody->setPosition(Vec2(pos.x + offset.x, pos.y + offset.y));
+    Vec3 offset = calculateOffset();
+    nodeToWorldTransform.transformPoint(&offset);
+    _physicsPositionBeforeSimulation.x = offset.x;
+    _physicsPositionBeforeSimulation.y = offset.y;
+    _physicsBody->setPosition(_physicsPositionBeforeSimulation);
 }
 
 void ComponentPhysics2d::afterSimulation()
@@ -87,12 +87,22 @@ void ComponentPhysics2d::afterSimulation()
     // update Node's position
     
     // set position
-    auto& pos = _physicsBody->getPosition();
-    auto&& offset = calculateOffset();
-    _owner->setPosition(pos.x - offset.x, pos.y - offset.y);
+    auto pos = _physicsBody->getPosition();
+    Vec2 offset(pos.x - _physicsPositionBeforeSimulation.x, pos.y - _physicsPositionBeforeSimulation.y);
+    auto ownerPosition = _owner->getPosition();
+    _owner->setPosition(ownerPosition.x + offset.x, ownerPosition.y + offset.y);
     
     // set rotation
-    _owner->setRotation(_physicsBody->getRotation());
+    Mat4 parentToWorldTransfrom;
+    if (_owner->getParent())
+        parentToWorldTransfrom = _owner->getParent()->getNodeToParentTransform();
+    else
+        parentToWorldTransfrom = _owner->getNodeToParentTransform();
+    
+    float rotation = _physicsBody->getRotation();
+    Vec3 rotationVec(rotation, 0, 0);
+    parentToWorldTransfrom.getInversed().transformVector(&rotationVec);
+    _owner->setRotation(rotationVec.x);
 }
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
@@ -122,11 +132,23 @@ bool ComponentPhysics2d::checkState()
     return true;
 }
 
-Vec2 ComponentPhysics2d::calculateOffset() const
+namespace
 {
-    auto&& anchorPoint = _owner->getAnchorPoint();
-    auto&& contentSize = _owner->getContentSize();
-    return Vec2((0.5 - anchorPoint.x) * contentSize.width, (0.5 - anchorPoint.y) * contentSize.height);
+    bool runOneTime = true;
+    Vec3 offset(0, 0, 0);
+}
+
+Vec3 ComponentPhysics2d::calculateOffset() const
+{
+    if (runOneTime)
+    {
+        auto contentSize = _owner->getContentSize();
+        offset.x = 0.5 * contentSize.width;
+        offset.y = 0.5 * contentSize.height;
+        runOneTime = false;
+    }
+    
+    return offset;
 }
 
 NS_CC_END

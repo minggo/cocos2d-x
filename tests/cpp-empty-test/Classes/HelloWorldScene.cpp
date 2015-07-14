@@ -38,10 +38,14 @@ bool HelloWorld::init()
     auto sprite = Sprite::create("bang.png");
     auto physicsComponent = ComponentPhysics2d::create();
     auto physicsBody = PhysicsBody::createBox(sprite->getContentSize());
+//    physicsBody->setGravityEnable(false);
     physicsComponent->setPhysicsBody(physicsBody);
     sprite->addComponent(physicsComponent);
     
-    sprite->setPosition(300, 300);
+    sprite->setAnchorPoint(Vec2(0.3, 0.3));
+    sprite->runAction(RotateTo::create(10, 180));
+    
+    sprite->setPosition(200, 200);
     addChild(sprite);
     
     return true;
