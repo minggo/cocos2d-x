@@ -35,7 +35,10 @@ ComponentPhysics2d* ComponentPhysics2d::create()
     return ret;
 }
 
-ComponentPhysics2d::ComponentPhysics2d() : _physicsBody(nullptr)
+ComponentPhysics2d::ComponentPhysics2d()
+: _physicsBody(nullptr)
+, _addedToPhysicsWorld(false)
+, _needCaculateOffset(true)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
@@ -120,7 +123,7 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
     return _physicsBody;
 }
 
-bool ComponentPhysics2d::checkState()
+bool ComponentPhysics2d::checkState() const
 {
     if (_owner->getScene() == nullptr)
         return false;
@@ -132,23 +135,17 @@ bool ComponentPhysics2d::checkState()
     return true;
 }
 
-namespace
+Vec3 ComponentPhysics2d::calculateOffset()
 {
-    bool runOneTime = true;
-    Vec3 offset(0, 0, 0);
-}
-
-Vec3 ComponentPhysics2d::calculateOffset() const
-{
-    if (runOneTime)
+    if (_needCaculateOffset)
     {
         auto contentSize = _owner->getContentSize();
-        offset.x = 0.5 * contentSize.width;
-        offset.y = 0.5 * contentSize.height;
-        runOneTime = false;
+        _offset.x = 0.5 * contentSize.width;
+        _offset.y = 0.5 * contentSize.height;
+        _needCaculateOffset = false;
     }
     
-    return offset;
+    return _offset;
 }
 
 NS_CC_END
