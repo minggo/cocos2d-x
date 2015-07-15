@@ -23,7 +23,10 @@
  ****************************************************************************/
 
 #include "physics/CCComponentPhysics2d.h"
+#include "physics/CCPhysicsBody.h"
+#include "physics/CCPhysicsManager.h"
 #include "2d/CCNode.h"
+#include "base/CCDirector.h"
 
 NS_CC_BEGIN
 
@@ -121,6 +124,19 @@ void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
 {
     return _physicsBody;
+}
+
+void ComponentPhysics2d::onAdd()
+{
+    // physics body should be set correctly, because it is a good time to add physics body to physics world
+    CC_ASSERT(_physicsBody != nullptr);
+    
+    Director::getInstance()->getPhysicsManager()->addPhysicsComponent(this);
+}
+
+void ComponentPhysics2d::onRemove()
+{
+    Director::getInstance()->getPhysicsManager()->removePhysicsComponent(this);
 }
 
 bool ComponentPhysics2d::checkState() const

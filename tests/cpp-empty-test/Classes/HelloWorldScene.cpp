@@ -1,7 +1,7 @@
 #include "HelloWorldScene.h"
 #include "AppMacros.h"
 #include "physics/CCComponentPhysics2d.h"
-#include "physics/CCPhysicsSystem.h"
+#include "physics/CCPhysicsManager.h"
 
 USING_NS_CC;
 
@@ -31,9 +31,8 @@ bool HelloWorld::init()
         return false;
     }
     
-    auto physicsSystem = new PhysicsSystem;
-    Director::getInstance()->getSystemManager()->addSystem<PhysicsSystem>(physicsSystem);
-    physicsSystem->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+
+    Director::getInstance()->getPhysicsManager()->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     
     auto sprite = Sprite::create("bang.png");
     auto physicsComponent = ComponentPhysics2d::create();

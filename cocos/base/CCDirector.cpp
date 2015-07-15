@@ -60,9 +60,8 @@ THE SOFTWARE.
 #include "base/CCAutoreleasePool.h"
 #include "base/CCConfiguration.h"
 #include "base/CCAsyncTaskPool.h"
-#include "base/CCSystemManager.h"
 #include "platform/CCApplication.h"
-//#include "platform/CCGLViewImpl.h"
+#include "physics/CCPhysicsManager.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "CCScriptSupport.h"
@@ -147,13 +146,15 @@ bool Director::init(void)
     _contentScaleFactor = 1.0f;
 
     _console = new (std::nothrow) Console;
-    
-    _systemManager = new (std::nothrow) SystemManager();
 
+    // scheduler
+    _scheduler = new (std::nothrow) Scheduler();
     // action manager
     _actionManager = new (std::nothrow) ActionManager();
-    _systemManager->getSystem<ScheduleSystem>()->_scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
-    
+    _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
+    // physics manager
+    _physicsManager = new (std::nothrow) PhysicsManager();
+    _scheduler->scheduleUpdate(_physicsManager, Scheduler::PRIORITY_PHYSICS, false);
 
     _eventDispatcher = new (std::nothrow) EventDispatcher();
     _eventAfterDraw = new (std::nothrow) EventCustom(EVENT_AFTER_DRAW);
@@ -184,6 +185,7 @@ Director::~Director(void)
 
     CC_SAFE_RELEASE(_runningScene);
     CC_SAFE_RELEASE(_notificationNode);
+    CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
     CC_SAFE_DELETE(_defaultFBO);
     
@@ -191,7 +193,7 @@ Director::~Director(void)
     delete _eventAfterDraw;
     delete _eventAfterVisit;
     delete _eventProjectionChanged;
-    delete _systemManager;
+    delete _physicsManager;
 
     delete _renderer;
 
@@ -268,7 +270,7 @@ void Director::drawScene()
     //tick before glClear: issue #533
     if (! _paused)
     {
-        _systemManager->update(_deltaTime);
+        _scheduler->update(_deltaTime);
         _eventDispatcher->dispatchEvent(_eventAfterUpdate);
     }
 
@@ -1263,19 +1265,13 @@ void Director::setNotificationNode(Node *node)
     CC_SAFE_RETAIN(_notificationNode);
 }
 
-Scheduler* Director::getScheduler() const
-{
-    return _systemManager->getSystem<ScheduleSystem>()->_scheduler;
-}
-
 void Director::setScheduler(Scheduler* scheduler)
 {
-    auto _scheduler = _systemManager->getSystem<ScheduleSystem>()->_scheduler;
     if (_scheduler != scheduler)
     {
         CC_SAFE_RETAIN(scheduler);
         CC_SAFE_RELEASE(_scheduler);
-        _systemManager->getSystem<ScheduleSystem>()->_scheduler = scheduler;
+        _scheduler = scheduler;
     }
 }
 
@@ -1297,11 +1293,6 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
         CC_SAFE_RELEASE(_eventDispatcher);
         _eventDispatcher = dispatcher;
     }
-}
-
-SystemManager* Director::getSystemManager() const
-{
-    return _systemManager;
 }
 
 /***************************************************

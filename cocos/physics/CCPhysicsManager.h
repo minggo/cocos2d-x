@@ -28,29 +28,28 @@
 #include <vector>
 
 #include "platform/CCPlatformMacros.h"
-#include "base/CCSystemManager.h"
 
 NS_CC_BEGIN
 
 class ComponentPhysics2d;
 class PhysicsWorld;
 
-class PhysicsSystem : public System<PhysicsSystem>
+class PhysicsManager
 {
 public:
-    PhysicsSystem();
-    ~PhysicsSystem();
+    PhysicsManager();
+    ~PhysicsManager();
     
     /**
      * will do physics simulation
      */
-    virtual void update(float dt) override;
+    void update(float dt);
     
     PhysicsWorld* getPhysicsWorld() const;
     
     // don't invoke these functions, because Node will invoke them automatically
-    void addComponent(ComponentPhysics2d* componentPhsics2d);
-    void removeComponent(ComponentPhysics2d* componentPhsics2d);
+    void addPhysicsComponent(ComponentPhysics2d* componentPhsics2d);
+    void removePhysicsComponent(ComponentPhysics2d* componentPhsics2d);
     
 private:
     std::vector<ComponentPhysics2d*> _components;

@@ -22,37 +22,23 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "CCPhysicsSystem.h"
+#include "physics/CCPhysicsManager.h"
 #include "physics/CCComponentPhysics2d.h"
 #include "physics/CCPhysicsWorld.h"
 
-//class PhysicsSystem : public System<PhysicsSystem>
-//{
-//public:
-//    /**
-//     * will do physics simulation
-//     */
-//    virtual void update(float dt) override;
-//    
-//    void addComponent(ComponentPhysics2d* componentPhsics2d);
-//    
-//private:
-//    std::vector<ComponentPhysics2d*> components;
-//};
-
 NS_CC_BEGIN
 
-PhysicsSystem::PhysicsSystem()
+PhysicsManager::PhysicsManager()
 {
     _physicsWorld = PhysicsWorld::construct();
 }
 
-PhysicsSystem::~PhysicsSystem()
+PhysicsManager::~PhysicsManager()
 {
     delete _physicsWorld;
 }
 
-void PhysicsSystem::update(float dt)
+void PhysicsManager::update(float dt)
 {
     // update physics position
     for (auto component : _components)
@@ -66,14 +52,14 @@ void PhysicsSystem::update(float dt)
         component->afterSimulation();
 }
 
-void PhysicsSystem::addComponent(ComponentPhysics2d* componentPhsics2d)
+void PhysicsManager::addPhysicsComponent(ComponentPhysics2d* componentPhsics2d)
 {
     _components.push_back(componentPhsics2d);
     
     _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
 }
 
-void PhysicsSystem::removeComponent(ComponentPhysics2d* componentPhsics2d)
+void PhysicsManager::removePhysicsComponent(ComponentPhysics2d* componentPhsics2d)
 {
     auto iter = std::find(_components.begin(), _components.end(), componentPhsics2d);
     if (iter != _components.end())
@@ -83,7 +69,7 @@ void PhysicsSystem::removeComponent(ComponentPhysics2d* componentPhsics2d)
     }
 }
 
-PhysicsWorld* PhysicsSystem::getPhysicsWorld() const
+PhysicsWorld* PhysicsManager::getPhysicsWorld() const
 {
     return _physicsWorld;
 }

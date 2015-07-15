@@ -169,6 +169,12 @@ public:
      */
     static const int PRIORITY_SYSTEM;
     
+    /** Priority level reserved for physics2d services.
+     * @lua NA
+     * @js NA
+     */
+    static const int PRIORITY_PHYSICS;
+    
     /** Minimum priority level for user scheduling. 
      * Priority level of user scheduling should bigger then this value.
      *

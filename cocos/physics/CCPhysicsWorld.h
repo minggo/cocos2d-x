@@ -392,7 +392,7 @@ protected:
     friend class PhysicsJoint;
     friend class PhysicsWorldCallback;
     friend class PhysicsDebugDraw;
-    friend class PhysicsSystem;
+    friend class PhysicsManager;
 };
 
 /** A physics helper class. Draw physics shape, joint in debug mode. 

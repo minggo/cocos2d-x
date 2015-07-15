@@ -27,9 +27,10 @@
 
 #include "platform/CCPlatformMacros.h"
 #include "2d/CCComponent.h"
-#include "physics/CCPhysicsBody.h"
 
 NS_CC_BEGIN
+
+class PhysicsBody;
 
 class ComponentPhysics2d : public Component
 {
@@ -43,6 +44,9 @@ public:
     
     void setPhysicsBody(PhysicsBody* physicsBody);
     PhysicsBody* getPhysicsBody() const;
+    
+    virtual void onAdd() override;
+    virtual void onRemove() override;
     
 CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d();
