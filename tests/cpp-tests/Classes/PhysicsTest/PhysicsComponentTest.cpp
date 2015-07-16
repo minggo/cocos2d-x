@@ -1,0 +1,327 @@
+#include "PhysicsComponentTest.h"
+
+#include <cmath>
+#include "ui/CocosGUI.h"
+#include "physics/CCComponentPhysics2d.h"
+#include "../testResource.h"
+
+USING_NS_CC;
+
+PhysicsComponentTests::PhysicsComponentTests()
+{
+    ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
+}
+
+namespace
+{
+    Color4F STATIC_COLOR(1.0f, 0.0f, 0.0f, 1.0f);
+    const int DRAG_BODYS_TAG = 0x80;
+}
+
+void PhysicsComponentDemo::toggleDebug()
+{
+#if CC_USE_PHYSICS
+    _debugDraw = !_debugDraw;
+    getPhysicsWorld()->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
+#endif
+}
+
+
+PhysicsComponentDemo::PhysicsComponentDemo()
+: _spriteTexture(nullptr)
+, _ball(nullptr)
+, _debugDraw(false)
+{
+}
+
+PhysicsComponentDemo::~PhysicsComponentDemo()
+{
+}
+
+bool PhysicsComponentDemo::init()
+{
+    if (TestCase::init())
+    {
+        return initWithPhysics();
+    }
+    return false;
+}
+std::string PhysicsComponentDemo::title() const
+{
+    return "PhysicsComponentTest";
+}
+
+void PhysicsComponentDemo::onEnter()
+{
+    TestCase::onEnter();
+    
+    _spriteTexture = SpriteBatchNode::create("Images/grossini_dance_atlas.png", 100)->getTexture();
+    
+    // menu for debug layer
+    MenuItemFont::setFontSize(18);
+    auto item = MenuItemFont::create("Toggle debug", CC_CALLBACK_1(PhysicsComponentDemo::toggleDebugCallback, this));
+    
+    auto menu = Menu::create(item, nullptr);
+    this->addChild(menu);
+    menu->setPosition(Vec2(VisibleRect::right().x - 50, VisibleRect::top().y - 10));
+}
+
+Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*/)
+{
+    CCLOG("Add sprite %0.2f x %02.f",p.x,p.y);
+    
+    int posx, posy;
+    
+    posx = CCRANDOM_0_1() * 200.0f;
+    posy = CCRANDOM_0_1() * 200.0f;
+    
+    posx = (posx % 4) * 85;
+    posy = (posy % 3) * 121;
+    
+    auto sp = Sprite::createWithTexture(_spriteTexture, Rect(posx, posy, 85, 121));
+    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
+    sp->setScale(scale);
+    sp->setPosition(p);
+    this->addChild(sp);
+    
+    return sp;
+}
+
+void PhysicsComponentDemo::toggleDebugCallback(Ref* sender)
+{
+    toggleDebug();
+}
+
+namespace
+{
+    const int LOGO_WIDTH = 188;
+    const int LOGO_HEIGHT = 35;
+    const int LOGO_RAW_LENGTH = 24;
+    const char LOGO_IMAGE[] =
+    {
+        15,-16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,-64,15,63,-32,-2,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,31,-64,15,127,-125,-1,-128,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,127,-64,15,127,15,-1,-64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-1,-64,15,-2,
+        31,-1,-64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-1,-64,0,-4,63,-1,-32,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,1,-1,-64,15,-8,127,-1,-32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        1,-1,-64,0,-8,-15,-1,-32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-31,-1,-64,15,-8,-32,
+        -1,-32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,-15,-1,-64,9,-15,-32,-1,-32,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,31,-15,-1,-64,0,-15,-32,-1,-32,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,63,-7,-1,-64,9,-29,-32,127,-61,-16,63,15,-61,-1,-8,31,-16,15,-8,126,7,-31,
+        -8,31,-65,-7,-1,-64,9,-29,-32,0,7,-8,127,-97,-25,-1,-2,63,-8,31,-4,-1,15,-13,
+        -4,63,-1,-3,-1,-64,9,-29,-32,0,7,-8,127,-97,-25,-1,-2,63,-8,31,-4,-1,15,-13,
+        -2,63,-1,-3,-1,-64,9,-29,-32,0,7,-8,127,-97,-25,-1,-1,63,-4,63,-4,-1,15,-13,
+        -2,63,-33,-1,-1,-32,9,-25,-32,0,7,-8,127,-97,-25,-1,-1,63,-4,63,-4,-1,15,-13,
+        -1,63,-33,-1,-1,-16,9,-25,-32,0,7,-8,127,-97,-25,-1,-1,63,-4,63,-4,-1,15,-13,
+        -1,63,-49,-1,-1,-8,9,-57,-32,0,7,-8,127,-97,-25,-8,-1,63,-2,127,-4,-1,15,-13,
+        -1,-65,-49,-1,-1,-4,9,-57,-32,0,7,-8,127,-97,-25,-8,-1,63,-2,127,-4,-1,15,-13,
+        -1,-65,-57,-1,-1,-2,9,-57,-32,0,7,-8,127,-97,-25,-8,-1,63,-2,127,-4,-1,15,-13,
+        -1,-1,-57,-1,-1,-1,9,-57,-32,0,7,-1,-1,-97,-25,-8,-1,63,-1,-1,-4,-1,15,-13,-1,
+        -1,-61,-1,-1,-1,-119,-57,-32,0,7,-1,-1,-97,-25,-8,-1,63,-1,-1,-4,-1,15,-13,-1,
+        -1,-61,-1,-1,-1,-55,-49,-32,0,7,-1,-1,-97,-25,-8,-1,63,-1,-1,-4,-1,15,-13,-1,
+        -1,-63,-1,-1,-1,-23,-49,-32,127,-57,-1,-1,-97,-25,-1,-1,63,-1,-1,-4,-1,15,-13,
+        -1,-1,-63,-1,-1,-1,-16,-49,-32,-1,-25,-1,-1,-97,-25,-1,-1,63,-33,-5,-4,-1,15,
+        -13,-1,-1,-64,-1,-9,-1,-7,-49,-32,-1,-25,-8,127,-97,-25,-1,-1,63,-33,-5,-4,-1,
+        15,-13,-1,-1,-64,-1,-13,-1,-32,-49,-32,-1,-25,-8,127,-97,-25,-1,-2,63,-49,-13,
+        -4,-1,15,-13,-1,-1,-64,127,-7,-1,-119,-17,-15,-1,-25,-8,127,-97,-25,-1,-2,63,
+        -49,-13,-4,-1,15,-13,-3,-1,-64,127,-8,-2,15,-17,-1,-1,-25,-8,127,-97,-25,-1,
+        -8,63,-49,-13,-4,-1,15,-13,-3,-1,-64,63,-4,120,0,-17,-1,-1,-25,-8,127,-97,-25,
+        -8,0,63,-57,-29,-4,-1,15,-13,-4,-1,-64,63,-4,0,15,-17,-1,-1,-25,-8,127,-97,
+        -25,-8,0,63,-57,-29,-4,-1,-1,-13,-4,-1,-64,31,-2,0,0,103,-1,-1,-57,-8,127,-97,
+        -25,-8,0,63,-57,-29,-4,-1,-1,-13,-4,127,-64,31,-2,0,15,103,-1,-1,-57,-8,127,
+        -97,-25,-8,0,63,-61,-61,-4,127,-1,-29,-4,127,-64,15,-8,0,0,55,-1,-1,-121,-8,
+        127,-97,-25,-8,0,63,-61,-61,-4,127,-1,-29,-4,63,-64,15,-32,0,0,23,-1,-2,3,-16,
+        63,15,-61,-16,0,31,-127,-127,-8,31,-1,-127,-8,31,-128,7,-128,0,0
+    };
+    
+    int getPixel(int x, int y)
+    {
+        return (LOGO_IMAGE[(x >> 3) + y * LOGO_RAW_LENGTH] >> (~x & 0x7)) & 1;
+    }
+    
+    float frand(void)
+    {
+        return rand() / RAND_MAX;
+    }
+}
+
+Sprite* PhysicsComponentDemo::makeBall(Vec2 point, float radius, PhysicsMaterial material)
+{
+    Sprite* ball = nullptr;
+    if (_ball != nullptr)
+        ball = Sprite::createWithTexture(_ball->getTexture());
+    else
+        ball = Sprite::create("Images/ball.png");
+    
+    ball->setScale(0.13f * radius);
+    
+    auto body = PhysicsBody::createCircle(radius, material);
+    addPhysicsComponent(ball, body);
+    ball->setPosition(Vec2(point.x, point.y));
+    
+    return ball;
+}
+
+Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsMaterial material)
+{
+    bool yellow = false;
+    if (color == 0)
+    {
+        yellow = CCRANDOM_0_1() > 0.5f;
+    }else
+    {
+        yellow = color == 1;
+    }
+    
+    auto box = yellow ? Sprite::create("Images/YellowSquare.png") : Sprite::create("Images/CyanSquare.png");
+    
+    box->setScaleX(size.width/100.0f);
+    box->setScaleY(size.height/100.0f);
+    
+    auto body = PhysicsBody::createBox(size, material);
+    addPhysicsComponent(box, body);
+    box->setPosition(Vec2(point.x, point.y));
+    
+    return box;
+}
+
+Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, PhysicsMaterial material)
+{
+    bool yellow = false;
+    if (color == 0)
+    {
+        yellow = CCRANDOM_0_1() > 0.5f;
+    }else
+    {
+        yellow = color == 1;
+    }
+    
+    auto triangle = yellow ? Sprite::create("Images/YellowTriangle.png") : Sprite::create("Images/CyanTriangle.png");
+    
+    if(size.height == 0)
+    {
+        triangle->setScale(size.width/100.0f);
+    }else
+    {
+        triangle->setScaleX(size.width/50.0f);
+        triangle->setScaleY(size.height/43.5f);
+    }
+    
+    Vec2 vers[] = { Vec2(0, size.height/2), Vec2(size.width/2, -size.height/2), Vec2(-size.width/2, -size.height/2)};
+    
+    auto body = PhysicsBody::createPolygon(vers, 3, material);
+    addPhysicsComponent(triangle, body);
+    triangle->setPosition(Vec2(point.x, point.y));
+    
+    return triangle;
+}
+
+bool PhysicsComponentDemo::onTouchBegan(Touch* touch, Event* event)
+{
+    auto location = touch->getLocation();
+    auto arr = _physicsWorld->getShapes(location);
+    
+    PhysicsBody* body = nullptr;
+    for (auto& obj : arr)
+    {
+        if ((obj->getBody()->getTag() & DRAG_BODYS_TAG) != 0)
+        {
+            body = obj->getBody();
+            break;
+        }
+    }
+    
+    if (body != nullptr)
+    {
+        Node* mouse = Node::create();
+        auto physicsBody = PhysicsBody::create(PHYSICS_INFINITY, PHYSICS_INFINITY);
+        physicsBody->setDynamic(false);
+        addPhysicsComponent(mouse, physicsBody);
+        mouse->setPosition(location);
+        this->addChild(mouse);
+        PhysicsJointPin* joint = PhysicsJointPin::construct(physicsBody, body, location);
+        joint->setMaxForce(5000.0f * body->getMass());
+        _physicsWorld->addJoint(joint);
+        _mouses.insert(std::make_pair(touch->getID(), mouse));
+        
+        return true;
+    }
+    
+    return false;
+}
+
+void PhysicsComponentDemo::onTouchMoved(Touch* touch, Event* event)
+{
+    auto it = _mouses.find(touch->getID());
+    
+    if (it != _mouses.end())
+    {
+        it->second->setPosition(touch->getLocation());
+    }
+}
+
+void PhysicsComponentDemo::onTouchEnded(Touch* touch, Event* event)
+{
+    auto it = _mouses.find(touch->getID());
+    
+    if (it != _mouses.end())
+    {
+        this->removeChild(it->second);
+        _mouses.erase(it);
+    }
+}
+
+void PhysicsComponentDemo::addPhysicsComponent(Node *node, PhysicsBody *physicsBody)
+{
+    auto physicsComponent = ComponentPhysics2d::create();
+    physicsComponent->setPhysicsBody(physicsBody);
+    node->addComponent(physicsComponent);
+}
+
+// Implementation of PhysicsComponentDemoLogoSmash
+
+void PhysicsComponentDemoLogoSmash::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    _physicsWorld = Director::getInstance()->getPhysicsManager()->getPhysicsWorld();
+    
+    _physicsWorld->setGravity(Vec2(0, 0));
+    _physicsWorld->setUpdateRate(5.0f);
+    
+    _ball = SpriteBatchNode::create("Images/ball.png", sizeof(LOGO_IMAGE)/sizeof(LOGO_IMAGE[0]));
+    addChild(_ball);
+    for (int y = 0; y < LOGO_HEIGHT; ++y)
+    {
+        for (int x = 0; x < LOGO_WIDTH; ++x)
+        {
+            if (getPixel(x, y))
+            {
+                float xJitter = 0.05 * frand();
+                float yJitter = 0.05 * frand();
+                
+                Node* ball = makeBall(Vec2(2*(x - LOGO_WIDTH/2 + xJitter) + VisibleRect::getVisibleRect().size.width/2,
+                                           2*(LOGO_HEIGHT-y + yJitter) + VisibleRect::getVisibleRect().size.height/2 - LOGO_HEIGHT/2),
+                                      0.95f, PhysicsMaterial(0.01f, 0.0f, 0.0f));
+                
+                auto physicsBody = ball->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                physicsBody->setMass(1.0);
+                physicsBody->setMoment(PHYSICS_INFINITY);
+                
+                _ball->addChild(ball);
+            }
+        }
+    }
+    
+    
+    auto bullet = makeBall(Vec2(400, 0), 10, PhysicsMaterial(PHYSICS_INFINITY, 0, 0));
+    bullet->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(Vec2(200, 0));
+    
+    bullet->setPosition(Vec2(-500, VisibleRect::getVisibleRect().size.height/2));
+    
+    _ball->addChild(bullet);
+}
+
+std::string PhysicsComponentDemoLogoSmash::title() const
+{
+    return "Logo Smash";
+}

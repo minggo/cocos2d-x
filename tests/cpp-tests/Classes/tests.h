@@ -73,6 +73,7 @@
 #include "DataVisitorTest/DataVisitorTest.h"
 #include "ConfigurationTest/ConfigurationTest.h"
 #include "PhysicsTest/PhysicsTest.h"
+#include "PhysicsTest/PhysicsComponentTest.h"
 #include "ReleasePoolTest/ReleasePoolTest.h"
 
 #include "Sprite3DTest/Sprite3DTest.h"

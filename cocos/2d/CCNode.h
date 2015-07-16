@@ -35,6 +35,7 @@
 #include "base/CCScriptSupport.h"
 #include "math/CCAffineTransform.h"
 #include "math/CCMath.h"
+#include "2d/CCComponentContainer.h"
 
 NS_CC_BEGIN
 
@@ -1613,6 +1614,12 @@ public:
      * @return The Component by name.
      */
     Component* getComponent(const std::string& name);
+    
+    template<typename T>
+    T* getComponent() const
+    {
+        return _componentContainer->getComponent<T>();
+    }
 
     /**
      * Adds a component.

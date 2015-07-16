@@ -37,6 +37,7 @@ THE SOFTWARE.
 #include "math/CCMath.h"
 #include "platform/CCGL.h"
 #include "platform/CCGLView.h"
+#include "physics/CCPhysicsManager.h"
 
 NS_CC_BEGIN
 
