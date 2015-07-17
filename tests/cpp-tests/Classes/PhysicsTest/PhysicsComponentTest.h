@@ -30,9 +30,9 @@ public:
     
     void toggleDebug();
     
-private:
-    void addPhysicsComponent(cocos2d::Node *node, cocos2d::PhysicsBody *physicsBody);
 protected:
+    void addPhysicsComponent(cocos2d::Node *node, cocos2d::PhysicsBody *physicsBody);
+    
     cocos2d::Texture2D* _spriteTexture;
     cocos2d::SpriteBatchNode* _ball;
     std::unordered_map<int, cocos2d::Node*> _mouses;
@@ -47,4 +47,17 @@ public:
     
     void onEnter() override;
     virtual std::string title() const override;
+};
+
+class PhysicsComponentDemoClickAdd : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoClickAdd);
+    
+    virtual ~PhysicsComponentDemoClickAdd();
+    void onEnter() override;
+    virtual std::string subtitle() const override;
+    
+    void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+    void onAcceleration(cocos2d::Acceleration* acc, cocos2d::Event* event);
 };

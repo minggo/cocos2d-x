@@ -4,7 +4,6 @@
 #include "ui/CocosGUI.h"
 USING_NS_CC;
 
-#if 0
 
 PhysicsTests::PhysicsTests()
 {
@@ -1829,4 +1828,3 @@ std::string PhysicsIssue9959::subtitle() const
 }
 
 #endif // ifndef CC_USE_PHYSICS
-#endif

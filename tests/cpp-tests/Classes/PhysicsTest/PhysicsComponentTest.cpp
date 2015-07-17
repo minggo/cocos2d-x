@@ -10,6 +10,7 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
+    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
 }
 
 namespace
@@ -22,7 +23,8 @@ void PhysicsComponentDemo::toggleDebug()
 {
 #if CC_USE_PHYSICS
     _debugDraw = !_debugDraw;
-    getPhysicsWorld()->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
+//    getPhysicsWorld()->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
+    _physicsWorld->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
 #endif
 }
 
@@ -40,11 +42,10 @@ PhysicsComponentDemo::~PhysicsComponentDemo()
 
 bool PhysicsComponentDemo::init()
 {
-    if (TestCase::init())
-    {
-        return initWithPhysics();
-    }
-    return false;
+    TestCase::init();
+    
+    _physicsWorld = Director::getInstance()->getPhysicsManager()->getPhysicsWorld();
+    return true;
 }
 std::string PhysicsComponentDemo::title() const
 {
@@ -283,7 +284,6 @@ void PhysicsComponentDemo::addPhysicsComponent(Node *node, PhysicsBody *physicsB
 void PhysicsComponentDemoLogoSmash::onEnter()
 {
     PhysicsComponentDemo::onEnter();
-    _physicsWorld = Director::getInstance()->getPhysicsManager()->getPhysicsWorld();
     
     _physicsWorld->setGravity(Vec2(0, 0));
     _physicsWorld->setUpdateRate(5.0f);
@@ -324,4 +324,66 @@ void PhysicsComponentDemoLogoSmash::onEnter()
 std::string PhysicsComponentDemoLogoSmash::title() const
 {
     return "Logo Smash";
+}
+
+// Implementation of PhysicsComponentDemoClickAdd
+
+PhysicsComponentDemoClickAdd::~PhysicsComponentDemoClickAdd()
+{
+    Device::setAccelerometerEnabled(false);
+}
+
+void PhysicsComponentDemoClickAdd::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    auto touchListener = EventListenerTouchAllAtOnce::create();
+    touchListener->onTouchesEnded = CC_CALLBACK_2(PhysicsComponentDemoClickAdd::onTouchesEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    Device::setAccelerometerEnabled(true);
+    auto accListener = EventListenerAcceleration::create(CC_CALLBACK_2(PhysicsComponentDemoClickAdd::onAcceleration, this));
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(accListener, this);
+    
+    auto node = Node::create();
+    addPhysicsComponent(node, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size));
+    node->setPosition(VisibleRect::center());
+    this->addChild(node);
+    
+    addGrossiniAtPosition(VisibleRect::center());
+}
+
+std::string PhysicsComponentDemoClickAdd::subtitle() const
+{
+    return "multi touch to add grossini";
+}
+
+void PhysicsComponentDemoClickAdd::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
+{
+    //Add a new body/atlas sprite at the touched location
+    
+    for( auto &touch: touches)
+    {
+        auto location = touch->getLocation();
+        
+        addGrossiniAtPosition( location );
+    }
+}
+
+void PhysicsComponentDemoClickAdd::onAcceleration(Acceleration* acc, Event* event)
+{
+    static float prevX=0, prevY=0;
+    
+#define FILTER_FACTOR 0.05f
+    
+    float accelX = (float) acc->x * FILTER_FACTOR + (1- FILTER_FACTOR)*prevX;
+    float accelY = (float) acc->y * FILTER_FACTOR + (1- FILTER_FACTOR)*prevY;
+    
+    prevX = accelX;
+    prevY = accelY;
+    
+    auto v = Vec2( accelX, accelY);
+    v = v * 200;
+    
+    _physicsWorld->setGravity(v);
 }
