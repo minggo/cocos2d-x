@@ -45,8 +45,8 @@ public:
     void setPhysicsBody(PhysicsBody* physicsBody);
     PhysicsBody* getPhysicsBody() const;
     
-    virtual void onAdd() override;
-    virtual void onRemove() override;
+    virtual void onEnter() override;
+    virtual void onExit() override;
     
 CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d();

@@ -37,7 +37,6 @@ THE SOFTWARE.
 #include "math/CCMath.h"
 #include "platform/CCGL.h"
 #include "platform/CCGLView.h"
-#include "physics/CCPhysicsManager.h"
 
 NS_CC_BEGIN
 
@@ -59,7 +58,6 @@ class EventListenerCustom;
 class TextureCache;
 class Renderer;
 class Camera;
-class PhysicsManager;
 
 class Console;
 namespace experimental
@@ -418,8 +416,6 @@ public:
      */
     void setActionManager(ActionManager* actionManager);
     
-    PhysicsManager* getPhysicsManager() const { return _physicsManager; }
-    
     /** Gets the EventDispatcher associated with this director.
      * @since v3.0
      * @js NA
@@ -530,8 +526,6 @@ protected:
      @since v2.0
      */
     ActionManager *_actionManager;
-    
-    PhysicsManager *_physicsManager;
     
     /** EventDispatcher associated with this director
      @since v3.0

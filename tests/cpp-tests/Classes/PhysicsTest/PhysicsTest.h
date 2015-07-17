@@ -6,6 +6,7 @@
 
 #include <map>
 
+#if 0
 
 DEFINE_TEST_SUITE(PhysicsTests);
 
@@ -275,5 +276,6 @@ public:
     virtual std::string subtitle() const override;
 };
 
+#endif
 #endif
 #endif

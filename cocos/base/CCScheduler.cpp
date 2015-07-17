@@ -241,8 +241,6 @@ void TimerScriptHandler::cancel()
 
 // Priority level reserved for system services.
 const int Scheduler::PRIORITY_SYSTEM = INT_MIN;
-// Priority level reserved for physics services.
-const int Scheduler::PRIORITY_PHYSICS = INT_MAX;
 
 // Minimum priority level for user scheduling.
 const int Scheduler::PRIORITY_NON_SYSTEM_MIN = PRIORITY_SYSTEM + 1;

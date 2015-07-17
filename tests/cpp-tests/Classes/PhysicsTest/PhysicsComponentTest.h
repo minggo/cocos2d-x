@@ -13,7 +13,6 @@ public:
     PhysicsComponentDemo();
     virtual ~PhysicsComponentDemo();
     
-    virtual bool init() override;
     virtual void onEnter() override;
     virtual std::string title() const override;
     
@@ -37,7 +36,6 @@ protected:
     cocos2d::SpriteBatchNode* _ball;
     std::unordered_map<int, cocos2d::Node*> _mouses;
     bool _debugDraw;
-    cocos2d::PhysicsWorld *_physicsWorld;
 };
 
 class PhysicsComponentDemoLogoSmash : public PhysicsComponentDemo

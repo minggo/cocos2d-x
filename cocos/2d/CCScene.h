@@ -47,6 +47,7 @@ class Physics3DWorld;
 #if CC_USE_NAVMESH
 class NavMesh;
 #endif
+class PhysicsManager;
 
 /**
  * @addtogroup _2d
@@ -153,8 +154,10 @@ public:
      * @return The physics world of the scene.
      * @js NA
      */
-    inline PhysicsWorld* getPhysicsWorld() { return _physicsWorld; }
+    inline PhysicsWorld* getPhysicsWorld() const { return _physicsWorld; }
 #endif
+    
+    PhysicsManager* getPhysicsManager() const { return _physicsManager; }
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     /** Get the 3d physics world of the scene.
@@ -203,8 +206,9 @@ public:
     void setNavMeshDebugCamera(Camera *camera);
 
 protected:
-    NavMesh*       _navMesh;
-    Camera *       _navMeshDebugCamera;
+    NavMesh*        _navMesh;
+    Camera *        _navMeshDebugCamera;
+    PhysicsManager* _physicsManager;
 #endif
     
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)

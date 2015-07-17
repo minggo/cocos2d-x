@@ -37,6 +37,7 @@ THE SOFTWARE.
 #if CC_USE_PHYSICS
 #include "physics/CCPhysicsWorld.h"
 #endif
+#include "physics/CCPhysicsManager.h"
 
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
 #include "physics3d/CCPhysics3DWorld.h"
@@ -50,9 +51,6 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 Scene::Scene()
-#if CC_USE_PHYSICS
-: _physicsWorld(nullptr)
-#endif
 {
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     _physics3DWorld = nullptr;
@@ -73,13 +71,13 @@ Scene::Scene()
     
     _event = Director::getInstance()->getEventDispatcher()->addCustomEventListener(Director::EVENT_PROJECTION_CHANGED, std::bind(&Scene::onProjectionChanged, this, std::placeholders::_1));
     _event->retain();
+    
+    _physicsManager = new (std::nothrow) PhysicsManager();
+    _physicsWorld = _physicsManager->getPhysicsWorld();
 }
 
 Scene::~Scene()
 {
-#if CC_USE_PHYSICS
-    CC_SAFE_DELETE(_physicsWorld);
-#endif
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     CC_SAFE_RELEASE(_physics3DWorld);
     CC_SAFE_RELEASE(_physics3dDebugCamera);
@@ -89,6 +87,8 @@ Scene::~Scene()
 #endif
     Director::getInstance()->getEventDispatcher()->removeEventListener(_event);
     CC_SAFE_RELEASE(_event);
+    
+    delete _physicsManager;
 }
 
 #if CC_USE_NAVMESH
@@ -341,10 +341,11 @@ void Scene::addChildToPhysicsWorld(Node* child)
 void Scene::stepPhysicsAndNavigation(float deltaTime)
 {
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsWorld->isAutoStep())
-    {
-        _physicsWorld->update(deltaTime, false);
-    }
+//    if (_physicsWorld && _physicsWorld->isAutoStep())
+//    {
+//        _physicsWorld->update(deltaTime, false);
+//    }
+    _physicsManager->update(deltaTime);
 #endif
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     if (_physics3DWorld)

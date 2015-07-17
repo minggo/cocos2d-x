@@ -40,13 +40,6 @@ PhysicsComponentDemo::~PhysicsComponentDemo()
 {
 }
 
-bool PhysicsComponentDemo::init()
-{
-    TestCase::init();
-    
-    _physicsWorld = Director::getInstance()->getPhysicsManager()->getPhysicsWorld();
-    return true;
-}
 std::string PhysicsComponentDemo::title() const
 {
     return "PhysicsComponentTest";
@@ -362,7 +355,7 @@ void PhysicsComponentDemoClickAdd::onTouchesEnded(const std::vector<Touch*>& tou
 {
     //Add a new body/atlas sprite at the touched location
     
-    for( auto &touch: touches)
+    for( auto touch: touches)
     {
         auto location = touch->getLocation();
         

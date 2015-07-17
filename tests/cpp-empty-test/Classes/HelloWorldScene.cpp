@@ -32,8 +32,6 @@ bool HelloWorld::init()
     }
     
 
-    Director::getInstance()->getPhysicsManager()->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    
     auto sprite = Sprite::create("bang.png");
     auto physicsComponent = ComponentPhysics2d::create();
     auto physicsBody = PhysicsBody::createBox(sprite->getContentSize());

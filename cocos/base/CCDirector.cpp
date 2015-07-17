@@ -151,9 +151,6 @@ bool Director::init(void)
     // action manager
     _actionManager = new (std::nothrow) ActionManager();
     _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
-    // physics manager
-    _physicsManager = new (std::nothrow) PhysicsManager();
-    _scheduler->scheduleUpdate(_physicsManager, Scheduler::PRIORITY_PHYSICS, false);
 
     _eventDispatcher = new (std::nothrow) EventDispatcher();
     _eventAfterDraw = new (std::nothrow) EventCustom(EVENT_AFTER_DRAW);
@@ -192,7 +189,6 @@ Director::~Director(void)
     delete _eventAfterDraw;
     delete _eventAfterVisit;
     delete _eventProjectionChanged;
-    delete _physicsManager;
 
     delete _renderer;
 

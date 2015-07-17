@@ -126,22 +126,22 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
     return _physicsBody;
 }
 
-void ComponentPhysics2d::onAdd()
+void ComponentPhysics2d::onEnter()
 {
-    // physics body should be set correctly, because it is a good time to add physics body to physics world
+    // should set physics body
     CC_ASSERT(_physicsBody != nullptr);
     
-    Director::getInstance()->getPhysicsManager()->addPhysicsComponent(this);
+    _owner->getScene()->getPhysicsManager()->addPhysicsComponent(this);
 }
 
-void ComponentPhysics2d::onRemove()
+void ComponentPhysics2d::onExit()
 {
-    Director::getInstance()->getPhysicsManager()->removePhysicsComponent(this);
+    _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
 }
 
 bool ComponentPhysics2d::checkState() const
 {
-    if (_owner->getScene() == nullptr)
+    if (_owner->getScene() != Director::getInstance()->getRunningScene())
         return false;
     
     // don't update position if physics body is disabled
