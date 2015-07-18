@@ -10,7 +10,8 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
-    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
+	ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
+	ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
 }
 
 namespace
@@ -57,7 +58,7 @@ void PhysicsComponentDemo::onEnter()
     
     auto menu = Menu::create(item, nullptr);
     this->addChild(menu);
-    menu->setPosition(Vec2(VisibleRect::right().x - 50, VisibleRect::top().y - 10));
+	menu->setPosition(Vec2(VisibleRect::right().x - item->getContentSize().width / 2 - 10, VisibleRect::top().y - item->getContentSize().height/ 2 - 10));
 }
 
 Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*/)
@@ -73,9 +74,12 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
     posy = (posy % 3) * 121;
     
     auto sp = Sprite::createWithTexture(_spriteTexture, Rect(posx, posy, 85, 121));
-    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
-    sp->setScale(scale);
-    sp->setPosition(p);
+
+	sp->setScale(scale);
+	sp->setPosition(p);
+    //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
+	//addPhysicsComponent(sp, PhysicsBody::createBox(Size(sp->getContentSize().width , sp->getContentSize().height )));
+	addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
     this->addChild(sp);
     
     return sp;
@@ -379,4 +383,50 @@ void PhysicsComponentDemoClickAdd::onAcceleration(Acceleration* acc, Event* even
     v = v * 200;
     
     _physicsWorld->setGravity(v);
+}
+
+void PhysicsComponentDemoPyramidStack::onEnter()
+{
+	PhysicsComponentDemo::onEnter();
+
+	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchBegan, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchMoved, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchEnded, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
+	auto node = Node::create();
+	addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
+	this->addChild(node);
+
+	auto ball = Sprite::create("Images/ball.png");
+	ball->setScale(1);
+	ball->setTag(100);
+	addPhysicsComponent(ball, PhysicsBody::createCircle(10));
+	ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+	ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
+	this->addChild(ball);
+
+	scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentDemoPyramidStack::updateOnce), 3.0);
+
+	for (int i = 0; i<14; i++)
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
+			sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+		}
+	}
+}
+void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
+{
+	auto ball = getChildByTag(100);
+	if (ball){
+		ball->setScale(ball->getScale() * 3);
+	}
+}
+
+std::string PhysicsComponentDemoPyramidStack::title() const
+{
+	return "Pyramid Stack";
 }

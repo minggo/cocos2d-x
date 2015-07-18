@@ -34,7 +34,7 @@ NS_CC_BEGIN
 class ComponentPhysics2d;
 class PhysicsWorld;
 
-class PhysicsManager
+class CC_DLL PhysicsManager
 {
 public:
     PhysicsManager();

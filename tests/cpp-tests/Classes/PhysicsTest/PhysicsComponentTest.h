@@ -59,3 +59,13 @@ public:
     void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     void onAcceleration(cocos2d::Acceleration* acc, cocos2d::Event* event);
 };
+
+class PhysicsComponentDemoPyramidStack : public PhysicsComponentDemo
+{
+public:
+	CREATE_FUNC(PhysicsComponentDemoPyramidStack);
+
+	void onEnter() override;
+	void updateOnce(float delta);
+	virtual std::string title() const override;
+};
