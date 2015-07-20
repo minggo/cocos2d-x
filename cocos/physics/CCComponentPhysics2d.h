@@ -32,7 +32,7 @@ NS_CC_BEGIN
 
 class PhysicsBody;
 
-class ComponentPhysics2d : public Component
+class CC_DLL ComponentPhysics2d : public Component
 {
 public:
     static ComponentPhysics2d* create();

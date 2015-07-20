@@ -199,6 +199,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClCompile Include="..\Classes\PerformanceTest\PerformanceRendererTest.cpp" />
     <ClCompile Include="..\Classes\PerformanceTest\PerformanceScenarioTest.cpp" />
     <ClCompile Include="..\Classes\Physics3DTest\Physics3DTest.cpp" />
+    <ClCompile Include="..\Classes\PhysicsTest\PhysicsComponentTest.cpp" />
     <ClCompile Include="..\Classes\PhysicsTest\PhysicsTest.cpp" />
     <ClCompile Include="..\Classes\ReleasePoolTest\ReleasePoolTest.cpp" />
     <ClCompile Include="..\Classes\Scene3DTest\Scene3DTest.cpp" />
@@ -405,6 +406,7 @@ xcopy "$(OutDir)..\*.dll" "$(OutDir)" /D /Y</Command>
     <ClInclude Include="..\Classes\PerformanceTest\PerformanceRendererTest.h" />
     <ClInclude Include="..\Classes\PerformanceTest\PerformanceScenarioTest.h" />
     <ClInclude Include="..\Classes\Physics3DTest\Physics3DTest.h" />
+    <ClInclude Include="..\Classes\PhysicsTest\PhysicsComponentTest.h" />
     <ClInclude Include="..\Classes\PhysicsTest\PhysicsTest.h" />
     <ClInclude Include="..\Classes\ReleasePoolTest\ReleasePoolTest.h" />
     <ClInclude Include="..\Classes\Scene3DTest\Scene3DTest.h" />
