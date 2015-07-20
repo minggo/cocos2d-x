@@ -10,9 +10,10 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
+
+    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
 	ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
-	ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
-	ADD_TEST_CASE(PhysicsComponentDemoRayCast);
+    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
 }
 
 namespace
@@ -59,7 +60,7 @@ void PhysicsComponentDemo::onEnter()
     
     auto menu = Menu::create(item, nullptr);
     this->addChild(menu);
-	menu->setPosition(Vec2(VisibleRect::right().x - item->getContentSize().width / 2 - 10, VisibleRect::top().y - item->getContentSize().height/ 2 - 10));
+    menu->setPosition(Vec2(VisibleRect::right().x - item->getContentSize().width / 2 - 10, VisibleRect::top().y - item->getContentSize().height/ 2 - 10));
 }
 
 Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*/)
@@ -80,7 +81,7 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 	sp->setPosition(p);
     //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
 	//addPhysicsComponent(sp, PhysicsBody::createBox(Size(sp->getContentSize().width , sp->getContentSize().height )));
-	addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
+    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
     this->addChild(sp);
     
     return sp;
@@ -156,7 +157,7 @@ Sprite* PhysicsComponentDemo::makeBall(Vec2 point, float radius, PhysicsMaterial
     
     //auto body = PhysicsBody::createCircle(radius, material);
     //addPhysicsComponent(ball, body);
-	addPhysicsComponent(ball, PhysicsBody::createCircle(ball->getContentSize().width/2, material));
+    addPhysicsComponent(ball, PhysicsBody::createCircle(ball->getContentSize().width/2, material));
     ball->setPosition(Vec2(point.x, point.y));
     
     return ball;
@@ -180,7 +181,7 @@ Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsM
     
     //auto body = PhysicsBody::createBox(size, material);
     //addPhysicsComponent(box, body);
-	addPhysicsComponent(box, PhysicsBody::createBox(box->getContentSize(), material));
+    addPhysicsComponent(box, PhysicsBody::createBox(box->getContentSize(), material));
     box->setPosition(Vec2(point.x, point.y));
     
     return box;
@@ -209,11 +210,11 @@ Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, Phy
     }
     
     //Vec2 vers[] = { Vec2(0, size.height/2), Vec2(size.width/2, -size.height/2), Vec2(-size.width/2, -size.height/2)};
-	Vec2 vers[] = { Vec2(0, triangle->getContentSize().height / 2), Vec2(triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2), Vec2(-triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2) };
+    Vec2 vers[] = { Vec2(0, triangle->getContentSize().height / 2), Vec2(triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2), Vec2(-triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2) };
 
     //auto body = PhysicsBody::createPolygon(vers, 3, material);
     //addPhysicsComponent(triangle, body);
-	addPhysicsComponent(triangle, PhysicsBody::createPolygon(vers, 3, material));
+    addPhysicsComponent(triangle, PhysicsBody::createPolygon(vers, 3, material));
     triangle->setPosition(Vec2(point.x, point.y));
     
     return triangle;
@@ -418,8 +419,8 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 	{
 		for (int j = 0; j <= i; j++)
 		{
-			auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
-			sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+		    auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
+		    sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
 		}
 	}
 }
@@ -453,7 +454,7 @@ void PhysicsComponentDemoRayCast::onEnter()
 	_physicsWorld->setGravity(Point::ZERO);
 
 	auto node = DrawNode::create();
-	addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
+    addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
 	node->drawSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50), 1, STATIC_COLOR);
 	this->addChild(node);
 
