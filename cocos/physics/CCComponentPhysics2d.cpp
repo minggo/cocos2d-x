@@ -67,7 +67,7 @@ void ComponentPhysics2d::beforeSimulation()
     // set scale
     // because there is floating point precision problem when caculation scale value in Mat4::decompose()
     if (fabs(scale.x - _ownerScale.x) > MATH_EPSILON
-        && fabs(scale.y - _ownerScale.y) > MATH_EPSILON)
+        || fabs(scale.y - _ownerScale.y) > MATH_EPSILON)
     {
         _ownerScale = scale;
         _physicsBody->setScale(_ownerScale.x, _ownerScale.y);

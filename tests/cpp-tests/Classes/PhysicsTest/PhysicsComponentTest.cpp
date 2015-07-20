@@ -10,9 +10,9 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
-//    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
-//    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
-//    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
+    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
+    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
+    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
 }
 
 namespace
