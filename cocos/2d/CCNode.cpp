@@ -333,10 +333,10 @@ void Node::setRotation(float rotation)
     _rotationZ_X = _rotationZ_Y = rotation;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
     
     updateRotationQuat();
@@ -475,10 +475,10 @@ void Node::setScale(float scale)
     _scaleX = _scaleY = _scaleZ = scale;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -498,10 +498,10 @@ void Node::setScale(float scaleX,float scaleY)
     _scaleY = scaleY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -514,10 +514,10 @@ void Node::setScaleX(float scaleX)
     _scaleX = scaleX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -559,10 +559,10 @@ void Node::setScaleY(float scaleY)
     _scaleY = scaleY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -596,10 +596,10 @@ void Node::setPosition(float x, float y)
     _transformUpdated = _transformDirty = _inverseDirty = true;
     _usingNormalizedPosition = false;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -666,10 +666,10 @@ void Node::setNormalizedPosition(const Vec2& position)
     _normalizedPositionDirty = true;
     _transformUpdated = _transformDirty = _inverseDirty = true;
 #if CC_USE_PHYSICS
-    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-    {
-        _physicsWorld->_updateBodyTransform = true;
-    }
+//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+//    {
+//        _physicsWorld->_updateBodyTransform = true;
+//    }
 #endif
 }
 
@@ -1292,10 +1292,10 @@ void Node::visit()
 uint32_t Node::processParentFlags(const Mat4& parentTransform, uint32_t parentFlags)
 {
 #if CC_USE_PHYSICS
-    if (_physicsBody && _updateTransformFromPhysics)
-    {
-        updateTransformFromPhysics(parentTransform, parentFlags);
-    }
+//    if (_physicsBody && _updateTransformFromPhysics)
+//    {
+//        updateTransformFromPhysics(parentTransform, parentFlags);
+//    }
 #endif
     if(_usingNormalizedPosition)
     {
@@ -2102,37 +2102,37 @@ void Node::setPhysicsBody(PhysicsBody* body)
 
 void Node::updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t parentFlags, float parentScaleX, float parentScaleY)
 {
-    _updateTransformFromPhysics = false;
-    auto flags = processParentFlags(parentTransform, parentFlags);
-    _updateTransformFromPhysics = true;
-    auto scaleX = parentScaleX * _scaleX;
-    auto scaleY = parentScaleY * _scaleY;
-    
-    if (_parent)
-    {
-        _physicsRotation = _parent->_physicsRotation + _rotationZ_X;
-    }
-    if (_physicsBody && ((flags & FLAGS_DIRTY_MASK) || _physicsTransformDirty))
-    {
-        _physicsTransformDirty = false;
-        
-        Vec3 vec3(_contentSize.width * 0.5f, _contentSize.height * 0.5f, 0);
-        Vec3 ret;
-        _modelViewTransform.transformPoint(vec3, &ret);
-        _physicsBody->setPosition(Vec2(ret.x, ret.y));
-
-        parentTransform.getInversed().transformPoint(&ret);
-        _offsetX = ret.x - _position.x;
-        _offsetY = ret.y - _position.y;
-
-        _physicsBody->setScale(scaleX / _physicsScaleStartX, scaleY / _physicsScaleStartY);
-        _physicsBody->setRotation(_physicsRotation - _physicsRotationOffset);
-    }
-
-    for (auto node : _children)
-    {
-        node->updatePhysicsBodyTransform(_modelViewTransform, flags, scaleX, scaleY);
-    }
+//    _updateTransformFromPhysics = false;
+//    auto flags = processParentFlags(parentTransform, parentFlags);
+//    _updateTransformFromPhysics = true;
+//    auto scaleX = parentScaleX * _scaleX;
+//    auto scaleY = parentScaleY * _scaleY;
+//    
+//    if (_parent)
+//    {
+//        _physicsRotation = _parent->_physicsRotation + _rotationZ_X;
+//    }
+//    if (_physicsBody && ((flags & FLAGS_DIRTY_MASK) || _physicsTransformDirty))
+//    {
+//        _physicsTransformDirty = false;
+//        
+//        Vec3 vec3(_contentSize.width * 0.5f, _contentSize.height * 0.5f, 0);
+//        Vec3 ret;
+//        _modelViewTransform.transformPoint(vec3, &ret);
+//        _physicsBody->setPosition(Vec2(ret.x, ret.y));
+//
+//        parentTransform.getInversed().transformPoint(&ret);
+//        _offsetX = ret.x - _position.x;
+//        _offsetY = ret.y - _position.y;
+//
+//        _physicsBody->setScale(scaleX / _physicsScaleStartX, scaleY / _physicsScaleStartY);
+//        _physicsBody->setRotation(_physicsRotation - _physicsRotationOffset);
+//    }
+//
+//    for (auto node : _children)
+//    {
+//        node->updatePhysicsBodyTransform(_modelViewTransform, flags, scaleX, scaleY);
+//    }
 }
 
 void Node::updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags)
