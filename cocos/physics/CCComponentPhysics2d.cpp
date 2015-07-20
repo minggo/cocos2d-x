@@ -99,15 +99,15 @@ void ComponentPhysics2d::afterSimulation()
     _owner->setPosition(ownerPosition.x + offset.x, ownerPosition.y + offset.y);
     
     // set rotation
-    Mat4 parentToWorldTransfrom;
+    Mat4 parentToWorldTransform;
     if (_owner->getParent())
-        parentToWorldTransfrom = _owner->getParent()->getNodeToParentTransform();
+        parentToWorldTransform = _owner->getParent()->getNodeToParentTransform();
     else
-        parentToWorldTransfrom = _owner->getNodeToParentTransform();
+        parentToWorldTransform = _owner->getNodeToParentTransform();
     
     float rotation = _physicsBody->getRotation();
     Vec3 rotationVec(rotation, 0, 0);
-    parentToWorldTransfrom.getInversed().transformVector(&rotationVec);
+    parentToWorldTransform.getInversed().transformVector(&rotationVec);
     _owner->setRotation(rotationVec.x);
 }
 
@@ -152,7 +152,7 @@ bool ComponentPhysics2d::checkState() const
         return false;
     
     // don't update position if physics body is disabled
-    if (_physicsBody->isEnabled())
+    if (!_physicsBody->isEnabled())
         return false;
     
     return true;

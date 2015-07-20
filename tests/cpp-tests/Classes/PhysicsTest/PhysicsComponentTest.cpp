@@ -10,9 +10,9 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
-    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
-    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
-    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
+//    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
+//    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
+//    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
 }
 
 namespace
@@ -25,7 +25,6 @@ void PhysicsComponentDemo::toggleDebug()
 {
 #if CC_USE_PHYSICS
     _debugDraw = !_debugDraw;
-//    getPhysicsWorld()->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
     _physicsWorld->setDebugDrawMask(_debugDraw ? PhysicsWorld::DEBUGDRAW_ALL : PhysicsWorld::DEBUGDRAW_NONE);
 #endif
 }
@@ -78,9 +77,7 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 
     sp->setScale(scale);
     sp->setPosition(p);
-    //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
-	//addPhysicsComponent(sp, PhysicsBody::createBox(Size(sp->getContentSize().width , sp->getContentSize().height )));
-    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
+    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
     this->addChild(sp);
     
     return sp;
@@ -154,9 +151,7 @@ Sprite* PhysicsComponentDemo::makeBall(Vec2 point, float radius, PhysicsMaterial
     
     ball->setScale(0.13f * radius);
     
-    //auto body = PhysicsBody::createCircle(radius, material);
-    //addPhysicsComponent(ball, body);
-    addPhysicsComponent(ball, PhysicsBody::createCircle(ball->getContentSize().width/2, material));
+    addPhysicsComponent(ball, PhysicsBody::createCircle(radius, material));
     ball->setPosition(Vec2(point.x, point.y));
     
     return ball;
@@ -178,9 +173,7 @@ Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsM
     box->setScaleX(size.width/100.0f);
     box->setScaleY(size.height/100.0f);
     
-    //auto body = PhysicsBody::createBox(size, material);
-    //addPhysicsComponent(box, body);
-    addPhysicsComponent(box, PhysicsBody::createBox(box->getContentSize(), material));
+    addPhysicsComponent(box, PhysicsBody::createBox(size, material));
     box->setPosition(Vec2(point.x, point.y));
     
     return box;
@@ -208,11 +201,8 @@ Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, Phy
         triangle->setScaleY(size.height/43.5f);
     }
     
-    //Vec2 vers[] = { Vec2(0, size.height/2), Vec2(size.width/2, -size.height/2), Vec2(-size.width/2, -size.height/2)};
-    Vec2 vers[] = { Vec2(0, triangle->getContentSize().height / 2), Vec2(triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2), Vec2(-triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2) };
+    Vec2 vers[] = { Vec2(0, size.height/2), Vec2(size.width/2, -size.height/2), Vec2(-size.width/2, -size.height/2)};
 
-    //auto body = PhysicsBody::createPolygon(vers, 3, material);
-    //addPhysicsComponent(triangle, body);
     addPhysicsComponent(triangle, PhysicsBody::createPolygon(vers, 3, material));
     triangle->setPosition(Vec2(point.x, point.y));
     
