@@ -396,32 +396,32 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 
     auto touchListener = EventListenerTouchOneByOne::create();
     touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchBegan, this);
-	touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchMoved, this);
-	touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
 
-	auto node = Node::create();
-	addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
-	this->addChild(node);
+    auto node = Node::create();
+    addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
+    this->addChild(node);
 
-	auto ball = Sprite::create("Images/ball.png");
-	ball->setScale(1);
-	ball->setTag(100);
-	addPhysicsComponent(ball, PhysicsBody::createCircle(10));
-	ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
-	ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
-	this->addChild(ball);
+    auto ball = Sprite::create("Images/ball.png");
+    ball->setScale(1);
+    ball->setTag(100);
+    addPhysicsComponent(ball, PhysicsBody::createCircle(10));
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
+    this->addChild(ball);
 
-	scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentDemoPyramidStack::updateOnce), 3.0);
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentDemoPyramidStack::updateOnce), 3.0);
 
-	for (int i = 0; i < 14; i++)
-	{
+    for (int i = 0; i < 14; i++)
+    {
         for (int j = 0; j <= i; j++)
         {
             auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
             sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
         }
-	}
+    }
 }
 void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
 {

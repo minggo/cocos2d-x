@@ -63,31 +63,31 @@ public:
 class PhysicsComponentDemoPyramidStack : public PhysicsComponentDemo
 {
 public:
-	CREATE_FUNC(PhysicsComponentDemoPyramidStack);
+    CREATE_FUNC(PhysicsComponentDemoPyramidStack);
 
-	void onEnter() override;
-	void updateOnce(float delta);
-	virtual std::string title() const override;
+    void onEnter() override;
+    void updateOnce(float delta);
+    virtual std::string title() const override;
 };
 
 class PhysicsComponentDemoRayCast : public PhysicsComponentDemo
 {
 public:
-	CREATE_FUNC(PhysicsComponentDemoRayCast);
+    CREATE_FUNC(PhysicsComponentDemoRayCast);
 
-	PhysicsComponentDemoRayCast();
+    PhysicsComponentDemoRayCast();
 
-	void onEnter() override;
-	virtual std::string title() const override;
-	void update(float delta) override;
-	void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+    void onEnter() override;
+    virtual std::string title() const override;
+    void update(float delta) override;
+    void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
 
-	void changeModeCallback(cocos2d::Ref* sender);
+    void changeModeCallback(cocos2d::Ref* sender);
 
-	bool anyRay(cocos2d::PhysicsWorld& world, const cocos2d::PhysicsRayCastInfo& info, void* data);
+    bool anyRay(cocos2d::PhysicsWorld& world, const cocos2d::PhysicsRayCastInfo& info, void* data);
 
 private:
-	float _angle;
-	cocos2d::DrawNode* _node;
-	int _mode;
+    float _angle;
+    cocos2d::DrawNode* _node;
+    int _mode;
 };
