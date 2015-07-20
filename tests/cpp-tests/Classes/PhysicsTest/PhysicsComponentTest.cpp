@@ -10,9 +10,8 @@ USING_NS_CC;
 PhysicsComponentTests::PhysicsComponentTests()
 {
     ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
-
+    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
     ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
-	ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
     ADD_TEST_CASE(PhysicsComponentDemoRayCast);
 }
 
@@ -77,8 +76,8 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
     
     auto sp = Sprite::createWithTexture(_spriteTexture, Rect(posx, posy, 85, 121));
 
-	sp->setScale(scale);
-	sp->setPosition(p);
+    sp->setScale(scale);
+    sp->setPosition(p);
     //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
 	//addPhysicsComponent(sp, PhysicsBody::createBox(Size(sp->getContentSize().width , sp->getContentSize().height )));
     addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
@@ -395,8 +394,8 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 {
 	PhysicsComponentDemo::onEnter();
 
-	auto touchListener = EventListenerTouchOneByOne::create();
-	touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchBegan, this);
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchBegan, this);
 	touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
@@ -415,26 +414,25 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 
 	scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentDemoPyramidStack::updateOnce), 3.0);
 
-	for (int i = 0; i<14; i++)
+	for (int i = 0; i < 14; i++)
 	{
-		for (int j = 0; j <= i; j++)
-		{
-		    auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
-		    sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
-		}
+        for (int j = 0; j <= i; j++)
+        {
+            auto sp = addGrossiniAtPosition(VisibleRect::bottom() + Vec2((i / 2 - j) * 11, (14 - i) * 23 + 100), 0.2f);
+            sp->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+        }
 	}
 }
 void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
 {
-	auto ball = getChildByTag(100);
-	if (ball){
-		ball->setScale(ball->getScale() * 3);
-	}
+    auto ball = getChildByTag(100);
+    if (ball)
+        ball->setScale(ball->getScale() * 3);
 }
 
 std::string PhysicsComponentDemoPyramidStack::title() const
 {
-	return "Pyramid Stack";
+    return "Pyramid Stack";
 }
 
 PhysicsComponentDemoRayCast::PhysicsComponentDemoRayCast()
@@ -445,172 +443,172 @@ PhysicsComponentDemoRayCast::PhysicsComponentDemoRayCast()
 
 void PhysicsComponentDemoRayCast::onEnter()
 {
-	PhysicsComponentDemo::onEnter();
+    PhysicsComponentDemo::onEnter();
 
-	auto listener = EventListenerTouchAllAtOnce::create();
-	listener->onTouchesEnded = CC_CALLBACK_2(PhysicsComponentDemoRayCast::onTouchesEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    auto listener = EventListenerTouchAllAtOnce::create();
+    listener->onTouchesEnded = CC_CALLBACK_2(PhysicsComponentDemoRayCast::onTouchesEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	_physicsWorld->setGravity(Point::ZERO);
+    _physicsWorld->setGravity(Point::ZERO);
 
-	auto node = DrawNode::create();
+    auto node = DrawNode::create();
     addPhysicsComponent(node, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
-	node->drawSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50), 1, STATIC_COLOR);
-	this->addChild(node);
+    node->drawSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50), 1, STATIC_COLOR);
+    this->addChild(node);
 
-	MenuItemFont::setFontSize(18);
-	auto item = MenuItemFont::create("Change Mode(any)", CC_CALLBACK_1(PhysicsComponentDemoRayCast::changeModeCallback, this));
+    MenuItemFont::setFontSize(18);
+    auto item = MenuItemFont::create("Change Mode(any)", CC_CALLBACK_1(PhysicsComponentDemoRayCast::changeModeCallback, this));
 
-	auto menu = Menu::create(item, nullptr);
-	this->addChild(menu);
-	menu->setPosition(Vec2(VisibleRect::left().x + 100, VisibleRect::top().y - 10));
+    auto menu = Menu::create(item, nullptr);
+    this->addChild(menu);
+    menu->setPosition(Vec2(VisibleRect::left().x + 100, VisibleRect::top().y - 10));
 
-	scheduleUpdate();
+    scheduleUpdate();
 }
 
 void PhysicsComponentDemoRayCast::changeModeCallback(Ref* sender)
 {
-	_mode = (_mode + 1) % 3;
+    _mode = (_mode + 1) % 3;
 
-	switch (_mode)
-	{
-	case 0:
-		((MenuItemFont*)sender)->setString("Change Mode(any)");
-		break;
-	case 1:
-		((MenuItemFont*)sender)->setString("Change Mode(nearest)");
-		break;
+    switch (_mode)
+    {
+    case 0:
+        ((MenuItemFont*)sender)->setString("Change Mode(any)");
+        break;
+    case 1:
+        ((MenuItemFont*)sender)->setString("Change Mode(nearest)");
+        break;
 	case 2:
-		((MenuItemFont*)sender)->setString("Change Mode(multiple)");
-		break;
+        ((MenuItemFont*)sender)->setString("Change Mode(multiple)");
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 
 bool PhysicsComponentDemoRayCast::anyRay(PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)
 {
-	*((Vec2*)data) = info.contact;
-	return false;
+    *((Vec2*)data) = info.contact;
+    return false;
 }
 
 void PhysicsComponentDemoRayCast::update(float delta)
 {
-	float L = 150.0f;
-	Vec2 point1 = VisibleRect::center();
-	Vec2 d(L * cosf(_angle), L * sinf(_angle));
-	Vec2 point2 = point1 + d;
+    float L = 150.0f;
+    Vec2 point1 = VisibleRect::center();
+    Vec2 d(L * cosf(_angle), L * sinf(_angle));
+    Vec2 point2 = point1 + d;
 
-	removeChild(_node);
-	_node = DrawNode::create();
-	switch (_mode)
-	{
-	case 0:
-	{
-		Vec2 point3 = point2;
-		auto func = CC_CALLBACK_3(PhysicsComponentDemoRayCast::anyRay, this);
+    removeChild(_node);
+    _node = DrawNode::create();
+    switch (_mode)
+    {
+    case 0:
+    {
+        Vec2 point3 = point2;
+        auto func = CC_CALLBACK_3(PhysicsComponentDemoRayCast::anyRay, this);
 
-		_physicsWorld->rayCast(func, point1, point2, &point3);
-		_node->drawSegment(point1, point3, 1, STATIC_COLOR);
+        _physicsWorld->rayCast(func, point1, point2, &point3);
+        _node->drawSegment(point1, point3, 1, STATIC_COLOR);
 
-		if (point2 != point3)
-		{
-			_node->drawDot(point3, 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
-		}
-		addChild(_node);
+        if (point2 != point3)
+        {
+            _node->drawDot(point3, 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+        }
+        addChild(_node);
 
-		break;
-	}
-	case 1:
-	{
-		Vec2 point3 = point2;
-		float friction = 1.0f;
-		PhysicsRayCastCallbackFunc func = [&point3, &friction](PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)->bool
-		{
-			if (friction > info.fraction)
-			{
-				point3 = info.contact;
-				friction = info.fraction;
-			}
+        break;
+    }
+    case 1:
+    {
+        Vec2 point3 = point2;
+        float friction = 1.0f;
+        PhysicsRayCastCallbackFunc func = [&point3, &friction](PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)->bool
+        {
+            if (friction > info.fraction)
+            {
+                point3 = info.contact;
+                friction = info.fraction;
+            }
 
-			return true;
-		};
+            return true;
+        };
 
-		_physicsWorld->rayCast(func, point1, point2, nullptr);
-		_node->drawSegment(point1, point3, 1, STATIC_COLOR);
+        _physicsWorld->rayCast(func, point1, point2, nullptr);
+        _node->drawSegment(point1, point3, 1, STATIC_COLOR);
 
-		if (point2 != point3)
-		{
-			_node->drawDot(point3, 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
-		}
-		addChild(_node);
+        if (point2 != point3)
+        {
+            _node->drawDot(point3, 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+        }
+        addChild(_node);
 
-		break;
-	}
-	case 2:
-	{
+        break;
+    }
+    case 2:
+    {
 #define MAX_MULTI_RAYCAST_NUM 5
-		Vec2 points[MAX_MULTI_RAYCAST_NUM];
-		int num = 0;
+        Vec2 points[MAX_MULTI_RAYCAST_NUM];
+        int num = 0;
 
-		PhysicsRayCastCallbackFunc func = [&points, &num](PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)->bool
-		{
-			if (num < MAX_MULTI_RAYCAST_NUM)
-			{
-				points[num++] = info.contact;
-			}
+        PhysicsRayCastCallbackFunc func = [&points, &num](PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)->bool
+        {
+            if (num < MAX_MULTI_RAYCAST_NUM)
+            {
+                points[num++] = info.contact;
+            }
 
-			return true;
-		};
+            return true;
+        };
 
-		_physicsWorld->rayCast(func, point1, point2, nullptr);
+        _physicsWorld->rayCast(func, point1, point2, nullptr);
 
-		_node->drawSegment(point1, point2, 1, STATIC_COLOR);
+        _node->drawSegment(point1, point2, 1, STATIC_COLOR);
 
-		for (int i = 0; i < num; ++i)
-		{
-			_node->drawDot(points[i], 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
-		}
+        for (int i = 0; i < num; ++i)
+        {
+            _node->drawDot(points[i], 2, Color4F(1.0f, 1.0f, 1.0f, 1.0f));
+        }
 
-		addChild(_node);
+        addChild(_node);
 
-		break;
-	}
+        break;
+    }
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 
-	_angle += 0.25f * (float)M_PI / 180.0f;
+    _angle += 0.25f * (float)M_PI / 180.0f;
 }
 
 void PhysicsComponentDemoRayCast::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
 {
-	//Add a new body/atlas sprite at the touched location
+    //Add a new body/atlas sprite at the touched location
 
-	for (auto &touch : touches)
-	{
-		auto location = touch->getLocation();
+    for (auto &touch : touches)
+    {
+        auto location = touch->getLocation();
 
-		float r = CCRANDOM_0_1();
+        float r = CCRANDOM_0_1();
 
-		if (r < 1.0f / 3.0f)
-		{
-			addChild(makeBall(location, 5 + CCRANDOM_0_1() * 10));
-		}
-		else if (r < 2.0f / 3.0f)
-		{
-			addChild(makeBox(location, Size(10 + CCRANDOM_0_1() * 15, 10 + CCRANDOM_0_1() * 15)));
-		}
-		else
-		{
-			addChild(makeTriangle(location, Size(10 + CCRANDOM_0_1() * 20, 10 + CCRANDOM_0_1() * 20)));
-		}
-	}
+        if (r < 1.0f / 3.0f)
+        {
+            addChild(makeBall(location, 5 + CCRANDOM_0_1() * 10));
+        }
+        else if (r < 2.0f / 3.0f)
+        {
+            addChild(makeBox(location, Size(10 + CCRANDOM_0_1() * 15, 10 + CCRANDOM_0_1() * 15)));
+        }
+        else
+        {
+            addChild(makeTriangle(location, Size(10 + CCRANDOM_0_1() * 20, 10 + CCRANDOM_0_1() * 20)));
+        }
+    }
 }
 
 std::string PhysicsComponentDemoRayCast::title() const
 {
-	return "Ray Cast";
+    return "Ray Cast";
 }
