@@ -40,12 +40,9 @@ ComponentPhysics2d* ComponentPhysics2d::create()
 
 ComponentPhysics2d::ComponentPhysics2d()
 : _physicsBody(nullptr)
-, _addedToPhysicsWorld(false)
-, _needCaculateOffset(true)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
-: _addedToPhysicsWorld(false)
 {
     CC_ASSERT(physicsBody != nullptr);
     
@@ -63,23 +60,26 @@ void ComponentPhysics2d::beforeSimulation()
     if (!checkState())
         return;
     
-    // update physics body's position
-    
-    auto&& nodeToWorldTransform = _owner->getNodeToWorldTransform();
+    _nodeToWorldTransform = _owner->getNodeToWorldTransform();
     Vec3 scale;
-    Quaternion rotation;
-    nodeToWorldTransform.decompose(&scale, &rotation, nullptr);
+    _nodeToWorldTransform.decompose(&scale, &_ownerRotation, nullptr);
     
     // set scale
-    _physicsBody->setScale(scale.x, scale.y);
+    // because there is floating point precision problem when caculation scale value in Mat4::decompose()
+    if (fabs(scale.x - _ownerScale.x) > MATH_EPSILON
+        && fabs(scale.y - _ownerScale.y) > MATH_EPSILON)
+    {
+        _ownerScale = scale;
+        _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
+    }
     
     // set rotation
     Vec3 zAxis(0, 0, 1);
-    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(rotation.toAxisAngle(&zAxis)));
+    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
     
     // set position
-    Vec3 offset = calculateOffset();
-    nodeToWorldTransform.transformPoint(&offset);
+    Vec3 offset = _offset;
+    _nodeToWorldTransform.transformPoint(&offset);
     _physicsPositionBeforeSimulation.x = offset.x;
     _physicsPositionBeforeSimulation.y = offset.y;
     _physicsBody->setPosition(_physicsPositionBeforeSimulation);
@@ -139,29 +139,23 @@ void ComponentPhysics2d::onExit()
     _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
 }
 
+void ComponentPhysics2d::onAdd()
+{
+    auto contentSize = _owner->getContentSize();
+    _offset.x = 0.5 * contentSize.width;
+    _offset.y = 0.5 * contentSize.height;
+}
+
 bool ComponentPhysics2d::checkState() const
 {
     if (_owner->getScene() != Director::getInstance()->getRunningScene())
         return false;
     
     // don't update position if physics body is disabled
-    if (_physicsBody == nullptr || (!_physicsBody->isEnabled()))
+    if (_physicsBody->isEnabled())
         return false;
     
     return true;
-}
-
-Vec3 ComponentPhysics2d::calculateOffset()
-{
-    if (_needCaculateOffset)
-    {
-        auto contentSize = _owner->getContentSize();
-        _offset.x = 0.5 * contentSize.width;
-        _offset.y = 0.5 * contentSize.height;
-        _needCaculateOffset = false;
-    }
-    
-    return _offset;
 }
 
 NS_CC_END

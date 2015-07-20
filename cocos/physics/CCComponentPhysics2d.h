@@ -47,6 +47,7 @@ public:
     
     virtual void onEnter() override;
     virtual void onExit() override;
+    virtual void onAdd() override;
     
 CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d();
@@ -56,15 +57,14 @@ private:
     // check if physics body is added to a running Node
     inline bool checkState() const;
     
-    inline Vec3 calculateOffset();
-    
 private:
     PhysicsBody *_physicsBody;
-    // whether physics body is added to physics world
-    bool _addedToPhysicsWorld;
     Vec2 _physicsPositionBeforeSimulation;
-    bool _needCaculateOffset;
+    // offset between owner's center point and down left point
     Vec3 _offset;
+    Mat4 _nodeToWorldTransform;
+    Vec3 _ownerScale;
+    Quaternion _ownerRotation;
 };
 
 NS_CC_END
