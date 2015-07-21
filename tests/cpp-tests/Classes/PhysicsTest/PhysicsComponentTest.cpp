@@ -78,8 +78,7 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 
     sp->setScale(scale);
     sp->setPosition(p);
-    //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f * scale, 108.0f * scale)));
-	//addPhysicsComponent(sp, PhysicsBody::createBox(Size(sp->getContentSize().width , sp->getContentSize().height )));
+    
     addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
     this->addChild(sp);
     
@@ -178,8 +177,6 @@ Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsM
     box->setScaleX(size.width/100.0f);
     box->setScaleY(size.height/100.0f);
     
-    //auto body = PhysicsBody::createBox(size, material);
-    //addPhysicsComponent(box, body);
     addPhysicsComponent(box, PhysicsBody::createBox(box->getContentSize(), material));
     box->setPosition(Vec2(point.x, point.y));
     
@@ -208,11 +205,8 @@ Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, Phy
         triangle->setScaleY(size.height/43.5f);
     }
     
-    //Vec2 vers[] = { Vec2(0, size.height/2), Vec2(size.width/2, -size.height/2), Vec2(-size.width/2, -size.height/2)};
     Vec2 vers[] = { Vec2(0, triangle->getContentSize().height / 2), Vec2(triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2), Vec2(-triangle->getContentSize().width / 2, -triangle->getContentSize().height / 2) };
 
-    //auto body = PhysicsBody::createPolygon(vers, 3, material);
-    //addPhysicsComponent(triangle, body);
     addPhysicsComponent(triangle, PhysicsBody::createPolygon(vers, 3, material));
     triangle->setPosition(Vec2(point.x, point.y));
     
@@ -478,7 +472,7 @@ void PhysicsComponentDemoRayCast::changeModeCallback(Ref* sender)
     case 1:
         ((MenuItemFont*)sender)->setString("Change Mode(nearest)");
         break;
-	case 2:
+    case 2:
         ((MenuItemFont*)sender)->setString("Change Mode(multiple)");
         break;
 
