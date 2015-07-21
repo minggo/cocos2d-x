@@ -77,7 +77,9 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 
     sp->setScale(scale);
     sp->setPosition(p);
+
     addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
+
     this->addChild(sp);
 
     return sp;
@@ -170,11 +172,11 @@ Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsM
     }
 
     auto box = yellow ? Sprite::create("Images/YellowSquare.png") : Sprite::create("Images/CyanSquare.png");
-
     box->setScaleX(size.width / 100.0f);
     box->setScaleY(size.height / 100.0f);
 
     addPhysicsComponent(box, PhysicsBody::createBox(box->getContentSize(), material));
+
     box->setPosition(Vec2(point.x, point.y));
 
     return box;

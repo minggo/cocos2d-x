@@ -264,9 +264,9 @@ void Scene::addChild(Node* child, int zOrder, int tag)
 void Scene::addChild(Node* child, int zOrder, const std::string &name)
 {
     Node::addChild(child, zOrder, name);
-#if CC_USE_PHYSICS
-    addChildToPhysicsWorld(child);
-#endif
+//#if CC_USE_PHYSICS
+//    addChildToPhysicsWorld(child);
+//#endif
 }
 
 Scene* Scene::createWithPhysics()
@@ -312,26 +312,26 @@ bool Scene::initWithPhysics()
 void Scene::addChildToPhysicsWorld(Node* child)
 {
 #if CC_USE_PHYSICS
-    if (_physicsWorld)
-    {
-        std::function<void(Node*)> addToPhysicsWorldFunc = nullptr;
-        addToPhysicsWorldFunc = [this, &addToPhysicsWorldFunc](Node* node) -> void
-        {
-            node->_physicsWorld = _physicsWorld;
-
-            if (node->getPhysicsBody())
-            {
-                _physicsWorld->addBody(node->getPhysicsBody());
-            }
-            
-            auto& children = node->getChildren();
-            for( const auto &n : children) {
-                addToPhysicsWorldFunc(n);
-            }
-        };
-        
-        addToPhysicsWorldFunc(child);
-    }
+//    if (_physicsWorld)
+//    {
+//        std::function<void(Node*)> addToPhysicsWorldFunc = nullptr;
+//        addToPhysicsWorldFunc = [this, &addToPhysicsWorldFunc](Node* node) -> void
+//        {
+//            node->_physicsWorld = _physicsWorld;
+//
+//            if (node->getPhysicsBody())
+//            {
+//                _physicsWorld->addBody(node->getPhysicsBody());
+//            }
+//            
+//            auto& children = node->getChildren();
+//            for( const auto &n : children) {
+//                addToPhysicsWorldFunc(n);
+//            }
+//        };
+//        
+//        addToPhysicsWorldFunc(child);
+//    }
 #endif
 }
 
