@@ -653,3 +653,4 @@ std::string PhysicsComponentDemoActions::title() const
 {
     return "Actions";
 }
+
