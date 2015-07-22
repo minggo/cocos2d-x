@@ -78,8 +78,8 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 
     sp->setScale(scale);
     sp->setPosition(p);
-    //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
-    addPhysicsComponent(sp, PhysicsBody::createCircle(sp->getContentSize().height/2));
+    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
+    //addPhysicsComponent(sp, PhysicsBody::createCircle(sp->getContentSize().height/2));
     this->addChild(sp);
 
     return sp;
