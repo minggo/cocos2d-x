@@ -875,8 +875,14 @@ void PhysicsComponentDemoPump::update(float delta)
         {
             if (body->getNode()!=nullptr)
             {
+                CCLOG("body->getNode() is not nullptr");
                 body->getNode()->setPosition(VisibleRect::leftTop() + Vec2(75 + CCRANDOM_0_1() * 90, 0)); 
             }
+            else
+            {
+                CCLOG("body->getNode() is nullptr");
+            }
+            
             body->setVelocity(Vec2(0, 0));
         }
     }
@@ -887,6 +893,7 @@ void PhysicsComponentDemoPump::update(float delta)
     {
         if (_distance != 0.0f)
         {
+            CCLOG("CALLED");
             _rotationV += _distance / 2500.0f;
 
             if (_rotationV > 30) _rotationV = 30.0f;
