@@ -151,9 +151,6 @@ void ComponentPhysics2d::onAdd()
     auto contentSize = _owner->getContentSize();
     _offset.x = 0.5 * contentSize.width;
     _offset.y = 0.5 * contentSize.height;
-    
-    // initialize physics body's poistion, rotation and scale
-    beforeSimulation();
 }
 
 NS_CC_END
