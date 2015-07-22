@@ -14,6 +14,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
     ADD_TEST_CASE(PhysicsComponentDemoRayCast);
     ADD_TEST_CASE(PhysicsComponentDemoActions);
+    ADD_TEST_CASE(PhysicsComponentDemoJoints);
 }
 
 namespace
@@ -654,3 +655,116 @@ std::string PhysicsComponentDemoActions::title() const
     return "Actions";
 }
 
+// implementation of PhysicsComponentDemoJoints
+
+
+void PhysicsComponentDemoJoints::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+    
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
+    listener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
+    listener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
+    float width = (VisibleRect::getVisibleRect().size.width - 10) / 4;
+    float height = (VisibleRect::getVisibleRect().size.height - 50) / 4;
+    
+    Node* node = Node::create();
+    PhysicsBody* box = PhysicsBody::create();
+    addPhysicsComponent(node, box);
+    
+    box->setDynamic(false);
+    node->setPosition(Point::ZERO);
+    this->addChild(node);
+    
+    PhysicsBody *sp1PhysicsBody = nullptr;
+    PhysicsBody *sp2PhysicsBody = nullptr;
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            Vec2 offset(VisibleRect::leftBottom().x + 5 + j * width + width/2, VisibleRect::leftBottom().y + 50 + i * height + height/2);
+            box->addShape(PhysicsShapeEdgeBox::create(Size(width, height), PHYSICSSHAPE_MATERIAL_DEFAULT, 1, offset));
+            
+            auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+            sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+            sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+            auto sp2 = makeBall(offset + Vec2(30, 0), 10);
+            sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+            sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+            
+            this->addChild(sp1);
+            this->addChild(sp2);
+            switch (i*4 + j)
+            {
+                case 0:
+                case 1:
+                {
+                    PhysicsJointPin* joint = PhysicsJointPin::construct(sp1PhysicsBody, sp2PhysicsBody, offset);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 2:
+                {
+                    PhysicsJointDistance* joint = PhysicsJointDistance::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 3:
+                {
+                    PhysicsJointLimit* joint = PhysicsJointLimit::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO, 30.0f, 60.0f);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 4:
+                {
+                    PhysicsJointSpring* joint = PhysicsJointSpring::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO, 500.0f, 0.3f);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 5:
+                {
+                    PhysicsJointGroove* joint = PhysicsJointGroove::construct(sp1PhysicsBody, sp2PhysicsBody, Vec2(30, 15), Vec2(30, -15), Vec2(-30, 0));
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 6:
+                {
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
+                    PhysicsJointRotarySpring* joint = PhysicsJointRotarySpring::construct(sp1PhysicsBody, sp2PhysicsBody, 3000.0f, 60.0f);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 7:
+                case 8:
+                case 10:
+                {
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
+                    PhysicsJointRotaryLimit* joint = PhysicsJointRotaryLimit::construct(sp1PhysicsBody, sp2PhysicsBody, 0.0f,(float) M_PI_2);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                case 9:
+                {
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
+                    PhysicsJointGear* joint = PhysicsJointGear::construct(sp1PhysicsBody, sp2PhysicsBody, 0.0f, 2.0f);
+                    getPhysicsWorld()->addJoint(joint);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+std::string PhysicsComponentDemoJoints::title() const
+{
+    return "Joints";
+}

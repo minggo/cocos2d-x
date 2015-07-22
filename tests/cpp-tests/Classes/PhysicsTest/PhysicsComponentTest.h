@@ -100,3 +100,12 @@ public:
     void onEnter() override;
     virtual std::string title() const override;
 };
+
+class PhysicsComponentDemoJoints : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoJoints);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+};
