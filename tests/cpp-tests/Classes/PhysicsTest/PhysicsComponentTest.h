@@ -91,3 +91,12 @@ private:
     cocos2d::DrawNode* _node;
     int _mode;
 };
+
+class PhysicsComponentDemoActions : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoActions);
+
+    void onEnter() override;
+    virtual std::string title() const override;
+};

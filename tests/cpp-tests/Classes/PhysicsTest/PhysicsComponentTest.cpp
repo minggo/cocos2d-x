@@ -13,6 +13,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
     ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
     ADD_TEST_CASE(PhysicsComponentDemoRayCast);
+    ADD_TEST_CASE(PhysicsComponentDemoActions);
 }
 
 namespace
@@ -77,9 +78,8 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
 
     sp->setScale(scale);
     sp->setPosition(p);
-
-    addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
-
+    //addPhysicsComponent(sp, PhysicsBody::createBox(Size(48.0f, 108.0f)));
+    addPhysicsComponent(sp, PhysicsBody::createCircle(sp->getContentSize().height/2));
     this->addChild(sp);
 
     return sp;
@@ -218,7 +218,7 @@ bool PhysicsComponentDemo::onTouchBegan(Touch* touch, Event* event)
 {
     auto location = touch->getLocation();
     auto arr = _physicsWorld->getShapes(location);
-
+    
     PhysicsBody* body = nullptr;
     for (auto& obj : arr)
     {
@@ -401,7 +401,7 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 
     auto ball = Sprite::create("Images/ball.png");
     ball->setScale(1);
-    ball->setTag(100);
+    ball->setTag(1000);
     addPhysicsComponent(ball, PhysicsBody::createCircle(10));
     ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
     ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
@@ -418,9 +418,10 @@ void PhysicsComponentDemoPyramidStack::onEnter()
         }
     }
 }
+
 void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
 {
-    auto ball = getChildByTag(100);
+    auto ball = getChildByTag(1000);
     if (ball)
         ball->setScale(ball->getScale() * 3);
 }
@@ -606,4 +607,49 @@ void PhysicsComponentDemoRayCast::onTouchesEnded(const std::vector<Touch*>& touc
 std::string PhysicsComponentDemoRayCast::title() const
 {
     return "Ray Cast";
+}
+
+void PhysicsComponentDemoActions::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    _physicsWorld->setGravity(Vect::ZERO);
+
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+
+    auto node = Node::create();
+    addPhysicsComponent(node, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size));
+    node->setPosition(VisibleRect::center());
+    this->addChild(node);
+
+    Sprite* sp1 = addGrossiniAtPosition(VisibleRect::center());
+    Sprite* sp2 = addGrossiniAtPosition(VisibleRect::left() + Vec2(50, 0));
+    Sprite* sp3 = addGrossiniAtPosition(VisibleRect::right() - Vec2(20, 0));
+    Sprite* sp4 = addGrossiniAtPosition(VisibleRect::leftTop() + Vec2(50, -50));
+    sp4->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setGravityEnable(false);
+
+    sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    sp3->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    sp4->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+
+    auto actionTo = JumpTo::create(2, Vec2(100, 100), 50, 4);
+    auto actionBy = JumpBy::create(2, Vec2(300, 0), 50, 4);
+    auto actionUp = JumpBy::create(2, Vec2(0, 50), 80, 4);
+    auto actionByBack = actionBy->reverse();
+    auto rotateBy = RotateBy::create(2, 180);
+    auto rotateByBack = RotateBy::create(2, -180);
+
+    sp1->runAction(RepeatForever::create(actionUp));
+    sp2->runAction(RepeatForever::create(Sequence::create(actionBy, actionByBack, nullptr)));
+    sp3->runAction(actionTo);
+    sp4->runAction(RepeatForever::create(Sequence::create(rotateBy, rotateByBack, nullptr)));
+}
+
+std::string PhysicsComponentDemoActions::title() const
+{
+    return "Actions";
 }
