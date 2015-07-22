@@ -54,10 +54,6 @@ CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d(PhysicsBody* phsicsBody);
     
 private:
-    // check if physics body is added to a running Node
-    inline bool checkState() const;
-    
-private:
     PhysicsBody *_physicsBody;
     Vec2 _physicsPositionBeforeSimulation;
     // offset between owner's center point and down left point
@@ -65,6 +61,7 @@ private:
     Mat4 _nodeToWorldTransform;
     Vec3 _ownerScale;
     Quaternion _ownerRotation;
+    bool _runOneTime;
 };
 
 NS_CC_END

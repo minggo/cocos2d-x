@@ -161,8 +161,8 @@ bool PhysicsJointFixed::createConstraints()
 {
     do
     {
-        _bodyA->getNode()->setPosition(_anchr);
-        _bodyB->getNode()->setPosition(_anchr);
+//        _bodyA->getNode()->setPosition(_anchr);
+//        _bodyB->getNode()->setPosition(_anchr);
 
         // add a pivot joint to fixed two body together
         auto joint = cpPivotJointNew(_bodyA->getCPBody(), _bodyB->getCPBody(),

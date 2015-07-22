@@ -305,7 +305,7 @@ public:
     inline const std::vector<PhysicsJoint*>& getJoints() const { return _joints; }
     
     /** get the sprite the body set to. */
-    inline Node* getNode() const { return _node; }
+//    inline Node* getNode() const { return _node; }
     
     /**
      * A mask that defines which categories this physics body belongs to.
@@ -368,7 +368,7 @@ public:
     int getGroup() const;
     
     /** get the body position. */
-    const Vec2& getPosition();
+    Vec2 getPosition() const;
     
     /** get the body rotation. */
     float getRotation();
@@ -505,7 +505,7 @@ public:
     Vec2 local2World(const Vec2& point);
 
     /** Get the rigid body of chipmunk. */
-    cpBody* getCPBody() { return _cpBody; }
+    cpBody* getCPBody() const { return _cpBody; }
     
 protected:
     
@@ -525,7 +525,7 @@ protected:
     virtual ~PhysicsBody();
     
 protected:
-    Node* _node;
+//    Node* _node;
     std::vector<PhysicsJoint*> _joints;
     Vector<PhysicsShape*> _shapes;
     PhysicsWorld* _world;
@@ -545,9 +545,6 @@ protected:
     float _angularDamping;
     int _tag;
     
-    bool _positionInitDirty;
-    Vec2 _recordedPosition;
-    Vec2 _latestPosition;
     Vec2 _positionOffset;
     float _rotationOffset;
     float _recordedRotation;

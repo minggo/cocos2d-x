@@ -2055,7 +2055,7 @@ void Node::setPhysicsBody(PhysicsBody* body)
     if (_physicsBody)
     {
         _physicsBody->removeFromWorld();
-        _physicsBody->_node = nullptr;
+//        _physicsBody->_node = nullptr;
         _physicsBody->release();
         _physicsBody = nullptr;
 
@@ -2070,12 +2070,12 @@ void Node::setPhysicsBody(PhysicsBody* body)
 
     if (body)
     {
-        if (body->getNode())
-        {
-            body->getNode()->setPhysicsBody(nullptr);
-        }
-        
-        body->_node = this;
+//        if (body->getNode())
+//        {
+//            body->getNode()->setPhysicsBody(nullptr);
+//        }
+//        
+//        body->_node = this;
         body->retain();
 
         _physicsBody = body;
@@ -2137,20 +2137,20 @@ void Node::updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t pare
 
 void Node::updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags)
 {
-    auto& newPosition = _physicsBody->getPosition();
-    auto& recordedPosition = _physicsBody->_recordedPosition;
-    auto updateBodyTransform = _physicsWorld->_updateBodyTransform;
-    if (parentFlags || recordedPosition.x != newPosition.x || recordedPosition.y != newPosition.y)
-    {
-        recordedPosition = newPosition;
-        Vec3 vec3(newPosition.x, newPosition.y, 0);
-        Vec3 ret;
-        parentTransform.getInversed().transformPoint(vec3, &ret);
-        setPosition(ret.x - _offsetX, ret.y - _offsetY);
-    }
-    _physicsRotation = _physicsBody->getRotation();
-    setRotation(_physicsRotation - _parent->_physicsRotation + _physicsRotationOffset);
-    _physicsWorld->_updateBodyTransform = updateBodyTransform;
+//    auto& newPosition = _physicsBody->getPosition();
+//    auto& recordedPosition = _physicsBody->_recordedPosition;
+//    auto updateBodyTransform = _physicsWorld->_updateBodyTransform;
+//    if (parentFlags || recordedPosition.x != newPosition.x || recordedPosition.y != newPosition.y)
+//    {
+//        recordedPosition = newPosition;
+//        Vec3 vec3(newPosition.x, newPosition.y, 0);
+//        Vec3 ret;
+//        parentTransform.getInversed().transformPoint(vec3, &ret);
+//        setPosition(ret.x - _offsetX, ret.y - _offsetY);
+//    }
+//    _physicsRotation = _physicsBody->getRotation();
+//    setRotation(_physicsRotation - _parent->_physicsRotation + _physicsRotationOffset);
+//    _physicsWorld->_updateBodyTransform = updateBodyTransform;
 }
 
 #endif //CC_USE_PHYSICS
