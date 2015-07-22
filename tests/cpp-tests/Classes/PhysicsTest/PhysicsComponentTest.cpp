@@ -401,7 +401,7 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 
     auto ball = Sprite::create("Images/ball.png");
     ball->setScale(1);
-    ball->setTag(1000);
+    ball->setTag(100);
     addPhysicsComponent(ball, PhysicsBody::createCircle(10));
     ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
     ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
@@ -421,7 +421,7 @@ void PhysicsComponentDemoPyramidStack::onEnter()
 
 void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
 {
-    auto ball = getChildByTag(1000);
+    auto ball = getChildByTag(100);
     if (ball)
         ball->setScale(ball->getScale() * 3);
 }
