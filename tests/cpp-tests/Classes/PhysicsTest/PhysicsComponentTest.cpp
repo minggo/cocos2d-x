@@ -15,6 +15,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoRayCast);
     ADD_TEST_CASE(PhysicsComponentDemoActions);
     ADD_TEST_CASE(PhysicsComponentDemoJoints);
+    ADD_TEST_CASE(PhysicsComponentDemoPump);
 }
 
 namespace
@@ -767,4 +768,165 @@ void PhysicsComponentDemoJoints::onEnter()
 std::string PhysicsComponentDemoJoints::title() const
 {
     return "Joints";
+}
+
+void PhysicsComponentDemoPump::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+
+    _distance = 0.0f;
+    _rotationV = 0.0f;
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    scheduleUpdate();
+
+    auto node = Node::create();
+    addPhysicsComponent(node, PhysicsBody::create());
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setDynamic(false);
+
+    PhysicsMaterial staticMaterial(PHYSICS_INFINITY, 0, 0.5f);
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(50, 0), VisibleRect::leftTop() + Vec2(50, -130), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(190, 0), VisibleRect::leftTop() + Vec2(100, -50), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(100, -50), VisibleRect::leftTop() + Vec2(100, -90), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(50, -130), VisibleRect::leftTop() + Vec2(100, -145), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(100, -145), VisibleRect::leftBottom() + Vec2(100, 80), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(150, -80), VisibleRect::leftBottom() + Vec2(150, 80), staticMaterial, 2.0f));
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->addShape(PhysicsShapeEdgeSegment::create(VisibleRect::leftTop() + Vec2(150, -80), VisibleRect::rightTop() + Vec2(-100, -150), staticMaterial, 2.0f));
+
+    node->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x01);
+    node->setPosition(Vec2::ZERO);
+    this->addChild(node);
+
+    // balls
+    for (int i = 0; i < 6; ++i)
+    {
+        auto ball = makeBall(VisibleRect::leftTop() + Vec2(75 + CCRANDOM_0_1() * 90, 0), 22, PhysicsMaterial(0.05f, 0.0f, 0.1f));
+        ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+        addChild(ball);
+    }
+    
+    Vec2 vec[4] =
+    {
+        VisibleRect::leftTop() + Vec2(102, -148),
+        VisibleRect::leftTop() + Vec2(148, -161),
+        VisibleRect::leftBottom() + Vec2(148, 20),
+        VisibleRect::leftBottom() + Vec2(102, 20)
+    };
+
+    // pump
+    auto pump = Node::create();
+    auto center = PhysicsShape::getPolyonCenter(vec, 4);
+    pump->setPosition(center);
+    addPhysicsComponent(pump, PhysicsBody::createPolygon(vec, 4, PHYSICSBODY_MATERIAL_DEFAULT, -center));
+    this->addChild(pump);
+    pump->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x02);
+    pump->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setGravityEnable(false);
+
+    // small gear
+    auto sgear = Node::create();
+    addPhysicsComponent(sgear, PhysicsBody::createCircle(44));
+    sgear->setPosition(VisibleRect::leftBottom() + Vec2(125, 0));
+    this->addChild(sgear);
+    sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x04);
+    sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x04);
+    sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(1);
+
+    _physicsWorld->addJoint(PhysicsJointPin::construct(node->getComponent<ComponentPhysics2d>()->getPhysicsBody(), sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), sgear->getPosition()));
+    _physicsWorld->addJoint(PhysicsJointDistance::construct(pump->getComponent<ComponentPhysics2d>()->getPhysicsBody(), sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), Vec2(0, 0), Vec2(0, -44)));
+
+    // big gear
+    auto bgear = Node::create();
+    addPhysicsComponent(bgear, PhysicsBody::createCircle(100));
+    bgear->setPosition(VisibleRect::leftBottom() + Vec2(275, 0));
+    this->addChild(bgear);
+    bgear->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x04);
+
+    _physicsWorld->addJoint(PhysicsJointPin::construct(bgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), node->getComponent<ComponentPhysics2d>()->getPhysicsBody(), bgear->getPosition()));
+    _physicsWorld->addJoint(PhysicsJointGear::construct(sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), bgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), (float)-M_PI_2, -2.0f));
+
+    // plugger
+    Vec2 seg[] = { VisibleRect::leftTop() + Vec2(75, -120), VisibleRect::leftBottom() + Vec2(75, -100) };
+    Vec2 segCenter = (seg[1] + seg[0]) / 2;
+    seg[1] -= segCenter;
+    seg[0] -= segCenter;
+    auto plugger = Node::create();
+    addPhysicsComponent(plugger, PhysicsBody::createEdgeSegment(seg[0], seg[1], PhysicsMaterial(0.01f, 0.0f, 0.5f), 20));
+    plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setDynamic(true);
+    plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(30);
+    plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMoment(100000);
+    plugger->setPosition(segCenter);
+    this->addChild(plugger);
+    plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x02);
+    sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x04 | 0x01);
+    _physicsWorld->addJoint(PhysicsJointPin::construct(node->getComponent<ComponentPhysics2d>()->getPhysicsBody(), plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody(), VisibleRect::leftBottom() + Vec2(75, -90)));
+    _physicsWorld->addJoint(PhysicsJointDistance::construct(plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody(), sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), Vec2::ZERO, Vec2(44, 0)));
+    
+}
+
+void PhysicsComponentDemoPump::update(float delta)
+{
+    for (const auto& body : _physicsWorld->getAllBodies())
+    {
+        if (body->getTag() == DRAG_BODYS_TAG && body->getPosition().y < 0.0f)
+        {
+            if (body->getNode()!=nullptr)
+            {
+                body->getNode()->setPosition(VisibleRect::leftTop() + Vec2(75 + CCRANDOM_0_1() * 90, 0)); 
+            }
+            body->setVelocity(Vec2(0, 0));
+        }
+    }
+
+    PhysicsBody* gear = _physicsWorld->getBody(1);
+
+    if (gear != nullptr)
+    {
+        if (_distance != 0.0f)
+        {
+            _rotationV += _distance / 2500.0f;
+
+            if (_rotationV > 30) _rotationV = 30.0f;
+            if (_rotationV < -30) _rotationV = -30.0f;
+        }
+
+        gear->setAngularVelocity(_rotationV);
+        _rotationV *= 0.995f;
+    }
+}
+
+bool PhysicsComponentDemoPump::onTouchBegan(Touch* touch, Event* event)
+{
+    PhysicsComponentDemo::onTouchBegan(touch, event);
+
+    _distance = touch->getLocation().x - VisibleRect::center().x;
+
+    return true;
+}
+
+void PhysicsComponentDemoPump::onTouchMoved(Touch* touch, Event* event)
+{
+    PhysicsComponentDemo::onTouchMoved(touch, event);
+
+    _distance = touch->getLocation().x - VisibleRect::center().x;
+}
+
+void PhysicsComponentDemoPump::onTouchEnded(Touch* touch, Event* event)
+{
+    PhysicsComponentDemo::onTouchEnded(touch, event);
+
+    _distance = 0;
+}
+
+std::string PhysicsComponentDemoPump::title() const
+{
+    return "Pump";
+}
+
+std::string PhysicsComponentDemoPump::subtitle() const
+{
+    return "touch screen on left or right";
 }
