@@ -61,7 +61,6 @@ private:
     Mat4 _nodeToWorldTransform;
     Vec3 _ownerScale;
     Quaternion _ownerRotation;
-    bool _runOneTime;
 };
 
 NS_CC_END

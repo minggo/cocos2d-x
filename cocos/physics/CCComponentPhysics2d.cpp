@@ -40,13 +40,11 @@ ComponentPhysics2d* ComponentPhysics2d::create()
 
 ComponentPhysics2d::ComponentPhysics2d()
 : _physicsBody(nullptr)
-, _runOneTime(true)
 , _ownerScale(1, 1, 1)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
-: _runOneTime(true)
-, _ownerScale(1, 1, 1)
+: _ownerScale(1, 1, 1)
 {
     CC_ASSERT(physicsBody != nullptr);
     
@@ -61,34 +59,22 @@ ComponentPhysics2d::~ComponentPhysics2d()
 
 void ComponentPhysics2d::beforeSimulation()
 {
-    if (_runOneTime)
-    {
-        _nodeToWorldTransform = _owner->getNodeToWorldTransform();
-        Vec3 scale;
-        _nodeToWorldTransform.decompose(&scale, &_ownerRotation, nullptr);
-        
-        // set scale
-        // because there is floating point precision problem when caculation scale value in Mat4::decompose()
-//        if (fabs(scale.x - _ownerScale.x) > MATH_EPSILON
-//            || fabs(scale.y - _ownerScale.y) > MATH_EPSILON)
-        {
-            _ownerScale = scale;
-            _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
-        }
-        
-        // set rotation
-        Vec3 zAxis(0, 0, 1);
-        _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
-        
-        // set position
-        Vec3 offset = _offset;
-        _nodeToWorldTransform.transformPoint(&offset);
-        _physicsPositionBeforeSimulation.x = offset.x;
-        _physicsPositionBeforeSimulation.y = offset.y;
-        _physicsBody->setPosition(_physicsPositionBeforeSimulation);
-        
-//        _runOneTime = false;
-    }
+    _nodeToWorldTransform = _owner->getNodeToWorldTransform();
+    _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
+    
+    // set scale
+    _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
+    
+    // set rotation
+    Vec3 zAxis(0, 0, 1);
+    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
+    
+    // set position
+    Vec3 offset = _offset;
+    _nodeToWorldTransform.transformPoint(&offset);
+    _physicsPositionBeforeSimulation.x = offset.x;
+    _physicsPositionBeforeSimulation.y = offset.y;
+    _physicsBody->setPosition(_physicsPositionBeforeSimulation);
 }
 
 void ComponentPhysics2d::afterSimulation()
