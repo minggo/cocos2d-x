@@ -32,7 +32,12 @@ NS_CC_BEGIN
 
 ComponentPhysics2d* ComponentPhysics2d::create()
 {
-    auto ret = new (std::nothrow) ComponentPhysics2d();
+    return create(nullptr);
+}
+
+ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
+{
+    auto ret = new (std::nothrow) ComponentPhysics2d(physicsBody);
     if (ret) ret->autorelease();
     
     return ret;
@@ -45,16 +50,14 @@ ComponentPhysics2d::ComponentPhysics2d()
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
 : _ownerScale(1, 1, 1)
+, _physicsBody(nullptr) // should set to null first to invoke setPhysicsBody()
 {
-    CC_ASSERT(physicsBody != nullptr);
-    
-    _physicsBody = physicsBody;
-    _physicsBody->retain();
+    setPhysicsBody(physicsBody);
 }
 
 ComponentPhysics2d::~ComponentPhysics2d()
 {
-    CC_SAFE_RELEASE(_physicsBody);
+    removePhysicsBody();
 }
 
 void ComponentPhysics2d::beforeSimulation()
@@ -106,12 +109,15 @@ void ComponentPhysics2d::afterSimulation()
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 {
-    // can not change physics body
-    CC_ASSERT(_physicsBody == nullptr);
-    CC_ASSERT(physicsBody != nullptr);
+    if (physicsBody != _physicsBody)
+    {
+        removePhysicsBody();
+        
+        _physicsBody = physicsBody;
+        _physicsBody->retain();
+        _physicsBody->_componentBelongsTo = this;
+    }
     
-    _physicsBody = physicsBody;
-    _physicsBody->retain();
 }
 
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
@@ -137,6 +143,16 @@ void ComponentPhysics2d::onAdd()
     auto contentSize = _owner->getContentSize();
     _offset.x = 0.5 * contentSize.width;
     _offset.y = 0.5 * contentSize.height;
+}
+
+void ComponentPhysics2d::removePhysicsBody()
+{
+    if (_physicsBody)
+    {
+        _physicsBody->_componentBelongsTo = nullptr;
+        _physicsBody->release();
+        _physicsBody = nullptr;
+    }
 }
 
 NS_CC_END

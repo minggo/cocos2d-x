@@ -31,10 +31,11 @@
 #include "chipmunk.h"
 
 #include "2d/CCScene.h"
-#include "CCPhysicsShape.h"
-#include "CCPhysicsJoint.h"
-#include "CCPhysicsWorld.h"
-#include "CCPhysicsHelper.h"
+#include "physics/CCPhysicsShape.h"
+#include "physics/CCPhysicsJoint.h"
+#include "physics/CCPhysicsWorld.h"
+#include "physics/CCPhysicsHelper.h"
+#include "physics/CCComponentPhysics2d.h"
 
 static inline void cpBodyUpdateVelocityWithoutGravity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
@@ -72,6 +73,7 @@ PhysicsBody::PhysicsBody()
 , _rotationOffset(0)
 , _recordedRotation(0.0f)
 , _recordedAngle(0.0)
+, _componentBelongsTo(nullptr)
 {
 }
 
@@ -707,6 +709,14 @@ void PhysicsBody::removeFromWorld()
     {
         _world->removeBody(this);
     }
+}
+
+Node* PhysicsBody::getNode() const
+{
+    if (_componentBelongsTo)
+        return _componentBelongsTo->getOwner();
+    else
+        return nullptr;
 }
 
 void PhysicsBody::setEnable(bool enable)

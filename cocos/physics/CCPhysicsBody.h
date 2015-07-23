@@ -41,6 +41,7 @@ class Node;
 class Sprite;
 class PhysicsWorld;
 class PhysicsJoint;
+class ComponentPhysics2d;
 
 typedef Vec2 Vect;
 
@@ -305,7 +306,7 @@ public:
     inline const std::vector<PhysicsJoint*>& getJoints() const { return _joints; }
     
     /** get the sprite the body set to. */
-//    inline Node* getNode() const { return _node; }
+    inline Node* getNode() const;
     
     /**
      * A mask that defines which categories this physics body belongs to.
@@ -529,6 +530,8 @@ protected:
     std::vector<PhysicsJoint*> _joints;
     Vector<PhysicsShape*> _shapes;
     PhysicsWorld* _world;
+    // weak reference
+    ComponentPhysics2d *_componentBelongsTo;
     cpBody* _cpBody;
     bool _dynamic;
     bool _enabled;
