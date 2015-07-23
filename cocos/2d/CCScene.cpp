@@ -256,9 +256,9 @@ void Scene::setNavMeshDebugCamera(Camera *camera)
 void Scene::addChild(Node* child, int zOrder, int tag)
 {
     Node::addChild(child, zOrder, tag);
-#if CC_USE_PHYSICS
-    addChildToPhysicsWorld(child);
-#endif
+//#if CC_USE_PHYSICS
+//    addChildToPhysicsWorld(child);
+//#endif
 }
 
 void Scene::addChild(Node* child, int zOrder, const std::string &name)
@@ -340,12 +340,14 @@ void Scene::addChildToPhysicsWorld(Node* child)
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
 void Scene::stepPhysicsAndNavigation(float deltaTime)
 {
+    _physicsManager->update(deltaTime);
+    
 #if CC_USE_PHYSICS
 //    if (_physicsWorld && _physicsWorld->isAutoStep())
 //    {
 //        _physicsWorld->update(deltaTime, false);
 //    }
-    _physicsManager->update(deltaTime);
+    
 #endif
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     if (_physics3DWorld)

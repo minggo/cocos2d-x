@@ -851,11 +851,10 @@ void PhysicsWorld::step(float delta)
 
 void PhysicsWorld::update(float delta, bool userCall/* = false*/)
 {
-    if(_updateBodyTransform || !_delayAddBodies.empty())
+    if(!_delayAddBodies.empty())
     {
 //        _scene->updatePhysicsBodyTransform(_scene->getNodeToParentTransform(), 0, 1.0f, 1.0f);
         updateBodies();
-        _updateBodyTransform = false;
     }
     else if (!_delayRemoveBodies.empty())
     {

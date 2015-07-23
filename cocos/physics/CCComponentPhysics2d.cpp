@@ -32,7 +32,12 @@ NS_CC_BEGIN
 
 ComponentPhysics2d* ComponentPhysics2d::create()
 {
-    auto ret = new (std::nothrow) ComponentPhysics2d();
+    return create(nullptr);
+}
+
+ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
+{
+    auto ret = new (std::nothrow) ComponentPhysics2d(physicsBody);
     if (ret) ret->autorelease();
     
     return ret;
@@ -40,38 +45,28 @@ ComponentPhysics2d* ComponentPhysics2d::create()
 
 ComponentPhysics2d::ComponentPhysics2d()
 : _physicsBody(nullptr)
+, _ownerScale(1, 1, 1)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
+: _ownerScale(1, 1, 1)
+, _physicsBody(nullptr) // should set to null first to invoke setPhysicsBody()
 {
-    CC_ASSERT(physicsBody != nullptr);
-    
-    _physicsBody = physicsBody;
-    _physicsBody->retain();
+    setPhysicsBody(physicsBody);
 }
 
 ComponentPhysics2d::~ComponentPhysics2d()
 {
-    CC_SAFE_RELEASE(_physicsBody);
+    removePhysicsBody();
 }
 
 void ComponentPhysics2d::beforeSimulation()
 {
-    if (!checkState())
-        return;
-    
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
-    Vec3 scale;
-    _nodeToWorldTransform.decompose(&scale, &_ownerRotation, nullptr);
+    _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
     
     // set scale
-    // because there is floating point precision problem when caculation scale value in Mat4::decompose()
-    if (fabs(scale.x - _ownerScale.x) > MATH_EPSILON
-        || fabs(scale.y - _ownerScale.y) > MATH_EPSILON)
-    {
-        _ownerScale = scale;
-        _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
-    }
+    _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
     
     // set rotation
     Vec3 zAxis(0, 0, 1);
@@ -87,9 +82,6 @@ void ComponentPhysics2d::beforeSimulation()
 
 void ComponentPhysics2d::afterSimulation()
 {
-    if (!checkState())
-        return;
-    
     // update Node's position
     
     // set position
@@ -97,6 +89,8 @@ void ComponentPhysics2d::afterSimulation()
     Vec2 offset(pos.x - _physicsPositionBeforeSimulation.x, pos.y - _physicsPositionBeforeSimulation.y);
     auto ownerPosition = _owner->getPosition();
     _owner->setPosition(ownerPosition.x + offset.x, ownerPosition.y + offset.y);
+    
+//    _owner->setPosition(_physicsBody->getPosition());
     
     // set rotation
     Mat4 parentToWorldTransform;
@@ -109,16 +103,21 @@ void ComponentPhysics2d::afterSimulation()
     Vec3 rotationVec(rotation, 0, 0);
     parentToWorldTransform.getInversed().transformVector(&rotationVec);
     _owner->setRotation(rotationVec.x);
+    
+//    _owner->setRotation(_physicsBody->getRotation());
 }
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 {
-    // can not change physics body
-    CC_ASSERT(_physicsBody == nullptr);
-    CC_ASSERT(physicsBody != nullptr);
+    if (physicsBody != _physicsBody)
+    {
+        removePhysicsBody();
+        
+        _physicsBody = physicsBody;
+        _physicsBody->retain();
+        _physicsBody->_componentBelongsTo = this;
+    }
     
-    _physicsBody = physicsBody;
-    _physicsBody->retain();
 }
 
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
@@ -146,16 +145,14 @@ void ComponentPhysics2d::onAdd()
     _offset.y = 0.5 * contentSize.height;
 }
 
-bool ComponentPhysics2d::checkState() const
+void ComponentPhysics2d::removePhysicsBody()
 {
-    if (_owner->getScene() != Director::getInstance()->getRunningScene())
-        return false;
-    
-    // don't update position if physics body is disabled
-    if (!_physicsBody->isEnabled())
-        return false;
-    
-    return true;
+    if (_physicsBody)
+    {
+        _physicsBody->_componentBelongsTo = nullptr;
+        _physicsBody->release();
+        _physicsBody = nullptr;
+    }
 }
 
 NS_CC_END

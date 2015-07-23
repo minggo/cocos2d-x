@@ -36,13 +36,14 @@ class CC_DLL ComponentPhysics2d : public Component
 {
 public:
     static ComponentPhysics2d* create();
+    static ComponentPhysics2d* create(PhysicsBody *physicsBody);
     
     virtual ~ComponentPhysics2d();
 
     void beforeSimulation();
     void afterSimulation();
     
-    void setPhysicsBody(PhysicsBody* physicsBody);
+    void setPhysicsBody(PhysicsBody *physicsBody);
     PhysicsBody* getPhysicsBody() const;
     
     virtual void onEnter() override;
@@ -51,11 +52,10 @@ public:
     
 CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d();
-    ComponentPhysics2d(PhysicsBody* phsicsBody);
+    ComponentPhysics2d(PhysicsBody *phsicsBody);
     
 private:
-    // check if physics body is added to a running Node
-    inline bool checkState() const;
+    void removePhysicsBody();
     
 private:
     PhysicsBody *_physicsBody;
