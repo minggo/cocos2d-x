@@ -1618,7 +1618,10 @@ public:
     template<typename T>
     T* getComponent() const
     {
-        return _componentContainer->getComponent<T>();
+        if (_componentContainer)
+            return _componentContainer->getComponent<T>();
+        else
+            return nullptr;
     }
 
     /**
