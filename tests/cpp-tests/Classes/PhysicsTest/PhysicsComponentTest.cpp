@@ -16,6 +16,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoActions);
     ADD_TEST_CASE(PhysicsComponentDemoJoints);
     ADD_TEST_CASE(PhysicsComponentDemoPump);
+    ADD_TEST_CASE(PhysicsComponentContactTest);
 }
 
 namespace
@@ -929,4 +930,266 @@ std::string PhysicsComponentDemoPump::title() const
 std::string PhysicsComponentDemoPump::subtitle() const
 {
     return "touch screen on left or right";
+}
+
+void PhysicsComponentContactTest::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    _physicsWorld->setGravity(Vect::ZERO);
+    auto s = VisibleRect::getVisibleRect().size;
+
+    _yellowBoxNum = 50;
+    _blueBoxNum = 50;
+    _yellowTriangleNum = 50;
+    _blueTriangleNum = 50;
+
+
+    MenuItemFont::setFontSize(65);
+    auto decrease1 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    decrease1->setColor(Color3B(0, 200, 20));
+    auto increase1 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    increase1->setColor(Color3B(0, 200, 20));
+    decrease1->setTag(1);
+    increase1->setTag(1);
+
+    auto menu1 = Menu::create(decrease1, increase1, nullptr);
+    menu1->alignItemsHorizontally();
+    menu1->setPosition(Vec2(s.width / 2, s.height - 50));
+    addChild(menu1, 1);
+
+    auto label = Label::createWithTTF("yellow box", "fonts/arial.ttf", 32);
+    addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2 - 150, s.height - 50));
+
+    auto decrease2 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    decrease2->setColor(Color3B(0, 200, 20));
+    auto increase2 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    increase2->setColor(Color3B(0, 200, 20));
+    decrease2->setTag(2);
+    increase2->setTag(2);
+
+    auto menu2 = Menu::create(decrease2, increase2, nullptr);
+    menu2->alignItemsHorizontally();
+    menu2->setPosition(Vec2(s.width / 2, s.height - 90));
+    addChild(menu2, 1);
+
+    label = Label::createWithTTF("blue box", "fonts/arial.ttf", 32);
+    addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2 - 150, s.height - 90));
+
+    auto decrease3 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    decrease3->setColor(Color3B(0, 200, 20));
+    auto increase3 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    increase3->setColor(Color3B(0, 200, 20));
+    decrease3->setTag(3);
+    increase3->setTag(3);
+
+    auto menu3 = Menu::create(decrease3, increase3, nullptr);
+    menu3->alignItemsHorizontally();
+    menu3->setPosition(Vec2(s.width / 2, s.height - 130));
+    addChild(menu3, 1);
+
+    label = Label::createWithTTF("yellow triangle", "fonts/arial.ttf", 32);
+    addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2 - 150, s.height - 130));
+
+    auto decrease4 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    decrease4->setColor(Color3B(0, 200, 20));
+    auto increase4 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    increase4->setColor(Color3B(0, 200, 20));
+    decrease4->setTag(4);
+    increase4->setTag(4);
+
+    auto menu4 = Menu::create(decrease4, increase4, nullptr);
+    menu4->alignItemsHorizontally();
+    menu4->setPosition(Vec2(s.width / 2, s.height - 170));
+    addChild(menu4, 1);
+
+    label = Label::createWithTTF("blue triangle", "fonts/arial.ttf", 32);
+    addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2 - 150, s.height - 170));
+
+    resetTest();
+}
+
+void PhysicsComponentContactTest::onDecrease(Ref* sender)
+{
+    switch (dynamic_cast<Node*>(sender)->getTag())
+    {
+    case 1:
+        if (_yellowBoxNum > 0) _yellowBoxNum -= 50;
+        break;
+    case 2:
+        if (_blueBoxNum > 0) _blueBoxNum -= 50;
+        break;
+    case 3:
+        if (_yellowTriangleNum > 0) _yellowTriangleNum -= 50;
+        break;
+    case 4:
+        if (_blueTriangleNum > 0) _blueTriangleNum -= 50;
+        break;
+
+    default:
+        break;
+    }
+
+    resetTest();
+}
+
+void PhysicsComponentContactTest::onIncrease(Ref* sender)
+{
+    switch (dynamic_cast<Node*>(sender)->getTag())
+    {
+    case 1:
+        _yellowBoxNum += 50;
+        break;
+    case 2:
+        _blueBoxNum += 50;
+        break;
+    case 3:
+        _yellowTriangleNum += 50;
+        break;
+    case 4:
+        _blueTriangleNum += 50;
+        break;
+
+    default:
+        break;
+    }
+
+    resetTest();
+}
+
+void PhysicsComponentContactTest::resetTest()
+{
+    removeChildByTag(10);
+    auto root = Node::create();
+    root->setTag(10);
+    this->addChild(root);
+
+    auto s = VisibleRect::getVisibleRect().size;
+    std::string strNum;
+    char buffer[10];
+
+    sprintf(buffer, "%d", _yellowBoxNum);
+    auto label = Label::createWithTTF(buffer, "fonts/arial.ttf", 32);
+    root->addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2, s.height - 50));
+
+    sprintf(buffer, "%d", _blueBoxNum);
+    label = Label::createWithTTF(buffer, "fonts/arial.ttf", 32);
+    root->addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2, s.height - 90));
+
+    sprintf(buffer, "%d", _yellowTriangleNum);
+    label = Label::createWithTTF(buffer, "fonts/arial.ttf", 32);
+    root->addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2, s.height - 130));
+
+    sprintf(buffer, "%d", _blueTriangleNum);
+    label = Label::createWithTTF(buffer, "fonts/arial.ttf", 32);
+    root->addChild(label, 1);
+    label->setPosition(Vec2(s.width / 2, s.height - 170));
+
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size, PhysicsMaterial(0.1f, 1, 0.0f)));
+    wall->setPosition(VisibleRect::center());
+    root->addChild(wall);
+
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsComponentContactTest::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+    // yellow box, will collide with itself and blue box.
+    for (int i = 0; i < _yellowBoxNum; ++i)
+    {
+        Size size(10 + CCRANDOM_0_1() * 10, 10 + CCRANDOM_0_1() * 10);
+        Size winSize = VisibleRect::getVisibleRect().size;
+        Vec2 position = Vec2(winSize.width, winSize.height) - Vec2(size.width, size.height);
+        position.x = position.x * CCRANDOM_0_1();
+        position.y = position.y * CCRANDOM_0_1();
+        position = VisibleRect::leftBottom() + position + Vec2(size.width / 2, size.height / 2);
+        Vect velocity((CCRANDOM_0_1() - 0.5) * 200, (CCRANDOM_0_1() - 0.5) * 200);
+        auto box = makeBox(position, size, 1, PhysicsMaterial(0.1f, 1, 0.0f));
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(velocity);
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x01);    // 0001
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0x04); // 0100
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x03);   // 0011
+        root->addChild(box);
+    }
+
+    // blue box, will collide with blue box.
+    for (int i = 0; i < _blueBoxNum; ++i)
+    {
+        Size size(10 + CCRANDOM_0_1() * 10, 10 + CCRANDOM_0_1() * 10);
+        Size winSize = VisibleRect::getVisibleRect().size;
+        Vec2 position = Vec2(winSize.width, winSize.height) - Vec2(size.width, size.height);
+        position.x = position.x * CCRANDOM_0_1();
+        position.y = position.y * CCRANDOM_0_1();
+        position = VisibleRect::leftBottom() + position + Vec2(size.width / 2, size.height / 2);
+        Vect velocity((CCRANDOM_0_1() - 0.5) * 200, (CCRANDOM_0_1() - 0.5) * 200);
+        auto box = makeBox(position, size, 2, PhysicsMaterial(0.1f, 1, 0.0f));
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(velocity);
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x02);    // 0010
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0x08); // 1000
+        box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x01);   // 0001
+        root->addChild(box);
+    }
+
+    // yellow triangle, will collide with itself and blue box.
+    for (int i = 0; i < _yellowTriangleNum; ++i)
+    {
+        Size size(10 + CCRANDOM_0_1() * 10, 10 + CCRANDOM_0_1() * 10);
+        Size winSize = VisibleRect::getVisibleRect().size;
+        Vec2 position = Vec2(winSize.width, winSize.height) - Vec2(size.width, size.height);
+        position.x = position.x * CCRANDOM_0_1();
+        position.y = position.y * CCRANDOM_0_1();
+        position = VisibleRect::leftBottom() + position + Vec2(size.width / 2, size.height / 2);
+        Vect velocity((CCRANDOM_0_1() - 0.5) * 300, (CCRANDOM_0_1() - 0.5) * 300);
+        auto triangle = makeTriangle(position, size, 1, PhysicsMaterial(0.1f, 1, 0.0f));
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(velocity);
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x04);    // 0100
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0x01); // 0001
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x06);   // 0110
+        root->addChild(triangle);
+    }
+
+    // blue triangle, will collide with yellow box.
+    for (int i = 0; i < _blueTriangleNum; ++i)
+    {
+        Size size(10 + CCRANDOM_0_1() * 10, 10 + CCRANDOM_0_1() * 10);
+        Size winSize = VisibleRect::getVisibleRect().size;
+        Vec2 position = Vec2(winSize.width, winSize.height) - Vec2(size.width, size.height);
+        position.x = position.x * CCRANDOM_0_1();
+        position.y = position.y * CCRANDOM_0_1();
+        position = VisibleRect::leftBottom() + position + Vec2(size.width / 2, size.height / 2);
+        Vect velocity((CCRANDOM_0_1() - 0.5) * 300, (CCRANDOM_0_1() - 0.5) * 300);
+        auto triangle = makeTriangle(position, size, 2, PhysicsMaterial(0.1f, 1, 0.0f));
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(velocity);
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCategoryBitmask(0x08);    // 1000
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0x02); // 0010
+        triangle->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setCollisionBitmask(0x01);   // 0001
+        root->addChild(triangle);
+    }
+}
+
+bool PhysicsComponentContactTest::onContactBegin(PhysicsContact& contact)
+{
+    PhysicsBody* a = contact.getShapeA()->getBody();
+    PhysicsBody* b = contact.getShapeB()->getBody();
+    PhysicsBody* body = (a->getCategoryBitmask() == 0x04 || a->getCategoryBitmask() == 0x08) ? a : b;
+    CC_UNUSED_PARAM(body);
+    CC_ASSERT(body->getCategoryBitmask() == 0x04 || body->getCategoryBitmask() == 0x08);
+
+    return true;
+}
+
+std::string PhysicsComponentContactTest::title() const
+{
+    return "Contact Test";
+}
+
+std::string PhysicsComponentContactTest::subtitle() const
+{
+    return "should not crash";
 }

@@ -128,3 +128,24 @@ private:
     float _distance;
     float _rotationV;
 };
+
+class PhysicsComponentContactTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentContactTest);
+
+    void onEnter() override;
+    void resetTest();
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+    void onDecrease(cocos2d::Ref* sender);
+    void onIncrease(cocos2d::Ref* sender);
+
+private:
+    int _yellowBoxNum;
+    int _blueBoxNum;
+    int _yellowTriangleNum;
+    int _blueTriangleNum;
+};
