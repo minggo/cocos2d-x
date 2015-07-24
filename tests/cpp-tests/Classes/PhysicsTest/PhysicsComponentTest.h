@@ -109,3 +109,22 @@ public:
     void onEnter() override;
     virtual std::string title() const override;
 };
+
+class PhysicsComponentDemoPump : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoPump);
+
+    void onEnter() override;
+    void update(float delta) override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+
+    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+    void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+
+private:
+    float _distance;
+    float _rotationV;
+};
