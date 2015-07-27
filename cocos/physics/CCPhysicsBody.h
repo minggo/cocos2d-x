@@ -306,7 +306,7 @@ public:
     inline const std::vector<PhysicsJoint*>& getJoints() const { return _joints; }
     
     /** get the sprite the body set to. */
-    inline Node* getNode() const;
+    Node* getNode() const;
     
     /**
      * A mask that defines which categories this physics body belongs to.

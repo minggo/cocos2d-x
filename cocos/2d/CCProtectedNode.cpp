@@ -102,15 +102,15 @@ void ProtectedNode::addProtectedChild(Node *child, int zOrder, int tag)
     
 #if CC_USE_PHYSICS
     // Recursive add children with which have physics body.
-    for (Node* node = this; node != nullptr; node = node->getParent())
-    {
-        Scene* scene = dynamic_cast<Scene*>(node);
-        if (scene != nullptr && scene->getPhysicsWorld() != nullptr)
-        {
-            scene->addChildToPhysicsWorld(child);
-            break;
-        }
-    }
+//    for (Node* node = this; node != nullptr; node = node->getParent())
+//    {
+//        Scene* scene = dynamic_cast<Scene*>(node);
+//        if (scene != nullptr && scene->getPhysicsWorld() != nullptr)
+//        {
+//            scene->addChildToPhysicsWorld(child);
+//            break;
+//        }
+//    }
 #endif
     
     if( _running )
@@ -171,10 +171,10 @@ void ProtectedNode::removeProtectedChild(cocos2d::Node *child, bool cleanup)
         }
         
 #if CC_USE_PHYSICS
-        if (child->getPhysicsBody() != nullptr)
-        {
-            child->getPhysicsBody()->removeFromWorld();
-        }
+//        if (child->getPhysicsBody() != nullptr)
+//        {
+//            child->getPhysicsBody()->removeFromWorld();
+//        }
         
 #endif
         // If you don't do cleanup, the child's actions will not get removed and the
@@ -211,10 +211,10 @@ void ProtectedNode::removeAllProtectedChildrenWithCleanup(bool cleanup)
         }
         
 #if CC_USE_PHYSICS
-        if (child->getPhysicsBody() != nullptr)
-        {
-            child->getPhysicsBody()->removeFromWorld();
-        }
+//        if (child->getPhysicsBody() != nullptr)
+//        {
+//            child->getPhysicsBody()->removeFromWorld();
+//        }
 #endif
         
         if (cleanup)

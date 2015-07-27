@@ -47,10 +47,10 @@ THE SOFTWARE.
 #include "math/TransformUtils.h"
 #include "deprecated/CCString.h"
 
-#if CC_USE_PHYSICS
-#include "physics/CCPhysicsBody.h"
-#include "physics/CCPhysicsWorld.h"
-#endif
+//#if CC_USE_PHYSICS
+//#include "physics/CCPhysicsBody.h"
+//#include "physics/CCPhysicsWorld.h"
+//#endif
 
 
 #if CC_NODE_RENDER_SUBPIXEL
@@ -116,17 +116,17 @@ Node::Node(void)
 , _updateScriptHandler(0)
 #endif
 , _componentContainer(nullptr)
-#if CC_USE_PHYSICS
-, _physicsBody(nullptr)
-, _physicsScaleStartX(1.0f)
-, _physicsScaleStartY(1.0f)
-, _physicsRotation(0.0f)
-, _physicsTransformDirty(true)
-, _updateTransformFromPhysics(true)
-, _physicsWorld(nullptr)
-, _physicsBodyAssociatedWith(0)
-, _physicsRotationOffset(0.0f)
-#endif
+//#if CC_USE_PHYSICS
+//, _physicsBody(nullptr)
+//, _physicsScaleStartX(1.0f)
+//, _physicsScaleStartY(1.0f)
+//, _physicsRotation(0.0f)
+//, _physicsTransformDirty(true)
+//, _updateTransformFromPhysics(true)
+//, _physicsWorld(nullptr)
+//, _physicsBodyAssociatedWith(0)
+//, _physicsRotationOffset(0.0f)
+//#endif
 , _displayedOpacity(255)
 , _realOpacity(255)
 , _displayedColor(Color3B::WHITE)
@@ -192,10 +192,10 @@ Node::~Node()
     
     CC_SAFE_DELETE(_componentContainer);
     
-#if CC_USE_PHYSICS
-    setPhysicsBody(nullptr);
-
-#endif
+//#if CC_USE_PHYSICS
+//    setPhysicsBody(nullptr);
+//
+//#endif
     
     stopAllActions();
     unscheduleAllCallbacks();
@@ -255,12 +255,12 @@ void Node::setSkewX(float skewX)
     if (_skewX == skewX)
         return;
     
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setSkewX");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setSkewX");
+//    }
+//#endif
     
     _skewX = skewX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
@@ -276,12 +276,12 @@ void Node::setSkewY(float skewY)
     if (_skewY == skewY)
         return;
     
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setSkewY");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setSkewY");
+//    }
+//#endif
     
     _skewY = skewY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
@@ -332,12 +332,12 @@ void Node::setRotation(float rotation)
     
     _rotationZ_X = _rotationZ_Y = rotation;
     _transformUpdated = _transformDirty = _inverseDirty = true;
-#if CC_USE_PHYSICS
-//    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
-//    {
-//        _physicsWorld->_updateBodyTransform = true;
-//    }
-#endif
+//#if CC_USE_PHYSICS
+////    if (_physicsWorld && _physicsBodyAssociatedWith > 0)
+////    {
+////        _physicsWorld->_updateBodyTransform = true;
+////    }
+//#endif
     
     updateRotationQuat();
 }
@@ -364,12 +364,12 @@ void Node::setRotation3D(const Vec3& rotation)
     
     updateRotationQuat();
 
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setRotation3D");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setRotation3D");
+//    }
+//#endif
 }
 
 Vec3 Node::getRotation3D() const
@@ -423,12 +423,12 @@ void Node::setRotationSkewX(float rotationX)
     if (_rotationZ_X == rotationX)
         return;
     
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setRotationSkewX");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setRotationSkewX");
+//    }
+//#endif
     
     _rotationZ_X = rotationX;
     _transformUpdated = _transformDirty = _inverseDirty = true;
@@ -446,12 +446,12 @@ void Node::setRotationSkewY(float rotationY)
     if (_rotationZ_Y == rotationY)
         return;
     
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setRotationSkewY");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setRotationSkewY");
+//    }
+//#endif
     
     _rotationZ_Y = rotationY;
     _transformUpdated = _transformDirty = _inverseDirty = true;
@@ -533,12 +533,12 @@ void Node::setScaleZ(float scaleZ)
     if (_scaleZ == scaleZ)
         return;
     
-#if CC_USE_PHYSICS
-    if (_physicsBody != nullptr)
-    {
-        CCLOG("Node WARNING: PhysicsBody doesn't support setScaleZ");
-    }
-#endif
+//#if CC_USE_PHYSICS
+//    if (_physicsBody != nullptr)
+//    {
+//        CCLOG("Node WARNING: PhysicsBody doesn't support setScaleZ");
+//    }
+//#endif
     
     _scaleZ = scaleZ;
     _transformUpdated = _transformDirty = _inverseDirty = true;
