@@ -17,6 +17,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoJoints);
     ADD_TEST_CASE(PhysicsComponentDemoPump);
     ADD_TEST_CASE(PhysicsComponentContactTest);
+    ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
 }
 
 namespace
@@ -1192,4 +1193,58 @@ std::string PhysicsComponentContactTest::title() const
 std::string PhysicsComponentContactTest::subtitle() const
 {
     return "should not crash";
+}
+
+void PhysicsComponentSetGravityEnableTest::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    // wall
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size, PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    wall->setPosition(VisibleRect::center());
+    addChild(wall);
+    
+    // common box
+    auto commonBox = makeBox(Vec2(100, 100), Size(50, 50), 1);
+    commonBox->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    addChild(commonBox);
+    
+    auto box = makeBox(Vec2(200, 100), Size(50, 50), 2);
+    box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(20);
+    box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setGravityEnable(false);
+    addChild(box);
+    
+    auto ball = makeBall(Vec2(200, 200), 50);
+    ball->setTag(2);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setGravityEnable(false);
+    addChild(ball);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(50);
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentSetGravityEnableTest::onScheduleOnce), 1.0);
+}
+
+void PhysicsComponentSetGravityEnableTest::onScheduleOnce(float delta)
+{
+    auto ball = getChildByTag(2);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(200);
+    
+    _physicsWorld->setGravity(Vect(0, 98));
+}
+
+std::string PhysicsComponentSetGravityEnableTest::title() const
+{
+    return "Set Gravity Enable Test";
+}
+
+std::string PhysicsComponentSetGravityEnableTest::subtitle() const
+{
+    return "only yellow box drop down";
 }

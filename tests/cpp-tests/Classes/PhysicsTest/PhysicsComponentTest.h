@@ -149,3 +149,14 @@ private:
     int _yellowTriangleNum;
     int _blueTriangleNum;
 };
+
+class PhysicsComponentSetGravityEnableTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentSetGravityEnableTest);
+    
+    void onEnter() override;
+    void onScheduleOnce(float delta);
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
