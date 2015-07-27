@@ -649,10 +649,12 @@ void PhysicsShapePolygon::updateScale()
 
     for (int i = 0; i < count; ++i)
     {
-        cpVect n = cpvnormalize(cpvperp(cpvsub(vects[i], vects[(i + 1) % count])));
-
-        planes[i].n = n;
-        planes[i].d = cpvdot(n, vects[i]);
+//        cpVect n = cpvnormalize(cpvperp(cpvsub(vects[i], vects[(i + 1) % count])));
+//
+//        planes[i].n = n;
+//        planes[i].d = cpvdot(n, vects[i]);
+        
+        planes[i].d = cpvdot(planes[i].n, vects[i]);
     }
     
     PhysicsShape::updateScale();

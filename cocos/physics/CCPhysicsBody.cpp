@@ -356,7 +356,7 @@ void PhysicsBody::setScale(float scaleX, float scaleY)
 
 Vec2 PhysicsBody::getPosition() const
 {
-    return Vec2(_cpBody->p.x, _cpBody->p.y);
+    return Vec2(_cpBody->p.x - _positionOffset.x, _cpBody->p.y - _positionOffset.y);
 }
 
 float PhysicsBody::getRotation()

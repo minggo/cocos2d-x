@@ -1661,29 +1661,29 @@ public:
      *
      * @param body A given physics body.
      */
-    void setPhysicsBody(PhysicsBody* body);
+//    void setPhysicsBody(PhysicsBody* body);
 
     /**
      * Get the PhysicsBody the sprite have.
      *
      * @return The PhysicsBody the sprite have.
      */
-    PhysicsBody* getPhysicsBody() const { return _physicsBody; }
+//    PhysicsBody* getPhysicsBody() const { return _physicsBody; }
     
     /**
      * Remove this node from physics world. it will remove all the physics bodies in it's children too.
      */
-    void removeFromPhysicsWorld();
+//    void removeFromPhysicsWorld();
     
     /** 
      * Update the transform matrix from physics.
      */
-    void updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags);
+//    void updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags);
 
     /** 
      * Update physics body transform matrix.
      */
-    virtual void updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t parentFlags, float parentScaleX, float parentScaleY);
+//    virtual void updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t parentFlags, float parentScaleX, float parentScaleY);
 #endif
     
     // overrides
@@ -1844,19 +1844,19 @@ protected:
     ComponentContainer *_componentContainer;        ///< Dictionary of components
 
 #if CC_USE_PHYSICS
-    PhysicsBody* _physicsBody;        ///< the physicsBody the node have
-    float _physicsScaleStartX;         ///< the scale x value when setPhysicsBody
-    float _physicsScaleStartY;         ///< the scale y value when setPhysicsBody
-    float _physicsRotation;
-    bool _physicsTransformDirty;
-    bool _updateTransformFromPhysics;
-
-    PhysicsWorld* _physicsWorld; /** The PhysicsWorld associated with the node.*/
-    int _physicsBodyAssociatedWith;  /** The count of PhysicsBody associated with the node and children.*/
-    float _physicsRotationOffset;  /** Record the rotation value when invoke Node::setPhysicsBody.*/
-
-    float _offsetX;
-    float _offsetY;
+//    PhysicsBody* _physicsBody;        ///< the physicsBody the node have
+//    float _physicsScaleStartX;         ///< the scale x value when setPhysicsBody
+//    float _physicsScaleStartY;         ///< the scale y value when setPhysicsBody
+//    float _physicsRotation;
+//    bool _physicsTransformDirty;
+//    bool _updateTransformFromPhysics;
+//
+//    PhysicsWorld* _physicsWorld; /** The PhysicsWorld associated with the node.*/
+//    int _physicsBodyAssociatedWith;  /** The count of PhysicsBody associated with the node and children.*/
+//    float _physicsRotationOffset;  /** Record the rotation value when invoke Node::setPhysicsBody.*/
+//
+//    float _offsetX;
+//    float _offsetY;
 #endif
     
     // opacity controls

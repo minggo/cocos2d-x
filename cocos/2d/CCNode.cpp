@@ -1172,18 +1172,18 @@ void Node::removeAllChildren()
 }
 
 #if CC_USE_PHYSICS
-void Node::removeFromPhysicsWorld()
-{
-//    if (_physicsBody != nullptr)
-//    {
-//        _physicsBody->removeFromWorld();
-//    }
-//
-//    for (auto child : _children)
-//    {
-//        child->removeFromPhysicsWorld();
-//    }
-}
+//void Node::removeFromPhysicsWorld()
+//{
+////    if (_physicsBody != nullptr)
+////    {
+////        _physicsBody->removeFromWorld();
+////    }
+////
+////    for (auto child : _children)
+////    {
+////        child->removeFromPhysicsWorld();
+////    }
+//}
 #endif
 
 void Node::removeAllChildrenWithCleanup(bool cleanup)
@@ -2045,113 +2045,113 @@ void Node::removeAllComponents()
 
 // MARK: Physics
 
-void Node::setPhysicsBody(PhysicsBody* body)
-{
-//    if (_physicsBody == body)
-//    {
-//        return;
-//    }
-//    
-//    if (_physicsBody)
-//    {
-//        _physicsBody->removeFromWorld();
-////        _physicsBody->_node = nullptr;
-//        _physicsBody->release();
-//        _physicsBody = nullptr;
-//
-//        _physicsBodyAssociatedWith--;
-//        auto parentNode = this;
-//        while (parentNode->_parent)
-//        {
-//            parentNode = parentNode->_parent;
-//            parentNode->_physicsBodyAssociatedWith--;
-//        }
-//    }
-//
-//    if (body)
-//    {
-////        if (body->getNode())
+//void Node::setPhysicsBody(PhysicsBody* body)
+//{
+////    if (_physicsBody == body)
+////    {
+////        return;
+////    }
+////    
+////    if (_physicsBody)
+////    {
+////        _physicsBody->removeFromWorld();
+//////        _physicsBody->_node = nullptr;
+////        _physicsBody->release();
+////        _physicsBody = nullptr;
+////
+////        _physicsBodyAssociatedWith--;
+////        auto parentNode = this;
+////        while (parentNode->_parent)
 ////        {
-////            body->getNode()->setPhysicsBody(nullptr);
+////            parentNode = parentNode->_parent;
+////            parentNode->_physicsBodyAssociatedWith--;
 ////        }
+////    }
+////
+////    if (body)
+////    {
+//////        if (body->getNode())
+//////        {
+//////            body->getNode()->setPhysicsBody(nullptr);
+//////        }
+//////        
+//////        body->_node = this;
+////        body->retain();
+////
+////        _physicsBody = body;
+////        _physicsScaleStartX = _scaleX;
+////        _physicsScaleStartY = _scaleY;
+////        _physicsRotationOffset = _rotationZ_X;
+////
+////        _physicsBodyAssociatedWith++;
+////        auto parentNode = this;
+////        while (parentNode->_parent)
+////        {
+////            parentNode = parentNode->_parent;
+////            parentNode->_physicsBodyAssociatedWith++;
+////        }
+////
+////        auto scene = dynamic_cast<Scene*>(parentNode);
+////        if (scene && scene->getPhysicsWorld())
+////        {
+////            _physicsTransformDirty = true;
+////            scene->getPhysicsWorld()->addBody(body);
+////        }
+////    }
+//}
+
+//void Node::updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t parentFlags, float parentScaleX, float parentScaleY)
+//{
+////    _updateTransformFromPhysics = false;
+////    auto flags = processParentFlags(parentTransform, parentFlags);
+////    _updateTransformFromPhysics = true;
+////    auto scaleX = parentScaleX * _scaleX;
+////    auto scaleY = parentScaleY * _scaleY;
+////    
+////    if (_parent)
+////    {
+////        _physicsRotation = _parent->_physicsRotation + _rotationZ_X;
+////    }
+////    if (_physicsBody && ((flags & FLAGS_DIRTY_MASK) || _physicsTransformDirty))
+////    {
+////        _physicsTransformDirty = false;
 ////        
-////        body->_node = this;
-//        body->retain();
-//
-//        _physicsBody = body;
-//        _physicsScaleStartX = _scaleX;
-//        _physicsScaleStartY = _scaleY;
-//        _physicsRotationOffset = _rotationZ_X;
-//
-//        _physicsBodyAssociatedWith++;
-//        auto parentNode = this;
-//        while (parentNode->_parent)
-//        {
-//            parentNode = parentNode->_parent;
-//            parentNode->_physicsBodyAssociatedWith++;
-//        }
-//
-//        auto scene = dynamic_cast<Scene*>(parentNode);
-//        if (scene && scene->getPhysicsWorld())
-//        {
-//            _physicsTransformDirty = true;
-//            scene->getPhysicsWorld()->addBody(body);
-//        }
-//    }
-}
+////        Vec3 vec3(_contentSize.width * 0.5f, _contentSize.height * 0.5f, 0);
+////        Vec3 ret;
+////        _modelViewTransform.transformPoint(vec3, &ret);
+////        _physicsBody->setPosition(Vec2(ret.x, ret.y));
+////
+////        parentTransform.getInversed().transformPoint(&ret);
+////        _offsetX = ret.x - _position.x;
+////        _offsetY = ret.y - _position.y;
+////
+////        _physicsBody->setScale(scaleX / _physicsScaleStartX, scaleY / _physicsScaleStartY);
+////        _physicsBody->setRotation(_physicsRotation - _physicsRotationOffset);
+////    }
+////
+////    for (auto node : _children)
+////    {
+////        node->updatePhysicsBodyTransform(_modelViewTransform, flags, scaleX, scaleY);
+////    }
+//}
 
-void Node::updatePhysicsBodyTransform(const Mat4& parentTransform, uint32_t parentFlags, float parentScaleX, float parentScaleY)
-{
-//    _updateTransformFromPhysics = false;
-//    auto flags = processParentFlags(parentTransform, parentFlags);
-//    _updateTransformFromPhysics = true;
-//    auto scaleX = parentScaleX * _scaleX;
-//    auto scaleY = parentScaleY * _scaleY;
-//    
-//    if (_parent)
-//    {
-//        _physicsRotation = _parent->_physicsRotation + _rotationZ_X;
-//    }
-//    if (_physicsBody && ((flags & FLAGS_DIRTY_MASK) || _physicsTransformDirty))
-//    {
-//        _physicsTransformDirty = false;
-//        
-//        Vec3 vec3(_contentSize.width * 0.5f, _contentSize.height * 0.5f, 0);
-//        Vec3 ret;
-//        _modelViewTransform.transformPoint(vec3, &ret);
-//        _physicsBody->setPosition(Vec2(ret.x, ret.y));
-//
-//        parentTransform.getInversed().transformPoint(&ret);
-//        _offsetX = ret.x - _position.x;
-//        _offsetY = ret.y - _position.y;
-//
-//        _physicsBody->setScale(scaleX / _physicsScaleStartX, scaleY / _physicsScaleStartY);
-//        _physicsBody->setRotation(_physicsRotation - _physicsRotationOffset);
-//    }
-//
-//    for (auto node : _children)
-//    {
-//        node->updatePhysicsBodyTransform(_modelViewTransform, flags, scaleX, scaleY);
-//    }
-}
-
-void Node::updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags)
-{
-//    auto& newPosition = _physicsBody->getPosition();
-//    auto& recordedPosition = _physicsBody->_recordedPosition;
-//    auto updateBodyTransform = _physicsWorld->_updateBodyTransform;
-//    if (parentFlags || recordedPosition.x != newPosition.x || recordedPosition.y != newPosition.y)
-//    {
-//        recordedPosition = newPosition;
-//        Vec3 vec3(newPosition.x, newPosition.y, 0);
-//        Vec3 ret;
-//        parentTransform.getInversed().transformPoint(vec3, &ret);
-//        setPosition(ret.x - _offsetX, ret.y - _offsetY);
-//    }
-//    _physicsRotation = _physicsBody->getRotation();
-//    setRotation(_physicsRotation - _parent->_physicsRotation + _physicsRotationOffset);
-//    _physicsWorld->_updateBodyTransform = updateBodyTransform;
-}
+//void Node::updateTransformFromPhysics(const Mat4& parentTransform, uint32_t parentFlags)
+//{
+////    auto& newPosition = _physicsBody->getPosition();
+////    auto& recordedPosition = _physicsBody->_recordedPosition;
+////    auto updateBodyTransform = _physicsWorld->_updateBodyTransform;
+////    if (parentFlags || recordedPosition.x != newPosition.x || recordedPosition.y != newPosition.y)
+////    {
+////        recordedPosition = newPosition;
+////        Vec3 vec3(newPosition.x, newPosition.y, 0);
+////        Vec3 ret;
+////        parentTransform.getInversed().transformPoint(vec3, &ret);
+////        setPosition(ret.x - _offsetX, ret.y - _offsetY);
+////    }
+////    _physicsRotation = _physicsBody->getRotation();
+////    setRotation(_physicsRotation - _parent->_physicsRotation + _physicsRotationOffset);
+////    _physicsWorld->_updateBodyTransform = updateBodyTransform;
+//}
 
 #endif //CC_USE_PHYSICS
 
