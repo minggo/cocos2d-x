@@ -16,8 +16,10 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoActions);
     ADD_TEST_CASE(PhysicsComponentDemoJoints);
     ADD_TEST_CASE(PhysicsComponentDemoPump);
+    ADD_TEST_CASE(PhysicsComponentDemoOneWayPlatform);
     ADD_TEST_CASE(PhysicsComponentContactTest);
     ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
+    ADD_TEST_CASE(PhysicsComponentFixedUpdate);
 }
 
 namespace
@@ -933,6 +935,47 @@ std::string PhysicsComponentDemoPump::subtitle() const
     return "touch screen on left or right";
 }
 
+void PhysicsComponentDemoOneWayPlatform::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    auto ground = Node::create();
+    addPhysicsComponent(ground, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
+    this->addChild(ground);
+    
+    auto platform = makeBox(VisibleRect::center(), Size(200, 50));
+    platform->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setDynamic(false);
+    platform->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0xFFFFFFFF);
+    this->addChild(platform);
+    
+    auto ball = makeBall(VisibleRect::center() - Vec2(0, 50), 20);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(Vec2(0, 150));
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(1.0f);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setContactTestBitmask(0xFFFFFFFF);
+    this->addChild(ball);
+    
+    auto contactListener = EventListenerPhysicsContactWithBodies::create(platform->getComponent<ComponentPhysics2d>()->getPhysicsBody(), ball->getComponent<ComponentPhysics2d>()->getPhysicsBody());
+    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsComponentDemoOneWayPlatform::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+}
+
+bool PhysicsComponentDemoOneWayPlatform::onContactBegin(PhysicsContact& contact)
+{
+    return contact.getContactData()->normal.y < 0;
+}
+
+std::string PhysicsComponentDemoOneWayPlatform::title() const
+{
+    return "One Way Platform";
+}
+
 void PhysicsComponentContactTest::onEnter()
 {
     PhysicsComponentDemo::onEnter();
@@ -1247,4 +1290,60 @@ std::string PhysicsComponentSetGravityEnableTest::title() const
 std::string PhysicsComponentSetGravityEnableTest::subtitle() const
 {
     return "only yellow box drop down";
+}
+
+void PhysicsComponentFixedUpdate::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    _physicsWorld->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    _physicsWorld->setGravity(Point::ZERO);
+    
+    // wall
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size, PhysicsMaterial(0.1f, 1, 0.0f)));
+    wall->setPosition(VisibleRect::center());
+    this->addChild(wall);
+    
+    addBall();
+    
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentFixedUpdate::updateStart), 2);
+}
+
+void PhysicsComponentFixedUpdate::addBall()
+{
+    auto ball = Sprite::create("Images/ball.png");
+    ball->setPosition(100, 100);
+    addPhysicsComponent(ball, PhysicsBody::createCircle(ball->getContentSize().width/2, PhysicsMaterial(0.1f, 1, 0.0f)));
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(Point(1000, 20));
+    this->addChild(ball);
+}
+
+void PhysicsComponentFixedUpdate::updateStart(float delta)
+{
+    addBall();
+    
+    _physicsWorld->setAutoStep(false);
+    scheduleUpdate();
+}
+
+void PhysicsComponentFixedUpdate::update(float delta)
+{
+    
+    // use fixed time and calculate 3 times per frame makes physics simulate more precisely.
+    for (int i = 0; i < 3; ++i)
+    {
+        _physicsWorld->step(1/180.0f);
+    }
+}
+
+std::string PhysicsComponentFixedUpdate::title() const
+{
+    return "Fixed Update Test";
+}
+
+std::string PhysicsComponentFixedUpdate::subtitle() const
+{
+    return "The secend ball should not run across the wall";
 }

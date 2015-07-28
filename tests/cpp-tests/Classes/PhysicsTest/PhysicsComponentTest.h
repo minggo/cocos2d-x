@@ -129,6 +129,17 @@ private:
     float _rotationV;
 };
 
+class PhysicsComponentDemoOneWayPlatform : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoOneWayPlatform);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
+};
+
 class PhysicsComponentContactTest : public PhysicsComponentDemo
 {
 public:
@@ -157,6 +168,18 @@ public:
     
     void onEnter() override;
     void onScheduleOnce(float delta);
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
+class PhysicsComponentFixedUpdate : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentFixedUpdate);
+    void onEnter() override;
+    void updateStart(float delta);
+    void addBall();
+    virtual void update(float delta) override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
 };
