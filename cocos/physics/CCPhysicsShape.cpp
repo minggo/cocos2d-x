@@ -123,7 +123,12 @@ void PhysicsShape::setScale(float scaleX, float scaleY)
         }
         _newScaleX = scaleX;
         _newScaleY = scaleY;
+        
         updateScale();
+        
+        // re-calculate area and mass
+        _area = calculateArea();
+        _mass = _material.density * _area;
     }
 }
 
