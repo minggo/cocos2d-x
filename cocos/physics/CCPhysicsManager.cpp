@@ -54,6 +54,10 @@ void PhysicsManager::update(float dt)
 
 void PhysicsManager::addPhysicsComponent(ComponentPhysics2d* componentPhsics2d)
 {
+    // don't add component again
+    if (std::find(_components.begin(), _components.end(), componentPhsics2d) != _components.end())
+        return;
+    
     _components.push_back(componentPhsics2d);
     
     _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
