@@ -32,7 +32,10 @@ NS_CC_BEGIN
 
 ComponentPhysics2d* ComponentPhysics2d::create()
 {
-    return create(nullptr);
+    auto ret = new (std::nothrow) ComponentPhysics2d();
+    if (ret) ret->autorelease();
+    
+    return ret;
 }
 
 ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
@@ -62,6 +65,8 @@ ComponentPhysics2d::~ComponentPhysics2d()
 
 void ComponentPhysics2d::beforeSimulation()
 {
+    CC_ASSERT(_physicsBody != nullptr);
+    
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
     _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
     
@@ -109,15 +114,18 @@ void ComponentPhysics2d::afterSimulation()
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 {
+    CC_ASSERT(physicsBody != nullptr);
+    
     if (physicsBody != _physicsBody)
     {
-        removePhysicsBody();
+        removeFromPhysicsManager();
         
         _physicsBody = physicsBody;
         _physicsBody->retain();
         _physicsBody->_componentBelongsTo = this;
+        
+        addToPhysicsManager();
     }
-    
 }
 
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
@@ -127,15 +135,15 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
 
 void ComponentPhysics2d::onEnter()
 {
-    // should set physics body
     CC_ASSERT(_physicsBody != nullptr);
     
-    _owner->getScene()->getPhysicsManager()->addPhysicsComponent(this);
+    addToPhysicsManager();
+    _physicsBody->setEnable(true);
 }
 
 void ComponentPhysics2d::onExit()
 {
-    _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
+    removeFromPhysicsManager();
 }
 
 void ComponentPhysics2d::onAdd()
@@ -143,16 +151,40 @@ void ComponentPhysics2d::onAdd()
     auto contentSize = _owner->getContentSize();
     _offset.x = 0.5 * contentSize.width;
     _offset.y = 0.5 * contentSize.height;
+
+    // add to physics world and disable it now, will enable it in onEnter()
+    addToPhysicsManager();
+    if (_physicsBody)
+        _physicsBody->setEnable(false);
+}
+
+void ComponentPhysics2d::onRemove()
+{
+    removePhysicsBody();
 }
 
 void ComponentPhysics2d::removePhysicsBody()
 {
+    removeFromPhysicsManager();
+    
     if (_physicsBody)
     {
         _physicsBody->_componentBelongsTo = nullptr;
         _physicsBody->release();
         _physicsBody = nullptr;
     }
+}
+
+void ComponentPhysics2d::addToPhysicsManager()
+{
+    if (_owner && _owner->getScene())
+        _owner->getScene()->getPhysicsManager()->addPhysicsComponent(this);
+}
+
+void ComponentPhysics2d::removeFromPhysicsManager()
+{
+    if (_owner && _owner->getScene())
+        _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
 }
 
 NS_CC_END

@@ -49,6 +49,7 @@ public:
     virtual void onEnter() override;
     virtual void onExit() override;
     virtual void onAdd() override;
+    virtual void onRemove() override;
     
 CC_CONSTRUCTOR_ACCESS:
     ComponentPhysics2d();
@@ -56,6 +57,8 @@ CC_CONSTRUCTOR_ACCESS:
     
 private:
     void removePhysicsBody();
+    void addToPhysicsManager();
+    void removeFromPhysicsManager();
     
 private:
     PhysicsBody *_physicsBody;
