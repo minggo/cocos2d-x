@@ -74,6 +74,8 @@ PhysicsBody::PhysicsBody()
 , _recordedRotation(0.0f)
 , _recordedAngle(0.0)
 , _componentBelongsTo(nullptr)
+, _massSetByUser(false)
+, _momentSetByUser(false)
 {
 }
 
@@ -351,14 +353,18 @@ void PhysicsBody::setScale(float scaleX, float scaleY)
     for (auto shape : _shapes)
     {
         _area -= shape->getArea();
-        addMass(-shape->getMass());
-        addMoment(-shape->getMoment());
+        if (!_massSetByUser)
+            addMass(-shape->getMass());
+        if (!_momentSetByUser)
+            addMoment(-shape->getMoment());
         
         shape->setScale(scaleX, scaleY);
         
         _area += shape->getArea();
-        addMass(shape->getMass());
-        addMoment(shape->getMoment());
+        if (!_massSetByUser)
+            addMass(shape->getMass());
+        if (!_momentSetByUser)
+            addMoment(shape->getMoment());
     }
 }
 
@@ -446,6 +452,7 @@ void PhysicsBody::setMass(float mass)
     }
     _mass = mass;
     _massDefault = false;
+    _massSetByUser = true;
     
     // update density
     if (_mass == PHYSICS_INFINITY)
@@ -555,6 +562,7 @@ void PhysicsBody::addMoment(float moment)
     if (_rotationEnabled && _dynamic)
     {
         cpBodySetMoment(_cpBody, PhysicsHelper::float2cpfloat(_moment));
+        _momentSetByUser = true;
     }
 }
 

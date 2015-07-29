@@ -548,6 +548,11 @@ protected:
     float _angularDamping;
     int _tag;
     
+    // when setMass() is invoked, it means body's mass is not calculated by shapes
+    bool _massSetByUser;
+    // when setMoment() is invoked, it means body's moment is not calculated by shapes
+    bool _momentSetByUser;
+    
     Vec2 _positionOffset;
     float _rotationOffset;
     float _recordedRotation;
