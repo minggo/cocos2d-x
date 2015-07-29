@@ -351,12 +351,14 @@ void PhysicsBody::setScale(float scaleX, float scaleY)
     for (auto shape : _shapes)
     {
         _area -= shape->getArea();
-        _mass -= shape->getMass();
+        addMass(-shape->getMass());
+        addMoment(-shape->getMoment());
         
         shape->setScale(scaleX, scaleY);
         
         _area += shape->getArea();
         addMass(shape->getMass());
+        addMoment(shape->getMoment());
     }
 }
 

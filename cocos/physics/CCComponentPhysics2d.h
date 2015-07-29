@@ -62,7 +62,7 @@ private:
     
 private:
     PhysicsBody *_physicsBody;
-    Vec2 _physicsPositionBeforeSimulation;
+    Vec3 _physicsPositionBeforeSimulation;
     // offset between owner's center point and down left point
     Vec3 _offset;
     Mat4 _nodeToWorldTransform;

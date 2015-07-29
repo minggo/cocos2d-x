@@ -67,22 +67,29 @@ void ComponentPhysics2d::beforeSimulation()
 {
     CC_ASSERT(_physicsBody != nullptr);
     
+    bool transfromDirty = _owner->getNodeToWorldTransfromDirty();
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
-    _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
     
-    // set scale
-    _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
-    
-    // set rotation
-    Vec3 zAxis(0, 0, 1);
-    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
+    if (transfromDirty)
+    {
+        _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
+        
+        // set scale
+        _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
+        
+        // set rotation
+        Vec3 zAxis;
+        float angle = CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis));
+        if (fabs(zAxis.z - 1.0f) < FLT_EPSILON)
+            angle = 360 - angle;
+        _physicsBody->setRotation(angle);
+    }
     
     // set position
-    Vec3 offset = _offset;
-    _nodeToWorldTransform.transformPoint(&offset);
-    _physicsPositionBeforeSimulation.x = offset.x;
-    _physicsPositionBeforeSimulation.y = offset.y;
-    _physicsBody->setPosition(_physicsPositionBeforeSimulation);
+    _physicsPositionBeforeSimulation = _offset;
+    _nodeToWorldTransform.transformPoint(&_physicsPositionBeforeSimulation);
+    if (transfromDirty)
+        _physicsBody->setPosition(Vec2(_physicsPositionBeforeSimulation.x, _physicsPositionBeforeSimulation.y));
 }
 
 void ComponentPhysics2d::afterSimulation()
@@ -110,6 +117,7 @@ void ComponentPhysics2d::afterSimulation()
     _owner->setRotation(rotationVec.x);
     
 //    _owner->setRotation(_physicsBody->getRotation());
+//    CCLOG("physics rotation: %f", _physicsBody->getRotation());
 }
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
@@ -138,7 +146,6 @@ void ComponentPhysics2d::onEnter()
     CC_ASSERT(_physicsBody != nullptr);
     
     addToPhysicsManager();
-    _physicsBody->setEnable(true);
 }
 
 void ComponentPhysics2d::onExit()
@@ -151,11 +158,6 @@ void ComponentPhysics2d::onAdd()
     auto contentSize = _owner->getContentSize();
     _offset.x = 0.5 * contentSize.width;
     _offset.y = 0.5 * contentSize.height;
-
-    // add to physics world and disable it now, will enable it in onEnter()
-    addToPhysicsManager();
-    if (_physicsBody)
-        _physicsBody->setEnable(false);
 }
 
 void ComponentPhysics2d::onRemove()
