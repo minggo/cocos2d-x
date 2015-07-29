@@ -74,8 +74,11 @@ void ComponentPhysics2d::beforeSimulation()
     _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
     
     // set rotation
-    Vec3 zAxis(0, 0, 1);
-    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
+    Vec3 zAxis;
+    float angle = CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis));
+    if (fabs(zAxis.z - 1.0) < FLT_EPSILON)
+        angle = 360 - angle;
+    _physicsBody->setRotation(angle);
     
     // set position
     Vec3 offset = _offset;
@@ -138,7 +141,6 @@ void ComponentPhysics2d::onEnter()
     CC_ASSERT(_physicsBody != nullptr);
     
     addToPhysicsManager();
-    _physicsBody->setEnable(true);
 }
 
 void ComponentPhysics2d::onExit()
@@ -151,11 +153,6 @@ void ComponentPhysics2d::onAdd()
     auto contentSize = _owner->getContentSize();
     _offset.x = 0.5 * contentSize.width;
     _offset.y = 0.5 * contentSize.height;
-
-    // add to physics world and disable it now, will enable it in onEnter()
-    addToPhysicsManager();
-    if (_physicsBody)
-        _physicsBody->setEnable(false);
 }
 
 void ComponentPhysics2d::onRemove()
