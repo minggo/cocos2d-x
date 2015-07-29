@@ -17,6 +17,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoJoints);
     ADD_TEST_CASE(PhysicsComponentDemoPump);
     ADD_TEST_CASE(PhysicsComponentDemoOneWayPlatform);
+    ADD_TEST_CASE(PhysicsComponentDemoSlice);
     ADD_TEST_CASE(PhysicsComponentContactTest);
     ADD_TEST_CASE(PhysicsComponentPositionRotationTest);
     ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
@@ -975,6 +976,110 @@ bool PhysicsComponentDemoOneWayPlatform::onContactBegin(PhysicsContact& contact)
 std::string PhysicsComponentDemoOneWayPlatform::title() const
 {
     return "One Way Platform";
+}
+
+void PhysicsComponentDemoSlice::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+    
+    _sliceTag = 1;
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = [](Touch* touch, Event* event)->bool{ return true; };
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoSlice::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    auto ground = Node::create();
+    addPhysicsComponent(ground, PhysicsBody::createEdgeSegment(VisibleRect::leftBottom() + Vec2(0, 50), VisibleRect::rightBottom() + Vec2(0, 50)));
+    this->addChild(ground);
+    
+    auto box = Node::create();
+    Vec2 points[4] = {Vec2(-100, -100), Vec2(-100, 100), Vec2(100, 100), Vec2(100, -100)};
+    addPhysicsComponent(box, PhysicsBody::createPolygon(points, 4));
+    box->setPosition(VisibleRect::center());
+    box->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(_sliceTag);
+    addChild(box);
+}
+
+bool PhysicsComponentDemoSlice::slice(PhysicsWorld &world, const PhysicsRayCastInfo& info, void *data)
+{
+    if (info.shape->getBody()->getTag() != _sliceTag)
+    {
+        return true;
+    }
+    
+    if (!info.shape->containsPoint(info.start) && !info.shape->containsPoint(info.end))
+    {
+        Vec2 normal = info.end - info.start;
+        normal = normal.getPerp().getNormalized();
+        float dist = info.start.dot(normal);
+        
+        clipPoly(dynamic_cast<PhysicsShapePolygon*>(info.shape), normal, dist);
+        clipPoly(dynamic_cast<PhysicsShapePolygon*>(info.shape), -normal, -dist);
+        
+        info.shape->getBody()->removeFromWorld();
+    }
+    
+    return true;
+}
+
+void PhysicsComponentDemoSlice::clipPoly(PhysicsShapePolygon* shape, Vec2 normal, float distance)
+{
+    PhysicsBody* body = shape->getBody();
+    int count = shape->getPointsCount();
+    int pointsCount = 0;
+    Vec2* points = new (std::nothrow) Vec2[count + 1];
+    
+    for (int i=0, j=count-1; i<count; j=i, ++i)
+    {
+        Vec2 a = body->local2World(shape->getPoint(j));
+        float aDist = a.dot(normal) - distance;
+        
+        if (aDist < 0.0f)
+        {
+            points[pointsCount] = a;
+            ++pointsCount;
+        }
+        
+        Vec2 b = body->local2World(shape->getPoint(i));
+        float bDist = b.dot(normal) - distance;
+        
+        if (aDist*bDist < 0.0f)
+        {
+            float t = std::fabs(aDist)/(std::fabs(aDist) + std::fabs(bDist));
+            points[pointsCount] = a.lerp(b, t);
+            ++pointsCount;
+        }
+    }
+    
+    Vec2 center = PhysicsShape::getPolyonCenter(points, pointsCount);
+    Node* node = Node::create();
+    PhysicsBody* polyon = PhysicsBody::createPolygon(points, pointsCount, PHYSICSBODY_MATERIAL_DEFAULT, -center);
+    node->setPosition(center);
+    addPhysicsComponent(node, polyon);
+    polyon->setVelocity(body->getVelocityAtWorldPoint(center));
+    polyon->setAngularVelocity(body->getAngularVelocity());
+    polyon->setTag(_sliceTag);
+    addChild(node);
+    
+    delete[] points;
+}
+
+void PhysicsComponentDemoSlice::onTouchEnded(Touch *touch, Event *event)
+{
+    auto func = CC_CALLBACK_3(PhysicsComponentDemoSlice::slice, this);
+    getPhysicsWorld()->rayCast(func, touch->getStartLocation(), touch->getLocation(), nullptr);
+}
+
+std::string PhysicsComponentDemoSlice::title() const
+{
+    return "Slice";
+}
+
+std::string PhysicsComponentDemoSlice::subtitle() const
+{
+    return "click and drag to slice up the block";
 }
 
 void PhysicsComponentContactTest::onEnter()

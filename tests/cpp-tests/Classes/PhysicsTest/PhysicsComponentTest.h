@@ -140,6 +140,24 @@ public:
     bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
+class PhysicsComponentDemoSlice : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoSlice);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    
+    bool slice(cocos2d::PhysicsWorld& world, const cocos2d::PhysicsRayCastInfo& info, void* data);
+    void clipPoly(cocos2d::PhysicsShapePolygon* shape, cocos2d::Vec2 normal, float distance);
+    
+    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+    
+private:
+    int _sliceTag;
+};
+
 class PhysicsComponentContactTest : public PhysicsComponentDemo
 {
 public:
