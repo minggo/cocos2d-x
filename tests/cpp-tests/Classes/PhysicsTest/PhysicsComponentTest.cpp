@@ -18,6 +18,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoPump);
     ADD_TEST_CASE(PhysicsComponentDemoOneWayPlatform);
     ADD_TEST_CASE(PhysicsComponentDemoSlice);
+    ADD_TEST_CASE(PhysicsComponentDemoBug3988);
     ADD_TEST_CASE(PhysicsComponentContactTest);
     ADD_TEST_CASE(PhysicsComponentPositionRotationTest);
     ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
@@ -1080,6 +1081,32 @@ std::string PhysicsComponentDemoSlice::title() const
 std::string PhysicsComponentDemoSlice::subtitle() const
 {
     return "click and drag to slice up the block";
+}
+
+void PhysicsComponentDemoBug3988::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+    _physicsWorld->setGravity(Vect::ZERO);
+    
+    auto ball  = Sprite::create("Images/YellowSquare.png");
+    ball->setPosition(VisibleRect::center() - Vec2(100, 0));
+    ball->setRotation(30.0f);
+    this->addChild(ball);
+    
+    auto physicsBall = makeBox(VisibleRect::center() + Vec2(100, 0), Size(100, 100));
+    physicsBall->setRotation(30.0f);
+    this->addChild(physicsBall);
+}
+
+std::string PhysicsComponentDemoBug3988::title() const
+{
+    return "Bug3988";
+}
+
+std::string PhysicsComponentDemoBug3988::subtitle() const
+{
+    return "All the Rectangles should have same rotation angle";
 }
 
 void PhysicsComponentContactTest::onEnter()
