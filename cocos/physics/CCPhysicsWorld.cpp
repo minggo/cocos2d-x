@@ -282,6 +282,7 @@ int PhysicsWorld::collisionBeginCallback(PhysicsContact& contact)
         contact.setEventCode(PhysicsContact::EventCode::BEGIN);
         contact.setWorld(this);
 //        _scene->getEventDispatcher()->dispatchEvent(&contact);
+        Director::getInstance()->getEventDispatcher()->dispatchEvent(&contact);
     }
     
     return ret ? contact.resetResult() : false;
@@ -297,6 +298,7 @@ int PhysicsWorld::collisionPreSolveCallback(PhysicsContact& contact)
     contact.setEventCode(PhysicsContact::EventCode::PRESOLVE);
     contact.setWorld(this);
 //    _scene->getEventDispatcher()->dispatchEvent(&contact);
+    Director::getInstance()->getEventDispatcher()->dispatchEvent(&contact);
     
     return contact.resetResult();
 }
@@ -311,6 +313,7 @@ void PhysicsWorld::collisionPostSolveCallback(PhysicsContact& contact)
     contact.setEventCode(PhysicsContact::EventCode::POSTSOLVE);
     contact.setWorld(this);
 //    _scene->getEventDispatcher()->dispatchEvent(&contact);
+    Director::getInstance()->getEventDispatcher()->dispatchEvent(&contact);
 }
 
 void PhysicsWorld::collisionSeparateCallback(PhysicsContact& contact)
@@ -323,6 +326,7 @@ void PhysicsWorld::collisionSeparateCallback(PhysicsContact& contact)
     contact.setEventCode(PhysicsContact::EventCode::SEPARATE);
     contact.setWorld(this);
 //    _scene->getEventDispatcher()->dispatchEvent(&contact);
+    Director::getInstance()->getEventDispatcher()->dispatchEvent(&contact);
 }
 
 void PhysicsWorld::rayCast(PhysicsRayCastCallbackFunc func, const Vec2& point1, const Vec2& point2, void* data)
