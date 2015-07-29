@@ -18,6 +18,7 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentDemoPump);
     ADD_TEST_CASE(PhysicsComponentDemoOneWayPlatform);
     ADD_TEST_CASE(PhysicsComponentContactTest);
+    ADD_TEST_CASE(PhysicsComponentPositionRotationTest);
     ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
     ADD_TEST_CASE(PhysicsComponentFixedUpdate);
 }
@@ -1236,6 +1237,64 @@ std::string PhysicsComponentContactTest::title() const
 std::string PhysicsComponentContactTest::subtitle() const
 {
     return "should not crash";
+}
+
+void PhysicsComponentPositionRotationTest::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+    _physicsWorld->setGravity(Point::ZERO);
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size));
+    wall->setPosition(VisibleRect::center());
+    addChild(wall);
+    
+    // anchor test
+    auto anchorNode = Sprite::create("Images/YellowSquare.png");
+    //anchorNode->setAnchorPoint(Vec2(0.1f, 0.9f));
+    anchorNode->setPosition(100, 100);
+    anchorNode->setScale(0.25);
+    addPhysicsComponent(anchorNode, PhysicsBody::createBox(anchorNode->getContentSize()));
+    anchorNode->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    addChild(anchorNode);
+    
+    //parent test
+    auto parent = Sprite::create("Images/YellowSquare.png");
+    parent->setPosition(200, 100);
+    parent->setScale(0.25);
+    addPhysicsComponent(parent,PhysicsBody::createBox(parent->getContentSize()));
+    parent->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    addChild(parent);
+    
+    auto leftBall = Sprite::create("Images/ball.png");
+    leftBall->setPosition(-30, 0);
+    leftBall->Node::setScale(2);
+    addPhysicsComponent(leftBall, PhysicsBody::createCircle(leftBall->getContentSize().width/2));
+    leftBall->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    parent->addChild(leftBall);
+    
+    // offset position rotation test
+    auto offsetPosNode = Sprite::create("Images/YellowSquare.png");
+    offsetPosNode->setPosition(100, 200);
+    addPhysicsComponent(offsetPosNode, PhysicsBody::createBox(offsetPosNode->getContentSize()/2));
+    offsetPosNode->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setPositionOffset(-Vec2(offsetPosNode->getContentSize() / 2));
+    offsetPosNode->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setRotationOffset(45);
+    offsetPosNode->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    addChild(offsetPosNode);
+    
+    return;
+}
+
+std::string PhysicsComponentPositionRotationTest::title() const
+{
+    return "Position/Rotation Test";
 }
 
 void PhysicsComponentSetGravityEnableTest::onEnter()

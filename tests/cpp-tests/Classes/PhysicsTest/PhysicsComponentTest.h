@@ -161,6 +161,15 @@ private:
     int _blueTriangleNum;
 };
 
+class PhysicsComponentPositionRotationTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentPositionRotationTest);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+};
+
 class PhysicsComponentSetGravityEnableTest : public PhysicsComponentDemo
 {
 public:
