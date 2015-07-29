@@ -22,7 +22,10 @@ PhysicsComponentTests::PhysicsComponentTests()
     ADD_TEST_CASE(PhysicsComponentContactTest);
     ADD_TEST_CASE(PhysicsComponentPositionRotationTest);
     ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
+    ADD_TEST_CASE(PhysicsComponentDemoBug5482);
     ADD_TEST_CASE(PhysicsComponentFixedUpdate);
+    ADD_TEST_CASE(PhysicsComponentTransformTest);
+    ADD_TEST_CASE(PhysicsComponentIssue9959);
 }
 
 namespace
@@ -1483,6 +1486,72 @@ std::string PhysicsComponentSetGravityEnableTest::subtitle() const
     return "only yellow box drop down";
 }
 
+void PhysicsComponentDemoBug5482::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    toggleDebug();
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    _bodyInA = false;
+    
+    // wall
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size, PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    wall->setPosition(VisibleRect::center());
+    addChild(wall);
+    
+    //button
+    MenuItemFont::setFontSize(18);
+    _button = MenuItemFont::create("Set Body To A", CC_CALLBACK_1(PhysicsComponentDemoBug5482::changeBodyCallback, this));
+    
+    auto menu = Menu::create(_button, nullptr);
+    this->addChild(menu);
+    
+    _nodeA = Sprite::create("Images/YellowSquare.png");
+    _nodeA->setPosition(VisibleRect::center().x - 150, 100);
+    this->addChild(_nodeA);
+    
+    _nodeB = Sprite::create("Images/YellowSquare.png");
+    _nodeB->setPosition(VisibleRect::center().x + 150, 100);
+    this->addChild(_nodeB);
+    
+    _body = PhysicsBody::createBox(_nodeA->getContentSize());
+    _body->setTag(DRAG_BODYS_TAG);
+    _body->retain();
+}
+
+void PhysicsComponentDemoBug5482::onExit()
+{
+    PhysicsComponentDemo::onExit();
+    _body->release();
+}
+
+void PhysicsComponentDemoBug5482::changeBodyCallback(Ref* sender)
+{
+    Sprite* node = _bodyInA ? _nodeB : _nodeA;
+    if (!node->getComponent<ComponentPhysics2d>()) {
+        addPhysicsComponent(node, _body);
+    }
+    node->getComponent<ComponentPhysics2d>()->setPhysicsBody(_body);
+    _bodyInA = !_bodyInA;
+}
+
+std::string PhysicsComponentDemoBug5482::title() const
+{
+    return "bug 5482: setPhysicsBodyTest";
+}
+
+std::string PhysicsComponentDemoBug5482::subtitle() const
+{
+    return "change physics body to the other.";
+}
+
 void PhysicsComponentFixedUpdate::onEnter()
 {
     PhysicsComponentDemo::onEnter();
@@ -1537,4 +1606,112 @@ std::string PhysicsComponentFixedUpdate::title() const
 std::string PhysicsComponentFixedUpdate::subtitle() const
 {
     return "The secend ball should not run across the wall";
+}
+
+bool PhysicsComponentTransformTest::onTouchBegan(Touch *touch, Event *event)
+{
+    _parentSprite->setPosition(_rootLayer->convertTouchToNodeSpace(touch));
+    return false;
+}
+
+void PhysicsComponentTransformTest::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    toggleDebug();
+    _physicsWorld->setGravity(Point::ZERO);
+    
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentTransformTest::onTouchBegan, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    _rootLayer = Layer::create();
+    addChild(_rootLayer);
+    
+    auto wall = Node::create();
+    addPhysicsComponent(wall, PhysicsBody::createEdgeBox(VisibleRect::getVisibleRect().size, PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    wall->setPosition(VisibleRect::center());
+    _rootLayer->addChild(wall);
+    
+    //parent test
+    _parentSprite = Sprite::create("Images/YellowSquare.png");
+    _parentSprite->setPosition(200, 100);
+    _parentSprite->setScale(0.25);
+    addPhysicsComponent(_parentSprite, PhysicsBody::createBox(_parentSprite->getContentSize(), PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    _parentSprite->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    _parentSprite->setTag(1);
+    _rootLayer->addChild(_parentSprite);
+
+    auto leftBall = Sprite::create("Images/ball.png");
+    leftBall->setPosition(-30, 0);
+    leftBall->setScale(2);
+    addPhysicsComponent(leftBall, PhysicsBody::createCircle(leftBall->getContentSize().width/2, PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    leftBall->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    _parentSprite->addChild(leftBall);
+
+    ScaleTo* scaleTo = ScaleTo::create(2.0, 0.5);
+    ScaleTo* scaleBack = ScaleTo::create(2.0, 1.0);
+    _parentSprite->runAction(RepeatForever::create(Sequence::create(scaleTo, scaleBack, nullptr)));
+
+    auto normal = Sprite::create("Images/YellowSquare.png");
+    normal->setPosition(300, 100);
+    normal->setScale(0.25, 0.5);
+    addPhysicsComponent(normal,PhysicsBody::createBox(_parentSprite->getContentSize(), PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    normal->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
+    _rootLayer->addChild(normal);
+
+    auto bullet = Sprite::create("Images/ball.png");
+    bullet->setPosition(200, 200);
+    addPhysicsComponent(bullet,PhysicsBody::createCircle(bullet->getContentSize().width/2, PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    bullet->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setVelocity(Vect(100, 100));
+    _rootLayer->addChild(bullet);
+    
+    MoveBy* move = MoveBy::create(2.0f, Vec2(100, 100));
+    MoveBy* move2 = MoveBy::create(2.0f, Vec2(-200, 0));
+    MoveBy* move3 = MoveBy::create(2.0f, Vec2(100, -100));
+    ScaleTo* scale = ScaleTo::create(3.0f, 0.3f);
+    ScaleTo* scale2 = ScaleTo::create(3.0f, 1.0f);
+    
+    RotateBy* rotate = RotateBy::create(6.0f, 360);
+    
+    _rootLayer->runAction(RepeatForever::create(Sequence::create(move, move2, move3, nullptr)));
+    _rootLayer->runAction(RepeatForever::create(Sequence::create(scale, scale2, nullptr)));
+    _rootLayer->runAction(RepeatForever::create(rotate));
+}
+
+std::string PhysicsComponentTransformTest::title() const
+{
+    return "Physics transform test";
+}
+
+void PhysicsComponentIssue9959::onEnter()
+{
+    PhysicsComponentDemo::onEnter();
+    
+    auto origin = Director::getInstance()->getVisibleOrigin();
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    
+    auto scale9Sprite1 = ui::Scale9Sprite::create("Images/ball.png");
+    scale9Sprite1->setPosition(origin + visibleSize/2);
+    addChild(scale9Sprite1);
+    scale9Sprite1->runAction(RepeatForever::create(Sequence::create(MoveBy::create(2.0f, Vec2(100.0f,0.0f)), MoveBy::create(2.0f, Vec2(-100.0f, 0.0f)), NULL)));
+    
+    auto scale9Sprite2 = ui::Scale9Sprite::create("Images/ball.png");
+    scale9Sprite2->setPosition(origin + visibleSize/2 + Vec2(0.0f, 50.0f));
+    addChild(scale9Sprite2);
+    scale9Sprite2->runAction(RepeatForever::create(Sequence::create(ScaleTo::create(2.0f, 1.5f), ScaleTo::create(2.0f, 1.0f), NULL)));
+    
+    auto scale9Sprite3 = ui::Scale9Sprite::create("Images/ball.png");
+    scale9Sprite3->setPosition(origin + visibleSize/2 + Vec2(0.0f, -50.0f));
+    addChild(scale9Sprite3);
+    scale9Sprite3->runAction(RepeatForever::create(RotateBy::create(2.0f, 360.0f)));
+}
+
+std::string PhysicsComponentIssue9959::title() const
+{
+    return "Reorder issue #9959";
+}
+
+std::string PhysicsComponentIssue9959::subtitle() const
+{
+    return "Test Scale9Sprite run scale/move/rotation action in physics scene";
 }

@@ -209,6 +209,25 @@ public:
     virtual std::string subtitle() const override;
 };
 
+class PhysicsComponentDemoBug5482 : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoBug5482);
+    
+    void onEnter() override;
+    void onExit() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    
+    void changeBodyCallback(cocos2d::Ref* sender);
+private:
+    cocos2d::Sprite* _nodeA;
+    cocos2d::Sprite* _nodeB;
+    cocos2d::PhysicsBody* _body;
+    cocos2d::MenuItemFont* _button;
+    bool _bodyInA;
+};
+
 class PhysicsComponentFixedUpdate : public PhysicsComponentDemo
 {
 public:
@@ -217,6 +236,31 @@ public:
     void updateStart(float delta);
     void addBall();
     virtual void update(float delta) override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
+class PhysicsComponentTransformTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentTransformTest);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    
+    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+    
+private:
+    cocos2d::Sprite* _parentSprite;
+    cocos2d::Layer* _rootLayer;
+};
+
+class PhysicsComponentIssue9959 : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentIssue9959);
+    
+    void onEnter() override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
 };
