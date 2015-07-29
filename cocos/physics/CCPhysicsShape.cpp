@@ -114,7 +114,7 @@ void PhysicsShape::setMaterial(const PhysicsMaterial& material)
 
 void PhysicsShape::setScale(float scaleX, float scaleY)
 {
-    if (_scaleX != scaleX || _scaleY != scaleY)
+    if (fabs(_scaleX - scaleX) > FLT_EPSILON || fabs(_scaleY - scaleY) > FLT_EPSILON)
     {
         if (_type == Type::CIRCLE && scaleX != scaleY)
         {
@@ -129,6 +129,7 @@ void PhysicsShape::setScale(float scaleX, float scaleY)
         // re-calculate area and mass
         _area = calculateArea();
         _mass = _material.density * _area;
+        _moment = calculateDefaultMoment();
     }
 }
 
