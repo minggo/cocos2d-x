@@ -691,8 +691,6 @@ void PhysicsComponentDemoJoints::onEnter()
     node->setPosition(Point::ZERO);
     this->addChild(node);
     
-    PhysicsBody *sp1PhysicsBody = nullptr;
-    PhysicsBody *sp2PhysicsBody = nullptr;
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
@@ -700,72 +698,204 @@ void PhysicsComponentDemoJoints::onEnter()
             Vec2 offset(VisibleRect::leftBottom().x + 5 + j * width + width/2, VisibleRect::leftBottom().y + 50 + i * height + height/2);
             box->addShape(PhysicsShapeEdgeBox::create(Size(width, height), PHYSICSSHAPE_MATERIAL_DEFAULT, 1, offset));
             
-            auto sp1 = makeBall(offset - Vec2(30, 0), 10);
-            sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
-            sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
-            auto sp2 = makeBall(offset + Vec2(30, 0), 10);
-            sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
-            sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
-            
-            this->addChild(sp1);
-            this->addChild(sp2);
             switch (i*4 + j)
             {
                 case 0:
-                case 1:
                 {
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBall(offset + Vec2(30, 0), 10);
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     PhysicsJointPin* joint = PhysicsJointPin::construct(sp1PhysicsBody, sp2PhysicsBody, offset);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
+                    break;
+                }
+                case 1:
+                {
+                    
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    PhysicsJointFixed* joint = PhysicsJointFixed::construct(sp1PhysicsBody, sp2PhysicsBody, offset);
+                    getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 2:
                 {
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     PhysicsJointDistance* joint = PhysicsJointDistance::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 3:
                 {
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     PhysicsJointLimit* joint = PhysicsJointLimit::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO, 30.0f, 60.0f);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 4:
                 {
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     PhysicsJointSpring* joint = PhysicsJointSpring::construct(sp1PhysicsBody, sp2PhysicsBody, Point::ZERO, Point::ZERO, 500.0f, 0.3f);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 5:
                 {
+                    auto sp1 = makeBall(offset - Vec2(30, 0), 10);
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     PhysicsJointGroove* joint = PhysicsJointGroove::construct(sp1PhysicsBody, sp2PhysicsBody, Vec2(30, 15), Vec2(30, -15), Vec2(-30, 0));
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 6:
                 {
+                    auto sp1 = makeBox(offset - Vec2(30, 0), Size(30, 10));
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
                     PhysicsJointRotarySpring* joint = PhysicsJointRotarySpring::construct(sp1PhysicsBody, sp2PhysicsBody, 3000.0f, 60.0f);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 7:
-                case 8:
-                case 10:
                 {
+                    auto sp1 = makeBox(offset - Vec2(30, 0), Size(30, 10));
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
                     PhysicsJointRotaryLimit* joint = PhysicsJointRotaryLimit::construct(sp1PhysicsBody, sp2PhysicsBody, 0.0f,(float) M_PI_2);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
+                    break;
+                }
+                case 8:
+                {
+                    auto sp1 = makeBox(offset - Vec2(30, 0), Size(30, 10));
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
+                    PhysicsJointRatchet* joint = PhysicsJointRatchet::construct(sp1PhysicsBody, sp2PhysicsBody, 0.0f, (float)M_PI_2);
+                    getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 case 9:
                 {
+                    auto sp1 = makeBox(offset - Vec2(30, 0), Size(30, 10));
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
                     getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
                     PhysicsJointGear* joint = PhysicsJointGear::construct(sp1PhysicsBody, sp2PhysicsBody, 0.0f, 2.0f);
                     getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
+                    break;
+                }
+                case 10:
+                {
+                    auto sp1 = makeBox(offset - Vec2(30, 0), Size(30, 10));
+                    auto sp1PhysicsBody = sp1->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp1PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    auto sp2 = makeBox(offset + Vec2(30, 0), Size(30, 10));
+                    auto sp2PhysicsBody = sp2->getComponent<ComponentPhysics2d>()->getPhysicsBody();
+                    sp2PhysicsBody->setTag(DRAG_BODYS_TAG);
+                    
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp1PhysicsBody, box, sp1->getPosition()));
+                    getPhysicsWorld()->addJoint(PhysicsJointPin::construct(sp2PhysicsBody, box, sp2->getPosition()));
+                    PhysicsJointMotor* joint = PhysicsJointMotor::construct(sp1PhysicsBody, sp2PhysicsBody, (float)M_PI_2);
+                    getPhysicsWorld()->addJoint(joint);
+                    
+                    this->addChild(sp1);
+                    this->addChild(sp2);
                     break;
                 }
                 default:
