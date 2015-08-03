@@ -140,6 +140,34 @@ public:
     bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
+class PhysicsComponentDemoSlice : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoSlice);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    
+    bool slice(cocos2d::PhysicsWorld& world, const cocos2d::PhysicsRayCastInfo& info, void* data);
+    void clipPoly(cocos2d::PhysicsShapePolygon* shape, cocos2d::Vec2 normal, float distance);
+    
+    void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+    
+private:
+    int _sliceTag;
+};
+
+class PhysicsComponentDemoBug3988 : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoBug3988);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
 class PhysicsComponentContactTest : public PhysicsComponentDemo
 {
 public:
@@ -161,6 +189,15 @@ private:
     int _blueTriangleNum;
 };
 
+class PhysicsComponentPositionRotationTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentPositionRotationTest);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+};
+
 class PhysicsComponentSetGravityEnableTest : public PhysicsComponentDemo
 {
 public:
@@ -172,6 +209,25 @@ public:
     virtual std::string subtitle() const override;
 };
 
+class PhysicsComponentDemoBug5482 : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentDemoBug5482);
+    
+    void onEnter() override;
+    void onExit() override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+    
+    void changeBodyCallback(cocos2d::Ref* sender);
+private:
+    cocos2d::Sprite* _nodeA;
+    cocos2d::Sprite* _nodeB;
+    cocos2d::PhysicsBody* _body;
+    cocos2d::MenuItemFont* _button;
+    bool _bodyInA;
+};
+
 class PhysicsComponentFixedUpdate : public PhysicsComponentDemo
 {
 public:
@@ -180,6 +236,31 @@ public:
     void updateStart(float delta);
     void addBall();
     virtual void update(float delta) override;
+    virtual std::string title() const override;
+    virtual std::string subtitle() const override;
+};
+
+class PhysicsComponentTransformTest : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentTransformTest);
+    
+    void onEnter() override;
+    virtual std::string title() const override;
+    
+    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+    
+private:
+    cocos2d::Sprite* _parentSprite;
+    cocos2d::Layer* _rootLayer;
+};
+
+class PhysicsComponentIssue9959 : public PhysicsComponentDemo
+{
+public:
+    CREATE_FUNC(PhysicsComponentIssue9959);
+    
+    void onEnter() override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
 };
