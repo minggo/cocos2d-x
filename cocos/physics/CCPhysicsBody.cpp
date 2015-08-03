@@ -562,7 +562,6 @@ void PhysicsBody::addMoment(float moment)
     if (_rotationEnabled && _dynamic)
     {
         cpBodySetMoment(_cpBody, PhysicsHelper::float2cpfloat(_moment));
-        _momentSetByUser = true;
     }
 }
 
@@ -632,6 +631,7 @@ void PhysicsBody::setMoment(float moment)
 {
     _moment = moment;
     _momentDefault = false;
+    _momentSetByUser = true;
     
     // the static body's mass and moment is always infinity
     if (_rotationEnabled && _dynamic)
