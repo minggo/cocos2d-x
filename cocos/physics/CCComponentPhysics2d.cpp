@@ -49,11 +49,13 @@ ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
 ComponentPhysics2d::ComponentPhysics2d()
 : _physicsBody(nullptr)
 , _ownerScale(1, 1, 1)
+, _rotationBeforeSimulation(0.0f)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
 : _ownerScale(1, 1, 1)
 , _physicsBody(nullptr) // should set to null first to invoke setPhysicsBody()
+, _rotationBeforeSimulation(0.0f)
 {
     setPhysicsBody(physicsBody);
 }
@@ -67,57 +69,40 @@ void ComponentPhysics2d::beforeSimulation()
 {
     CC_ASSERT(_physicsBody != nullptr);
     
-    bool transfromDirty = _owner->getNodeToWorldTransfromDirty();
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
+    _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
     
-    if (transfromDirty)
+    _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
+    
+    Vec3 zAxis;
+    _rotationBeforeSimulation = CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis));
+    if (fabs(zAxis.z - 1.0f) < FLT_EPSILON)
     {
-        _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
-        
-        // set scale
-        _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
-        
-        // set rotation
-        Vec3 zAxis;
-        float angle = CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis));
-        if (fabs(zAxis.z - 1.0f) < FLT_EPSILON)
-            angle = 360 - angle;
-        _physicsBody->setRotation(angle);
+        _rotationBeforeSimulation = 360 - _rotationBeforeSimulation;
     }
+    _physicsBody->setRotation(_rotationBeforeSimulation);
     
-    // set position
-    _physicsPositionBeforeSimulation = _offset;
-    _nodeToWorldTransform.transformPoint(&_physicsPositionBeforeSimulation);
-    if (transfromDirty)
-        _physicsBody->setPosition(Vec2(_physicsPositionBeforeSimulation.x, _physicsPositionBeforeSimulation.y));
+    
+    
+    _positionBeforeSimulation = _ownerCenterOffset;
+    _nodeToWorldTransform.transformPoint(&_positionBeforeSimulation);
+    _physicsBody->setPosition(Vec2(_positionBeforeSimulation.x, _positionBeforeSimulation.y));
+    
+    getParentToWorldTransform().getInversed().transformPoint(&_positionBeforeSimulation);
+    _offset.x = _positionBeforeSimulation.x - _owner->getPosition().x;
+    _offset.y = _positionBeforeSimulation.y - _owner->getPosition().y;
 }
 
 void ComponentPhysics2d::afterSimulation()
 {
-    // update Node's position
+    // set Node position
+    auto phyiscsPos = _physicsBody->getPosition();
+    Vec3 pos(phyiscsPos.x, phyiscsPos.y, 0);
+    getParentToWorldTransform().getInversed().transformPoint(&pos);
+    _owner->setPosition(pos.x - _offset.x, pos.y - _offset.y);
     
-    // set position
-    auto pos = _physicsBody->getPosition();
-    Vec2 offset(pos.x - _physicsPositionBeforeSimulation.x, pos.y - _physicsPositionBeforeSimulation.y);
-    auto ownerPosition = _owner->getPosition();
-    _owner->setPosition(ownerPosition.x + offset.x, ownerPosition.y + offset.y);
-    
-//    _owner->setPosition(_physicsBody->getPosition());
-    
-    // set rotation
-    Mat4 parentToWorldTransform;
-    if (_owner->getParent())
-        parentToWorldTransform = _owner->getParent()->getNodeToParentTransform();
-    else
-        parentToWorldTransform = _owner->getNodeToParentTransform();
-    
-    float rotation = _physicsBody->getRotation();
-    Vec3 rotationVec(rotation, 0, 0);
-    parentToWorldTransform.getInversed().transformVector(&rotationVec);
-    _owner->setRotation(rotationVec.x);
-    
-//    _owner->setRotation(_physicsBody->getRotation());
-//    CCLOG("physics rotation: %f", _physicsBody->getRotation());
+    // set Node rotation
+    _owner->setRotation(_owner->getRotation() + (_physicsBody->getRotation() - _rotationBeforeSimulation));
 }
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
@@ -156,8 +141,8 @@ void ComponentPhysics2d::onExit()
 void ComponentPhysics2d::onAdd()
 {
     auto contentSize = _owner->getContentSize();
-    _offset.x = 0.5 * contentSize.width;
-    _offset.y = 0.5 * contentSize.height;
+    _ownerCenterOffset.x = 0.5 * contentSize.width;
+    _ownerCenterOffset.y = 0.5 * contentSize.height;
 }
 
 void ComponentPhysics2d::onRemove()
@@ -187,6 +172,14 @@ void ComponentPhysics2d::removeFromPhysicsManager()
 {
     if (_owner && _owner->getScene())
         _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
+}
+
+Mat4 ComponentPhysics2d::getParentToWorldTransform()
+{
+    if (_owner->getParent())
+        return _owner->getParent()->getNodeToWorldTransform();
+    else
+        return _owner->getNodeToWorldTransform();
 }
 
 NS_CC_END

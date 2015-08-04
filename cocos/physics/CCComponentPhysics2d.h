@@ -59,15 +59,20 @@ private:
     void removePhysicsBody();
     void addToPhysicsManager();
     void removeFromPhysicsManager();
+    Mat4 getParentToWorldTransform();
     
 private:
     PhysicsBody *_physicsBody;
-    Vec3 _physicsPositionBeforeSimulation;
+    Vec3 _positionBeforeSimulation;
     // offset between owner's center point and down left point
-    Vec3 _offset;
+    Vec3 _ownerCenterOffset;
     Mat4 _nodeToWorldTransform;
     Vec3 _ownerScale;
+    Vec3 _ownerPosition;
     Quaternion _ownerRotation;
+    // offset of owner's center point and anchor point
+    Vec2 _offset;
+    float _rotationBeforeSimulation;
 };
 
 NS_CC_END
