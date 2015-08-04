@@ -72,7 +72,7 @@ Scene::Scene()
     _event = Director::getInstance()->getEventDispatcher()->addCustomEventListener(Director::EVENT_PROJECTION_CHANGED, std::bind(&Scene::onProjectionChanged, this, std::placeholders::_1));
     _event->retain();
     
-    _physicsManager = new (std::nothrow) PhysicsManager();
+    _physicsManager = new (std::nothrow) PhysicsManager(this);
     _physicsWorld = _physicsManager->getPhysicsWorld();
 }
 

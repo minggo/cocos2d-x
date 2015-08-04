@@ -25,10 +25,12 @@
 #include "physics/CCPhysicsManager.h"
 #include "physics/CCComponentPhysics2d.h"
 #include "physics/CCPhysicsWorld.h"
+#include "2d/CCScene.h"
 
 NS_CC_BEGIN
 
-PhysicsManager::PhysicsManager()
+PhysicsManager::PhysicsManager(Scene *scene)
+: _scene(scene)
 {
     _physicsWorld = PhysicsWorld::construct();
 }
@@ -40,16 +42,36 @@ PhysicsManager::~PhysicsManager()
 
 void PhysicsManager::update(float dt)
 {
-    // update physics position
-    for (auto component : _components)
-        component->beforeSimulation();
+    // Update physics position, should loop as the same sequence as node tree.
+    // ComponentPhysics2d::beforeSimulation() will depend on the sequence.
+    beforeSimulation(_scene);
     
     // do simulation
     _physicsWorld->update(dt, false);
     
-    // update Node's position
-    for (auto component : _components)
+    // Update physics position, should loop as the same sequence as node tree.
+    // ComponentPhysics2d::afterSimulation() will depend on the sequence.
+    afterSimulation(_scene);
+}
+
+void PhysicsManager::beforeSimulation(Node *node)
+{
+    auto component = node->getComponent<ComponentPhysics2d>();
+    if (component)
+        component->beforeSimulation();
+    
+    for (auto child : node->getChildren())
+        beforeSimulation(child);
+}
+
+void PhysicsManager::afterSimulation(Node *node)
+{
+    auto component = node->getComponent<ComponentPhysics2d>();
+    if (component)
         component->afterSimulation();
+    
+    for (auto child : node->getChildren())
+        afterSimulation(child);
 }
 
 void PhysicsManager::addPhysicsComponent(ComponentPhysics2d* componentPhsics2d)

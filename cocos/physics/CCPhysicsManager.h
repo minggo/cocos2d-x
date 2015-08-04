@@ -33,11 +33,13 @@ NS_CC_BEGIN
 
 class ComponentPhysics2d;
 class PhysicsWorld;
+class Scene;
+class Node;
 
 class CC_DLL PhysicsManager
 {
 public:
-    PhysicsManager();
+    PhysicsManager(Scene *scene);
     ~PhysicsManager();
     
     /**
@@ -47,13 +49,16 @@ public:
     
     PhysicsWorld* getPhysicsWorld() const;
     
-    // don't invoke these functions, because Node will invoke them automatically
     void addPhysicsComponent(ComponentPhysics2d* componentPhsics2d);
     void removePhysicsComponent(ComponentPhysics2d* componentPhsics2d);
     
 private:
+    void beforeSimulation(Node *node);
+    void afterSimulation(Node* node);
+private:
     std::vector<ComponentPhysics2d*> _components;
     PhysicsWorld *_physicsWorld;
+    Scene *_scene;
 };
 
 NS_CC_END
