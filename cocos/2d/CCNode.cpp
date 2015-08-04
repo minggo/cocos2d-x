@@ -1932,16 +1932,6 @@ Mat4 Node::getNodeToWorldTransform() const
     return t;
 }
 
-bool Node::getNodeToWorldTransfromDirty() const
-{
-    bool dirty = _transformDirty;
-    
-    for (Node *p = _parent; p != nullptr; p = p->getParent())
-        dirty |= p->_transformDirty;
-    
-    return dirty;
-}
-
 AffineTransform Node::getWorldToNodeAffineTransform() const
 {
     return AffineTransformInvert(this->getNodeToWorldAffineTransform());

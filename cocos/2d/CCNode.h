@@ -1518,14 +1518,6 @@ public:
      */
     virtual Mat4 getNodeToWorldTransform() const;
     virtual AffineTransform getNodeToWorldAffineTransform() const;
-    
-    /*
-     * Check whether the world transfrom is dirty.
-     * It is useful when synchronizing Node to physics body.
-     *
-     * @return True if transform is dirty, False if not.
-     */
-    virtual bool getNodeToWorldTransfromDirty() const;
 
     /** @deprecated Use getNodeToWorldTransform() instead */
     CC_DEPRECATED_ATTRIBUTE inline virtual AffineTransform nodeToWorldTransform() const { return getNodeToWorldAffineTransform(); }
@@ -1537,7 +1529,6 @@ public:
      */
     virtual Mat4 getWorldToNodeTransform() const;
     virtual AffineTransform getWorldToNodeAffineTransform() const;
-
 
     /** @deprecated Use getWorldToNodeTransform() instead */
     CC_DEPRECATED_ATTRIBUTE inline virtual AffineTransform worldToNodeTransform() const { return getWorldToNodeAffineTransform(); }
