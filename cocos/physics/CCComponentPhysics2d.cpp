@@ -67,7 +67,10 @@ ComponentPhysics2d::~ComponentPhysics2d()
 
 void ComponentPhysics2d::beforeSimulation()
 {
-    CC_ASSERT(_physicsBody != nullptr);
+    //CC_ASSERT(_physicsBody != nullptr);
+    if (_physicsBody == nullptr) {
+        return;
+    }
     
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
     
@@ -96,6 +99,9 @@ void ComponentPhysics2d::beforeSimulation()
 
 void ComponentPhysics2d::afterSimulation()
 {
+    if (_physicsBody == nullptr) {
+        return;
+    }
     // set Node position
     auto worldPosition = _physicsBody->getPosition();
     Vec3 positionInParent(worldPosition.x, worldPosition.y, 0);
@@ -130,8 +136,10 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
 
 void ComponentPhysics2d::onEnter()
 {
-    CC_ASSERT(_physicsBody != nullptr);
-    
+    //CC_ASSERT(_physicsBody != nullptr);
+    if (_physicsBody == nullptr) {
+        return;
+    }
     addToPhysicsManager();
 }
 
