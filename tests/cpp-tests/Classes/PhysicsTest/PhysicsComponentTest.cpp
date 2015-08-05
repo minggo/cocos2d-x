@@ -1645,10 +1645,12 @@ void PhysicsComponentDemoBug5482::onEnter()
     
     _nodeA = Sprite::create("Images/YellowSquare.png");
     _nodeA->setPosition(VisibleRect::center().x - 150, 100);
+    _nodeA->addComponent(ComponentPhysics2d::create());
     this->addChild(_nodeA);
     
     _nodeB = Sprite::create("Images/YellowSquare.png");
     _nodeB->setPosition(VisibleRect::center().x + 150, 100);
+    _nodeB->addComponent(ComponentPhysics2d::create());
     this->addChild(_nodeB);
     
     _body = PhysicsBody::createBox(_nodeA->getContentSize());
@@ -1665,9 +1667,6 @@ void PhysicsComponentDemoBug5482::onExit()
 void PhysicsComponentDemoBug5482::changeBodyCallback(Ref* sender)
 {
     Sprite* node = _bodyInA ? _nodeB : _nodeA;
-    if (!node->getComponent<ComponentPhysics2d>()) {
-        addPhysicsComponent(node, _body);
-    }
     node->getComponent<ComponentPhysics2d>()->setPhysicsBody(_body);
     _bodyInA = !_bodyInA;
 }
