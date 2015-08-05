@@ -1610,6 +1610,13 @@ public:
      */
     Component* getComponent(const std::string& name);
     
+    /**
+     * Get a component by the type T.
+     * @lua NA
+     * @js NA
+     *
+     * @return The component that match the type T.
+     */
     template<typename T>
     T* getComponent() const
     {
