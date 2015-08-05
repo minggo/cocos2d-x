@@ -660,6 +660,8 @@ void PhysicsShapePolygon::updateScale()
 //        planes[i].n = n;
 //        planes[i].d = cpvdot(n, vects[i]);
         
+        // FIXED ME: if update 'planes[i]' as the above codes, then can not query polygon shape by PhysicsWorld::getShapes().
+        // But modified like this, then ray test can not work correctly on some cases.
         planes[i].d = cpvdot(planes[i].n, vects[i]);
     }
     
