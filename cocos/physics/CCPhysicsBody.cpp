@@ -52,7 +52,6 @@ namespace
 }
 
 PhysicsBody::PhysicsBody()
-//: _node(nullptr)
 : _world(nullptr)
 , _cpBody(nullptr)
 , _dynamic(true)
@@ -69,11 +68,12 @@ PhysicsBody::PhysicsBody()
 , _linearDamping(0.0f)
 , _angularDamping(0.0f)
 , _tag(0)
-//, _positionInitDirty(true)
 , _rotationOffset(0)
 , _recordedRotation(0.0f)
 , _recordedAngle(0.0)
 , _componentBelongsTo(nullptr)
+, _massSetByUser(false)
+, _momentSetByUser(false)
 {
 }
 
@@ -350,13 +350,25 @@ void PhysicsBody::setScale(float scaleX, float scaleY)
 {
     for (auto shape : _shapes)
     {
+        _area -= shape->getArea();
+        if (!_massSetByUser)
+            addMass(-shape->getMass());
+        if (!_momentSetByUser)
+            addMoment(-shape->getMoment());
+        
         shape->setScale(scaleX, scaleY);
+        
+        _area += shape->getArea();
+        if (!_massSetByUser)
+            addMass(shape->getMass());
+        if (!_momentSetByUser)
+            addMoment(shape->getMoment());
     }
 }
 
 Vec2 PhysicsBody::getPosition() const
 {
-    return Vec2(_cpBody->p.x, _cpBody->p.y);
+    return Vec2(_cpBody->p.x - _positionOffset.x, _cpBody->p.y - _positionOffset.y);
 }
 
 float PhysicsBody::getRotation()
@@ -438,6 +450,7 @@ void PhysicsBody::setMass(float mass)
     }
     _mass = mass;
     _massDefault = false;
+    _massSetByUser = true;
     
     // update density
     if (_mass == PHYSICS_INFINITY)
@@ -616,6 +629,7 @@ void PhysicsBody::setMoment(float moment)
 {
     _moment = moment;
     _momentDefault = false;
+    _momentSetByUser = true;
     
     // the static body's mass and moment is always infinity
     if (_rotationEnabled && _dynamic)

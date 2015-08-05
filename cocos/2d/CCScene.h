@@ -40,6 +40,7 @@ class EventListenerCustom;
 class EventCustom;
 #if CC_USE_PHYSICS
 class PhysicsWorld;
+class PhysicsManager;
 #endif
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
 class Physics3DWorld;
@@ -47,7 +48,6 @@ class Physics3DWorld;
 #if CC_USE_NAVMESH
 class NavMesh;
 #endif
-class PhysicsManager;
 
 /**
  * @addtogroup _2d
@@ -146,8 +146,6 @@ private:
     
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION))
 public:
-    virtual void addChild(Node* child, int zOrder, int tag) override;
-    virtual void addChild(Node* child, int zOrder, const std::string &name) override;
     
 #if CC_USE_PHYSICS
     /** Get the physics world of the scene.
@@ -155,9 +153,15 @@ public:
      * @js NA
      */
     inline PhysicsWorld* getPhysicsWorld() const { return _physicsWorld; }
-#endif
     
+    /**
+     * Get the `PhysicsManager` belongs to this `Scene`.
+     * 
+     * @return PhysicsManager of the scene.
+     * @js NA
+     */
     PhysicsManager* getPhysicsManager() const { return _physicsManager; }
+#endif
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     /** Get the 3d physics world of the scene.
@@ -186,6 +190,7 @@ protected:
 
 #if CC_USE_PHYSICS
     PhysicsWorld* _physicsWorld;
+    PhysicsManager* _physicsManager;
 #endif
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
@@ -208,7 +213,6 @@ public:
 protected:
     NavMesh*        _navMesh;
     Camera *        _navMeshDebugCamera;
-    PhysicsManager* _physicsManager;
 #endif
     
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)

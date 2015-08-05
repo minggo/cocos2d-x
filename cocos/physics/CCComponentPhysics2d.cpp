@@ -38,19 +38,22 @@ ComponentPhysics2d* ComponentPhysics2d::create()
 ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
 {
     auto ret = new (std::nothrow) ComponentPhysics2d(physicsBody);
-    if (ret) ret->autorelease();
+    if (ret)
+        ret->autorelease();
     
     return ret;
 }
 
 ComponentPhysics2d::ComponentPhysics2d()
 : _physicsBody(nullptr)
-, _ownerScale(1, 1, 1)
+, _physicsRotation(0.0f)
+, _ownerOriginRotation(0.0f)
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
-: _ownerScale(1, 1, 1)
-, _physicsBody(nullptr) // should set to null first to invoke setPhysicsBody()
+: _physicsRotation(0.0f)
+, _ownerOriginRotation(0.0f)
+, _physicsBody(nullptr) // should set to null to invoke setPhysicsBody()
 {
     setPhysicsBody(physicsBody);
 }
@@ -62,62 +65,76 @@ ComponentPhysics2d::~ComponentPhysics2d()
 
 void ComponentPhysics2d::beforeSimulation()
 {
+    if (nullptr == _physicsBody)
+        return;
+    
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
-    _nodeToWorldTransform.decompose(&_ownerScale, &_ownerRotation, nullptr);
     
     // set scale
-    _physicsBody->setScale(_ownerScale.x, _ownerScale.y);
+    Vec3 scale;
+    _nodeToWorldTransform.getScale(&scale);
+    _physicsBody->setScale(scale.x, scale.y);
     
     // set rotation
-    Vec3 zAxis(0, 0, 1);
-    _physicsBody->setRotation(CC_RADIANS_TO_DEGREES(_ownerRotation.toAxisAngle(&zAxis)));
+    if (_owner->getParent())
+    {
+        _physicsRotation = getPhysicsRotation(_owner->getParent()) + _owner->getRotation();
+    }
+    _physicsBody->setRotation(_physicsRotation - _ownerOriginRotation);
     
     // set position
-    Vec3 offset = _offset;
-    _nodeToWorldTransform.transformPoint(&offset);
-    _physicsPositionBeforeSimulation.x = offset.x;
-    _physicsPositionBeforeSimulation.y = offset.y;
-    _physicsBody->setPosition(_physicsPositionBeforeSimulation);
+    auto worldPosition = _ownerCenterOffset;
+    _nodeToWorldTransform.transformPoint(&worldPosition);
+    _physicsBody->setPosition(Vec2(worldPosition.x, worldPosition.y));
+    
+    auto positionInParent = worldPosition;
+    getParentToWorldTransform().getInversed().transformPoint(&positionInParent);
+    _offset.x = positionInParent.x - _owner->getPosition().x;
+    _offset.y = positionInParent.y - _owner->getPosition().y;
 }
 
 void ComponentPhysics2d::afterSimulation()
 {
-    // update Node's position
+    if (nullptr == _physicsBody)
+        return;
     
-    // set position
-    auto pos = _physicsBody->getPosition();
-    Vec2 offset(pos.x - _physicsPositionBeforeSimulation.x, pos.y - _physicsPositionBeforeSimulation.y);
-    auto ownerPosition = _owner->getPosition();
-    _owner->setPosition(ownerPosition.x + offset.x, ownerPosition.y + offset.y);
+    // set Node position
+    auto worldPosition = _physicsBody->getPosition();
+    Vec3 positionInParent(worldPosition.x, worldPosition.y, 0);
+    getParentToWorldTransform().getInversed().transformPoint(&positionInParent);
+    _owner->setPosition(positionInParent.x - _offset.x, positionInParent.y - _offset.y);
     
-//    _owner->setPosition(_physicsBody->getPosition());
-    
-    // set rotation
-    Mat4 parentToWorldTransform;
-    if (_owner->getParent())
-        parentToWorldTransform = _owner->getParent()->getNodeToParentTransform();
-    else
-        parentToWorldTransform = _owner->getNodeToParentTransform();
-    
-    float rotation = _physicsBody->getRotation();
-    Vec3 rotationVec(rotation, 0, 0);
-    parentToWorldTransform.getInversed().transformVector(&rotationVec);
-    _owner->setRotation(rotationVec.x);
-    
-//    _owner->setRotation(_physicsBody->getRotation());
+    // set Node rotation
+    _physicsRotation = _physicsBody->getRotation();
+    _owner->setRotation(_physicsRotation - getPhysicsRotation(_owner->getParent()) + _ownerOriginRotation);
 }
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 {
+    removeFromPhysicsManager();
+    
     if (physicsBody != _physicsBody)
     {
-        removePhysicsBody();
+        if (nullptr != _physicsBody)
+        {
+            _physicsBody->release();
+            _physicsBody->_componentBelongsTo = nullptr;
+        }
+        
+        // two components should not share the same physics body
+        if (physicsBody && physicsBody->_componentBelongsTo != nullptr)
+            physicsBody->_componentBelongsTo->_physicsBody = nullptr;
         
         _physicsBody = physicsBody;
-        _physicsBody->retain();
-        _physicsBody->_componentBelongsTo = this;
+        
+        if (nullptr != _physicsBody)
+        {
+            _physicsBody->retain();
+            _physicsBody->_componentBelongsTo = this;
+        }
     }
     
+    addToPhysicsManager();
 }
 
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
@@ -125,33 +142,93 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
     return _physicsBody;
 }
 
+void ComponentPhysics2d::setEnabled(bool value)
+{
+    Component::setEnabled(value);
+    
+    if (value)
+        addToPhysicsManager();
+    else
+        removeFromPhysicsManager();
+}
+
 void ComponentPhysics2d::onEnter()
 {
-    // should set physics body
-    CC_ASSERT(_physicsBody != nullptr);
-    
-    _owner->getScene()->getPhysicsManager()->addPhysicsComponent(this);
+    addToPhysicsManager();
 }
 
 void ComponentPhysics2d::onExit()
 {
-    _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
+    removeFromPhysicsManager();
 }
 
 void ComponentPhysics2d::onAdd()
 {
     auto contentSize = _owner->getContentSize();
-    _offset.x = 0.5 * contentSize.width;
-    _offset.y = 0.5 * contentSize.height;
+    _ownerCenterOffset.x = 0.5 * contentSize.width;
+    _ownerCenterOffset.y = 0.5 * contentSize.height;
+    
+    _ownerOriginRotation = _owner->getRotation();
+    
+    // component may be added after onEnter() has been invoked, so we should add
+    // this line to make sure physics body is added to physics world
+    addToPhysicsManager();
+}
+
+void ComponentPhysics2d::onRemove()
+{
+    removePhysicsBody();
 }
 
 void ComponentPhysics2d::removePhysicsBody()
 {
+    removeFromPhysicsManager();
+    
     if (_physicsBody)
     {
         _physicsBody->_componentBelongsTo = nullptr;
         _physicsBody->release();
         _physicsBody = nullptr;
+    }
+}
+
+void ComponentPhysics2d::addToPhysicsManager()
+{
+    if (_owner && _owner->getScene())
+        _owner->getScene()->getPhysicsManager()->addPhysicsComponent(this);
+}
+
+void ComponentPhysics2d::removeFromPhysicsManager()
+{
+    if (_owner && _owner->getScene())
+        _owner->getScene()->getPhysicsManager()->removePhysicsComponent(this);
+}
+
+Mat4 ComponentPhysics2d::getParentToWorldTransform() const
+{
+    if (_owner->getParent())
+        return _owner->getParent()->getNodeToWorldTransform();
+    else
+        return _owner->getNodeToWorldTransform();
+}
+
+float ComponentPhysics2d::getPhysicsRotation(Node *node) const
+{
+    if (!node)
+        return 0.0f;
+    
+    auto physicsComponent = node->getComponent<ComponentPhysics2d>();
+    if (physicsComponent)
+    {
+        return physicsComponent->_physicsRotation;
+    }
+    else
+    {
+        auto parent = node->getParent();
+        if (parent)
+            return getPhysicsRotation(parent) + node->getRotation();
+        else
+            return 0.0f;
     }
 }
 

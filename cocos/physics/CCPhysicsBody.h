@@ -306,7 +306,7 @@ public:
     inline const std::vector<PhysicsJoint*>& getJoints() const { return _joints; }
     
     /** get the sprite the body set to. */
-    inline Node* getNode() const;
+    Node* getNode() const;
     
     /**
      * A mask that defines which categories this physics body belongs to.
@@ -526,7 +526,6 @@ protected:
     virtual ~PhysicsBody();
     
 protected:
-//    Node* _node;
     std::vector<PhysicsJoint*> _joints;
     Vector<PhysicsShape*> _shapes;
     PhysicsWorld* _world;
@@ -547,6 +546,11 @@ protected:
     float _linearDamping;
     float _angularDamping;
     int _tag;
+    
+    // when setMass() is invoked, it means body's mass is not calculated by shapes
+    bool _massSetByUser;
+    // when setMoment() is invoked, it means body's moment is not calculated by shapes
+    bool _momentSetByUser;
     
     Vec2 _positionOffset;
     float _rotationOffset;

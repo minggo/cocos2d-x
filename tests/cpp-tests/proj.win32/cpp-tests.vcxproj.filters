@@ -960,9 +960,6 @@
     <ClCompile Include="..\Classes\Scene3DTest\Scene3DTest.cpp">
       <Filter>Classes\Scene3DTest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\PhysicsTest\PhysicsComponentTest.cpp">
-      <Filter>Classes\PhysicsTest</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -1750,9 +1747,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Scene3DTest\Scene3DTest.h">
       <Filter>Classes\Scene3DTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PhysicsTest\PhysicsComponentTest.h">
-      <Filter>Classes\PhysicsTest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

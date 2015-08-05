@@ -329,8 +329,6 @@ public:
     void step(float delta);
     
 protected:
-//    static PhysicsWorld* construct(Scene& scene);
-//    bool init(Scene& scene);
     static PhysicsWorld* construct();
     bool init();
     
