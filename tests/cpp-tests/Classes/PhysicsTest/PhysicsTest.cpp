@@ -7,25 +7,25 @@
 
 USING_NS_CC;
 
-PhysicsComponentTests::PhysicsComponentTests()
+PhysicsTests::PhysicsTests()
 {
-    ADD_TEST_CASE(PhysicsComponentDemoLogoSmash);
-    ADD_TEST_CASE(PhysicsComponentDemoPyramidStack);
-    ADD_TEST_CASE(PhysicsComponentDemoClickAdd);
-    ADD_TEST_CASE(PhysicsComponentDemoRayCast);
-    ADD_TEST_CASE(PhysicsComponentDemoActions);
-    ADD_TEST_CASE(PhysicsComponentDemoJoints);
-    ADD_TEST_CASE(PhysicsComponentDemoPump);
-    ADD_TEST_CASE(PhysicsComponentDemoOneWayPlatform);
-    ADD_TEST_CASE(PhysicsComponentDemoSlice);
-    ADD_TEST_CASE(PhysicsComponentDemoBug3988);
-    ADD_TEST_CASE(PhysicsComponentContactTest);
-    ADD_TEST_CASE(PhysicsComponentPositionRotationTest);
-    ADD_TEST_CASE(PhysicsComponentSetGravityEnableTest);
-    ADD_TEST_CASE(PhysicsComponentDemoBug5482);
-    ADD_TEST_CASE(PhysicsComponentFixedUpdate);
-    ADD_TEST_CASE(PhysicsComponentTransformTest);
-    ADD_TEST_CASE(PhysicsComponentIssue9959);
+    ADD_TEST_CASE(PhysicsDemoLogoSmash);
+    ADD_TEST_CASE(PhysicsDemoPyramidStack);
+    ADD_TEST_CASE(PhysicsDemoClickAdd);
+    ADD_TEST_CASE(PhysicsDemoRayCast);
+    ADD_TEST_CASE(PhysicsDemoActions);
+    ADD_TEST_CASE(PhysicsDemoJoints);
+    ADD_TEST_CASE(PhysicsDemoPump);
+    ADD_TEST_CASE(PhysicsDemoOneWayPlatform);
+    ADD_TEST_CASE(PhysicsDemoSlice);
+    ADD_TEST_CASE(PhysicsDemoBug3988);
+    ADD_TEST_CASE(PhysicsContactTest);
+    ADD_TEST_CASE(PhysicsPositionRotationTest);
+    ADD_TEST_CASE(PhysicsSetGravityEnableTest);
+    ADD_TEST_CASE(PhysicsDemoBug5482);
+    ADD_TEST_CASE(PhysicsFixedUpdate);
+    ADD_TEST_CASE(PhysicsTransformTest);
+    ADD_TEST_CASE(PhysicsIssue9959);
 }
 
 namespace
@@ -34,7 +34,7 @@ namespace
     const int DRAG_BODYS_TAG = 0x80;
 }
 
-void PhysicsComponentDemo::toggleDebug()
+void PhysicsDemo::toggleDebug()
 {
 #if CC_USE_PHYSICS
     _debugDraw = !_debugDraw;
@@ -43,23 +43,23 @@ void PhysicsComponentDemo::toggleDebug()
 }
 
 
-PhysicsComponentDemo::PhysicsComponentDemo()
+PhysicsDemo::PhysicsDemo()
 : _spriteTexture(nullptr)
 , _ball(nullptr)
 , _debugDraw(false)
 {
 }
 
-PhysicsComponentDemo::~PhysicsComponentDemo()
+PhysicsDemo::~PhysicsDemo()
 {
 }
 
-std::string PhysicsComponentDemo::title() const
+std::string PhysicsDemo::title() const
 {
     return "PhysicsComponentTest";
 }
 
-void PhysicsComponentDemo::onEnter()
+void PhysicsDemo::onEnter()
 {
     TestCase::onEnter();
     
@@ -67,14 +67,14 @@ void PhysicsComponentDemo::onEnter()
     
     // menu for debug layer
     MenuItemFont::setFontSize(18);
-    auto item = MenuItemFont::create("Toggle debug", CC_CALLBACK_1(PhysicsComponentDemo::toggleDebugCallback, this));
+    auto item = MenuItemFont::create("Toggle debug", CC_CALLBACK_1(PhysicsDemo::toggleDebugCallback, this));
     
     auto menu = Menu::create(item, nullptr);
     this->addChild(menu);
     menu->setPosition(Vec2(VisibleRect::right().x - item->getContentSize().width / 2 - 10, VisibleRect::top().y - item->getContentSize().height / 2 - 10));
 }
 
-Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*/)
+Sprite* PhysicsDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*/)
 {
     CCLOG("Add sprite %0.2f x %02.f", p.x, p.y);
     
@@ -97,7 +97,7 @@ Sprite* PhysicsComponentDemo::addGrossiniAtPosition(Vec2 p, float scale/* = 1.0*
     return sp;
 }
 
-void PhysicsComponentDemo::toggleDebugCallback(Ref* sender)
+void PhysicsDemo::toggleDebugCallback(Ref* sender)
 {
     toggleDebug();
 }
@@ -155,7 +155,7 @@ namespace
     }
 }
 
-Sprite* PhysicsComponentDemo::makeBall(Vec2 point, float radius, PhysicsMaterial material)
+Sprite* PhysicsDemo::makeBall(Vec2 point, float radius, PhysicsMaterial material)
 {
     Sprite* ball = nullptr;
     if (_ball != nullptr)
@@ -171,7 +171,7 @@ Sprite* PhysicsComponentDemo::makeBall(Vec2 point, float radius, PhysicsMaterial
     return ball;
 }
 
-Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsMaterial material)
+Sprite* PhysicsDemo::makeBox(Vec2 point, Size size, int color, PhysicsMaterial material)
 {
     bool yellow = false;
     if (color == 0)
@@ -194,7 +194,7 @@ Sprite* PhysicsComponentDemo::makeBox(Vec2 point, Size size, int color, PhysicsM
     return box;
 }
 
-Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, PhysicsMaterial material)
+Sprite* PhysicsDemo::makeTriangle(Vec2 point, Size size, int color, PhysicsMaterial material)
 {
     bool yellow = false;
     if (color == 0)
@@ -226,7 +226,7 @@ Sprite* PhysicsComponentDemo::makeTriangle(Vec2 point, Size size, int color, Phy
     return triangle;
 }
 
-bool PhysicsComponentDemo::onTouchBegan(Touch* touch, Event* event)
+bool PhysicsDemo::onTouchBegan(Touch* touch, Event* event)
 {
     auto location = touch->getLocation();
     auto arr = _physicsWorld->getShapes(location);
@@ -260,7 +260,7 @@ bool PhysicsComponentDemo::onTouchBegan(Touch* touch, Event* event)
     return false;
 }
 
-void PhysicsComponentDemo::onTouchMoved(Touch* touch, Event* event)
+void PhysicsDemo::onTouchMoved(Touch* touch, Event* event)
 {
     auto it = _mouses.find(touch->getID());
     
@@ -270,7 +270,7 @@ void PhysicsComponentDemo::onTouchMoved(Touch* touch, Event* event)
     }
 }
 
-void PhysicsComponentDemo::onTouchEnded(Touch* touch, Event* event)
+void PhysicsDemo::onTouchEnded(Touch* touch, Event* event)
 {
     auto it = _mouses.find(touch->getID());
     
@@ -281,7 +281,7 @@ void PhysicsComponentDemo::onTouchEnded(Touch* touch, Event* event)
     }
 }
 
-void PhysicsComponentDemo::addPhysicsComponent(Node *node, PhysicsBody *physicsBody)
+void PhysicsDemo::addPhysicsComponent(Node *node, PhysicsBody *physicsBody)
 {
     auto physicsComponent = ComponentPhysics2d::create();
     physicsComponent->setPhysicsBody(physicsBody);
@@ -290,9 +290,9 @@ void PhysicsComponentDemo::addPhysicsComponent(Node *node, PhysicsBody *physicsB
 
 // Implementation of PhysicsComponentDemoLogoSmash
 
-void PhysicsComponentDemoLogoSmash::onEnter()
+void PhysicsDemoLogoSmash::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     _physicsWorld->setGravity(Vec2(0, 0));
     _physicsWorld->setUpdateRate(5.0f);
@@ -330,28 +330,28 @@ void PhysicsComponentDemoLogoSmash::onEnter()
     _ball->addChild(bullet);
 }
 
-std::string PhysicsComponentDemoLogoSmash::title() const
+std::string PhysicsDemoLogoSmash::title() const
 {
     return "Logo Smash";
 }
 
 // Implementation of PhysicsComponentDemoClickAdd
 
-PhysicsComponentDemoClickAdd::~PhysicsComponentDemoClickAdd()
+PhysicsDemoClickAdd::~PhysicsDemoClickAdd()
 {
     Device::setAccelerometerEnabled(false);
 }
 
-void PhysicsComponentDemoClickAdd::onEnter()
+void PhysicsDemoClickAdd::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto touchListener = EventListenerTouchAllAtOnce::create();
-    touchListener->onTouchesEnded = CC_CALLBACK_2(PhysicsComponentDemoClickAdd::onTouchesEnded, this);
+    touchListener->onTouchesEnded = CC_CALLBACK_2(PhysicsDemoClickAdd::onTouchesEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     Device::setAccelerometerEnabled(true);
-    auto accListener = EventListenerAcceleration::create(CC_CALLBACK_2(PhysicsComponentDemoClickAdd::onAcceleration, this));
+    auto accListener = EventListenerAcceleration::create(CC_CALLBACK_2(PhysicsDemoClickAdd::onAcceleration, this));
     _eventDispatcher->addEventListenerWithSceneGraphPriority(accListener, this);
     
     auto node = Node::create();
@@ -362,12 +362,12 @@ void PhysicsComponentDemoClickAdd::onEnter()
     addGrossiniAtPosition(VisibleRect::center());
 }
 
-std::string PhysicsComponentDemoClickAdd::subtitle() const
+std::string PhysicsDemoClickAdd::subtitle() const
 {
     return "multi touch to add grossini";
 }
 
-void PhysicsComponentDemoClickAdd::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
+void PhysicsDemoClickAdd::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
 {
     //Add a new body/atlas sprite at the touched location
     
@@ -379,7 +379,7 @@ void PhysicsComponentDemoClickAdd::onTouchesEnded(const std::vector<Touch*>& tou
     }
 }
 
-void PhysicsComponentDemoClickAdd::onAcceleration(Acceleration* acc, Event* event)
+void PhysicsDemoClickAdd::onAcceleration(Acceleration* acc, Event* event)
 {
     static float prevX=0, prevY=0;
     
@@ -397,14 +397,14 @@ void PhysicsComponentDemoClickAdd::onAcceleration(Acceleration* acc, Event* even
     _physicsWorld->setGravity(v);
 }
 
-void PhysicsComponentDemoPyramidStack::onEnter()
+void PhysicsDemoPyramidStack::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPyramidStack::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemoPyramidStack::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemoPyramidStack::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemoPyramidStack::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     auto node = Node::create();
@@ -419,7 +419,7 @@ void PhysicsComponentDemoPyramidStack::onEnter()
     ball->setPosition(VisibleRect::bottom() + Vec2(0, 60));
     this->addChild(ball);
     
-    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentDemoPyramidStack::updateOnce), 3.0);
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsDemoPyramidStack::updateOnce), 3.0);
     
     for (int i = 0; i < 14; i++)
     {
@@ -431,30 +431,30 @@ void PhysicsComponentDemoPyramidStack::onEnter()
     }
 }
 
-void PhysicsComponentDemoPyramidStack::updateOnce(float delta)
+void PhysicsDemoPyramidStack::updateOnce(float delta)
 {
     auto ball = getChildByTag(100);
     if (ball)
         ball->setScale(ball->getScale() * 3);
 }
 
-std::string PhysicsComponentDemoPyramidStack::title() const
+std::string PhysicsDemoPyramidStack::title() const
 {
     return "Pyramid Stack";
 }
 
-PhysicsComponentDemoRayCast::PhysicsComponentDemoRayCast()
+PhysicsDemoRayCast::PhysicsDemoRayCast()
 : _angle(0.0f)
 , _node(nullptr)
 , _mode(0)
 {}
 
-void PhysicsComponentDemoRayCast::onEnter()
+void PhysicsDemoRayCast::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto listener = EventListenerTouchAllAtOnce::create();
-    listener->onTouchesEnded = CC_CALLBACK_2(PhysicsComponentDemoRayCast::onTouchesEnded, this);
+    listener->onTouchesEnded = CC_CALLBACK_2(PhysicsDemoRayCast::onTouchesEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
     _physicsWorld->setGravity(Point::ZERO);
@@ -465,7 +465,7 @@ void PhysicsComponentDemoRayCast::onEnter()
     this->addChild(node);
     
     MenuItemFont::setFontSize(18);
-    auto item = MenuItemFont::create("Change Mode(any)", CC_CALLBACK_1(PhysicsComponentDemoRayCast::changeModeCallback, this));
+    auto item = MenuItemFont::create("Change Mode(any)", CC_CALLBACK_1(PhysicsDemoRayCast::changeModeCallback, this));
     
     auto menu = Menu::create(item, nullptr);
     this->addChild(menu);
@@ -474,7 +474,7 @@ void PhysicsComponentDemoRayCast::onEnter()
     scheduleUpdate();
 }
 
-void PhysicsComponentDemoRayCast::changeModeCallback(Ref* sender)
+void PhysicsDemoRayCast::changeModeCallback(Ref* sender)
 {
     _mode = (_mode + 1) % 3;
     
@@ -495,13 +495,13 @@ void PhysicsComponentDemoRayCast::changeModeCallback(Ref* sender)
     }
 }
 
-bool PhysicsComponentDemoRayCast::anyRay(PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)
+bool PhysicsDemoRayCast::anyRay(PhysicsWorld& world, const PhysicsRayCastInfo& info, void* data)
 {
     *((Vec2*)data) = info.contact;
     return false;
 }
 
-void PhysicsComponentDemoRayCast::update(float delta)
+void PhysicsDemoRayCast::update(float delta)
 {
     float L = 150.0f;
     Vec2 point1 = VisibleRect::center();
@@ -515,7 +515,7 @@ void PhysicsComponentDemoRayCast::update(float delta)
         case 0:
         {
             Vec2 point3 = point2;
-            auto func = CC_CALLBACK_3(PhysicsComponentDemoRayCast::anyRay, this);
+            auto func = CC_CALLBACK_3(PhysicsDemoRayCast::anyRay, this);
             
             _physicsWorld->rayCast(func, point1, point2, &point3);
             _node->drawSegment(point1, point3, 1, STATIC_COLOR);
@@ -591,7 +591,7 @@ void PhysicsComponentDemoRayCast::update(float delta)
     _angle += 0.25f * (float)M_PI / 180.0f;
 }
 
-void PhysicsComponentDemoRayCast::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
+void PhysicsDemoRayCast::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
 {
     //Add a new body/atlas sprite at the touched location
     
@@ -616,20 +616,20 @@ void PhysicsComponentDemoRayCast::onTouchesEnded(const std::vector<Touch*>& touc
     }
 }
 
-std::string PhysicsComponentDemoRayCast::title() const
+std::string PhysicsDemoRayCast::title() const
 {
     return "Ray Cast";
 }
 
-void PhysicsComponentDemoActions::onEnter()
+void PhysicsDemoActions::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     _physicsWorld->setGravity(Vect::ZERO);
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoActions::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemoActions::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemoActions::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemoActions::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     auto node = Node::create();
@@ -661,23 +661,23 @@ void PhysicsComponentDemoActions::onEnter()
     sp4->runAction(RepeatForever::create(Sequence::create(rotateBy, rotateByBack, nullptr)));
 }
 
-std::string PhysicsComponentDemoActions::title() const
+std::string PhysicsDemoActions::title() const
 {
     return "Actions";
 }
 
-// implementation of PhysicsComponentDemoJoints
+// implementation of PhysicsDemoJoints
 
 
-void PhysicsComponentDemoJoints::onEnter()
+void PhysicsDemoJoints::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     
     auto listener = EventListenerTouchOneByOne::create();
-    listener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
-    listener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
-    listener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    listener->onTouchBegan = CC_CALLBACK_2(PhysicsDemo::onTouchBegan, this);
+    listener->onTouchMoved = CC_CALLBACK_2(PhysicsDemo::onTouchMoved, this);
+    listener->onTouchEnded = CC_CALLBACK_2(PhysicsDemo::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
     float width = (VisibleRect::getVisibleRect().size.width - 10) / 4;
@@ -905,22 +905,22 @@ void PhysicsComponentDemoJoints::onEnter()
     }
 }
 
-std::string PhysicsComponentDemoJoints::title() const
+std::string PhysicsDemoJoints::title() const
 {
     return "Joints";
 }
 
-void PhysicsComponentDemoPump::onEnter()
+void PhysicsDemoPump::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     
     _distance = 0.0f;
     _rotationV = 0.0f;
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoPump::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemoPump::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemoPump::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemoPump::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     scheduleUpdate();
     
@@ -1006,7 +1006,7 @@ void PhysicsComponentDemoPump::onEnter()
     _physicsWorld->addJoint(PhysicsJointDistance::construct(plugger->getComponent<ComponentPhysics2d>()->getPhysicsBody(), sgear->getComponent<ComponentPhysics2d>()->getPhysicsBody(), Vec2::ZERO, Vec2(44, 0)));
 }
 
-void PhysicsComponentDemoPump::update(float delta)
+void PhysicsDemoPump::update(float delta)
 {
     for (const auto& body : _physicsWorld->getAllBodies())
     {
@@ -1038,47 +1038,47 @@ void PhysicsComponentDemoPump::update(float delta)
     }
 }
 
-bool PhysicsComponentDemoPump::onTouchBegan(Touch* touch, Event* event)
+bool PhysicsDemoPump::onTouchBegan(Touch* touch, Event* event)
 {
-    PhysicsComponentDemo::onTouchBegan(touch, event);
+    PhysicsDemo::onTouchBegan(touch, event);
     
     _distance = touch->getLocation().x - VisibleRect::center().x;
     
     return true;
 }
 
-void PhysicsComponentDemoPump::onTouchMoved(Touch* touch, Event* event)
+void PhysicsDemoPump::onTouchMoved(Touch* touch, Event* event)
 {
-    PhysicsComponentDemo::onTouchMoved(touch, event);
+    PhysicsDemo::onTouchMoved(touch, event);
     
     _distance = touch->getLocation().x - VisibleRect::center().x;
 }
 
-void PhysicsComponentDemoPump::onTouchEnded(Touch* touch, Event* event)
+void PhysicsDemoPump::onTouchEnded(Touch* touch, Event* event)
 {
-    PhysicsComponentDemo::onTouchEnded(touch, event);
+    PhysicsDemo::onTouchEnded(touch, event);
     
     _distance = 0;
 }
 
-std::string PhysicsComponentDemoPump::title() const
+std::string PhysicsDemoPump::title() const
 {
     return "Pump";
 }
 
-std::string PhysicsComponentDemoPump::subtitle() const
+std::string PhysicsDemoPump::subtitle() const
 {
     return "touch screen on left or right";
 }
 
-void PhysicsComponentDemoOneWayPlatform::onEnter()
+void PhysicsDemoOneWayPlatform::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoOneWayPlatform::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemoOneWayPlatform::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemoOneWayPlatform::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemoOneWayPlatform::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     auto ground = Node::create();
@@ -1098,30 +1098,30 @@ void PhysicsComponentDemoOneWayPlatform::onEnter()
     this->addChild(ball);
     
     auto contactListener = EventListenerPhysicsContactWithBodies::create(platform->getComponent<ComponentPhysics2d>()->getPhysicsBody(), ball->getComponent<ComponentPhysics2d>()->getPhysicsBody());
-    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsComponentDemoOneWayPlatform::onContactBegin, this);
+    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsDemoOneWayPlatform::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
-bool PhysicsComponentDemoOneWayPlatform::onContactBegin(PhysicsContact& contact)
+bool PhysicsDemoOneWayPlatform::onContactBegin(PhysicsContact& contact)
 {
     return contact.getContactData()->normal.y < 0;
 }
 
-std::string PhysicsComponentDemoOneWayPlatform::title() const
+std::string PhysicsDemoOneWayPlatform::title() const
 {
     return "One Way Platform";
 }
 
-void PhysicsComponentDemoSlice::onEnter()
+void PhysicsDemoSlice::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     
     _sliceTag = 1;
     
     auto touchListener = EventListenerTouchOneByOne::create();
     touchListener->onTouchBegan = [](Touch* touch, Event* event)->bool{ return true; };
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemoSlice::onTouchEnded, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemoSlice::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     auto ground = Node::create();
@@ -1136,7 +1136,7 @@ void PhysicsComponentDemoSlice::onEnter()
     addChild(box);
 }
 
-bool PhysicsComponentDemoSlice::slice(PhysicsWorld &world, const PhysicsRayCastInfo& info, void *data)
+bool PhysicsDemoSlice::slice(PhysicsWorld &world, const PhysicsRayCastInfo& info, void *data)
 {
     if (info.shape->getBody()->getTag() != _sliceTag)
     {
@@ -1158,7 +1158,7 @@ bool PhysicsComponentDemoSlice::slice(PhysicsWorld &world, const PhysicsRayCastI
     return true;
 }
 
-void PhysicsComponentDemoSlice::clipPoly(PhysicsShapePolygon* shape, Vec2 normal, float distance)
+void PhysicsDemoSlice::clipPoly(PhysicsShapePolygon* shape, Vec2 normal, float distance)
 {
     PhysicsBody* body = shape->getBody();
     int count = shape->getPointsCount();
@@ -1200,25 +1200,25 @@ void PhysicsComponentDemoSlice::clipPoly(PhysicsShapePolygon* shape, Vec2 normal
     delete[] points;
 }
 
-void PhysicsComponentDemoSlice::onTouchEnded(Touch *touch, Event *event)
+void PhysicsDemoSlice::onTouchEnded(Touch *touch, Event *event)
 {
-    auto func = CC_CALLBACK_3(PhysicsComponentDemoSlice::slice, this);
+    auto func = CC_CALLBACK_3(PhysicsDemoSlice::slice, this);
     getPhysicsWorld()->rayCast(func, touch->getStartLocation(), touch->getLocation(), nullptr);
 }
 
-std::string PhysicsComponentDemoSlice::title() const
+std::string PhysicsDemoSlice::title() const
 {
     return "Slice";
 }
 
-std::string PhysicsComponentDemoSlice::subtitle() const
+std::string PhysicsDemoSlice::subtitle() const
 {
     return "click and drag to slice up the block";
 }
 
-void PhysicsComponentDemoBug3988::onEnter()
+void PhysicsDemoBug3988::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     _physicsWorld->setGravity(Vect::ZERO);
     
@@ -1232,19 +1232,19 @@ void PhysicsComponentDemoBug3988::onEnter()
     this->addChild(physicsBall);
 }
 
-std::string PhysicsComponentDemoBug3988::title() const
+std::string PhysicsDemoBug3988::title() const
 {
     return "Bug3988";
 }
 
-std::string PhysicsComponentDemoBug3988::subtitle() const
+std::string PhysicsDemoBug3988::subtitle() const
 {
     return "All the Rectangles should have same rotation angle";
 }
 
-void PhysicsComponentContactTest::onEnter()
+void PhysicsContactTest::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     _physicsWorld->setGravity(Vect::ZERO);
     auto s = VisibleRect::getVisibleRect().size;
     
@@ -1255,9 +1255,9 @@ void PhysicsComponentContactTest::onEnter()
     
     
     MenuItemFont::setFontSize(65);
-    auto decrease1 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    auto decrease1 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsContactTest::onDecrease, this));
     decrease1->setColor(Color3B(0, 200, 20));
-    auto increase1 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    auto increase1 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsContactTest::onIncrease, this));
     increase1->setColor(Color3B(0, 200, 20));
     decrease1->setTag(1);
     increase1->setTag(1);
@@ -1271,9 +1271,9 @@ void PhysicsComponentContactTest::onEnter()
     addChild(label, 1);
     label->setPosition(Vec2(s.width / 2 - 150, s.height - 50));
     
-    auto decrease2 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    auto decrease2 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsContactTest::onDecrease, this));
     decrease2->setColor(Color3B(0, 200, 20));
-    auto increase2 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    auto increase2 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsContactTest::onIncrease, this));
     increase2->setColor(Color3B(0, 200, 20));
     decrease2->setTag(2);
     increase2->setTag(2);
@@ -1287,9 +1287,9 @@ void PhysicsComponentContactTest::onEnter()
     addChild(label, 1);
     label->setPosition(Vec2(s.width / 2 - 150, s.height - 90));
     
-    auto decrease3 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    auto decrease3 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsContactTest::onDecrease, this));
     decrease3->setColor(Color3B(0, 200, 20));
-    auto increase3 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    auto increase3 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsContactTest::onIncrease, this));
     increase3->setColor(Color3B(0, 200, 20));
     decrease3->setTag(3);
     increase3->setTag(3);
@@ -1303,9 +1303,9 @@ void PhysicsComponentContactTest::onEnter()
     addChild(label, 1);
     label->setPosition(Vec2(s.width / 2 - 150, s.height - 130));
     
-    auto decrease4 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsComponentContactTest::onDecrease, this));
+    auto decrease4 = MenuItemFont::create(" - ", CC_CALLBACK_1(PhysicsContactTest::onDecrease, this));
     decrease4->setColor(Color3B(0, 200, 20));
-    auto increase4 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsComponentContactTest::onIncrease, this));
+    auto increase4 = MenuItemFont::create(" + ", CC_CALLBACK_1(PhysicsContactTest::onIncrease, this));
     increase4->setColor(Color3B(0, 200, 20));
     decrease4->setTag(4);
     increase4->setTag(4);
@@ -1322,7 +1322,7 @@ void PhysicsComponentContactTest::onEnter()
     resetTest();
 }
 
-void PhysicsComponentContactTest::onDecrease(Ref* sender)
+void PhysicsContactTest::onDecrease(Ref* sender)
 {
     switch (dynamic_cast<Node*>(sender)->getTag())
     {
@@ -1346,7 +1346,7 @@ void PhysicsComponentContactTest::onDecrease(Ref* sender)
     resetTest();
 }
 
-void PhysicsComponentContactTest::onIncrease(Ref* sender)
+void PhysicsContactTest::onIncrease(Ref* sender)
 {
     switch (dynamic_cast<Node*>(sender)->getTag())
     {
@@ -1370,7 +1370,7 @@ void PhysicsComponentContactTest::onIncrease(Ref* sender)
     resetTest();
 }
 
-void PhysicsComponentContactTest::resetTest()
+void PhysicsContactTest::resetTest()
 {
     removeChildByTag(10);
     auto root = Node::create();
@@ -1407,7 +1407,7 @@ void PhysicsComponentContactTest::resetTest()
     root->addChild(wall);
     
     auto contactListener = EventListenerPhysicsContact::create();
-    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsComponentContactTest::onContactBegin, this);
+    contactListener->onContactBegin = CC_CALLBACK_1(PhysicsContactTest::onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
     
     // yellow box, will collide with itself and blue box.
@@ -1483,7 +1483,7 @@ void PhysicsComponentContactTest::resetTest()
     }
 }
 
-bool PhysicsComponentContactTest::onContactBegin(PhysicsContact& contact)
+bool PhysicsContactTest::onContactBegin(PhysicsContact& contact)
 {
     PhysicsBody* a = contact.getShapeA()->getBody();
     PhysicsBody* b = contact.getShapeB()->getBody();
@@ -1494,26 +1494,26 @@ bool PhysicsComponentContactTest::onContactBegin(PhysicsContact& contact)
     return true;
 }
 
-std::string PhysicsComponentContactTest::title() const
+std::string PhysicsContactTest::title() const
 {
     return "Contact Test";
 }
 
-std::string PhysicsComponentContactTest::subtitle() const
+std::string PhysicsContactTest::subtitle() const
 {
     return "should not crash";
 }
 
-void PhysicsComponentPositionRotationTest::onEnter()
+void PhysicsPositionRotationTest::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     _physicsWorld->setGravity(Point::ZERO);
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemo::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     auto wall = Node::create();
@@ -1557,19 +1557,19 @@ void PhysicsComponentPositionRotationTest::onEnter()
     return;
 }
 
-std::string PhysicsComponentPositionRotationTest::title() const
+std::string PhysicsPositionRotationTest::title() const
 {
     return "Position/Rotation Test";
 }
 
-void PhysicsComponentSetGravityEnableTest::onEnter()
+void PhysicsSetGravityEnableTest::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemo::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     // wall
@@ -1595,10 +1595,10 @@ void PhysicsComponentSetGravityEnableTest::onEnter()
     ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setGravityEnable(false);
     addChild(ball);
     ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(50);
-    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentSetGravityEnableTest::onScheduleOnce), 1.0);
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsSetGravityEnableTest::onScheduleOnce), 1.0);
 }
 
-void PhysicsComponentSetGravityEnableTest::onScheduleOnce(float delta)
+void PhysicsSetGravityEnableTest::onScheduleOnce(float delta)
 {
     auto ball = getChildByTag(2);
     ball->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setMass(200);
@@ -1606,26 +1606,26 @@ void PhysicsComponentSetGravityEnableTest::onScheduleOnce(float delta)
     _physicsWorld->setGravity(Vect(0, 98));
 }
 
-std::string PhysicsComponentSetGravityEnableTest::title() const
+std::string PhysicsSetGravityEnableTest::title() const
 {
     return "Set Gravity Enable Test";
 }
 
-std::string PhysicsComponentSetGravityEnableTest::subtitle() const
+std::string PhysicsSetGravityEnableTest::subtitle() const
 {
     return "only yellow box drop down";
 }
 
-void PhysicsComponentDemoBug5482::onEnter()
+void PhysicsDemoBug5482::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     toggleDebug();
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentDemo::onTouchBegan, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsComponentDemo::onTouchMoved, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsComponentDemo::onTouchEnded, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsDemo::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PhysicsDemo::onTouchMoved, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(PhysicsDemo::onTouchEnded, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     _bodyInA = false;
@@ -1638,7 +1638,7 @@ void PhysicsComponentDemoBug5482::onEnter()
     
     //button
     MenuItemFont::setFontSize(18);
-    _button = MenuItemFont::create("Set Body To A", CC_CALLBACK_1(PhysicsComponentDemoBug5482::changeBodyCallback, this));
+    _button = MenuItemFont::create("Set Body To A", CC_CALLBACK_1(PhysicsDemoBug5482::changeBodyCallback, this));
     
     auto menu = Menu::create(_button, nullptr);
     this->addChild(menu);
@@ -1658,32 +1658,32 @@ void PhysicsComponentDemoBug5482::onEnter()
     _body->retain();
 }
 
-void PhysicsComponentDemoBug5482::onExit()
+void PhysicsDemoBug5482::onExit()
 {
-    PhysicsComponentDemo::onExit();
+    PhysicsDemo::onExit();
     _body->release();
 }
 
-void PhysicsComponentDemoBug5482::changeBodyCallback(Ref* sender)
+void PhysicsDemoBug5482::changeBodyCallback(Ref* sender)
 {
     Sprite* node = _bodyInA ? _nodeB : _nodeA;
     node->getComponent<ComponentPhysics2d>()->setPhysicsBody(_body);
     _bodyInA = !_bodyInA;
 }
 
-std::string PhysicsComponentDemoBug5482::title() const
+std::string PhysicsDemoBug5482::title() const
 {
     return "bug 5482: setPhysicsBodyTest";
 }
 
-std::string PhysicsComponentDemoBug5482::subtitle() const
+std::string PhysicsDemoBug5482::subtitle() const
 {
     return "change physics body to the other.";
 }
 
-void PhysicsComponentFixedUpdate::onEnter()
+void PhysicsFixedUpdate::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     _physicsWorld->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     _physicsWorld->setGravity(Point::ZERO);
@@ -1696,10 +1696,10 @@ void PhysicsComponentFixedUpdate::onEnter()
     
     addBall();
     
-    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsComponentFixedUpdate::updateStart), 2);
+    scheduleOnce(CC_SCHEDULE_SELECTOR(PhysicsFixedUpdate::updateStart), 2);
 }
 
-void PhysicsComponentFixedUpdate::addBall()
+void PhysicsFixedUpdate::addBall()
 {
     auto ball = Sprite::create("Images/ball.png");
     ball->setPosition(100, 100);
@@ -1709,7 +1709,7 @@ void PhysicsComponentFixedUpdate::addBall()
     this->addChild(ball);
 }
 
-void PhysicsComponentFixedUpdate::updateStart(float delta)
+void PhysicsFixedUpdate::updateStart(float delta)
 {
     addBall();
     
@@ -1717,7 +1717,7 @@ void PhysicsComponentFixedUpdate::updateStart(float delta)
     scheduleUpdate();
 }
 
-void PhysicsComponentFixedUpdate::update(float delta)
+void PhysicsFixedUpdate::update(float delta)
 {
     
     // use fixed time and calculate 3 times per frame makes physics simulate more precisely.
@@ -1727,30 +1727,30 @@ void PhysicsComponentFixedUpdate::update(float delta)
     }
 }
 
-std::string PhysicsComponentFixedUpdate::title() const
+std::string PhysicsFixedUpdate::title() const
 {
     return "Fixed Update Test";
 }
 
-std::string PhysicsComponentFixedUpdate::subtitle() const
+std::string PhysicsFixedUpdate::subtitle() const
 {
     return "The secend ball should not run across the wall";
 }
 
-bool PhysicsComponentTransformTest::onTouchBegan(Touch *touch, Event *event)
+bool PhysicsTransformTest::onTouchBegan(Touch *touch, Event *event)
 {
     _parentSprite->setPosition(_rootLayer->convertTouchToNodeSpace(touch));
     return false;
 }
 
-void PhysicsComponentTransformTest::onEnter()
+void PhysicsTransformTest::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     toggleDebug();
     _physicsWorld->setGravity(Point::ZERO);
     
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsComponentTransformTest::onTouchBegan, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(PhysicsTransformTest::onTouchBegan, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
     _rootLayer = Layer::create();
@@ -1807,14 +1807,14 @@ void PhysicsComponentTransformTest::onEnter()
     _rootLayer->runAction(RepeatForever::create(rotate));
 }
 
-std::string PhysicsComponentTransformTest::title() const
+std::string PhysicsTransformTest::title() const
 {
     return "Physics transform test";
 }
 
-void PhysicsComponentIssue9959::onEnter()
+void PhysicsIssue9959::onEnter()
 {
-    PhysicsComponentDemo::onEnter();
+    PhysicsDemo::onEnter();
     
     auto origin = Director::getInstance()->getVisibleOrigin();
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -1835,12 +1835,12 @@ void PhysicsComponentIssue9959::onEnter()
     scale9Sprite3->runAction(RepeatForever::create(RotateBy::create(2.0f, 360.0f)));
 }
 
-std::string PhysicsComponentIssue9959::title() const
+std::string PhysicsIssue9959::title() const
 {
     return "Reorder issue #9959";
 }
 
-std::string PhysicsComponentIssue9959::subtitle() const
+std::string PhysicsIssue9959::subtitle() const
 {
     return "Test Scale9Sprite run scale/move/rotation action in physics scene";
 }

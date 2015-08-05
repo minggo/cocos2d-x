@@ -5,13 +5,13 @@
 #include "../BaseTest.h"
 
 
-DEFINE_TEST_SUITE(PhysicsComponentTests);
+DEFINE_TEST_SUITE(PhysicsTests);
 
-class PhysicsComponentDemo : public TestCase
+class PhysicsDemo : public TestCase
 {
 public:
-    PhysicsComponentDemo();
-    virtual ~PhysicsComponentDemo();
+    PhysicsDemo();
+    virtual ~PhysicsDemo();
     
     virtual void onEnter() override;
     virtual std::string title() const override;
@@ -38,21 +38,21 @@ protected:
     bool _debugDraw;
 };
 
-class PhysicsComponentDemoLogoSmash : public PhysicsComponentDemo
+class PhysicsDemoLogoSmash : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoLogoSmash);
+    CREATE_FUNC(PhysicsDemoLogoSmash);
     
     void onEnter() override;
     virtual std::string title() const override;
 };
 
-class PhysicsComponentDemoClickAdd : public PhysicsComponentDemo
+class PhysicsDemoClickAdd : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoClickAdd);
+    CREATE_FUNC(PhysicsDemoClickAdd);
     
-    virtual ~PhysicsComponentDemoClickAdd();
+    virtual ~PhysicsDemoClickAdd();
     void onEnter() override;
     virtual std::string subtitle() const override;
     
@@ -60,22 +60,22 @@ public:
     void onAcceleration(cocos2d::Acceleration* acc, cocos2d::Event* event);
 };
 
-class PhysicsComponentDemoPyramidStack : public PhysicsComponentDemo
+class PhysicsDemoPyramidStack : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoPyramidStack);
+    CREATE_FUNC(PhysicsDemoPyramidStack);
     
     void onEnter() override;
     void updateOnce(float delta);
     virtual std::string title() const override;
 };
 
-class PhysicsComponentDemoRayCast : public PhysicsComponentDemo
+class PhysicsDemoRayCast : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoRayCast);
+    CREATE_FUNC(PhysicsDemoRayCast);
     
-    PhysicsComponentDemoRayCast();
+    PhysicsDemoRayCast();
     
     void onEnter() override;
     virtual std::string title() const override;
@@ -92,28 +92,28 @@ private:
     int _mode;
 };
 
-class PhysicsComponentDemoActions : public PhysicsComponentDemo
+class PhysicsDemoActions : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoActions);
+    CREATE_FUNC(PhysicsDemoActions);
     
     void onEnter() override;
     virtual std::string title() const override;
 };
 
-class PhysicsComponentDemoJoints : public PhysicsComponentDemo
+class PhysicsDemoJoints : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoJoints);
+    CREATE_FUNC(PhysicsDemoJoints);
     
     void onEnter() override;
     virtual std::string title() const override;
 };
 
-class PhysicsComponentDemoPump : public PhysicsComponentDemo
+class PhysicsDemoPump : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoPump);
+    CREATE_FUNC(PhysicsDemoPump);
     
     void onEnter() override;
     void update(float delta) override;
@@ -129,10 +129,10 @@ private:
     float _rotationV;
 };
 
-class PhysicsComponentDemoOneWayPlatform : public PhysicsComponentDemo
+class PhysicsDemoOneWayPlatform : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoOneWayPlatform);
+    CREATE_FUNC(PhysicsDemoOneWayPlatform);
     
     void onEnter() override;
     virtual std::string title() const override;
@@ -140,10 +140,10 @@ public:
     bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
-class PhysicsComponentDemoSlice : public PhysicsComponentDemo
+class PhysicsDemoSlice : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoSlice);
+    CREATE_FUNC(PhysicsDemoSlice);
     
     void onEnter() override;
     virtual std::string title() const override;
@@ -158,20 +158,20 @@ private:
     int _sliceTag;
 };
 
-class PhysicsComponentDemoBug3988 : public PhysicsComponentDemo
+class PhysicsDemoBug3988 : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoBug3988);
+    CREATE_FUNC(PhysicsDemoBug3988);
     
     void onEnter() override;
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
 };
 
-class PhysicsComponentContactTest : public PhysicsComponentDemo
+class PhysicsContactTest : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentContactTest);
+    CREATE_FUNC(PhysicsContactTest);
     
     void onEnter() override;
     void resetTest();
@@ -189,19 +189,19 @@ private:
     int _blueTriangleNum;
 };
 
-class PhysicsComponentPositionRotationTest : public PhysicsComponentDemo
+class PhysicsPositionRotationTest : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentPositionRotationTest);
+    CREATE_FUNC(PhysicsPositionRotationTest);
     
     void onEnter() override;
     virtual std::string title() const override;
 };
 
-class PhysicsComponentSetGravityEnableTest : public PhysicsComponentDemo
+class PhysicsSetGravityEnableTest : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentSetGravityEnableTest);
+    CREATE_FUNC(PhysicsSetGravityEnableTest);
     
     void onEnter() override;
     void onScheduleOnce(float delta);
@@ -209,10 +209,10 @@ public:
     virtual std::string subtitle() const override;
 };
 
-class PhysicsComponentDemoBug5482 : public PhysicsComponentDemo
+class PhysicsDemoBug5482 : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentDemoBug5482);
+    CREATE_FUNC(PhysicsDemoBug5482);
     
     void onEnter() override;
     void onExit() override;
@@ -228,10 +228,10 @@ private:
     bool _bodyInA;
 };
 
-class PhysicsComponentFixedUpdate : public PhysicsComponentDemo
+class PhysicsFixedUpdate : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentFixedUpdate);
+    CREATE_FUNC(PhysicsFixedUpdate);
     void onEnter() override;
     void updateStart(float delta);
     void addBall();
@@ -240,10 +240,10 @@ public:
     virtual std::string subtitle() const override;
 };
 
-class PhysicsComponentTransformTest : public PhysicsComponentDemo
+class PhysicsTransformTest : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentTransformTest);
+    CREATE_FUNC(PhysicsTransformTest);
     
     void onEnter() override;
     virtual std::string title() const override;
@@ -255,10 +255,10 @@ private:
     cocos2d::Layer* _rootLayer;
 };
 
-class PhysicsComponentIssue9959 : public PhysicsComponentDemo
+class PhysicsIssue9959 : public PhysicsDemo
 {
 public:
-    CREATE_FUNC(PhysicsComponentIssue9959);
+    CREATE_FUNC(PhysicsIssue9959);
     
     void onEnter() override;
     virtual std::string title() const override;
