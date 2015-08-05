@@ -526,7 +526,6 @@ protected:
     virtual ~PhysicsBody();
     
 protected:
-//    Node* _node;
     std::vector<PhysicsJoint*> _joints;
     Vector<PhysicsShape*> _shapes;
     PhysicsWorld* _world;
