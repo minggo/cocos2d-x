@@ -32,16 +32,14 @@ NS_CC_BEGIN
 
 ComponentPhysics2d* ComponentPhysics2d::create()
 {
-    auto ret = new (std::nothrow) ComponentPhysics2d();
-    if (ret) ret->autorelease();
-    
-    return ret;
+    return create(nullptr);
 }
 
 ComponentPhysics2d* ComponentPhysics2d::create(PhysicsBody *physicsBody)
 {
     auto ret = new (std::nothrow) ComponentPhysics2d(physicsBody);
-    if (ret) ret->autorelease();
+    if (ret)
+        ret->autorelease();
     
     return ret;
 }
@@ -53,9 +51,9 @@ ComponentPhysics2d::ComponentPhysics2d()
 {}
 
 ComponentPhysics2d::ComponentPhysics2d(PhysicsBody* physicsBody)
-: _physicsBody(nullptr) // should set to null first to invoke setPhysicsBody()
-, _physicsRotation(0.0f)
+: _physicsRotation(0.0f)
 , _ownerOriginRotation(0.0f)
+, _physicsBody(nullptr) // should set to null to invoke setPhysicsBody()
 {
     setPhysicsBody(physicsBody);
 }
@@ -67,10 +65,8 @@ ComponentPhysics2d::~ComponentPhysics2d()
 
 void ComponentPhysics2d::beforeSimulation()
 {
-    //CC_ASSERT(_physicsBody != nullptr);
-    if (_physicsBody == nullptr) {
+    if (nullptr == _physicsBody)
         return;
-    }
     
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
     
@@ -99,9 +95,9 @@ void ComponentPhysics2d::beforeSimulation()
 
 void ComponentPhysics2d::afterSimulation()
 {
-    if (_physicsBody == nullptr) {
+    if (nullptr == _physicsBody)
         return;
-    }
+    
     // set Node position
     auto worldPosition = _physicsBody->getPosition();
     Vec3 positionInParent(worldPosition.x, worldPosition.y, 0);
@@ -115,18 +111,30 @@ void ComponentPhysics2d::afterSimulation()
 
 void ComponentPhysics2d::setPhysicsBody(PhysicsBody *physicsBody)
 {
-    CC_ASSERT(physicsBody != nullptr);
+    removeFromPhysicsManager();
     
     if (physicsBody != _physicsBody)
     {
-        removeFromPhysicsManager();
+        if (nullptr != _physicsBody)
+        {
+            _physicsBody->release();
+            _physicsBody->_componentBelongsTo = nullptr;
+        }
+        
+        // two components should not share the same physics body
+        if (physicsBody && physicsBody->_componentBelongsTo != nullptr)
+            physicsBody->_componentBelongsTo->_physicsBody = nullptr;
         
         _physicsBody = physicsBody;
-        _physicsBody->retain();
-        _physicsBody->_componentBelongsTo = this;
         
-        addToPhysicsManager();
+        if (nullptr != _physicsBody)
+        {
+            _physicsBody->retain();
+            _physicsBody->_componentBelongsTo = this;
+        }
     }
+    
+    addToPhysicsManager();
 }
 
 PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
@@ -134,12 +142,18 @@ PhysicsBody* ComponentPhysics2d::getPhysicsBody() const
     return _physicsBody;
 }
 
+void ComponentPhysics2d::setEnabled(bool value)
+{
+    Component::setEnabled(value);
+    
+    if (value)
+        addToPhysicsManager();
+    else
+        removeFromPhysicsManager();
+}
+
 void ComponentPhysics2d::onEnter()
 {
-    //CC_ASSERT(_physicsBody != nullptr);
-    if (_physicsBody == nullptr) {
-        return;
-    }
     addToPhysicsManager();
 }
 
@@ -155,6 +169,10 @@ void ComponentPhysics2d::onAdd()
     _ownerCenterOffset.y = 0.5 * contentSize.height;
     
     _ownerOriginRotation = _owner->getRotation();
+    
+    // component may be added after onEnter() has been invoked, so we should add
+    // this line to make sure physics body is added to physics world
+    addToPhysicsManager();
 }
 
 void ComponentPhysics2d::onRemove()

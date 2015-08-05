@@ -36,14 +36,31 @@ class PhysicsWorld;
 class Scene;
 class Node;
 
+/// @cond DO_NOT_SHOW
+
+/**
+ * Now `PhysicsManager` belongs to a `Scene`. `Scene` will create `PhysicsManager` automatically.
+ * The reason to design like this are:
+ * - PhysicsManager keeps physics world, it is reasonale that a scene has its own physics world.
+ *   It is useful that when a scene is active again, you don't have to create physics world and 
+ *   do all related things again.
+ * - Keep compatibility
+ */
 class CC_DLL PhysicsManager
 {
 public:
+    /**
+     * Create a PhysicsManager with `Scene`. `Scene` will create it automatically,
+     * so don't create it yourself.
+     *
+     * @scene The scene this `PhysicsManager` belongs to.
+     */
     PhysicsManager(Scene *scene);
     ~PhysicsManager();
     
     /**
-     * will do physics simulation
+     * Do physics simulation. It is invoked by `Scene`, don't invoke it yourself.
+     *
      */
     void update(float dt);
     
@@ -60,6 +77,8 @@ private:
     PhysicsWorld *_physicsWorld;
     Scene *_scene;
 };
+
+/// @endcond DO_NOT_SHOW
 
 NS_CC_END
 

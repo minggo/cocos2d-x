@@ -82,7 +82,8 @@ void PhysicsManager::addPhysicsComponent(ComponentPhysics2d* componentPhsics2d)
     
     _components.push_back(componentPhsics2d);
     
-    _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
+    if (nullptr != componentPhsics2d->getPhysicsBody())
+        _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
 }
 
 void PhysicsManager::removePhysicsComponent(ComponentPhysics2d* componentPhsics2d)
@@ -91,7 +92,8 @@ void PhysicsManager::removePhysicsComponent(ComponentPhysics2d* componentPhsics2
     if (iter != _components.end())
     {
         _components.erase(iter);
-        _physicsWorld->removeBody(componentPhsics2d->getPhysicsBody());
+        if (componentPhsics2d->getPhysicsBody())
+            _physicsWorld->removeBody(componentPhsics2d->getPhysicsBody());
     }
 }
 
