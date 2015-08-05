@@ -22,8 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __CC_PHYSICS_SYSTEM_H__
-#define __CC_PHYSICS_SYSTEM_H__
+#pragma once
 
 #include <vector>
 
@@ -35,6 +34,13 @@ class ComponentPhysics2d;
 class PhysicsWorld;
 class Scene;
 class Node;
+
+/**
+ * @addtogroup physics
+ * @{
+ * @addtogroup physics_2d
+ * @{
+ */
 
 /**
  * Now `PhysicsManager` belongs to a `Scene`. `Scene` will create `PhysicsManager` automatically.
@@ -103,8 +109,7 @@ private:
     Scene *_scene;
 };
 
-
+/** @} */
+/** @} */
 
 NS_CC_END
-
-#endif /* defined(__CC_PHYSICS_SYSTEM_H__) */

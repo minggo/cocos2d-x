@@ -22,8 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __CCCOMPONENT_PHYSICS2D_H__
-#define __CCCOMPONENT_PHYSICS2D_H__
+#pragma once
 
 #include "platform/CCPlatformMacros.h"
 #include "2d/CCComponent.h"
@@ -128,6 +127,3 @@ private:
 /** @} */
 
 NS_CC_END
-
-
-#endif /* defined(__CCCOMPONENT_PHYSICS2D_H__) */
