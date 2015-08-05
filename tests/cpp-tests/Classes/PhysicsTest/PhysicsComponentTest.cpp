@@ -1784,7 +1784,7 @@ void PhysicsComponentTransformTest::onEnter()
     auto normal = Sprite::create("Images/YellowSquare.png");
     normal->setPosition(300, 100);
     normal->setScale(0.25, 0.5);
-    addPhysicsComponent(normal,PhysicsBody::createBox(_parentSprite->getContentSize(), PhysicsMaterial(0.1f, 1.0f, 0.0f)));
+    addPhysicsComponent(normal,PhysicsBody::createBox(normal->getContentSize(), PhysicsMaterial(0.1f, 1.0f, 0.0f)));
     normal->getComponent<ComponentPhysics2d>()->getPhysicsBody()->setTag(DRAG_BODYS_TAG);
     _rootLayer->addChild(normal);
 
@@ -1799,7 +1799,7 @@ void PhysicsComponentTransformTest::onEnter()
     MoveBy* move3 = MoveBy::create(2.0f, Vec2(100, -100));
     ScaleTo* scale = ScaleTo::create(3.0f, 0.3f);
     ScaleTo* scale2 = ScaleTo::create(3.0f, 1.0f);
-    
+
     RotateBy* rotate = RotateBy::create(6.0f, 360);
     
     _rootLayer->runAction(RepeatForever::create(Sequence::create(move, move2, move3, nullptr)));
