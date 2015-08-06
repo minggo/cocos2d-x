@@ -22,6 +22,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "base/ccConfig.h" // to include defination of CC_USE_PHYSICS
+#if CC_USE_PHYSICS
+
 #include "physics/CCComponentPhysics2d.h"
 #include "physics/CCPhysicsBody.h"
 #include "physics/CCPhysicsManager.h"
@@ -233,3 +236,5 @@ float ComponentPhysics2d::getPhysicsRotation(Node *node) const
 }
 
 NS_CC_END
+
+#endif // CC_USE_PHYSICS

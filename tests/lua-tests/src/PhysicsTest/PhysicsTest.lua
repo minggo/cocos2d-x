@@ -3,6 +3,7 @@ local MATERIAL_DEFAULT = cc.PhysicsMaterial(0.1, 0.5, 0.5)
 local curLayer = nil
 local STATIC_COLOR = cc.c4f(1.0, 0.0, 0.0, 1.0)
 local DRAG_BODYS_TAG = 0x80
+local PHYSICS_COMPONENT_NAME = "physics_component"
 
 local function range(from, to, step)
   step = step or 1
@@ -43,6 +44,12 @@ local function initWithLayer(layer, callback)
     layer:registerScriptHandler(onNodeEvent)
 end
 
+local function addPhysicsComponent(node, physicsBody, componentName)
+    local component = cc.ComponentPhysics2d:create(physicsBody)
+    component:setName(componentName)
+    node:addComponent(component)
+end
+
 local function addGrossiniAtPosition(layer, p, scale)
    scale = scale or 1.0
 
@@ -53,7 +60,8 @@ local function addGrossiniAtPosition(layer, p, scale)
 
    local sp = cc.Sprite:createWithTexture(layer.spriteTexture, cc.rect(posx, posy, 85, 121))
    sp:setScale(scale)
-   sp:setPhysicsBody(cc.PhysicsBody:createBox(cc.size(48.0*scale, 108.0*scale)))
+   -- sp:setPhysicsBody(cc.PhysicsBody:createBox(cc.size(48.0*scale, 108.0*scale)))
+   addPhysicsComponent(sp, cc.PhysicsBody:createBox(cc.size(48.0*scale, 108.0*scale)), PHYSICS_COMPONENT_NAME)
    layer:addChild(sp)
    sp:setPosition(p)
    return sp
@@ -73,11 +81,14 @@ local function onTouchBegan(touch, event)
     
     if body then
         local mouse = cc.Node:create();
-        mouse:setPhysicsBody(cc.PhysicsBody:create(PHYSICS_INFINITY, PHYSICS_INFINITY));
-        mouse:getPhysicsBody():setDynamic(false);
+        local physicsBody = cc.PhysicsBody:create(PHYSICS_INFINITY, PHYSICS_INFINITY)
+        -- mouse:setPhysicsBody(cc.PhysicsBody:create(PHYSICS_INFINITY, PHYSICS_INFINITY));
+        addPhysicsComponent(mouse, physicsBody, PHYSICS_COMPONENT_NAME)
+        -- mouse:getPhysicsBody():setDynamic(false);
+        physicsBody:setDynamic(false)
         mouse:setPosition(location);
         curLayer:addChild(mouse);
-        local joint = cc.PhysicsJointPin:construct(mouse:getPhysicsBody(), body, location);
+        local joint = cc.PhysicsJointPin:construct(physicsBody, body, location);
         joint:setMaxForce(5000.0 * body:getMass());
         cc.Director:getInstance():getRunningScene():getPhysicsWorld():addJoint(joint);
         touch.mouse = mouse
@@ -114,7 +125,8 @@ local function makeBall(layer, point, radius, material)
     ball:setScale(0.13 * radius)
 
     local body = cc.PhysicsBody:createCircle(radius, material)
-    ball:setPhysicsBody(body)
+    -- ball:setPhysicsBody(body)
+    addPhysicsComponent(ball, body, PHYSICS_COMPONENT_NAME)
     ball:setPosition(point)
 
     return ball
@@ -135,8 +147,8 @@ local function makeBox(point, size, color, material)
     box:setScaleX(size.width/100.0);
     box:setScaleY(size.height/100.0);
     
-    local body = cc.PhysicsBody:createBox(size, material);
-    box:setPhysicsBody(body);
+    local body = cc.PhysicsBody:createBox(box:getContentSize(), material);
+    addPhysicsComponent(box, body, PHYSICS_COMPONENT_NAME)
     box:setPosition(cc.p(point.x, point.y));
     
     return box;
@@ -163,7 +175,7 @@ local function makeTriangle(point, size, color, material)
      vers = { cc.p(0, size.height/2), cc.p(size.width/2, -size.height/2), cc.p(-size.width/2, -size.height/2)};
     
     local body = cc.PhysicsBody:createPolygon(vers, material);
-    triangle:setPhysicsBody(body);
+    addPhysicsComponent(triangle, body, PHYSICS_COMPONENT_NAME)
     triangle:setPosition(point);
     
     return triangle;
@@ -173,8 +185,8 @@ local function PhysicsDemoClickAdd()
     local layer = cc.Layer:create()
     local function onEnter()
        local function onTouchEnded(touch, event)
-	  local location = touch:getLocation();
-	  addGrossiniAtPosition(layer, location)
+	          local location = touch:getLocation();
+	          addGrossiniAtPosition(layer, location)
        end
        
        local touchListener = cc.EventListenerTouchOneByOne:create()
@@ -250,25 +262,28 @@ local function PhysicsDemoLogoSmash()
        layer.ball = cc.SpriteBatchNode:create("Images/ball.png", #logo_image);
        layer:addChild(layer.ball);
        for y in range(0, logo_height-1) do
-	  for x in range(0, logo_width-1) do
-	     if get_pixel(x, y) == 1 then
-                local x_jitter = 0.05*math.random();
-                local y_jitter = 0.05*math.random();
+	         for x in range(0, logo_width-1) do
+	             if get_pixel(x, y) == 1 then
+                  local x_jitter = 0.05*math.random();
+                  local y_jitter = 0.05*math.random();
                 
-                local ball = makeBall(layer, cc.p(2*(x - logo_width/2 + x_jitter) + VisibleRect:getVisibleRect().width/2,
-					       2*(logo_height-y + y_jitter) + VisibleRect:getVisibleRect().height/2 - logo_height/2),
+                  local ball = makeBall(layer, cc.p(2*(x - logo_width/2 + x_jitter) + VisibleRect:getVisibleRect().width/2,
+					         2*(logo_height-y + y_jitter) + VisibleRect:getVisibleRect().height/2 - logo_height/2),
                                       0.95, cc.PhysicsMaterial(0.01, 0.0, 0.0));
                 
-                ball:getPhysicsBody():setMass(1.0);
-                ball:getPhysicsBody():setMoment(PHYSICS_INFINITY);
+                  -- ball:getPhysicsBody():setMass(1.0);
+                  local physicsBody = ball:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody()
+                  physicsBody:setMass(1.0)
+                  physicsBody:setMoment(PHYSICS_INFINITY);
 
-                layer.ball:addChild(ball);
-	     end
-	  end
+                  layer.ball:addChild(ball);
+	              end
+	          end
        end
 
        local bullet = makeBall(layer, cc.p(400, 0), 10, cc.PhysicsMaterial(PHYSICS_INFINITY, 0, 0));
-       bullet:getPhysicsBody():setVelocity(cc.p(200, 0));
+       -- bullet:getPhysicsBody():setVelocity(cc.p(200, 0));
+       bullet:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setVelocity(cc.p(200, 0))
        bullet:setPosition(cc.p(-500, VisibleRect:getVisibleRect().height/2))
        layer.ball:addChild(bullet);
     end

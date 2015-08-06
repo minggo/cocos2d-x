@@ -24,6 +24,9 @@
 
 #pragma once
 
+#include "base/ccConfig.h" // to include defination of CC_USE_PHYSICS
+#if CC_USE_PHYSICS
+
 #include "platform/CCPlatformMacros.h"
 #include "2d/CCComponent.h"
 
@@ -127,3 +130,5 @@ private:
 /** @} */
 
 NS_CC_END
+
+#endif // CC_USE_PHYSICS

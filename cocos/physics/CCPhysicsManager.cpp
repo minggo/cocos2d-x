@@ -22,6 +22,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "base/ccConfig.h" // to include defination of CC_USE_PHYSICS
+#if CC_USE_PHYSICS
+
 #include "physics/CCPhysicsManager.h"
 #include "physics/CCComponentPhysics2d.h"
 #include "physics/CCPhysicsWorld.h"
@@ -103,3 +106,5 @@ PhysicsWorld* PhysicsManager::getPhysicsWorld() const
 }
 
 NS_CC_END
+
+#endif // CC_USE_PHYSICS
