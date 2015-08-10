@@ -1627,6 +1627,107 @@ local function PhysicsDemoBug5482()
   return layer
 end
 
+local function PhysicsTransformTest()
+  local layer = cc.Layer:create()
+  local function onEnter()
+    layer:toggleDebug()
+    cc.Director:getInstance():getRunningScene():getPhysicsWorld():setGravity(cc.p(0,0))
+
+    local touchListener = cc.EventListenerTouchOneByOne:create()
+    touchListener:registerScriptHandler(onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
+    local eventDispatcher = layer:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(touchListener, layer)
+
+    local _rootLayer = cc.Layer:create()
+    layer:addChild(_rootLayer)
+
+    local wall = cc.Node:create()
+    addPhysicsComponent(wall, 
+                        cc.PhysicsBody:createEdgeBox(cc.size(VisibleRect:getVisibleRect().width, 
+                                                             VisibleRect:getVisibleRect().height),
+                                                     cc.PhysicsMaterial(0.1, 1.0, 0.0)))
+    wall:setPosition(VisibleRect:center());
+    _rootLayer:addChild(wall)
+
+    local _parentSprite = cc.Sprite:create("Images/YellowSquare.png")
+    _parentSprite:setPosition(cc.p(200,100))
+    _parentSprite:setScale(0.25)
+    addPhysicsComponent(_parentSprite,cc.PhysicsBody:createBox(_parentSprite:getContentSize(),cc.PhysicsMaterial(0.1, 1.0, 0.0)))
+    _parentSprite:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setTag(DRAG_BODYS_TAG)
+    _parentSprite:setTag(1)
+    _rootLayer:addChild(_parentSprite)
+
+    local leftBall = cc.Sprite:create("Images/ball.png")
+    leftBall:setPosition(cc.p(-30,0))
+    leftBall:setScale(2)
+    addPhysicsComponent(leftBall,cc.PhysicsBody:createCircle(leftBall:getContentSize().width/2,cc.PhysicsMaterial(0.1,1.0,0.0)))
+    leftBall:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setTag(DRAG_BODYS_TAG)
+    _parentSprite:addChild(leftBall)
+
+    local scaleTo = cc.ScaleTo:create(2.0,0.5)
+    local scaleBack = cc.ScaleTo:create(2.0,1.0)
+    _parentSprite:runAction(cc.RepeatForever:create(cc.Sequence:create(scaleTo,scaleBack)))
+
+    local normal = cc.Sprite:create("Images/YellowSquare.png")
+    normal:setPosition(cc.p(300,100))
+    normal:setScale(0.25,0.5)
+    addPhysicsComponent(normal,cc.PhysicsBody:createBox(normal:getContentSize()),cc.PhysicsMaterial(0.1,1.0,0.0))
+    normal:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setTag(DRAG_BODYS_TAG)
+    _rootLayer:addChild(normal)
+
+    local  bullet = cc.Sprite:create("Images/ball.png")
+    bullet:setPosition(cc.p(200,200))
+    addPhysicsComponent(bullet,cc.PhysicsBody:createCircle(bullet:getContentSize().width/2,cc.PhysicsMaterial(0.1,1.0,0.0)))
+    bullet:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setVelocity(cc.p(100,100))
+    _rootLayer:addChild(bullet)
+
+    local move = cc.MoveBy:create(2.0,cc.p(100,100))
+    local move2 = cc.MoveBy:create(2.0,cc.p(-200,0))
+    local move3 = cc.MoveBy:create(2.0,cc.p(100,-100))
+    local scale = cc.ScaleTo:create(3.0,0.3)
+    local scale2 = cc.ScaleTo:create(3.0,1.0)
+    local rotate = cc.RotateBy:create(6.0,360)
+
+    _rootLayer:runAction(cc.RepeatForever:create(cc.Sequence:create(move,move2,move3)))
+    _rootLayer:runAction(cc.RepeatForever:create(cc.Sequence:create(scale,scale2)))
+    _rootLayer:runAction(cc.RepeatForever:create(cc.Sequence:create(rotate)))
+  end
+
+  initWithLayer(layer, onEnter)
+  Helper.titleLabel:setString("Reorder issue #9959")
+  Helper.subtitleLabel:setString("Test Scale9Sprite run scale/move/rotation action in physics scene")
+  return layer
+end
+
+local function PhysicsIssue9959()
+  local layer = cc.Layer:create()
+  local function onEnter()
+    local origin = cc.Director:getInstance():getVisibleOrigin()
+    local visibleSize = cc.Director:getInstance():getVisibleSize()
+
+    local scale9Sprite1 = ccui.Scale9Sprite:create("Images/ball.png")
+    scale9Sprite1:setPosition(cc.p(origin.x+visibleSize.width/2,origin.y+visibleSize.height/2))
+    layer:addChild(scale9Sprite1)
+    scale9Sprite1:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.MoveBy:create(2.0,cc.p(100.0,0.0)),
+    																   cc.MoveBy:create(2.0,cc.p(-100,0.0)))))
+
+    local scale9Sprite2 = ccui.Scale9Sprite:create("Images/ball.png")
+    scale9Sprite2:setPosition(cc.p(origin.x+visibleSize.width/2,origin.y+visibleSize.height/2+50))
+    layer:addChild(scale9Sprite2)
+    scale9Sprite2:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.ScaleTo:create(2.0,1.5),
+    																   cc.ScaleTo:create(2.0,1.0))))
+
+    local scale9Sprite3 = ccui.Scale9Sprite:create("Images/ball.png")
+    scale9Sprite3:setPosition(cc.p(origin.x+visibleSize.width/2,origin.y+visibleSize.height/2-50))
+    layer:addChild(scale9Sprite3)
+    scale9Sprite3:runAction(cc.RepeatForever:create(cc.Sequence:create(cc.RotateBy:create(2.0,360))))
+  end
+
+  initWithLayer(layer, onEnter)
+  Helper.titleLabel:setString("Physics transform test")
+  return layer
+end
+
 function PhysicsTest()
   cclog("PhysicsTest")
   local scene = cc.Scene:createWithPhysics()
@@ -1648,9 +1749,9 @@ function PhysicsTest()
       PhysicsPositionRotationTest,
       PhysicsSetGravityEnableTest,
       PhysicsDemoBug5482,
-      PhysicsFixedUpdate
-      --PhysicsTransformTest,
-      --PhysicsIssue9959
+      PhysicsFixedUpdate,
+      PhysicsTransformTest,
+      PhysicsIssue9959
    }
 
    scene:addChild(Helper.createFunctionTable[1]())
