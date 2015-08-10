@@ -169,12 +169,12 @@ local function makeTriangle(point, size, color, material)
         triangle:setScaleX(size.width/50.0)
         triangle:setScaleY(size.height/43.5)
     end
-    
-     vers = { cc.p(0, size.height/2), 
-              cc.p(size.width/2, -size.height/2), 
-              cc.p(-size.width/2, -size.height/2)
-            }
-    
+
+    vers = { cc.p(0, triangle:getContentSize().height/2),
+             cc.p(triangle:getContentSize().width/2, -triangle:getContentSize().height/2),
+             cc.p(-triangle:getContentSize().width/2, -triangle:getContentSize().height/2)
+           }
+
     local body = cc.PhysicsBody:createPolygon(vers, material)
     addPhysicsComponent(triangle, body)
     triangle:setPosition(point)
@@ -1460,6 +1460,62 @@ local function PhysicsPositionRotationTest()
   return layer
 end
 
+local function PhysicsSetGravityEnableTest()
+  local layer = cc.Layer:create()
+  local function onEnter()
+
+    local touchListener = cc.EventListenerTouchOneByOne:create()
+    touchListener:registerScriptHandler(onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
+    touchListener:registerScriptHandler(onTouchMoved, cc.Handler.EVENT_TOUCH_MOVED)
+    touchListener:registerScriptHandler(onTouchEnded, cc.Handler.EVENT_TOUCH_ENDED)
+    local eventDispatcher = layer:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(touchListener, layer)
+
+    local wall = cc.Node:create()
+    addPhysicsComponent(wall, 
+                        cc.PhysicsBody:createEdgeBox(cc.size(VisibleRect:getVisibleRect().width, 
+                                                             VisibleRect:getVisibleRect().height),
+                                                     cc.PhysicsMaterial(0.1, 1.0, 0.0)))
+    wall:setPosition(VisibleRect:center());
+    layer:addChild(wall)
+
+    local commonBox = makeBox(cc.p(100, 100), cc.size(50, 50), 1)
+    commonBox:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setTag(DRAG_BODYS_TAG)
+    layer:addChild(commonBox)
+
+    local box = makeBox(cc.p(200, 100), cc.size(50, 50), 2)
+    local boxBody = box:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody()
+    boxBody:setMass(20)
+    boxBody:setTag(DRAG_BODYS_TAG)
+    boxBody:setGravityEnable(false)
+    layer:addChild(box)
+
+    local ball = makeBall(layer,cc.p(200,200),50)
+    ball:setTag(2)
+    local ballBody = ball:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody()
+    ballBody:setTag(DRAG_BODYS_TAG)
+    ballBody:setGravityEnable(false)
+    ballBody:setMass(50)
+    layer:addChild(ball)
+
+    local function onScheduleOnce()
+      cclog("onScheduleOnce")
+      local ball = layer:getChildByTag(2)
+      ball:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setMass(200)
+      cc.Director:getInstance():getRunningScene():getPhysicsWorld():setGravity(cc.p(0, 98))
+    end
+    --layer:scheduleOnce(onScheduleOnce,1.0)
+    local action = cc.Sequence:create(cc.DelayTime:create(1.0),
+                                      cc.CallFunc:create(onScheduleOnce))
+    layer:runAction(action)
+  end
+
+  initWithLayer(layer, onEnter)
+  Helper.titleLabel:setString("Set Gravity Enable Test")
+  Helper.subtitleLabel:setString("only yellow box drop down")
+  return layer
+end
+
 function PhysicsTest()
   cclog("PhysicsTest")
   local scene = cc.Scene:createWithPhysics()
@@ -1479,6 +1535,11 @@ function PhysicsTest()
       PhysicsDemoBug3988,
       PhysicsContactTest,
       PhysicsPositionRotationTest,
+      PhysicsSetGravityEnableTest
+      --PhysicsDemoBug5482,
+      --PhysicsFixedUpdate,
+      --PhysicsTransformTest,
+      --PhysicsIssue9959
    }
 
    scene:addChild(Helper.createFunctionTable[1]())
