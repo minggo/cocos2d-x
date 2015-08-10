@@ -1579,6 +1579,54 @@ local function PhysicsDemoBug5482()
   return layer
 end
 
+local function PhysicsDemoBug5482()
+  local layer = cc.Layer:create()
+  local function onEnter()
+    cc.Director:getInstance():getRunningScene():getPhysicsWorld():setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
+    cc.Director:getInstance():getRunningScene():getPhysicsWorld():setGravity(cc.p(0, 0))
+
+    local function addBall()
+    	local ball = cc.Sprite:create("Images/ball.png")
+    	ball:setPosition(cc.p(100,100))
+    	addPhysicsComponent(ball,cc.PhysicsBody:createCircle(ball:getContentSize().width/2, cc.PhysicsMaterial(0.1, 1, 0.0)))
+    	ball:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setTag(DRAG_BODYS_TAG)
+    	ball:getComponent(PHYSICS_COMPONENT_NAME):getPhysicsBody():setVelocity(cc.p(1000,20))
+    	layer:addChild(ball)
+    end
+
+    local  function update(delta)
+    	for i=1,3 do
+    		cc.Director:getInstance():getRunningScene():getPhysicsWorld():step(1/180.0)
+    	end
+    end
+
+    local function updateStart(delta)
+    	addBall()
+    	cc.Director:getInstance():getRunningScene():getPhysicsWorld():setAutoStep(false)
+    	layer:scheduleUpdateWithPriorityLua(update, 0)
+    end
+
+    -- wall
+    local wall = cc.Node:create()
+    addPhysicsComponent(wall, 
+                        cc.PhysicsBody:createEdgeBox(cc.size(VisibleRect:getVisibleRect().width, 
+                                                             VisibleRect:getVisibleRect().height),
+                                                     cc.PhysicsMaterial(0.1, 1.0, 0.0)))
+    wall:setPosition(VisibleRect:center());
+    layer:addChild(wall)
+
+    addBall()
+    layer:runAction(cc.Sequence:create(cc.DelayTime:create(2.0),
+                                      cc.CallFunc:create(updateStart)))
+
+  end
+
+  initWithLayer(layer, onEnter)
+  Helper.titleLabel:setString("Fixed Update Test")
+  Helper.subtitleLabel:setString("The secend ball should not run across the wall")
+  return layer
+end
+
 function PhysicsTest()
   cclog("PhysicsTest")
   local scene = cc.Scene:createWithPhysics()
@@ -1599,8 +1647,8 @@ function PhysicsTest()
       PhysicsContactTest,
       PhysicsPositionRotationTest,
       PhysicsSetGravityEnableTest,
-      PhysicsDemoBug5482
-      --PhysicsFixedUpdate,
+      PhysicsDemoBug5482,
+      PhysicsFixedUpdate
       --PhysicsTransformTest,
       --PhysicsIssue9959
    }
