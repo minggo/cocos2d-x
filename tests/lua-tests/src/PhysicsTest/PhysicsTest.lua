@@ -1694,7 +1694,8 @@ local function PhysicsTransformTest()
   end
 
   initWithLayer(layer, onEnter)
-  Helper.titleLabel:setString("Physics transform test")
+  Helper.titleLabel:setString("Reorder issue #9959")
+  Helper.subtitleLabel:setString("Test Scale9Sprite run scale/move/rotation action in physics scene")
   return layer
 end
 
