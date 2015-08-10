@@ -1516,6 +1516,69 @@ local function PhysicsSetGravityEnableTest()
   return layer
 end
 
+local function PhysicsDemoBug5482()
+  local layer = cc.Layer:create()
+  local function onEnter()
+    layer:toggleDebug()
+    local _bodyInA = false
+
+    local touchListener = cc.EventListenerTouchOneByOne:create()
+    touchListener:registerScriptHandler(onTouchBegan, cc.Handler.EVENT_TOUCH_BEGAN)
+    touchListener:registerScriptHandler(onTouchMoved, cc.Handler.EVENT_TOUCH_MOVED)
+    touchListener:registerScriptHandler(onTouchEnded, cc.Handler.EVENT_TOUCH_ENDED)
+    local eventDispatcher = layer:getEventDispatcher()
+    eventDispatcher:addEventListenerWithSceneGraphPriority(touchListener, layer)
+
+    -- wall
+    local wall = cc.Node:create()
+    addPhysicsComponent(wall, 
+                        cc.PhysicsBody:createEdgeBox(cc.size(VisibleRect:getVisibleRect().width, 
+                                                             VisibleRect:getVisibleRect().height),
+                                                     cc.PhysicsMaterial(0.1, 1.0, 0.0)))
+    wall:setPosition(VisibleRect:center());
+    layer:addChild(wall)
+
+    local _nodeA = cc.Sprite:create("Images/YellowSquare.png")
+    _nodeA:setPosition(cc.p(VisibleRect:center().x-150,100))
+    addPhysicsComponent(_nodeA,nil)
+    layer:addChild(_nodeA)
+
+    local _nodeB = cc.Sprite:create("Images/YellowSquare.png")
+    _nodeB:setPosition(cc.p(VisibleRect:center().x+150,100))
+    addPhysicsComponent(_nodeB,nil)
+    layer:addChild(_nodeB)
+
+    local _body = cc.PhysicsBody:createBox(_nodeA:getContentSize())
+    _body:setTag(DRAG_BODYS_TAG)
+    _body:retain()
+
+    local function changeBodyCallback(sender)
+    	local node = nil
+    	if _bodyInA then
+    		node = _nodeB
+    		cclog("_nodeB")
+    	else
+    		node = _nodeA
+    		cclog("_nodeA")
+    	end
+    	node:getComponent(PHYSICS_COMPONENT_NAME):setPhysicsBody(_body)
+    	_bodyInA = not _bodyInA
+   	end
+    
+    cc.MenuItemFont:setFontSize(18)
+    local _button = cc.MenuItemFont:create("Set Body To A");
+    _button:registerScriptTapHandler(changeBodyCallback)
+
+    local menu = cc.Menu:create(_button)
+    layer:addChild(menu)
+  end
+
+  initWithLayer(layer, onEnter)
+  Helper.titleLabel:setString("bug 5482: setPhysicsBodyTest")
+  Helper.subtitleLabel:setString("change physics body to the other.")
+  return layer
+end
+
 function PhysicsTest()
   cclog("PhysicsTest")
   local scene = cc.Scene:createWithPhysics()
@@ -1535,8 +1598,8 @@ function PhysicsTest()
       PhysicsDemoBug3988,
       PhysicsContactTest,
       PhysicsPositionRotationTest,
-      PhysicsSetGravityEnableTest
-      --PhysicsDemoBug5482,
+      PhysicsSetGravityEnableTest,
+      PhysicsDemoBug5482
       --PhysicsFixedUpdate,
       --PhysicsTransformTest,
       --PhysicsIssue9959
