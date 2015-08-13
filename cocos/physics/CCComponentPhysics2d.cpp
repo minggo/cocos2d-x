@@ -66,6 +66,13 @@ ComponentPhysics2d::~ComponentPhysics2d()
     removePhysicsBody();
 }
 
+// true if two Vec3 equals, false else
+bool ComponentPhysics2d::isVec3Equal(const cocos2d::Vec3 &v1, const cocos2d::Vec3 &v2) const
+{
+    return fabs(v1.x - v2.x) < FLT_EPSILON &&
+    fabs(v1.x - v2.y) < FLT_EPSILON;
+}
+
 void ComponentPhysics2d::beforeSimulation()
 {
     if (nullptr == _physicsBody)
@@ -74,9 +81,12 @@ void ComponentPhysics2d::beforeSimulation()
     _nodeToWorldTransform = _owner->getNodeToWorldTransform();
     
     // set scale
-    Vec3 scale;
-    _nodeToWorldTransform.getScale(&scale);
-    _physicsBody->setScale(scale.x, scale.y);
+    _nodeToWorldTransform.getScale(&_scale);
+    if (! isVec3Equal(_scale, _recordScale))
+    {
+        _physicsBody->setScale(_scale.x, _scale.y);
+        _recordScale = _scale;
+    }
     
     // set rotation
     if (_owner->getParent())
@@ -90,10 +100,9 @@ void ComponentPhysics2d::beforeSimulation()
     _nodeToWorldTransform.transformPoint(&worldPosition);
     _physicsBody->setPosition(Vec2(worldPosition.x, worldPosition.y));
     
-    auto positionInParent = worldPosition;
-    getParentToWorldTransform().getInversed().transformPoint(&positionInParent);
-    _offset.x = positionInParent.x - _owner->getPosition().x;
-    _offset.y = positionInParent.y - _owner->getPosition().y;
+    getParentToWorldTransform().getInversed().transformPoint(&worldPosition);
+    _offset.x = worldPosition.x - _owner->getPosition().x;
+    _offset.y = worldPosition.y - _owner->getPosition().y;
 }
 
 void ComponentPhysics2d::afterSimulation()

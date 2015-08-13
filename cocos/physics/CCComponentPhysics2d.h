@@ -112,6 +112,7 @@ private:
     void removeFromPhysicsManager();
     Mat4 getParentToWorldTransform() const;
     float getPhysicsRotation(Node *node) const;
+    bool isVec3Equal(const Vec3 &v1, const Vec3 &v2) const;
     
 private:
     // this physic body of this component
@@ -124,6 +125,8 @@ private:
     float _physicsRotation;
     // the rotation of owner when the component is added to, the value will not change
     float _ownerOriginRotation;
+    Vec3 _recordScale;
+    Vec3 _scale;
 };
 
 /** @} */

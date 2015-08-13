@@ -59,9 +59,12 @@ void PhysicsManager::update(float dt)
 
 void PhysicsManager::beforeSimulation(Node *node)
 {
-    auto component = node->getComponent<ComponentPhysics2d>();
-    if (component)
+    auto iter = _owners.find(node);
+    if (iter != _owners.end())
+    {
+        auto component = iter->second;
         component->beforeSimulation();
+    }
     
     for (auto child : node->getChildren())
         beforeSimulation(child);
@@ -69,9 +72,12 @@ void PhysicsManager::beforeSimulation(Node *node)
 
 void PhysicsManager::afterSimulation(Node *node)
 {
-    auto component = node->getComponent<ComponentPhysics2d>();
-    if (component)
+    auto iter = _owners.find(node);
+    if (iter != _owners.end())
+    {
+        auto component = iter->second;
         component->afterSimulation();
+    }
     
     for (auto child : node->getChildren())
         afterSimulation(child);
@@ -84,6 +90,9 @@ void PhysicsManager::addPhysicsComponent(ComponentPhysics2d* componentPhsics2d)
         return;
     
     _components.push_back(componentPhsics2d);
+    // Node::getComponent<>() is a time comsuming operation, so record data to avoid invoking it.
+    std::pair<Node*, ComponentPhysics2d*> element(componentPhsics2d->getOwner(), componentPhsics2d);
+    _owners.insert(element);
     
     if (nullptr != componentPhsics2d->getPhysicsBody())
         _physicsWorld->addBody(componentPhsics2d->getPhysicsBody());
@@ -94,9 +103,23 @@ void PhysicsManager::removePhysicsComponent(ComponentPhysics2d* componentPhsics2
     auto iter = std::find(_components.begin(), _components.end(), componentPhsics2d);
     if (iter != _components.end())
     {
+        removeElementFromMap(*iter);
+        
         _components.erase(iter);
         if (componentPhsics2d->getPhysicsBody())
             _physicsWorld->removeBody(componentPhsics2d->getPhysicsBody());
+    }
+}
+
+void PhysicsManager::removeElementFromMap(ComponentPhysics2d* component)
+{
+    for (auto element : _owners)
+    {
+        if (element.second == component)
+        {
+            _owners.erase(element.first);
+            break;
+        }
     }
 }
 

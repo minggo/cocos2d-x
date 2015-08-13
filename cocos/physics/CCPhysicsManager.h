@@ -28,6 +28,7 @@
 #if CC_USE_PHYSICS
 
 #include <vector>
+#include <unordered_map>
 
 #include "platform/CCPlatformMacros.h"
 
@@ -106,8 +107,11 @@ public:
 private:
     void beforeSimulation(Node *node);
     void afterSimulation(Node* node);
+    void removeElementFromMap(ComponentPhysics2d* component);
 private:
     std::vector<ComponentPhysics2d*> _components;
+    // record the owners of components for performance
+    std::unordered_map<Node*, ComponentPhysics2d*> _owners;
     PhysicsWorld *_physicsWorld;
     Scene *_scene;
 };
