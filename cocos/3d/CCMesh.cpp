@@ -127,6 +127,7 @@ Mesh::Mesh()
 , _blend(BlendFunc::ALPHA_NON_PREMULTIPLIED)
 , _visibleChanged(nullptr)
 , _blendDirty(true)
+, _force2DQueue(false)
 {
     
 }
@@ -272,6 +273,9 @@ void Mesh::setTexture(Texture2D* tex)
     // Texture must be saved for future use
     // it doesn't matter if the material is already set or not
     // This functionality is added for compatibility issues
+    if (tex == nullptr)
+        tex = getDummyTexture();
+    
     if (tex != _texture)
     {
         CC_SAFE_RETAIN(tex);
@@ -354,6 +358,7 @@ void Mesh::draw(Renderer* renderer, float globalZOrder, const Mat4& transform, u
 
     _meshCommand.setSkipBatching(isTransparent);
     _meshCommand.setTransparent(isTransparent);
+    _meshCommand.set3D(!_force2DQueue);
 
     // set default uniforms for Mesh
     // 'u_color' and others

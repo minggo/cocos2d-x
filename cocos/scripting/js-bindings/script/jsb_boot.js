@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Chukong Technologies Inc.
+ * Copyright (c) 2015 Chukong Technologies Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,130 +23,6 @@
 //
 // cocos2d boot
 //
-
-var cc = cc || {};
-var window = window || this;
-
-/**
- * Iterate over an object or an array, executing a function for each matched element.
- * @param {object|array} obj
- * @param {function} iterator
- * @param {object} [context]
- */
-cc.each = function (obj, iterator, context) {
-    if (!obj)
-        return;
-    if (obj instanceof Array) {
-        for (var i = 0, li = obj.length; i < li; i++) {
-            if (iterator.call(context, obj[i], i) === false)
-                return;
-        }
-    } else {
-        for (var key in obj) {
-            if (iterator.call(context, obj[key], key) === false)
-                return;
-        }
-    }
-};
-
-/**
- * Copy all of the properties in source objects to target object and return the target object.
- * @param {object} target
- * @param {object} *sources
- * @returns {object}
- */
-cc.extend = function(target) {
-    var sources = arguments.length >= 2 ? Array.prototype.slice.call(arguments, 1) : [];
-
-    cc.each(sources, function(src) {
-        for(var key in src) {
-            if (src.hasOwnProperty(key)) {
-                target[key] = src[key];
-            }
-        }
-    });
-    return target;
-};
-
-/**
- * Check the obj whether is function or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isFunction = function(obj) {
-    return typeof obj == 'function';
-};
-
-/**
- * Check the obj whether is number or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isNumber = function(obj) {
-    return typeof obj == 'number' || Object.prototype.toString.call(obj) == '[object Number]';
-};
-
-/**
- * Check the obj whether is string or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isString = function(obj) {
-    return typeof obj == 'string' || Object.prototype.toString.call(obj) == '[object String]';
-};
-
-/**
- * Check the obj whether is array or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isArray = function(obj) {
-    return Array.isArray(obj) ||
-        (typeof obj === 'object' && objectToString(obj) === '[object Array]');
-};
-
-/**
- * Check the obj whether is undefined or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isUndefined = function(obj) {
-    return typeof obj === 'undefined';
-};
-
-/**
- * Check the obj whether is object or not
- * @param {*} obj
- * @returns {boolean}
- */
-cc.isObject = function(obj) {
-    return obj.__nativeObj !== undefined ||
-        ( typeof obj === "object" && Object.prototype.toString.call(obj) === '[object Object]' );
-};
-
-/**
- * Check the url whether cross origin
- * @param {String} url
- * @returns {boolean}
- */
-cc.isCrossOrigin = function (url) {
-    return false;
-};
-
-/**
- * Common getter setter configuration function
- * @function
- * @param {Object}   proto      A class prototype or an object to config
- * @param {String}   prop       Property name
- * @param {function} getter     Getter function for the property
- * @param {function} setter     Setter function for the property
- */
-cc.defineGetterSetter = function (proto, prop, getter, setter){
-    var desc = { enumerable: false, configurable: true };
-    getter && (desc.get = getter);
-    setter && (desc.set = setter);
-    Object.defineProperty(proto, prop, desc);
-};
 
 //+++++++++++++++++++++++++something about async begin+++++++++++++++++++++++++++++++
 /**
@@ -366,6 +242,20 @@ cc.path = {
         index = pathStr.lastIndexOf(".");
         if(index < 0) return null;
         return pathStr.substring(index, pathStr.length);
+    },
+
+    /**
+     * Get the main name of a file name
+     * @param {string} fileName
+     * @returns {string}
+     */
+    mainFileName: function(fileName){
+        if(fileName){
+           var idx = fileName.lastIndexOf(".");
+            if(idx !== -1)
+               return fileName.substring(0,idx);
+        }
+        return fileName;
     },
     
     /**
@@ -625,15 +515,18 @@ cc.loader = {
         }
         var basePath = loader.getBasePath ? loader.getBasePath() : self.resPath;
         var realUrl = self.getUrl(basePath, url);
-        var data = loader.load(realUrl, url);
-        if (data) {
-            self.cache[url] = data;
-            cb(null, data);
-        } else {
-            self.cache[url] = null;
-            delete self.cache[url];
-            cb();
-        }
+
+        loader.load(realUrl, url, item, function (err, data) {
+            if (err) {
+                cc.log(err);
+                self.cache[url] = null;
+                delete self.cache[url];
+                cb();
+            } else {
+                self.cache[url] = data;
+                cb(null, data);
+            }
+        });
     },
     
     /**
@@ -776,13 +669,18 @@ cc.loader = {
      * Release the cache of resource by url.
      * @param url
      */
-    release : function(url){//do nothing in jsb
+    release : function(url){
+        var cache = this.cache;
+        delete cache[url];
     },
     
     /**
      * Resource cache of all resources.
      */
-    releaseAll : function(){//do nothing in jsb
+    releaseAll : function(){
+        var locCache = this.cache;
+        for (var key in locCache)
+            delete locCache[key];
     }
     
 };
@@ -1477,12 +1375,15 @@ cc._initSys = function(config, CONFIG_KEY){
     if( locSys.isMobile ) {
         capabilities["accelerometer"] = true;
         capabilities["touches"] = true;
+        if (platform === locSys.WINRT || platform === locSys.WP8) {
+            capabilities["keyboard"] = true;
+        }
     } else {
         // desktop
         capabilities["keyboard"] = true;
         capabilities["mouse"] = true;
         // winrt can't suppot mouse in current version
-        if (platform === locSys.WINRT)
+        if (platform === locSys.WINRT || platform === locSys.WP8)
         {
             capabilities["touches"] = true;
             capabilities["mouse"] = false;
