@@ -29,7 +29,7 @@
 
 #include "platform/CCPlatformMacros.h"
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
 #include "pthread.h"
 #define MUTEX pthread_mutex_t
 #define MUTEX_INIT(m) \
@@ -58,7 +58,7 @@
 #define MUTEX_UNLOCK(m) \
     ReleaseMutex(m)
 #else
-#message "Unsupported platform for AllocatorMutex, Locking semantics will not be supported"
+#error "Unsupported platform for AllocatorMutex, Locking semantics will not be supported"
 #define MUTEX
 #define MUTEX_INIT(...)
 #define MUTEX_LOCK(...)

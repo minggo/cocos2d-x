@@ -1,6 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2015 Chukong Technologies Inc.
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -23,25 +23,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __PLATFORM_CCSTDC_H__
-#define __PLATFORM_CCSTDC_H__
+#pragma once
 
-#include "platform/CCPlatformConfig.h"
+#include <float.h>
+#include <sys/time.h>
+#include <stdint.h>
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-#include "platform/mac/CCStdC-mac.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-#include "platform/ios/CCStdC-ios.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include "platform/android/CCStdC-android.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "platform/win32/CCStdC-win32.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
-#include "platform/winrt/CCStdC.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-#include "platform/linux/CCStdC-linux.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
-#include "platform/pepper/CCStdC-pepper.h"
-#endif
+#ifndef MIN
+#define MIN(x,y) (((x) > (y)) ? (y) : (x))
+#endif  // MIN
 
-#endif /* __PLATFORM_CCSTDC_H__*/
+#ifndef MAX
+#define MAX(x,y) (((x) < (y)) ? (y) : (x))
+#endif  // MAX

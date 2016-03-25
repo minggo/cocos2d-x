@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "base/s3tc.h"
+#include <string.h>
 
 //Decode S3TC encode block to 4x4 RGB32 pixels
 static void s3tc_decode_block(uint8_t **blockData,

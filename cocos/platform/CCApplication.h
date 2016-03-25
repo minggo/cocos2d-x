@@ -41,6 +41,8 @@ THE SOFTWARE.
 #include "platform/winrt/CCApplication.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 #include "platform/linux/CCApplication-linux.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
+#include "platform/pepper/CCApplication-pepper.h"
 #endif
 
 /// @endcond

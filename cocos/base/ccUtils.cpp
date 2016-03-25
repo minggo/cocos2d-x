@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "base/ccUtils.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "base/CCDirector.h"
 #include "base/CCAsyncTaskPool.h"

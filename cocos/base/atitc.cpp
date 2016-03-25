@@ -22,6 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include <string.h>
 #include "base/atitc.h"
 
 //Decode ATITC encode block to 4x4 RGB32 pixels

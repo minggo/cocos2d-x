@@ -1,6 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2015 Chukong Technologies Inc.
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -23,25 +23,59 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __PLATFORM_CCSTDC_H__
-#define __PLATFORM_CCSTDC_H__
+#include "platform/pepper/CCGLViewImpl-pepper.h"
 
-#include "platform/CCPlatformConfig.h"
+#include <stdio.h>
+#include <GLES2/gl2.h>
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-#include "platform/mac/CCStdC-mac.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-#include "platform/ios/CCStdC-ios.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include "platform/android/CCStdC-android.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "platform/win32/CCStdC-win32.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
-#include "platform/winrt/CCStdC.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-#include "platform/linux/CCStdC-linux.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
-#include "platform/pepper/CCStdC-pepper.h"
-#endif
+#include "platform/pepper/CCPepperModule.h"
 
-#endif /* __PLATFORM_CCSTDC_H__*/
+
+namespace cocos2d
+{
+
+
+GLViewImpl* GLViewImpl::create(void* instance, int width, int height)
+{
+    auto ret = new GLViewImpl(instance);
+    if (ret) 
+    {
+        ret->setFrameSize(width, height);
+        ret->autorelease();
+    }
+
+    return ret;
+}
+
+
+GLViewImpl::GLViewImpl(const void* instance)
+: _cocosInstance(const_cast<void*>(instance))
+{
+}
+
+GLViewImpl::~GLViewImpl()
+{
+}
+ 
+void GLViewImpl::end()
+{
+
+}
+
+bool GLViewImpl::isOpenGLReady()
+{
+    return true;
+}
+
+
+void GLViewImpl::swapBuffers()
+{
+    static_cast<CocosInstance*>(_cocosInstance)->SwapBuffers();   
+}
+
+void GLViewImpl::setIMEKeyboardState(bool open)
+{
+}
+
+}
+

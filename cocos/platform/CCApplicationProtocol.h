@@ -52,12 +52,13 @@ public:
         OS_ANDROID,/** Android */
         OS_IPHONE,/** Iphone */
         OS_IPAD,/** Ipad */
-        OS_BLACKBERRY,/** BLACKBERRY */
-        OS_NACL,/** Nacl */
-        OS_EMSCRIPTEN,/** Emscripten */
-        OS_TIZEN,/** Tizen */
+//        OS_BLACKBERRY,/** BLACKBERRY */
+//        OS_NACL,/** Nacl */
+//        OS_EMSCRIPTEN,/** Emscripten */
+//        OS_TIZEN,/** Tizen */
         OS_WINRT,/** Windows Store Applications */
-        OS_WP8/** Windows Phone Applications */
+        OS_WP8,/** Windows Phone Applications */
+        OS_PEPPER /** perpper plugin */
     };
 
     /**

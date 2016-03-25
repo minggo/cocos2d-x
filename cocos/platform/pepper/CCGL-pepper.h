@@ -1,6 +1,6 @@
 /****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2015 Chukong Technologies Inc.
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -23,25 +23,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __PLATFORM_CCSTDC_H__
-#define __PLATFORM_CCSTDC_H__
+#pragma once
 
-#include "platform/CCPlatformConfig.h"
+#define GL_GLEXT_PROTOTYPES
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-#include "platform/mac/CCStdC-mac.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS
-#include "platform/ios/CCStdC-ios.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include "platform/android/CCStdC-android.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-#include "platform/win32/CCStdC-win32.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
-#include "platform/winrt/CCStdC.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-#include "platform/linux/CCStdC-linux.h"
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
-#include "platform/pepper/CCStdC-pepper.h"
-#endif
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include "ppapi/lib/gl/gles2/gl2ext_ppapi.h"
 
-#endif /* __PLATFORM_CCSTDC_H__*/
+
+#define glGenVertexArrays glGenVertexArraysOES
+#define glDeleteVertexArrays glDeleteVertexArraysOES
+#define glBindVertexArray glBindVertexArrayOES
+#define glIsVertexArray glIsVertexArrayOES
+#define glClearDepth glClearDepthf
+#define glMapBuffer glMapBufferImpl
+#define glUnmapBuffer glUnmapBufferImpl
+
+#define GL_DEPTH24_STENCIL8 GL_DEPTH24_STENCIL8_OES
+#define GL_BGRA GL_BGRA_EXT
+
+// just make compiler happy, because pepper doesn't support these two functions
+// and they are not invoked
+
+GLvoid* glMapBufferImpl(GLenum target, GLenum access) 
+{
+	return nullptr; 
+}
+GLboolean glUnmapBufferImpl(GLenum target) { return false; }

@@ -214,12 +214,12 @@ THE SOFTWARE.
 //Enhance modification end
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY)
-    #include "platform/blackberry/CCApplication.h"
-    #include "platform/blackberry/CCGLViewImpl.h"
-    #include "platform/blackberry/CCGL.h"
-    #include "platform/blackberry/CCStdC.h"
-#endif // CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY)
+//    #include "platform/blackberry/CCApplication.h"
+//    #include "platform/blackberry/CCGLViewImpl.h"
+//    #include "platform/blackberry/CCGL.h"
+//    #include "platform/blackberry/CCStdC.h"
+//#endif // CC_TARGET_PLATFORM == CC_PLATFORM_BLACKBERRY
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     #include "platform/win32/CCApplication-win32.h"
@@ -247,6 +247,13 @@ THE SOFTWARE.
 	#include "platform/winrt/CCGLViewImpl-winrt.h"
 	#include "platform/winrt/CCGL.h"
 	#include "platform/winrt/CCStdC.h"
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER)
+#include "platform/pepper/CCApplication-pepper.h"
+#include "platform/pepper/CCGLViewImpl-pepper.h"
+#include "platform/pepper/CCGL-pepper.h"
+#include "platform/pepper/CCStdC-pepper.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
 
 // script_support
