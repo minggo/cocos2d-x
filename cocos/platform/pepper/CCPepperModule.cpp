@@ -5,6 +5,8 @@
 
 #include "ppapi/lib/gl/gles2/gl2ext_ppapi.h"
 
+#include "2d/CCSprite.h"
+
 #include "base/CCDirector.h"
 
 
@@ -24,8 +26,11 @@ void CocosInstance::DidChangeView(const pp::View& view)
 	// Pepper specifies dimensions in DIPs (device-independent pixels). To
     // generate a context that is at device-pixel resolution on HiDPI devices,
     // scale the dimensions by view.GetDeviceScale().
-    int32_t newWidth = view.GetRect().width() * view.GetDeviceScale();
-    int32_t newHeight = view.GetRect().height() * view.GetDeviceScale();
+    // int32_t newWidth = view.GetRect().width() * view.GetDeviceScale();
+    // int32_t newHeight = view.GetRect().height() * view.GetDeviceScale();
+
+    int32_t newWidth = view.GetRect().width();
+    int32_t newHeight = view.GetRect().height();
 
     if (_context.is_null())
     {
@@ -36,7 +41,13 @@ void CocosInstance::DidChangeView(const pp::View& view)
     	auto director = cocos2d::Director::getInstance();
 	    director->setOpenGLView(_view);
 
-	    director->mainLoop();
+        // create a scene. it's an autorelease object
+        auto scene = cocos2d::Scene::create();
+        auto sprite = cocos2d::Sprite::create("/Users/minggo/SourceCode/test/electron/electron-pepper/HelloWorld.png");
+        sprite->setPosition(newWidth/2, newHeight/2);
+        scene->addChild(sprite);
+        director->runWithScene(scene);
+        director->mainLoop();
     }
     else 
     {

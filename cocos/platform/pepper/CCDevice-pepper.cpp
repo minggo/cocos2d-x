@@ -1,6 +1,6 @@
 /****************************************************************************
-Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2013-2014 Chukong Technologies Inc.
+Copyright (c) 2010-2016 cocos2d-x.org
+Copyright (c) 2013-2016 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -23,28 +23,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "platform/CCDevice.h"
 
-#define GL_GLEXT_PROTOTYPES
+namespace cocos2d {
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include "ppapi/lib/gl/gles2/gl2ext_ppapi.h"
+int Device::getDPI()
+{
+    return 0;
+}
+    
+void Device::setAccelerometerEnabled(bool enable) {}
+void Device::setAccelerometerInterval(float interval) {}
+void Device::setKeepScreenOn(bool keepScreenOn) {}
+void Device::vibrate(float duration) {}
+Data Device::getTextureDataForText(const char * text, const FontDefinition& textDefinition, TextAlign align, int &width, int &height, bool& hasPremultipliedAlpha)
+{
+    return Data();
+}
 
-
-#define glGenVertexArrays glGenVertexArraysOES
-#define glDeleteVertexArrays glDeleteVertexArraysOES
-#define glBindVertexArray glBindVertexArrayOES
-#define glIsVertexArray glIsVertexArrayOES
-#define glClearDepth glClearDepthf
-#define glMapBuffer glMapBufferImpl
-#define glUnmapBuffer glUnmapBufferImpl
-
-#define GL_DEPTH24_STENCIL8 GL_DEPTH24_STENCIL8_OES
-#define GL_BGRA GL_BGRA_EXT
-
-// just make compiler happy, because pepper doesn't support these two functions
-// and they are not invoked
-
-extern GLvoid* glMapBufferImpl(GLenum target, GLenum access);
-extern GLboolean glUnmapBufferImpl(GLenum target);
+} // end of namespace

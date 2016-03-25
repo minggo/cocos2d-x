@@ -284,6 +284,9 @@ static void _log(const char *format, va_list args)
     } while (pos < len);
     SendLogToWindow(buf);
     fflush(stdout);
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_PEPPER
+    fprintf(stderr, "%s", buf);
+    fflush(stderr);
 #else
     // Linux, Mac, iOS, etc
     fprintf(stdout, "%s", buf);

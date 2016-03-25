@@ -36,8 +36,9 @@ public:
 	FileUtilsPepper();
 	virtual ~FileUtilsPepper();
 
-	bool isFileExistInternal(const std::string& path) const override;
-    bool isAbsolutePath(const std::string& path) const override;
+	virtual bool isFileExistInternal(const std::string& path) const override;
+    virtual bool isAbsolutePath(const std::string& path) const override;
+    virtual std::string getWritablePath() const override;
 };
 
 } // end of namespace

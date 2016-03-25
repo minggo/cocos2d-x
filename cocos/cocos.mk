@@ -74,6 +74,8 @@ $(COCOS_ROOT)/cocos/2d/CCTransitionPageTurn.cpp \
 $(COCOS_ROOT)/cocos/2d/CCTransitionProgress.cpp \
 $(COCOS_ROOT)/cocos/2d/CCTweenFunction.cpp \
 $(COCOS_ROOT)/cocos/2d/CCAutoPolygon.cpp \
+$(COCOS_ROOT)/cocos/3d/CCFrustum.cpp \
+$(COCOS_ROOT)/cocos/3d/CCPlane.cpp \
 $(COCOS_ROOT)/cocos/platform/CCFileUtils.cpp \
 $(COCOS_ROOT)/cocos/platform/CCGLView.cpp \
 $(COCOS_ROOT)/cocos/platform/CCImage.cpp \
@@ -82,6 +84,9 @@ $(COCOS_ROOT)/cocos/platform/CCThread.cpp \
 $(COCOS_ROOT)/cocos/platform/pepper/CCPepperModule.cpp \
 $(COCOS_ROOT)/cocos/platform/pepper/CCGLViewImpl-pepper.cpp \
 $(COCOS_ROOT)/cocos/platform/pepper/CCApplication-pepper.cpp \
+$(COCOS_ROOT)/cocos/platform/pepper/CCFileUtils-pepper.cpp \
+$(COCOS_ROOT)/cocos/platform/pepper/CCDevice-pepper.cpp \
+$(COCOS_ROOT)/cocos/platform/pepper/CCGL-pepper.cpp \
 $(COCOS_ROOT)/cocos/math/MathUtil.cpp\
 $(COCOS_ROOT)/cocos/math/CCAffineTransform.cpp \
 $(COCOS_ROOT)/cocos/math/CCGeometry.cpp \
@@ -245,7 +250,8 @@ CXXFLAGS += -I$(COCOS_ROOT)/external/freetype2/include/mac/freetype2 \
 -I$(COCOS_ROOT)/external/png/include/mac \
 -I$(COCOS_ROOT)/external/tiff/include/mac \
 -I$(COCOS_ROOT)/external/jpeg/include/mac \
--I$(COCOS_ROOT)/external/webp/include/mac
+-I$(COCOS_ROOT)/external/webp/include/mac \
+-DPEPPER_MAC
 
 LDFLAGS += \
 -L$(COCOS_ROOT)/external/png/prebuilt/mac \
@@ -253,9 +259,9 @@ LDFLAGS += \
 -L$(COCOS_ROOT)/external/tiff/prebuilt/mac \
 -L$(COCOS_ROOT)/external/webp/prebuilt/mac \
 -L$(COCOS_ROOT)/external/freetype2/prebuilt/mac \
--L$(COCOS_ROOT)/external/zlib/prebuilt/mac
+-L$(COCOS_ROOT)/external/zlib/prebuilt/mac 
 else
 CXXFLAGS += -I$(COCOS_ROOT)/external/freetype2/include/win32/freetype2
 endif
 
-LIBS += png jpeg tiff webp freetype z
+LIBS += png jpeg tiff webp freetype z iconv
