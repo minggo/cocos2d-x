@@ -2,12 +2,13 @@
 
 #include "ppapi/cpp/module.h"
 #include "ppapi/cpp/var.h"
-
 #include "ppapi/lib/gl/gles2/gl2ext_ppapi.h"
 
 #include "2d/CCSprite.h"
-
 #include "base/CCDirector.h"
+#include "scripting/js-bindings/manual/ScriptingCore.h"
+#include "scripting/js-bindings/manual/cocos2d_specifics.hpp"
+#include "scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
 
 
 CocosInstance::CocosInstance(PP_Instance instance)
@@ -18,6 +19,11 @@ CocosInstance::CocosInstance(PP_Instance instance)
 
 bool CocosInstance::Init(uint32_t argc,  const char* argn[], const char* argv[])
 {
+    // register jsb modules
+    ScriptingCore* sc = ScriptingCore::getInstance();
+    sc->addRegisterCallback(register_all_cocos2dx);
+    sc->addRegisterCallback(register_cocos2dx_js_core);
+
 	return true;
 }
 
