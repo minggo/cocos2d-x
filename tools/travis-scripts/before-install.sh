@@ -19,10 +19,12 @@ function install_android_ndk()
         HOST_NAME="linux"
     fi
 
-    echo "Download android-ndk-r12b-${HOST_NAME}-x86_64.zip ..."
-    curl -O http://dl.google.com/android/repository/android-ndk-r12b-${HOST_NAME}-x86_64.zip
-    echo "Decompress android-ndk-r12b-${HOST_NAME}-x86_64.zip ..."
-    tar xf android-ndk-r12b-${HOST_NAME}-x86_64.zip
+    FILE_NAME=android-ndk-r12b-${HOST_NAME}-x86_64.zip
+
+    echo "Download ${FILE_NAME} ..."
+    curl -O http://dl.google.com/android/repository/${FILE_NAME}
+    echo "Decompress ${FILE_NAME} ..."
+    tar xf ${FILE_NAME}
     # Rename ndk
     mv android-ndk-r12b android-ndk
 }
