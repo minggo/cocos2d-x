@@ -13,7 +13,7 @@ cd $HOME/bin
 function install_android_ndk()
 {
     # Download android ndk
-    if [ $TRAVIS_OS_NAME = "osx" ]; then
+    if [ "$TRAVIS_OS_NAME" = "osx" ]; then
         HOST_NAME="darwin"
     else
         HOST_NAME="linux"
@@ -40,12 +40,12 @@ function install_linux_environment()
 # set up environment according os and target
 function install_environement()
 {
-    if [ $TRAVIS_OS_NAME = 'linux' ]; then
-        if [ $BUILD_TARGET = 'linux' ]; then
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+        if [ "$BUILD_TARGET" = "linux" ]; then
             install_linux_environment
         fi
 
-        if [ $BUILD_TARGET = 'android' ]; then
+        if [ "$BUILD_TARGET" = "android" ]; then
             install_android_ndk
         fi
     fi
