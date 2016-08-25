@@ -40,12 +40,12 @@ function install_linux_environment()
 # set up environment according os and target
 function install_environement()
 {
-    if [ $TRAVIS_OS_NAME == 'linux' ]; then
-        if [ $BUILD_TARGET == 'linux' ]; then
+    if [ $TRAVIS_OS_NAME = 'linux' ]; then
+        if [ $BUILD_TARGET = 'linux' ]; then
             install_linux_environment
         fi
 
-        if [ $BUILD_TARGET == 'android' ]; then
+        if [ $BUILD_TARGET = 'android' ]; then
             install_android_ndk
         fi
     fi
