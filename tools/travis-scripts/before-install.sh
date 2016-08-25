@@ -48,7 +48,8 @@ function install_environement()
     fi
 }
 
-
+# use NDK's clang to generate binding codes
+install_android_ndk
 install_environement
 
 

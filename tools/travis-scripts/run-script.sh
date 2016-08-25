@@ -8,12 +8,6 @@ COCOS2DX_ROOT="$DIR"/../..
 
 function build_linux()
 {
-    # Generate binding glue codes
-    echo "Generating bindings glue codes ..."
-    cd $COCOS2DX_ROOT/tools/travis-scripts
-    ./generate-bindings.sh
-    # ./generate-cocosfiles.sh
-
     echo "Building cocos2d-x"
     cd $COCOS2DX_ROOT/build
     mkdir -p linux-build
@@ -22,8 +16,30 @@ function build_linux()
     make -j10
 }
 
+function genernate_binding_codes()
+{
+    # set environment variables needed by binding codes
+
+    if [ -z "$NDK_ROOT" ]; then
+        export NDK_ROOT=$HOME/bin/android-ndk
+    fi
+
+    if [ -z "$PYTHON_BIN" ]; then
+        export PYTHON_BIN=/usr/bin/python
+    fi
+
+    # Generate binding glue codes
+    echo "Generating bindings glue codes ..."
+    cd $COCOS2DX_ROOT/tools/travis-scripts
+    ./generate-bindings.sh
+    # ./generate-cocosfiles.sh
+}
+
 function build()
 {
+    # need to generate binding codes for all targets
+    genernate_binding_codes
+
     if [ $BUILD_TARGET == 'linux' ]; then
         build_linux
     fi
@@ -31,13 +47,9 @@ function build()
 
 build
 
-# if [ -z "$NDK_ROOT" ]; then
-#     export NDK_ROOT=$HOME/bin/android-ndk
-# fi
 
-# if [ -z "$PYTHON_BIN" ]; then
-#     export PYTHON_BIN=/usr/bin/python
-# fi
+
+
 
 # if [ "$GEN_BINDING"x = "YES"x ]; then
 #     # Re-generation of the javascript bindings can perform push of the new
