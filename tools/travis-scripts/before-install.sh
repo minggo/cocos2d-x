@@ -24,7 +24,7 @@ function install_android_ndk()
     echo "Download ${FILE_NAME} ..."
     curl -O http://dl.google.com/android/repository/${FILE_NAME}
     echo "Decompress ${FILE_NAME} ..."
-    unzip $FILE_NAME
+    unzip $FILE_NAME > /dev/null
     # Rename ndk
     mv android-ndk-r12b android-ndk
 }
