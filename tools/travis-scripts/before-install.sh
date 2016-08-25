@@ -38,7 +38,7 @@ function install_linux_environment()
 function install_environement()
 {
     if [ $TRAVIS_OS_NAME == 'linux' and  ]; then
-        if [  == 'linux' ]; then
+        if [ $BUILD_TARGET == 'linux' ]; then
             install_linux_environment
         fi
 
