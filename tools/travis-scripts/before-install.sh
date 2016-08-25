@@ -19,7 +19,7 @@ function install_android_ndk()
         HOST_NAME="linux"
     fi
 
-    FILE_NAME=android-ndk-r12b-${HOST_NAME}-x86_64.zip
+    FILE_NAME=android-ndk-r10d-${HOST_NAME}-x86_64.zip
 
     echo "Download ${FILE_NAME} ..."
     curl -O http://dl.google.com/android/repository/${FILE_NAME}
