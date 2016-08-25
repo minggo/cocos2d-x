@@ -13,13 +13,14 @@ cd $HOME/bin
 function install_android_ndk()
 {
     # Download android ndk
-    if [ "$PLATFORM"x = "mac-ios"x ]; then
+    if [ $TRAVIS_OS_NAME = "osx" ]; then
         HOST_NAME="darwin"
     else
         HOST_NAME="linux"
     fi
-    echo "Download android-ndk-r9d-${HOST_NAME}-x86_64.zip ..."
-    curl -O http://dl.google.com/android/ndk/android-ndk-r12b-${HOST_NAME}-x86_64.tar.bz2
+
+    echo "Download android-ndk-r12b-${HOST_NAME}-x86_64.zip ..."
+    curl -O http://dl.google.com/android/repository/android-ndk-r12b-${HOST_NAME}-x86_64.zip
     echo "Decompress android-ndk-r12b-${HOST_NAME}-x86_64.zip ..."
     tar xjf android-ndk-r12b-${HOST_NAME}-x86_64.tar.bz2
     # Rename ndk
