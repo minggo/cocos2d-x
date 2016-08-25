@@ -29,6 +29,8 @@ function build()
     fi
 }
 
+build
+
 # if [ -z "$NDK_ROOT" ]; then
 #     export NDK_ROOT=$HOME/bin/android-ndk
 # fi
