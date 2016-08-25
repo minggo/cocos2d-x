@@ -4,7 +4,7 @@ matrix:
   include:
     # build linux
     - os: linux
-      env: BUILD_TARGET=linux
+      env: BUILD_TARGET=linux NAME="linux build"
       sudo: required
     # build android
     # - os: linux
