@@ -41,6 +41,7 @@ function install_linux_environment()
     cd cmake-3.2.2
     ./configure
     make
+    cd ..
     # install dpes
     python download-deps.py -r=yes
 
