@@ -23,7 +23,7 @@ function install_android_ndk()
 
     echo "Download ${FILE_NAME} ..."
     curl -O http://dl.google.com/android/ndk/${FILE_NAME}
-    chmod +x ./$FILE_NAME
+    sudo chmod +x ./$FILE_NAME
     echo "Decompress ${FILE_NAME} ..."
     ./$FILE_NAME > /dev/null
     # Rename ndk
@@ -35,8 +35,8 @@ function install_linux_environment()
     pushd $COCOS2DX_ROOT
 
     # update cmake
-    add-apt-repository ppa:george-edison55/cmake-3.x
-    apt-get update
+    sudo add-apt-repository ppa:george-edison55/cmake-3.x
+    sudo apt-get update
     # install dpes
     python download-deps.py -r=yes
 

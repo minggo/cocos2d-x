@@ -53,6 +53,9 @@ script:
 before_install:
 - tools/travis-scripts/before-install.sh
 
+notifications:
+  email: false
+
 # whitelist
 # branches:
 #   only:
