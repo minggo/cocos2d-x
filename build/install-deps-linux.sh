@@ -9,7 +9,7 @@ if [ ! $(command -v apt-get) ]; then
 fi
 
 #install g++-4.9
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get update
 
 #try to remove glfw2

@@ -8,7 +8,7 @@ COCOS2DX_ROOT="$DIR"/../..
 
 function build_linux()
 {
-    echo "Building cocos2d-x"
+    echo "Building tests ..."
     cd $COCOS2DX_ROOT/build
     mkdir -p linux-build
     cd linux-build
