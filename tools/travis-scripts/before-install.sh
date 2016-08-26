@@ -35,7 +35,7 @@ function install_linux_environment()
     pushd $COCOS2DX_ROOT
 
     # update cmake
-    echo "install cmake 3.2.2"
+    echo "update cmake ..."
     # sudo apt-get install build-essential > /dev/null
     # wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz 
     # tar xf cmake-3.2.2.tar.gz > /dev/null
@@ -44,8 +44,9 @@ function install_linux_environment()
     # make > /dev/null
     # sudo make install
     sudo add-apt-repository ppa:george-edison55/precise-backports > /dev/null
-    sudo apt-get update > /dev/null
+    sudo apt-get update -y > /dev/null
     sudo apt-get upgrade cmake
+    cmake --version
     cd ..
     # install dpes
     python download-deps.py -r=yes
