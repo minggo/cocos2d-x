@@ -35,9 +35,12 @@ function install_linux_environment()
     pushd $COCOS2DX_ROOT
 
     # update cmake
-    sudo add-apt-repository ppa:george-edison55/cmake-3.x -y > /dev/null
-    sudo apt-get update > /dev/null
-    sudo apt-get upgrade
+    sudo apt-get install build-essential
+    wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz
+    tar xf cmake-3.2.2.tar.gz
+    cd cmake-3.2.2
+    ./configure
+    make
     # install dpes
     python download-deps.py -r=yes
 
@@ -53,7 +56,7 @@ function install_environement()
         fi
 
         if [ "$BUILD_TARGET" = "android" ]; then
-            install_android_ndk
+            
         fi
     fi
 }
