@@ -43,11 +43,11 @@ function install_linux_environment()
     # ./configure > /dev/null
     # make > /dev/null
     # sudo make install
-    sudo add-apt-repository -y ppa:george-edison55/precise-backports  > /dev/null
+    sudo add-apt-repository -y ppa:george-edison55/precise-backports 2>&1  > /dev/null
     echo "apt-get update ..."
     sudo apt-get update -q -y > /dev/null
     echo "upgrade cmake ..."
-    sudo apt-get upgrade -q -y --force-yes cmake
+    sudo apt-get install -y --only-upgrade cmake
     cmake --version
     cd ..
     # install dpes
