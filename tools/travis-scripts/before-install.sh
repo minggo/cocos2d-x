@@ -32,9 +32,14 @@ function install_android_ndk()
 
 function install_linux_environment()
 {
-    # install dpes
     pushd $COCOS2DX_ROOT
+
+    # update cmake
+    add-apt-repository ppa:george-edison55/cmake-3.x
+    apt-get update
+    # install dpes
     python download-deps.py -r=yes
+
     popd
 }
 
