@@ -43,7 +43,7 @@ function install_linux_environment()
     # ./configure > /dev/null
     # make > /dev/null
     # sudo make install
-    sudo add-apt-repository ppa:george-edison55/precise-backports -y -q > /dev/null
+    sudo add-apt-repository ppa:george-edison55/precise-backports -y > /dev/null
     sudo apt-get update -q -y > /dev/null
     sudo apt-get -q -y --force-yes upgrade cmake
     cmake --version
