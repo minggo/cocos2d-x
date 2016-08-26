@@ -35,8 +35,9 @@ function install_linux_environment()
     pushd $COCOS2DX_ROOT
 
     # update cmake
-    sudo add-apt-repository ppa:george-edison55/cmake-3.x -y
-    sudo apt-get update
+    sudo add-apt-repository ppa:george-edison55/cmake-3.x -y > /dev/null
+    sudo apt-get update > /dev/null
+    sudo apt-get --only-upgrade install cmake
     # install dpes
     python download-deps.py -r=yes
 
