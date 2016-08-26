@@ -54,10 +54,6 @@ function install_environement()
         if [ "$BUILD_TARGET" = "linux" ]; then
             install_linux_environment
         fi
-
-        if [ "$BUILD_TARGET" = "android" ]; then
-            
-        fi
     fi
 }
 
