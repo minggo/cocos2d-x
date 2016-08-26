@@ -27,7 +27,7 @@ function install_android_ndk()
     echo "Decompress ${FILE_NAME} ..."
     ./$FILE_NAME > /dev/null
     # Rename ndk
-    mv android-ndk-r12b android-ndk
+    mv android-ndk-r10d android-ndk
 }
 
 function install_linux_environment()
