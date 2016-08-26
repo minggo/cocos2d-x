@@ -32,28 +32,12 @@ function install_android_ndk()
 
 function install_linux_environment()
 {
-    pushd $COCOS2DX_ROOT
-
-    # update cmake
-    # echo "update cmake ..."
-    # # sudo apt-get install build-essential > /dev/null
-    # # wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz 
-    # # tar xf cmake-3.2.2.tar.gz > /dev/null
-    # # cd cmake-3.2.2
-    # # ./configure > /dev/null
-    # # make > /dev/null
-    # # sudo make install
-    # sudo add-apt-repository -y ppa:george-edison55/precise-backports 2>&1  > /dev/null
-    # echo "apt-get update ..."
-    # sudo apt-get update -q -y > /dev/null
-    # echo "upgrade cmake ..."
-    # sudo apt-get install cmake
-    # cmake --version
-    # cd ..
     # install dpes
+    pushd $COCOS2DX_ROOT
     python download-deps.py -r=yes
-
     popd
+
+    bash $COCOS2DX_ROOT/build/install-deps-linux.sh
 }
 
 # set up environment according os and target
