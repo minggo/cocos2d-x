@@ -22,7 +22,7 @@ function install_android_ndk()
     FILE_NAME=android-ndk-r10d-${HOST_NAME}-x86_64.bin
 
     echo "Download ${FILE_NAME} ..."
-    curl -O http://dl.google.com/android/repository/${FILE_NAME}
+    curl -O http://dl.google.com/android/ndk/${FILE_NAME}
     echo "Decompress ${FILE_NAME} ..."
     sh $FILE_NAME > /dev/null
     # Rename ndk
