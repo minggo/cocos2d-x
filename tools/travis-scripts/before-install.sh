@@ -49,7 +49,7 @@ function install_linux_environment()
     # echo "upgrade cmake ..."
     # sudo apt-get install cmake
     # cmake --version
-    cd ..
+    # cd ..
     # install dpes
     python download-deps.py -r=yes
 
