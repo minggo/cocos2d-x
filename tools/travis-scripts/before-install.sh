@@ -23,7 +23,7 @@ function install_android_ndk()
 
     echo "Download ${FILE_NAME} ..."
     curl -O http://dl.google.com/android/ndk/${FILE_NAME}
-    chmod +777 ./$FILE_NAME
+    chmod +x ./$FILE_NAME
     echo "Decompress ${FILE_NAME} ..."
     ./$FILE_NAME > /dev/null
     # Rename ndk
