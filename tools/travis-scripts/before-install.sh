@@ -47,7 +47,7 @@ function install_linux_environment()
     echo "apt-get update ..."
     sudo apt-get update -q -y > /dev/null
     echo "upgrade cmake ..."
-    sudo apt-get --only-upgrade install cmake
+    sudo apt-get install cmake
     cmake --version
     cd ..
     # install dpes
