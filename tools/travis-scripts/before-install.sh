@@ -44,7 +44,8 @@ function install_linux_environment()
     # make > /dev/null
     # sudo make install
     sudo add-apt-repository ppa:george-edison55/precise-backports -y > /dev/null
-    sudo apt-get update -qq && sudo apt-get dist-upgrade -qq && echo "All up to date now!"
+    sudo apt-get update -q -y
+    sudo apt-get upgrade -q -y --force-yes cmake
     cmake --version
     cd ..
     # install dpes
