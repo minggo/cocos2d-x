@@ -42,12 +42,12 @@ function install_linux_environment()
 
 function install_android_environment()
 {
+    sudo apt-get install ant -y
     ant_path=`which ant`
     ant_root=${ant_path::-4}
-    echo 'ant_root is ${ant_root}'
+    echo "ant_root is ${ant_root}"
     pushd $COCOS2DX_ROOT
     python setup.py -n $HOME/bin/android-ndk -a /usr/local/android-sdk -t $ant_root
-    ./build/
 }
 
 # set up environment according os and target

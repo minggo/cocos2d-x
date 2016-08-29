@@ -56,8 +56,6 @@ script:
 - tools/travis-scripts/run-script.sh
 before_install:
 - tools/travis-scripts/before-install.sh
-install:
-  - ant
 
 addons:
   apt:
