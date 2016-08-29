@@ -10,7 +10,7 @@ matrix:
     - os: linux
       env: BUILD_TARGET=linux
       sudo: required
-    build android
+    # build android
     - os: linux
       env: BUILD_TARGET=android
     # # build mac
