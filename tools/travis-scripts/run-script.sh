@@ -53,6 +53,7 @@ function build()
     fi
 
     if [ $BUILD_TARGET == 'android' ]; then
+        build_android
     fi
 }
 
