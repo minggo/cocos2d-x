@@ -16,6 +16,14 @@ function build_linux()
     make -j10
 }
 
+function build_android()
+{
+    # Build all samples
+    echo "Building Android samples ..."
+    cd $COCOS2DX_ROOT/build
+    ./android-build.py all
+}
+
 function genernate_binding_codes()
 {
     # set environment variables needed by binding codes
@@ -42,6 +50,9 @@ function build()
 
     if [ $BUILD_TARGET == 'linux' ]; then
         build_linux
+    fi
+
+    if [ $BUILD_TARGET == 'android' ]; then
     fi
 }
 

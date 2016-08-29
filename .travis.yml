@@ -1,4 +1,8 @@
-language: cpp
+language: android
+
+android:
+  components:
+    - android-10
 
 matrix:
   include:
@@ -6,9 +10,9 @@ matrix:
     - os: linux
       env: BUILD_TARGET=linux
       sudo: required
-    # build android
-    # - os: linux
-    #   env: BUILD_TARGET=android
+    build android
+    - os: linux
+      env: BUILD_TARGET=android
     # # build mac
     # - os: osx
     #   env: BUILD_TARGET=mac
@@ -52,6 +56,8 @@ script:
 - tools/travis-scripts/run-script.sh
 before_install:
 - tools/travis-scripts/before-install.sh
+install:
+  - ant deps
 
 addons:
   apt:

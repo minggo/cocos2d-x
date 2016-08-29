@@ -40,12 +40,26 @@ function install_linux_environment()
     bash $COCOS2DX_ROOT/build/install-deps-linux.sh
 }
 
+function install_android_environment()
+{
+    ant_path = `which ant`
+    ant_root = ${ant_path::-4}
+    echo 'ant_root is ${ant_root}'
+    pushd $COCOS2DX_ROOT
+    python setup.py -n $HOME/bin/android-ndk -a /usr/local/android-sdk -t $ant_root
+    ./build/
+}
+
 # set up environment according os and target
 function install_environement()
 {
     if [ "$TRAVIS_OS_NAME" = "linux" ]; then
         if [ "$BUILD_TARGET" = "linux" ]; then
             install_linux_environment
+        fi
+
+        if [ "$BUILD_TARGET" = "android" ]; then
+            install_android_environment
         fi
     fi
 }
