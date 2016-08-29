@@ -31,7 +31,7 @@ function genernate_binding_codes()
     # Generate binding glue codes
     echo "Generating bindings glue codes ..."
     cd $COCOS2DX_ROOT/tools/travis-scripts
-    ./generate-bindings.sh
+    ./generate-bindings.sh > /dev/null
     # ./generate-cocosfiles.sh
 }
 
