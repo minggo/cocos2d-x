@@ -1,18 +1,21 @@
-language: android
 
-android:
-  components:
-    - android-10
+
 
 matrix:
   include:
     # build linux
     - os: linux
       env: BUILD_TARGET=linux
+      language: c++
       sudo: required
     # build android
     - os: linux
       env: BUILD_TARGET=android
+      language: android
+      sudo: required
+      android:
+        components:
+          - android-10
     # # build mac
     # - os: osx
     #   env: BUILD_TARGET=mac

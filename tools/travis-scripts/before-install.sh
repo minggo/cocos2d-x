@@ -32,12 +32,15 @@ function install_android_ndk()
 
 function install_linux_environment()
 {
+    bash $COCOS2DX_ROOT/build/install-deps-linux.sh
+}
+
+function install_deps()
+{
     # install dpes
     pushd $COCOS2DX_ROOT
     python download-deps.py -r=yes
     popd
-
-    bash $COCOS2DX_ROOT/build/install-deps-linux.sh
 }
 
 function install_android_environment()
@@ -53,6 +56,11 @@ function install_android_environment()
 # set up environment according os and target
 function install_environement()
 {
+    # use NDK's clang to generate binding codes
+    install_android_ndk
+    
+    install_deps
+
     if [ "$TRAVIS_OS_NAME" = "linux" ]; then
         if [ "$BUILD_TARGET" = "linux" ]; then
             install_linux_environment
@@ -64,8 +72,7 @@ function install_environement()
     fi
 }
 
-# use NDK's clang to generate binding codes
-install_android_ndk
+
 install_environement
 
 
