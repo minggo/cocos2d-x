@@ -10,7 +10,7 @@ fi
 
 #install g++-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y > /dev/null
-sudo apt-get update --qq
+sudo apt-get update
 
 #try to remove glfw2
 sudo apt-get remove libglfw2
