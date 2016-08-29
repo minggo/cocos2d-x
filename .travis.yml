@@ -6,7 +6,7 @@ matrix:
     # build linux
     - os: linux
       env: BUILD_TARGET=linux
-      language: c++
+      language: C++
       sudo: required
     # build android
     - os: linux
