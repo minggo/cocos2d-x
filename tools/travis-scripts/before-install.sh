@@ -53,6 +53,13 @@ function install_android_environment()
     echo '{"agreement_shown": true}' | sudo tee $HOME/.cocos/local_cfg.json
 }
 
+function install_python_module_for_osx()
+{
+    sudo easy_install pip
+    sudo pip install PyYAML
+    sudo pip install Cheetah
+}
+
 # set up environment according os and target
 function install_environement_for_pull_request()
 {
@@ -60,14 +67,18 @@ function install_environement_for_pull_request()
     install_android_ndk
     download_deps
 
-    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-        if [ "$BUILD_TARGET" = "linux" ]; then
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+        if [ "$BUILD_TARGET" == "linux" ]; then
             install_linux_environment
         fi
 
-        if [ "$BUILD_TARGET" = "android" ]; then
+        if [ "$BUILD_TARGET" == "android" ]; then
             install_android_environment
         fi
+    fi
+
+    if [ "$TRAVIS_OS_NAME" == "osx" ]: then
+        install_python_module_for_osx
     fi
 }
 
@@ -76,6 +87,10 @@ function install_environement_for_after_merge()
 {
     install_android_ndk
     download_deps
+
+    if [ "$TRAVIS_OS_NAME" == "osx" ]: then
+        install_python_module_for_osx
+    fi
 }
 
 # build pull request
