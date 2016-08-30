@@ -94,13 +94,13 @@ function install_environement_for_after_merge()
 }
 
 # build pull request
-if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ $TRAVIS_EVENT_TYPE == "push" ]; then
     install_environement_for_pull_request
 fi
 
 # run after merging
 # - make cocos robot to send PR to cocos2d-x for new binding codes
 # - generate cocos_files.json for template
-if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ $TRAVIS_EVENT_TYPE != "push" ]; then
     install_environement_for_after_merge
 fi
