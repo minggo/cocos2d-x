@@ -21,10 +21,10 @@ function build_android()
     # Build all samples
     echo "Building Android samples ..."
     export COCOS_CONSOLE_ROOT=$COCOS2DX_ROOT/tools/cocos2d-console/bin
-    export ANT=/usr/bin
+    export ANT_ROOT=/usr/bin
     export ANDROID_SDK_ROOT=/usr/local/android-sdk
     export COCOS_X_ROOT=$COCOS2DX_ROOT
-    export PATH=$ANT:$ANDROID_SDK_ROOT:$COCOS_CONSOLE_ROOT:$PATH
+    export PATH=$ANT_ROOT:$ANDROID_SDK_ROOT:$COCOS_CONSOLE_ROOT:$PATH
     echo "PATH is $PATH"
     cd $COCOS2DX_ROOT/build
     ./android-build.py all
@@ -139,12 +139,12 @@ function run_pull_request()
 
     if [ $BUILD_TARGET == 'mac' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs 8 -arch x86_64 -sdk iphonesimulator9.2  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs 8 -arch x86_64 -sdk iphonesimulator9.3  build
     fi
 
     if [ $BUILD_TARGET == 'ios' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs 8 -arch i386 -sdk iphonesimulator9.2  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs 8 -arch i386 -sdk iphonesimulator9.3  build
     fi
 }
 
