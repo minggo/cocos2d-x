@@ -151,12 +151,14 @@ function run_pull_request()
 
     if [ $BUILD_TARGET == 'mac' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk iphonesimulator9.3  build
+        xcodebuild -project "$COCOS2DX_ROOT"/build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" build
+        #xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk iphonesimulator9.3  build
     fi
 
     if [ $BUILD_TARGET == 'ios' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
+        xcodebuild -project "$COCOS2DX_ROOT"/build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" build
+        #xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
     fi
 }
 
