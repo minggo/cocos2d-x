@@ -36,7 +36,7 @@ matrix:
       sudo: required
       python:
         - "2.7"
-  global:
+global:
   - secure: |-
       cHXOjAda+t2tmBVuVAiQfvhDN+unToO6hX1rc3dJeGDOk4rlQnylJacjA7o/
       enkWeHagbW2Ja4h7BxQz4h7dada8zEbIbEMK4VEHx6AWwQM+GIEqkJPv5g8k
