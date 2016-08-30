@@ -33,9 +33,11 @@ function build_android()
     PROJECTS=("cpp-empty-test" "cpp-tests" "lua-empty-test/project" "lua-tests/project" "js-tests/project")
     for i in ${PROJECTS[*]}; do
         ln -s $COCOS2DX_ROOT/android_build_objs $COCOS2DX_ROOT/tests/$i/proj.android/obj
+        pushd $COCOS2DX_ROOT/tests/$i
+        cocos compile -p android
+        popd
     done
 
-    ./android-build.py all
 }
 
 function genernate_binding_codes()

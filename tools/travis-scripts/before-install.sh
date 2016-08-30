@@ -94,7 +94,7 @@ function install_environement_for_after_merge()
 }
 
 # build pull request
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ $TRAVIS_EVENT_TYPE == "push" ]; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     install_environement_for_pull_request
 fi
 
