@@ -145,14 +145,16 @@ function run_pull_request()
         build_android
     fi
 
+    NUM_OF_CORES=`getconf _NPROCESSORS_ONLN`
+
     if [ $BUILD_TARGET == 'mac' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs 8 -arch x86_64 -sdk iphonesimulator9.3  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk iphonesimulator9.3  build
     fi
 
     if [ $BUILD_TARGET == 'ios' ]; then
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs 8 -arch i386 -sdk iphonesimulator9.3  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
     fi
 }
 
