@@ -102,7 +102,7 @@ function generate_pull_request_for_binding_codes_and_cocosfiles()
     git diff FETCH_HEAD --stat --exit-code "$COCOSFILE_PATH"
     COCOSFILE_DIFF_RETVAL=$?
 
-    if [ $LUA_DIFF_RETVAL -eq 0 && $JS_DIFF_RETVAL -eq 0 && $COCOSFILE_DIFF_RETVAL -eq 0 ]; then
+    if [ $LUA_DIFF_RETVAL -eq 0 ] && [ $JS_DIFF_RETVAL -eq 0 ] && [ $COCOSFILE_DIFF_RETVAL -eq 0 ]; then
         echo
         echo "No differences in generated files"
         echo "Exiting with success."
