@@ -6,8 +6,8 @@ import sys
 import os, os.path
 from optparse import OptionParser
 
-CPP_SAMPLES = ['cpp-empty-test', 'cpp-tests', 'game-controller-test']
-LUA_SAMPLES = ['lua-empty-test', 'lua-tests', 'lua-game-controller-test']
+CPP_SAMPLES = ['cpp-empty-test', 'cpp-tests']
+LUA_SAMPLES = ['lua-empty-test', 'lua-tests']
 JS_SAMPLES = ['js-tests']
 ALL_SAMPLES = CPP_SAMPLES + LUA_SAMPLES + JS_SAMPLES
 
