@@ -51,6 +51,7 @@ function install_android_environment()
     echo "ant_root is ${ant_root}"
     pushd $COCOS2DX_ROOT
     python setup.py -n $HOME/bin/android-ndk -a /usr/local/android-sdk -t $ant_root
+    source /home/travis/.bashrc
 }
 
 # set up environment according os and target

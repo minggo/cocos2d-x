@@ -173,10 +173,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 fi
 
 
-
-
-
-
 # elif [ "$PLATFORM"x = "mac-ios"x ]; then
 #     if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 #         exit 0
