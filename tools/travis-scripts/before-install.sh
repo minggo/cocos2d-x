@@ -88,7 +88,7 @@ function install_environement_for_after_merge()
     install_android_ndk
     download_deps
 
-    if [ "$TRAVIS_OS_NAME" == "osx" ]: then
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
         install_python_module_for_osx
     fi
 }
