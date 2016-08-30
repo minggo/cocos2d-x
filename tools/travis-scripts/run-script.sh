@@ -25,8 +25,16 @@ function build_android()
     export ANDROID_SDK_ROOT=/usr/local/android-sdk
     export COCOS_X_ROOT=$COCOS2DX_ROOT
     export PATH=$ANT_ROOT:$ANDROID_SDK_ROOT:$COCOS_CONSOLE_ROOT:$PATH
-    echo "PATH is $PATH"
+
     cd $COCOS2DX_ROOT/build
+
+    # share the obj folder to speed up building
+    mkdir android_build_objs
+    PROJECTS=("cpp-empty-test" "cpp-tests" "lua-empty-test/project" "lua-tests/project" "js-tests/project")
+    for i in ${PROJECTS[*]}; do
+        ln -s $COCOS2DX_ROOT/android_build_objs $COCOS2DX_ROOT/tests/$i/proj.android/obj
+    done
+
     ./android-build.py all
 }
 
@@ -169,11 +177,7 @@ function run_after_merge()
     fi
 
     genernate_binding_codes
-
-    cd $COCOS2DX_ROOT/tools/travis-scripts
-    ./generate-cocosfiles.sh
-
-    generate_pull_request_for_binding_codes
+    generate_pull_request_for_binding_codes_and_cocosfiles
 }
 
 # build pull request

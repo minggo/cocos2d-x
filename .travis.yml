@@ -58,7 +58,12 @@ before_install:
 notifications:
   email: false
 
-# whitelist
-# branches:
-#   only:
-#     - v3
+# blocklist
+branches:
+  except:
+  - v1
+  - v2
+  - v4-develop
+  - v3-doc
+  - v3.11_backup
+  - v35-for-tizen
