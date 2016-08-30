@@ -46,11 +46,11 @@ function download_deps()
 function install_android_environment()
 {
     sudo apt-get install ant -y
-    ant_path=`which ant`
-    ant_root=${ant_path::-4}
-    echo "ant_root is ${ant_root}"
-    pushd $COCOS2DX_ROOT
-    python setup.py -n $HOME/bin/android-ndk -a /usr/local/android-sdk -t $ant_root
+    export COCOS_CONSOLE_ROOT=$COCOS2DX_ROOT/tools/cocos2d-console/bin
+    export ANT=/usr/bin
+    export ANDROID_SDK_ROOT=/usr/local/android-sdk
+    export COCOS_X_ROOT=$COCOS2DX_ROOT
+    export PATH=$COCOS_CONSOLE_ROOT:$PATH
 }
 
 # set up environment according os and target
