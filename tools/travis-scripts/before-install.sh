@@ -50,7 +50,7 @@ function install_android_environment()
     # todo: cocos should add parameter to avoid promt
     sudo mkdir $HOME/.cocos
     sudo touch $HOME/.cocos/local_cfg.json
-    sudo echo '{"agreement_shown": true}' >> $HOME/.cocos/local_cfg.json
+    echo '{"agreement_shown": true}' | sudo tee $HOME/.cocos/local_cfg.json
 }
 
 # set up environment according os and target
