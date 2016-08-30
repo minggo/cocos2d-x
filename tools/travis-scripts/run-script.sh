@@ -20,6 +20,7 @@ function build_android()
 {
     # Build all samples
     echo "Building Android samples ..."
+    ehco "PATH is $PATH"
     cd $COCOS2DX_ROOT/build
     ./android-build.py all
 }
@@ -182,6 +183,9 @@ fi
 #         cd $COCOS2DX_ROOT/tools/travis-scripts
 #         ./generate-bindings.sh
 #         ./generate-cocosfiles.sh
+  # - PLATFORM=mac-ios SDK=iphonesimulator7.1 ARCH=i386 SCHEME="build all tests iOS"
+#  - PLATFORM=mac-ios SDK=iphonesimulator7.1 ARCH=x86_64 SCHEME="build all tests iOS"
+  # - PLATFORM=mac-ios SDK=macosx10.9 ARCH=x86_64 SCHEME="build all tests Mac"
 
 #         cd $COCOS2DX_ROOT
 #         xctool -project build/cocos2d_tests.xcodeproj -scheme "$SCHEME" -jobs 8 -arch "$ARCH" -sdk "$SDK"  build
