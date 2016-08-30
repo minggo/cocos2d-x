@@ -16,14 +16,14 @@ matrix:
       android:
         components:
           - android-10
-    # # build mac
-    # - os: osx
-    #   env: BUILD_TARGET=mac
-    #   osx_image: xcode7.3
-    # # build iOS
-    # - os: osx
-    #   env: BUILD_TARGET=ios
-    #   osx_image: xcode7.3
+    # build mac
+    - os: osx
+      env: BUILD_TARGET=mac
+      osx_image: xcode7.3
+    # build iOS
+    - os: osx
+      env: BUILD_TARGET=ios
+      osx_image: xcode7.3
   global:
   - secure: |-
       cHXOjAda+t2tmBVuVAiQfvhDN+unToO6hX1rc3dJeGDOk4rlQnylJacjA7o/

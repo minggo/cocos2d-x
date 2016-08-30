@@ -136,6 +136,16 @@ function run_pull_request()
     if [ $BUILD_TARGET == 'android' ]; then
         build_android
     fi
+
+    if [ $BUILD_TARGET == 'mac' ]; then
+        cd $COCOS2DX_ROOT
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs 8 -arch x86_64 -sdk iphonesimulator9.2  build
+    fi
+
+    if [ $BUILD_TARGET == 'ios' ]; then
+        cd $COCOS2DX_ROOT
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs 8 -arch i386 -sdk iphonesimulator9.2  build
+    fi
 }
 
 function run_after_merge()
@@ -177,25 +187,3 @@ fi
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     run_after_merge
 fi
-
-
-# elif [ "$PLATFORM"x = "mac-ios"x ]; then
-#     if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-#         exit 0
-#     fi
-
-#     if [ "$PUSH_TO_MAC"x != "YES"x ]; then
-#         cd $COCOS2DX_ROOT/tools/travis-scripts
-#         ./generate-bindings.sh
-#         ./generate-cocosfiles.sh
-  # - PLATFORM=mac-ios SDK=iphonesimulator7.1 ARCH=i386 SCHEME="build all tests iOS"
-#  - PLATFORM=mac-ios SDK=iphonesimulator7.1 ARCH=x86_64 SCHEME="build all tests iOS"
-  # - PLATFORM=mac-ios SDK=macosx10.9 ARCH=x86_64 SCHEME="build all tests Mac"
-
-#         cd $COCOS2DX_ROOT
-#         xctool -project build/cocos2d_tests.xcodeproj -scheme "$SCHEME" -jobs 8 -arch "$ARCH" -sdk "$SDK"  build
-#     fi
-# else
-#     echo "Unknown \$PLATFORM: '$PLATFORM'"
-#     exit 1
-# fi
