@@ -22,6 +22,8 @@ function build_android()
     echo "Building Android samples ..."
     # make cocos command take effect
     source /home/travis/.bashrc
+    echo "cocos_console_root is $COCOS_CONSOLE_ROOT"
+    export PATH=$COCOS_CONSOLE_ROOT:$PATH
     cd $COCOS2DX_ROOT/build
     ./android-build.py all
 }
