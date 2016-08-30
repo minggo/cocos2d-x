@@ -24,7 +24,7 @@ function build_android()
     export ANT=/usr/bin
     export ANDROID_SDK_ROOT=/usr/local/android-sdk
     export COCOS_X_ROOT=$COCOS2DX_ROOT
-    export PATH=$COCOS_CONSOLE_ROOT:$PATH
+    export PATH=$ANT:$ANDROID_SDK_ROOT:$COCOS_CONSOLE_ROOT:$PATH
     echo "PATH is $PATH"
     cd $COCOS2DX_ROOT/build
     ./android-build.py all
