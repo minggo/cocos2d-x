@@ -20,6 +20,8 @@ function build_android()
 {
     # Build all samples
     echo "Building Android samples ..."
+    # make cocos command take effect
+    source /home/travis/.bashrc
     cd $COCOS2DX_ROOT/build
     ./android-build.py all
 }
