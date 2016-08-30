@@ -46,11 +46,7 @@ function download_deps()
 function install_android_environment()
 {
     sudo apt-get install ant -y
-    export COCOS_CONSOLE_ROOT=$COCOS2DX_ROOT/tools/cocos2d-console/bin
-    export ANT=/usr/bin
-    export ANDROID_SDK_ROOT=/usr/local/android-sdk
-    export COCOS_X_ROOT=$COCOS2DX_ROOT
-    export PATH=$COCOS_CONSOLE_ROOT:$PATH
+    
 }
 
 # set up environment according os and target
