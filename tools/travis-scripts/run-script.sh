@@ -39,7 +39,7 @@ function build_android()
     src_dir=$COCOS2DX_ROOT/tests/cpp-empty-test/proj.android/obj
     dst_dir=$COCOS2DX_ROOT/tests/cpp-tests/proj.android/obj
     mkdir $dst_dir
-    cp -r src_dir $dst_dir
+    cp -r $src_dir $dst_dir
     pushd $COCOS2DX_ROOT/tests/cpp-tests
     cocos compile -p android
     popd
@@ -48,7 +48,7 @@ function build_android()
     src_dir=$dst_dir
     dst_dir=$COCOS2DX_ROOT/tests/lua-tests/project/proj.android/obj
     mkdir $dst_dir
-    cp -r src_dir $dst_dir
+    cp -r $src_dir $dst_dir
     pushd $COCOS2DX_ROOT/tests/lua-tests
     cocos compile -p android
     popd
@@ -57,7 +57,7 @@ function build_android()
     src_dir=$dst_dir
     dst_dir=$COCOS2DX_ROOT/tests/js-tests/project/proj.android/obj
     mkdir $dst_dir
-    cp -r src_dir $dst_dir
+    cp -r $src_dir $dst_dir
     pushd $COCOS2DX_ROOT/tests/js-tests
     cocos compile -p android
     popd
