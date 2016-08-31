@@ -68,7 +68,7 @@ function genernate_binding_codes()
     # set environment variables needed by binding codes
 
 
-    export NDK_ROOT=$HOME/bin/android-ndk-r10d
+    export NDK_ROOT=$HOME/bin/android-ndk
     export PYTHON_BIN=/usr/bin/python
 
     # Generate binding glue codes

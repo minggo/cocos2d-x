@@ -14,11 +14,6 @@ function install_android_ndk()
     mkdir -p $HOME/bin
     cd $HOME/bin
 
-    if [ -d $HOME/bin/android-ndk-r10d ]; then
-        echo "android-ndk is cached, don't have to install it"
-        return
-    fi
-
     # Download android ndk
     if [ "$TRAVIS_OS_NAME" = "osx" ]; then
         HOST_NAME="darwin"
@@ -34,7 +29,7 @@ function install_android_ndk()
     echo "Decompress ${FILE_NAME} ..."
     ./$FILE_NAME > /dev/null
     # Rename ndk
-    #mv android-ndk-r10d android-ndk
+    mv android-ndk-r10d android-ndk
 }
 
 function install_linux_environment()

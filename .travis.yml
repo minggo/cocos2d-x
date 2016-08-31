@@ -59,8 +59,6 @@ before_install:
 
 cache:
   bundler: true
-  directories:
-    - $HOME/bin/android-ndk-r10d
 
 notifications:
   email: false
