@@ -7,11 +7,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
 HOST_NAME=""
 
-mkdir -p $HOME/bin
-cd $HOME/bin
+
 
 function install_android_ndk()
 {
+    mkdir -p $HOME/bin
+    cd $HOME/bin
+
     if [ -d $HOME/bin/android-ndk-r10d ]; then
         echo "android-ndk is cached, don't have to install it"
         return
