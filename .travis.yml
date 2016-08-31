@@ -58,10 +58,9 @@ before_install:
 - tools/travis-scripts/before-install.sh
 
 cache:
+  bundler: true
   directories:
     - $HOME/bin/android-ndk-r10d
-
-cache: bundler
 
 notifications:
   email: false
