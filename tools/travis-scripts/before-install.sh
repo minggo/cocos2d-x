@@ -12,6 +12,11 @@ cd $HOME/bin
 
 function install_android_ndk()
 {
+    if [ -z $HOME/bin/android-ndk ]; then
+        echo "android-ndk is cached, don't have to install it"
+        return
+    fi
+
     # Download android ndk
     if [ "$TRAVIS_OS_NAME" = "osx" ]; then
         HOST_NAME="darwin"

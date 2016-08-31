@@ -28,6 +28,7 @@ matrix:
       sudo: required
       python:
         - "2.7"
+      cache: pip
     # build iOS
     - os: osx
       env: BUILD_TARGET=ios
@@ -36,6 +37,7 @@ matrix:
       sudo: required
       python:
         - "2.7"
+      cache: pip
 global:
   - secure: |-
       cHXOjAda+t2tmBVuVAiQfvhDN+unToO6hX1rc3dJeGDOk4rlQnylJacjA7o/
@@ -54,6 +56,11 @@ script:
 - tools/travis-scripts/run-script.sh
 before_install:
 - tools/travis-scripts/before-install.sh
+
+cache:
+  - ccache
+  directories:
+    - $HOME/bin/android-ndk
 
 notifications:
   email: false
