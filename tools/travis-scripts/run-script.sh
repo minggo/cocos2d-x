@@ -29,7 +29,7 @@ function build_android()
     cd $COCOS2DX_ROOT/build
 
     # share the obj folder to speed up building
-    ./android-build cpp-empty-test
+    ./android-build.py cpp-empty-test
     src_dir=$COCOS2DX_ROOT/tests/cpp-empty-test/proj.android/obj
     PROJECTS=("cpp-tests" "lua-empty-test/project" "lua-tests/project" "js-tests/project")
     for i in ${PROJECTS[*]}; do
@@ -39,7 +39,7 @@ function build_android()
         fi
         cp -r $src_dir $dst_dir
         src_dir=$dst_dir
-        ./android-build $i
+        ./android-build.py $i
     done
 }
 
