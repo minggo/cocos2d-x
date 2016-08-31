@@ -12,7 +12,7 @@ cd $HOME/bin
 
 function install_android_ndk()
 {
-    if [ -z $HOME/bin/android-ndk ]; then
+    if [ -d $HOME/bin/android-ndk ]; then
         echo "android-ndk is cached, don't have to install it"
         return
     fi
