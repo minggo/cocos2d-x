@@ -68,7 +68,7 @@ function genernate_binding_codes()
     # set environment variables needed by binding codes
 
     if [ -z "$NDK_ROOT" ]; then
-        export NDK_ROOT=$HOME/bin/android-ndk
+        export NDK_ROOT=$HOME/bin/android-ndk/r10d
     fi
 
     if [ -z "$PYTHON_BIN" ]; then
