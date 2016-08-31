@@ -24,6 +24,8 @@ matrix:
     - os: osx
       env: BUILD_TARGET=mac
       language: cpp
+      compiler:
+        - clang
       osx_image: xcode7.3
       sudo: required
       python:
@@ -32,6 +34,8 @@ matrix:
     - os: osx
       env: BUILD_TARGET=ios
       language: cpp
+      compiler:
+        - clang
       osx_image: xcode7.3
       sudo: required
       python:
