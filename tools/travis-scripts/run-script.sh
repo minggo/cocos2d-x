@@ -39,7 +39,7 @@ function build_android()
     src_dir=$COCOS2DX_ROOT/tests/cpp-empty-test/proj.android/obj/
     dst_dir=$COCOS2DX_ROOT/tests/cpp-tests/proj.android/obj/
     mkdir $dst_dir
-    cp -a $src_dir $dst_dir
+    cp -a $src_dir/* $dst_dir
     pushd $COCOS2DX_ROOT/tests/cpp-tests
     cocos compile -p android
     popd
@@ -48,7 +48,7 @@ function build_android()
     src_dir=$dst_dir
     dst_dir=$COCOS2DX_ROOT/tests/lua-tests/project/proj.android/obj/
     mkdir $dst_dir
-    cp -a $src_dir $dst_dir
+    cp -a $src_dir/* $dst_dir
     pushd $COCOS2DX_ROOT/tests/lua-tests
     cocos compile -p android
     popd
@@ -57,7 +57,7 @@ function build_android()
     src_dir=$dst_dir
     dst_dir=$COCOS2DX_ROOT/tests/js-tests/project/proj.android/obj/
     mkdir $dst_dir
-    cp -a $src_dir $dst_dir
+    cp -a $src_dir/* $dst_dir
     pushd $COCOS2DX_ROOT/tests/js-tests
     cocos compile -p android
     popd
@@ -172,20 +172,20 @@ function run_pull_request()
     if [ $BUILD_TARGET == 'mac' ]; then
         # xcodebuild -project "$COCOS2DX_ROOT"/build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" build
         # don't build lua-empty-test cpp-empty-test for time-saving
-        cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
-        # xctool -project build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
-        # xctool -project build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
-        # xctool -project build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
+        #cd $COCOS2DX_ROOT
+        #xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
+        #xctool -project build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk macosx10.11  build
     fi
 
     if [ $BUILD_TARGET == 'ios' ]; then
         # xcodebuild -project "$COCOS2DX_ROOT"/build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" build
         cd $COCOS2DX_ROOT
-        xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
+        #xctool -project build/cocos2d_tests.xcodeproj -scheme "build all tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
         # xctool -project build/cocos2d_tests.xcodeproj -scheme "cpp-tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
-        # xctool -project build/cocos2d_tests.xcodeproj -scheme "lua-tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
-        # xctool -project build/cocos2d_tests.xcodeproj -scheme "js-tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "lua-tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
+        xctool -project build/cocos2d_tests.xcodeproj -scheme "js-tests iOS" -jobs $NUM_OF_CORES -arch i386 -sdk iphonesimulator9.3  build
     fi
 }
 
