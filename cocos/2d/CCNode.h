@@ -127,6 +127,13 @@ public:
      */
     static Node * create();
 
+private:
+    // Get total node count, it's used by EngineDataManager internally.
+    // Make it public while it's needed, but not now.
+    static int getTotalNodeCount();
+    friend class EngineDataManager;
+public:
+    
     /**
      * Gets the description string. It makes debugging easier.
      * @return A string
@@ -1991,6 +1998,8 @@ public:
     friend class PhysicsBody;
 #endif
 
+    static int _totalNodeCount;
+    
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Node);
 };

@@ -66,6 +66,10 @@ THE SOFTWARE.
 #include "base/CCScriptSupport.h"
 #endif
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
+#endif
+
 /**
  Position of the FPS
  
@@ -86,6 +90,8 @@ static DisplayLinkDirector *s_SharedDirector = nullptr;
 #define kDefaultFPS        60  // 60 frames per second
 extern const char* cocos2dVersion(void);
 
+const char *Director::EVENT_BEFORE_SET_NEXT_SCENE = "director_before_set_next_scene";
+const char *Director::EVENT_AFTER_SET_NEXT_SCENE = "director_after_set_next_scene";
 const char *Director::EVENT_PROJECTION_CHANGED = "director_projection_changed";
 const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
@@ -128,6 +134,7 @@ bool Director::init(void)
     _FPSLabel = _drawnBatchesLabel = _drawnVerticesLabel = nullptr;
     _totalFrames = 0;
     _lastUpdate = std::chrono::steady_clock::now();
+    
     _secondsPerFrame = 1.0f;
 
     // paused ?
@@ -155,6 +162,11 @@ bool Director::init(void)
     _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
 
     _eventDispatcher = new (std::nothrow) EventDispatcher();
+    
+    _beforeSetNextScene = new (std::nothrow) EventCustom(EVENT_BEFORE_SET_NEXT_SCENE);
+    _beforeSetNextScene->setUserData(this);
+    _afterSetNextScene = new (std::nothrow) EventCustom(EVENT_AFTER_SET_NEXT_SCENE);
+    _afterSetNextScene->setUserData(this);
     _eventAfterDraw = new (std::nothrow) EventCustom(EVENT_AFTER_DRAW);
     _eventAfterDraw->setUserData(this);
     _eventAfterVisit = new (std::nothrow) EventCustom(EVENT_AFTER_VISIT);
@@ -173,6 +185,9 @@ bool Director::init(void)
     _renderer = new (std::nothrow) Renderer;
     RenderState::initialize();
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::init();
+#endif
     return true;
 }
 
@@ -190,12 +205,14 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_actionManager);
     CC_SAFE_DELETE(_defaultFBO);
     
-    delete _eventBeforeUpdate;
-    delete _eventAfterUpdate;
-    delete _eventAfterDraw;
-    delete _eventAfterVisit;
-    delete _eventProjectionChanged;
-    delete _eventResetDirector;
+    CC_SAFE_RELEASE(_beforeSetNextScene);
+    CC_SAFE_RELEASE(_afterSetNextScene);
+    CC_SAFE_RELEASE(_eventBeforeUpdate);
+    CC_SAFE_RELEASE(_eventAfterUpdate);
+    CC_SAFE_RELEASE(_eventAfterDraw);
+    CC_SAFE_RELEASE(_eventAfterVisit);
+    CC_SAFE_RELEASE(_eventProjectionChanged);
+    CC_SAFE_RELEASE(_eventResetDirector);
 
     delete _renderer;
 
@@ -306,10 +323,13 @@ void Director::drawScene()
         _notificationNode->visit(_renderer, Mat4::IDENTITY, 0);
     }
 
+    updateFrameRate();
+    
     if (_displayStats)
     {
         showStats();
     }
+    
     _renderer->render();
 
     _eventDispatcher->dispatchEvent(_eventAfterDraw);
@@ -356,6 +376,7 @@ void Director::calculateDeltaTime()
 
     _lastUpdate = now;
 }
+
 float Director::getDeltaTime() const
 {
     return _deltaTime;
@@ -1055,6 +1076,9 @@ void Director::purgeDirector()
         _openGLView = nullptr;
     }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::destroy();
+#endif
     // delete Director
     release();
 }
@@ -1087,9 +1111,11 @@ void Director::restartDirector()
 
 void Director::setNextScene()
 {
+    _eventDispatcher->dispatchEvent(_beforeSetNextScene);
+    
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
     bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
-
+    
     // If it is not a transition, call onExit/cleanup
      if (! newIsTransition)
      {
@@ -1120,6 +1146,8 @@ void Director::setNextScene()
         _runningScene->onEnter();
         _runningScene->onEnterTransitionDidFinish();
     }
+    
+    _eventDispatcher->dispatchEvent(_afterSetNextScene);
 }
 
 void Director::pause()
@@ -1151,6 +1179,16 @@ void Director::resume()
     setNextDeltaTimeZero(true);
 }
 
+void Director::updateFrameRate()
+{
+    static float prevDeltaTime  = 0.016f; // 60FPS
+    static const float FPS_FILTER = 0.10f;
+    
+    float dt = _deltaTime * FPS_FILTER + (1-FPS_FILTER) * prevDeltaTime;
+    prevDeltaTime = dt;
+    _frameRate = 1/dt;
+}
+
 // display the FPS using a LabelAtlas
 // updates the FPS every frame
 void Director::showStats()
@@ -1163,18 +1201,12 @@ void Director::showStats()
 
     static unsigned long prevCalls = 0;
     static unsigned long prevVerts = 0;
-    static float prevDeltaTime  = 0.016f; // 60FPS
-    static const float FPS_FILTER = 0.10f;
 
     _accumDt += _deltaTime;
     
     if (_displayStats && _FPSLabel && _drawnBatchesLabel && _drawnVerticesLabel)
     {
-        char buffer[30];
-
-        float dt = _deltaTime * FPS_FILTER + (1-FPS_FILTER) * prevDeltaTime;
-        prevDeltaTime = dt;
-        _frameRate = 1/dt;
+        char buffer[30] = {0};
 
         // Probably we don't need this anymore since
         // the framerate is using a low-pass filter
@@ -1366,7 +1398,7 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
 void DisplayLinkDirector::startAnimation()
 {
     _lastUpdate = std::chrono::steady_clock::now();
-
+    
     _invalid = false;
 
     _cocos2d_thread_id = std::this_thread::get_id();
