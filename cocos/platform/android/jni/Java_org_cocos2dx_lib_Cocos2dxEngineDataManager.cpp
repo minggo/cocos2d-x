@@ -34,9 +34,11 @@ THE SOFTWARE.
 
 #include <android/log.h>
 
-#define LOG_TAG    "Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.cpp"
+#define LOG_TAG    "EngineDataManager.cpp"
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+
+#define EDM_DEBUG 1
 
 #define JNI_FUNC_PREFIX(func) Java_org_cocos2dx_lib_Cocos2dxEngineDataManager_##func
 
@@ -75,43 +77,45 @@ int _oldGpuLevel = 0;
 #define CARRAY_SIZE(arr) ((int)(sizeof(arr) / sizeof(arr[0])))
 
 // CPU Level
-#define CPU_LEVEL_WEIGHT_NODE (0.3f)
-#define CPU_LEVEL_WEIGHT_PARTICLE (0.4f)
-#define CPU_LEVEL_WEIGHT_ACTION (0.3f)
-#define CPU_LEVEL_WEIGHT_AUDIO (0.3f)
 
-#define CPU_LEVEL_ELEMENT(node, particle, action, audio) \
-        ((node) * CPU_LEVEL_WEIGHT_NODE + (particle) * CPU_LEVEL_WEIGHT_PARTICLE + (action) * CPU_LEVEL_WEIGHT_ACTION + (audio) * CPU_LEVEL_WEIGHT_AUDIO)
+struct CpuLevelInfo
+{
+    unsigned int nodeCount;
+    unsigned int particleCount;
+    unsigned int actionCount;
+    unsigned int audioCount;
+};
 
-const float _cpuLevelArr[] = {
-    CPU_LEVEL_ELEMENT(50 ,  100, 20,  2),
-    CPU_LEVEL_ELEMENT(100,  200, 40,  6),
-    CPU_LEVEL_ELEMENT(300,  300, 60,  12),
-    CPU_LEVEL_ELEMENT(700,  400, 70,  18),
-    CPU_LEVEL_ELEMENT(1500, 500, 100, 24)
+const CpuLevelInfo _cpuLevelArr[] = {
+    {50 ,  100, 20,  2},
+    {100,  200, 40,  6},
+    {300,  300, 60,  12},
+    {700,  400, 70,  18},
+    {1500, 500, 100, 24}
 };
 
 // GPU Level
-#define GPU_LEVEL_WEIGHT_VERTEX (0.6f)
-#define GPU_LEVEL_WEIGHT_BATCH (1.0f - GPU_LEVEL_WEIGHT_VERTEX)
 
-#define GPU_LEVEL_ELEMENT(vertexCount, batchedCount) \
-        ((vertexCount) * GPU_LEVEL_WEIGHT_VERTEX + (batchedCount) * GPU_LEVEL_WEIGHT_BATCH)
-
-const float _gpuLevelArr[] = {
-    GPU_LEVEL_ELEMENT(1000, 20),
-    GPU_LEVEL_ELEMENT(2000, 30),
-    GPU_LEVEL_ELEMENT(3000, 40),
-    GPU_LEVEL_ELEMENT(4000, 50),
-    GPU_LEVEL_ELEMENT(6000, 60),
-    GPU_LEVEL_ELEMENT(8000, 70),
-    GPU_LEVEL_ELEMENT(10000, 80),
-    GPU_LEVEL_ELEMENT(15000, 100),
-    GPU_LEVEL_ELEMENT(20000, 120),
-    GPU_LEVEL_ELEMENT(25000, 150)
+struct GpuLevelInfo
+{
+    unsigned int vertexCount;
+    unsigned int drawCount;
 };
 
+const GpuLevelInfo _gpuLevelArr[] = {
+    {1000, 20},
+    {2000, 30},
+    {3000, 40},
+    {4000, 50},
+    {6000, 60},
+    {8000, 70},
+    {10000, 80},
+    {15000, 100},
+    {20000, 120},
+    {25000, 150}
+};
 
+// Particle Level
 const float _particleLevelArr[] = {
     0.0f,
     0.2f,
@@ -121,32 +125,85 @@ const float _particleLevelArr[] = {
     1.0f
 };
 
-int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
+#if EDM_DEBUG
+int _oldCpuLevelNode = 0;
+int _oldCpuLevelParticle = 0;
+int _oldCpuLevelAction = 0;
+int _oldCpuLevelAudio = 0;
+
+int _oldGpuLevelVertex = 0;
+int _oldGpuLevelDraw = 0;
+#endif
+
+int cbCpuLevelNode(int i) { return _cpuLevelArr[i].nodeCount; }
+int cbCpuLevelParticle(int i) { return _cpuLevelArr[i].particleCount; }
+int cbCpuLevelAction(int i) { return _cpuLevelArr[i].actionCount; }
+int cbCpuLevelAudio(int i) { return _cpuLevelArr[i].audioCount; }
+
+int toCpuLevelPerFactor(int value, int (*cb)(int i))
 {
     int len = CARRAY_SIZE(_cpuLevelArr);
     for (int i = 0; i < len; ++i)
     {
-        if (CPU_LEVEL_ELEMENT(nodeCount, particleCount, actionCount, audioCount) < _cpuLevelArr[i])
-        {
+        if (value < cb(i))
             return i;
-        }
     }
-
     return len - 1;
 }
 
-int toGpuLevel(int vetexCount, int batchedCount)
+int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
+{
+    int cpuLevelNode = toCpuLevelPerFactor(nodeCount, cbCpuLevelNode);
+    int cpuLevelParticle = toCpuLevelPerFactor(particleCount, cbCpuLevelParticle);
+    int cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
+    int cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
+    int cpuLevel = cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio;
+
+#if EDM_DEBUG
+    if (_oldCpuLevelNode != cpuLevelNode
+        || _oldCpuLevelParticle != cpuLevelParticle
+        || _oldCpuLevelAction != cpuLevelAction
+        || _oldCpuLevelAudio != cpuLevelAudio)
+    {
+        log("cpu level: %d, node: %d, particle: %d, action: %d, audio: %d", cpuLevel, cpuLevelNode, cpuLevelParticle, cpuLevelAction, cpuLevelAudio);
+        _oldCpuLevelNode = cpuLevelNode;
+        _oldCpuLevelParticle = cpuLevelParticle;
+        _oldCpuLevelAction = cpuLevelAction;
+        _oldCpuLevelAudio = cpuLevelAudio;
+    }
+#endif
+    return cpuLevel;
+}
+
+int cbGpuLevelVertex(int i) { return _gpuLevelArr[i].vertexCount; }
+int cbGpuLevelDraw(int i) { return _gpuLevelArr[i].drawCount; }
+
+int toGpuLevelPerFactor(int value, int (*cb)(int i))
 {
     int len = CARRAY_SIZE(_gpuLevelArr);
     for (int i = 0; i < len; ++i)
     {
-        if (GPU_LEVEL_ELEMENT(vetexCount, batchedCount) < _gpuLevelArr[i])
-        {
+        if (value < cb(i))
             return i;
-        }
     }
-
     return len - 1;
+}
+
+int toGpuLevel(int vertexCount, int drawCount)
+{
+    int gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
+    int gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
+    int gpuLevel = gpuLevelVertex + gpuLevelDraw;
+#if EDM_DEBUG
+    if (_oldGpuLevelVertex != gpuLevelVertex
+        || _oldGpuLevelDraw != gpuLevelDraw)
+    {
+        log("gpu level: %d, vertex: %d, draw: %d", gpuLevel, gpuLevelVertex, gpuLevelDraw);
+        _oldGpuLevelVertex = gpuLevelVertex;
+        _oldGpuLevelDraw = gpuLevelDraw;
+    }
+#endif
+    return gpuLevel;
 }
 
 void resetLastTime()
