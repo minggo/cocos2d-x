@@ -36,9 +36,6 @@ NS_CC_BEGIN
 // Action Base Class
 //
 
-// static
-int Action::_totalActionCount = 0;
-
 Action::Action()
 :_originalTarget(nullptr)
 ,_target(nullptr)
@@ -49,13 +46,11 @@ Action::Action()
     ScriptEngineProtocol* engine = ScriptEngineManager::getInstance()->getScriptEngine();
     _scriptType = engine != nullptr ? engine->getScriptType() : kScriptTypeNone;
 #endif
-    ++_totalActionCount;
 }
 
 Action::~Action()
 {
     CCLOGINFO("deallocing Action: %p - tag: %i", this, _tag);
-    --_totalActionCount;
 }
 
 std::string Action::description() const

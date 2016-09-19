@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "base/CCEventType.h"
 #include "renderer/CCRenderer.h"
 #include "2d/CCParticleSystem.h"
-#include "2d/CCAction.h"
+#include "2d/CCActionManager.h"
 #include "audio/include/AudioEngine.h"
 
 #include <android/log.h>
@@ -243,7 +243,7 @@ void EngineDataManager::calculateFrameLost()
 // static 
 void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 {
-    log("previous node count: %d", Node::getTotalNodeCount());
+    log("previous node count: %d", Node::getAttachedNodeCount());
     int cpuLevel = 0;
     int gpuLevel = 0;
     getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
@@ -254,7 +254,7 @@ void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 // static 
 void EngineDataManager::onAfterSetNextScene(EventCustom* event)
 {
-    log("current node count: %d", Node::getTotalNodeCount());
+    log("current node count: %d", Node::getAttachedNodeCount());
     int cpuLevel = 0;
     int gpuLevel = 0;
     getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
@@ -286,13 +286,14 @@ void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
     if (cpuLevel == nullptr || gpuLevel == nullptr)
         return;
 
-    int totalNodeCount = Node::getTotalNodeCount();
+    auto director = Director::getInstance();
+    int totalNodeCount = Node::getAttachedNodeCount();
     int totalParticleCount = getTotalParticleCount();
-    int totalActionCount = Action::getTotalActionCount();
+    int totalActionCount = director->getActionManager()->getNumberOfRunningActions();
     int totalPlayingAudioCount = experimental::AudioEngine::getPlayingAudioCount();
     *cpuLevel = toCpuLevel(totalNodeCount, totalParticleCount, totalActionCount, totalPlayingAudioCount);
 
-    auto renderer = Director::getInstance()->getRenderer();
+    auto renderer = director->getRenderer();
     int vertexCount = renderer->getDrawnVertices();
     int batchedCount = renderer->getDrawnBatches();
 

@@ -160,12 +160,6 @@ public:
      */
     inline void setFlags(unsigned int flags) { _flags = flags; }
 
-private:
-    static int getTotalActionCount() { return _totalActionCount; }
-    static int _totalActionCount;
-    friend class EngineDataManager;
-public:
-    
 CC_CONSTRUCTOR_ACCESS:
     Action();
     virtual ~Action();
@@ -187,6 +181,7 @@ protected:
 #if CC_ENABLE_SCRIPT_BINDING
     ccScriptType _scriptType;         ///< type of script binding, lua or javascript
 #endif
+
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Action);
 };

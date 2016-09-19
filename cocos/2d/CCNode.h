@@ -127,11 +127,10 @@ public:
      */
     static Node * create();
 
-private:
-    // Get total node count, it's used by EngineDataManager internally.
-    // Make it public while it's needed, but not now.
-    static int getTotalNodeCount();
-    friend class EngineDataManager;
+    /**
+     * Gets counts of nodes those are attached to scene graph.
+     */
+    static int getAttachedNodeCount() { return __attachedNodeCount; }
 public:
     
     /**
@@ -1998,7 +1997,7 @@ public:
     friend class PhysicsBody;
 #endif
 
-    static int _totalNodeCount;
+    static int __attachedNodeCount;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Node);

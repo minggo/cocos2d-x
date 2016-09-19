@@ -57,7 +57,7 @@ NS_CC_BEGIN
 
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
 unsigned int Node::s_globalOrderOfArrival = 0;
-int Node::_totalNodeCount = 0;
+int Node::__attachedNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
 
@@ -143,12 +143,6 @@ Node * Node::create()
         CC_SAFE_DELETE(ret);
     }
     return ret;
-}
-
-// static
-int Node::getTotalNodeCount()
-{
-    return _totalNodeCount;
 }
 
 Node::~Node()
@@ -1282,7 +1276,7 @@ Mat4 Node::transform(const Mat4& parentTransform)
 
 void Node::onEnter()
 {
-    ++_totalNodeCount;
+    ++__attachedNodeCount;
 #if CC_ENABLE_SCRIPT_BINDING
     if (_scriptType == kScriptTypeJavascript)
     {
@@ -1397,7 +1391,7 @@ void Node::onExit()
     }
 #endif
     
-    --_totalNodeCount;
+    --__attachedNodeCount;
 }
 
 void Node::setEventDispatcher(EventDispatcher* dispatcher)
