@@ -1112,7 +1112,7 @@ void Director::restartDirector()
 void Director::setNextScene()
 {
     _eventDispatcher->dispatchEvent(_beforeSetNextScene);
-    
+
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
     bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
     
@@ -1398,7 +1398,7 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
 void DisplayLinkDirector::startAnimation()
 {
     _lastUpdate = std::chrono::steady_clock::now();
-    
+
     _invalid = false;
 
     _cocos2d_thread_id = std::this_thread::get_id();
