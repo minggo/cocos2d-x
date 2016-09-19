@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "base/CCEventType.h"
 #include "renderer/CCRenderer.h"
 #include "2d/CCParticleSystem.h"
+#include "2d/CCAction.h"
 #include "audio/include/AudioEngine.h"
 
 #include <android/log.h>
@@ -38,8 +39,6 @@ THE SOFTWARE.
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 #define JNI_FUNC_PREFIX(func) Java_org_cocos2dx_lib_Cocos2dxEngineDataManager_##func
-#define MAP_INSERT(map, k, v) map.insert(std::make_pair(k, v))
-
 
 using namespace cocos2d;
 
@@ -52,13 +51,7 @@ bool _isSupported = false;
 
 float _defaultAnimationInterval = -1.0f;
 
-std::unordered_map<int/*level*/, float/*particlePercent*/> _levelParticleCountMap;
 std::unordered_map<unsigned int /*Ref::_ID*/, int/*particleCount*/> _psIdCountMap;
-
-std::unordered_map<int/*nodeCount*/, int/*cpuLevel*/> _nodeCountCpuLevelMap;
-std::vector<int> _nodeCountRangeVector;
-std::unordered_map<int/*vertexCount*/, int/*gpuLevel*/> _vertexCountGpuLevelMap;
-std::vector<int> _vertexCountRangeVector;
 
 /* last time frame lost cycle was calculated */
 std::chrono::steady_clock::time_point _lastContinuousFrameLostUpdate;
@@ -79,106 +72,81 @@ int _lowFpsCounter = 0;
 int _oldCpuLevel = 0;
 int _oldGpuLevel = 0;
 
-void initLevelParticleCountMap()
+#define CARRAY_SIZE(arr) ((int)(sizeof(arr) / sizeof(arr[0])))
+
+// CPU Level
+#define CPU_LEVEL_WEIGHT_NODE (0.3f)
+#define CPU_LEVEL_WEIGHT_PARTICLE (0.4f)
+#define CPU_LEVEL_WEIGHT_ACTION (0.3f)
+#define CPU_LEVEL_WEIGHT_AUDIO (0.3f)
+
+#define CPU_LEVEL_ELEMENT(node, particle, action, audio) \
+        ((node) * CPU_LEVEL_WEIGHT_NODE + (particle) * CPU_LEVEL_WEIGHT_PARTICLE + (action) * CPU_LEVEL_WEIGHT_ACTION + (audio) * CPU_LEVEL_WEIGHT_AUDIO)
+
+const float _cpuLevelArr[] = {
+    CPU_LEVEL_ELEMENT(50 ,  100, 20,  2),
+    CPU_LEVEL_ELEMENT(100,  200, 40,  6),
+    CPU_LEVEL_ELEMENT(300,  300, 60,  12),
+    CPU_LEVEL_ELEMENT(700,  400, 70,  18),
+    CPU_LEVEL_ELEMENT(1500, 500, 100, 24)
+};
+
+// GPU Level
+#define GPU_LEVEL_WEIGHT_VERTEX (0.6f)
+#define GPU_LEVEL_WEIGHT_BATCH (1.0f - GPU_LEVEL_WEIGHT_VERTEX)
+
+#define GPU_LEVEL_ELEMENT(vertexCount, batchedCount) \
+        ((vertexCount) * GPU_LEVEL_WEIGHT_VERTEX + (batchedCount) * GPU_LEVEL_WEIGHT_BATCH)
+
+const float _gpuLevelArr[] = {
+    GPU_LEVEL_ELEMENT(1000, 20),
+    GPU_LEVEL_ELEMENT(2000, 30),
+    GPU_LEVEL_ELEMENT(3000, 40),
+    GPU_LEVEL_ELEMENT(4000, 50),
+    GPU_LEVEL_ELEMENT(6000, 60),
+    GPU_LEVEL_ELEMENT(8000, 70),
+    GPU_LEVEL_ELEMENT(10000, 80),
+    GPU_LEVEL_ELEMENT(15000, 100),
+    GPU_LEVEL_ELEMENT(20000, 120),
+    GPU_LEVEL_ELEMENT(25000, 150)
+};
+
+
+const float _particleLevelArr[] = {
+    0.0f,
+    0.2f,
+    0.4f,
+    0.6f,
+    0.8f,
+    1.0f
+};
+
+int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
 {
-    if (_levelParticleCountMap.empty())
+    int len = CARRAY_SIZE(_cpuLevelArr);
+    for (int i = 0; i < len; ++i)
     {
-        #define PARTICLE_COUNT_MAP_INSERT(k, v) MAP_INSERT(_levelParticleCountMap, k, v)
-
-        PARTICLE_COUNT_MAP_INSERT(0, 0.0f);
-        PARTICLE_COUNT_MAP_INSERT(1, 0.2f);
-        PARTICLE_COUNT_MAP_INSERT(2, 0.4f);
-        PARTICLE_COUNT_MAP_INSERT(3, 0.6f);
-        PARTICLE_COUNT_MAP_INSERT(4, 0.8f);
-        PARTICLE_COUNT_MAP_INSERT(5, 1.0f);
-
-        #undef PARTICLE_COUNT_MAP_INSERT
-    }
-}
-
-void initNodeCountCpuLevelMap()
-{
-    if (_nodeCountCpuLevelMap.empty())
-    {
-        #define NODE_COUNT_MAP_INSERT(k, v) \
-            MAP_INSERT(_nodeCountCpuLevelMap, k, v); \
-            _nodeCountRangeVector.push_back(k)
-
-        NODE_COUNT_MAP_INSERT(50  , 0);
-        NODE_COUNT_MAP_INSERT(100 , 1);
-        NODE_COUNT_MAP_INSERT(300 , 2);
-        NODE_COUNT_MAP_INSERT(700 , 3);
-        NODE_COUNT_MAP_INSERT(1000, 4);
-        NODE_COUNT_MAP_INSERT(1500, 5);
-        NODE_COUNT_MAP_INSERT(1800, 6);
-        NODE_COUNT_MAP_INSERT(2100, 7);
-        NODE_COUNT_MAP_INSERT(3000, 8);
-        NODE_COUNT_MAP_INSERT(5000, 9);
-
-        #undef NODE_COUNT_MAP_INSERT
-    }
-}
-
-int toCpuLevel(int nodeCount) //, int actionCount, int scheduleCount)
-{
-    auto iter = std::find_if(_nodeCountRangeVector.begin(), _nodeCountRangeVector.end(), [nodeCount](int step) -> bool{
-        return nodeCount < step;
-    });
-
-    if (iter != _nodeCountRangeVector.end())
-    {
-        return _nodeCountCpuLevelMap[*iter];
-    }
-
-    return _nodeCountCpuLevelMap[_nodeCountRangeVector[_nodeCountRangeVector.size()-1]];
-}
-
-void initActionCountCpuLevelMap()
-{
-    //TODO:
-}
-
-void initScheduleCountCpuLevelMap()
-{
-    //TODO:
-}
-
-void initVertexCountGpuLevelMap()
-{
-    if (_vertexCountGpuLevelMap.empty())
-    {
-        #define VERTEX_COUNT_MAP_INSERT(k, v) \
-            MAP_INSERT(_vertexCountGpuLevelMap, k, v); \
-            _vertexCountRangeVector.push_back(k)
-
-        // currently, key = drawnBatches * vertexCount
-        VERTEX_COUNT_MAP_INSERT(10000, 0);
-        VERTEX_COUNT_MAP_INSERT(20000, 1);
-        VERTEX_COUNT_MAP_INSERT(30000, 2);
-        VERTEX_COUNT_MAP_INSERT(40000, 3);
-        VERTEX_COUNT_MAP_INSERT(60000, 4);
-        VERTEX_COUNT_MAP_INSERT(80000, 5);
-        VERTEX_COUNT_MAP_INSERT(100000, 6);
-        VERTEX_COUNT_MAP_INSERT(300000, 7);
-        VERTEX_COUNT_MAP_INSERT(400000, 8);
-        VERTEX_COUNT_MAP_INSERT(500000, 9);
-
-        #undef VERTEX_COUNT_MAP_INSERT
-    }
-}
-
-int toGpuLevel(int vetexCount)
-{
-    auto iter = std::find_if(_vertexCountRangeVector.begin(), _vertexCountRangeVector.end(), [vetexCount](int step) -> bool{
-        return vetexCount < step;
-    });
-
-    if (iter != _vertexCountRangeVector.end())
-    {
-        return _vertexCountGpuLevelMap[*iter];
+        if (CPU_LEVEL_ELEMENT(nodeCount, particleCount, actionCount, audioCount) < _cpuLevelArr[i])
+        {
+            return i;
+        }
     }
 
-    return _vertexCountGpuLevelMap[_vertexCountRangeVector[_vertexCountRangeVector.size()-1]];
+    return len - 1;
+}
+
+int toGpuLevel(int vetexCount, int batchedCount)
+{
+    int len = CARRAY_SIZE(_gpuLevelArr);
+    for (int i = 0; i < len; ++i)
+    {
+        if (GPU_LEVEL_ELEMENT(vetexCount, batchedCount) < _gpuLevelArr[i])
+        {
+            return i;
+        }
+    }
+
+    return len - 1;
 }
 
 void resetLastTime()
@@ -191,6 +159,24 @@ void resetLastTime()
 } // namespace {
 
 namespace cocos2d {
+
+int EngineDataManager::getTotalParticleCount()
+{
+    auto& particleSystems = ParticleSystem::getAllParticleSystems();
+    if (particleSystems.empty())
+    {
+        LOGD("There isn't any ParticleSystem instance!");
+        return 0;
+    }
+
+    int count = 0;
+    for (auto&& system : particleSystems)
+    {
+        count += system->getTotalParticles();
+    }
+
+    return count;
+}
 
 // calculates frame lost event
 // static
@@ -301,13 +287,16 @@ void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
         return;
 
     int totalNodeCount = Node::getTotalNodeCount();
-    *cpuLevel = toCpuLevel(totalNodeCount);
+    int totalParticleCount = getTotalParticleCount();
+    int totalActionCount = Action::getTotalActionCount();
+    int totalPlayingAudioCount = experimental::AudioEngine::getPlayingAudioCount();
+    *cpuLevel = toCpuLevel(totalNodeCount, totalParticleCount, totalActionCount, totalPlayingAudioCount);
 
     auto renderer = Director::getInstance()->getRenderer();
     int vertexCount = renderer->getDrawnVertices();
-    int batched = renderer->getDrawnBatches();
+    int batchedCount = renderer->getDrawnBatches();
 
-    *gpuLevel = toGpuLevel(vertexCount * batched);
+    *gpuLevel = toGpuLevel(vertexCount, batchedCount);
 }
 
 // static
@@ -324,12 +313,6 @@ void EngineDataManager::init()
 
     if (_isInitialized)
         return;
-
-    initNodeCountCpuLevelMap();
-    initLevelParticleCountMap();
-    initActionCountCpuLevelMap();
-    initScheduleCountCpuLevelMap();
-    initVertexCountGpuLevelMap();
 
     resetLastTime();
 
@@ -477,7 +460,7 @@ void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject th
 
     LOGD("nativeOnChangeSpecialEffectLevel, level: %d", level);
 
-    if (_levelParticleCountMap.find(level) == _levelParticleCountMap.end())
+    if (level < 0 || level >= CARRAY_SIZE(_particleLevelArr))
     {
         LOGE("Pass a wrong level value: %d, only 0 ~ 5 is supported!", level);
         return;
@@ -502,7 +485,7 @@ void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject th
         validIDs.push_back(system->_ID);
 
         int defaultParticleCount = _psIdCountMap[system->_ID];
-        int expectedParticleCount = _levelParticleCountMap[level] * defaultParticleCount;
+        int expectedParticleCount = _particleLevelArr[level] * defaultParticleCount;
 
         LOGD("Set ParticleSystem(%p)'s total particle count from (%d) to (%d)", system, defaultParticleCount, expectedParticleCount);
 

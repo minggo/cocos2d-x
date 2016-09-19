@@ -160,6 +160,12 @@ public:
      */
     inline void setFlags(unsigned int flags) { _flags = flags; }
 
+private:
+    static int getTotalActionCount() { return _totalActionCount; }
+    static int _totalActionCount;
+    friend class EngineDataManager;
+public:
+    
 CC_CONSTRUCTOR_ACCESS:
     Action();
     virtual ~Action();

@@ -45,6 +45,9 @@
  */
 
 NS_CC_BEGIN
+
+class EngineDataManager;
+
     namespace experimental{
 
 /**
@@ -294,6 +297,9 @@ public:
      */
     static void preload(const std::string& filePath, std::function<void(bool isSuccess)> callback);
 
+private:
+    static int getPlayingAudioCount();
+    friend class cocos2d::EngineDataManager;
 protected:
     static void addTask(const std::function<void()>& task);
     static void remove(int audioID);

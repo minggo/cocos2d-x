@@ -70,6 +70,8 @@ private:
     static void onAfterVisitScene(EventCustom* event);
     static void onEnterForeground(EventCustom* event);
 
+    static int getTotalParticleCount();
+
 // For JNI function use, should be public
 public:
     static void nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray arrExpectedFps, jintArray arrRealFps);
