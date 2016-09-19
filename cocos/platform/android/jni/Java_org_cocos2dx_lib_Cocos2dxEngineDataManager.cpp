@@ -158,6 +158,7 @@ int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount
     int cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
     int cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
     int cpuLevel = cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio;
+    cpuLevel = std::min(cpuLevel, CARRAY_SIZE(_cpuLevelArr) - 1);
 
 #if EDM_DEBUG
     if (_oldCpuLevelNode != cpuLevelNode
@@ -194,6 +195,8 @@ int toGpuLevel(int vertexCount, int drawCount)
     int gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
     int gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
     int gpuLevel = gpuLevelVertex + gpuLevelDraw;
+    gpuLevel = std::min(gpuLevel, CARRAY_SIZE(_gpuLevelArr) - 1);
+
 #if EDM_DEBUG
     if (_oldGpuLevelVertex != gpuLevelVertex
         || _oldGpuLevelDraw != gpuLevelDraw)
