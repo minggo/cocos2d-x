@@ -250,12 +250,10 @@ public:
      * @js NA
      */
     static ParticleSystem* createWithTotalParticles(int numberOfParticles);
-    
-private:
-    // Get the reference of all ParticleSystem, it's used by EngineDataManager internally.
-    // Make it public while it's needed, but not now.
-    static std::vector<ParticleSystem*>& getAllParticleSystems();
-    friend class EngineDataManager;
+
+    /** Gets all ParticleSystem references
+     */
+    static Vector<ParticleSystem*>& getAllParticleSystems();
 public:
     void addParticles(int count);
     
@@ -977,7 +975,7 @@ protected:
     /** is the emitter paused */
     bool _paused;
 
-    static std::vector<ParticleSystem*> __allInstances;
+    static Vector<ParticleSystem*> __allInstances;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ParticleSystem);

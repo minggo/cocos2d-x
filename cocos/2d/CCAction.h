@@ -181,7 +181,6 @@ protected:
 #if CC_ENABLE_SCRIPT_BINDING
     ccScriptType _scriptType;         ///< type of script binding, lua or javascript
 #endif
-
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Action);
 };

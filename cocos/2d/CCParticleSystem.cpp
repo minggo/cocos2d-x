@@ -185,7 +185,7 @@ void ParticleData::release()
     CC_SAFE_FREE(modeB.radius);
 }
 
-std::vector<ParticleSystem*> ParticleSystem::__allInstances;
+Vector<ParticleSystem*> ParticleSystem::__allInstances;
 
 ParticleSystem::ParticleSystem()
 : _isBlendAdditive(false)
@@ -237,8 +237,6 @@ ParticleSystem::ParticleSystem()
     modeB.endRadiusVar = 0;            
     modeB.rotatePerSecond = 0;
     modeB.rotatePerSecondVar = 0;
-    
-    __allInstances.push_back(this);
 }
 // implementation ParticleSystem
 
@@ -267,7 +265,7 @@ ParticleSystem* ParticleSystem::createWithTotalParticles(int numberOfParticles)
 }
 
 // static
-std::vector<ParticleSystem*>& ParticleSystem::getAllParticleSystems()
+Vector<ParticleSystem*>& ParticleSystem::getAllParticleSystems()
 {
     return __allInstances;
 }
@@ -595,12 +593,6 @@ ParticleSystem::~ParticleSystem()
     //unscheduleUpdate();
     _particleData.release();
     CC_SAFE_RELEASE(_texture);
-    
-    auto iter = std::find(std::begin(__allInstances), std::end(__allInstances), this);
-    if (iter != std::end(__allInstances))
-    {
-        __allInstances.erase(iter);
-    }
 }
 
 void ParticleSystem::addParticles(int count)
@@ -809,6 +801,8 @@ void ParticleSystem::onEnter()
     
     // update after action in run!
     this->scheduleUpdateWithPriority(1);
+
+    __allInstances.pushBack(this);
 }
 
 void ParticleSystem::onExit()
@@ -823,6 +817,12 @@ void ParticleSystem::onExit()
     
     this->unscheduleUpdate();
     Node::onExit();
+
+    auto iter = std::find(std::begin(__allInstances), std::end(__allInstances), this);
+    if (iter != std::end(__allInstances))
+    {
+        __allInstances.erase(iter);
+    }
 }
 
 void ParticleSystem::stopSystem()

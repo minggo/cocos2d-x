@@ -128,7 +128,7 @@ public:
     static Node * create();
 
     /**
-     * Gets counts of nodes those are attached to scene graph.
+     * Gets count of nodes those are attached to scene graph.
      */
     static int getAttachedNodeCount() { return __attachedNodeCount; }
 public:
