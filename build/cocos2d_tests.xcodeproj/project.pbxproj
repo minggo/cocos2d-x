@@ -769,6 +769,10 @@
 		467361E31D86A3B5005B6797 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 467361E01D86A3A9005B6797 /* button.png */; };
 		467361E41D86A3BA005B6797 /* buttonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 467361E11D86A3A9005B6797 /* buttonHighlighted.png */; };
 		467361E51D86A3BD005B6797 /* buttonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 467361E11D86A3A9005B6797 /* buttonHighlighted.png */; };
+		468033101D8FBD3C00E5C4C3 /* configure.json in Resources */ = {isa = PBXBuildFile; fileRef = 4680330F1D8FBD3300E5C4C3 /* configure.json */; };
+		468033111D8FBD4100E5C4C3 /* configure.json in Resources */ = {isa = PBXBuildFile; fileRef = 4680330F1D8FBD3300E5C4C3 /* configure.json */; };
+		468033131D8FE2A400E5C4C3 /* arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 468033121D8FE23400E5C4C3 /* arial.ttf */; };
+		468033141D8FE2A600E5C4C3 /* arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 468033121D8FE23400E5C4C3 /* arial.ttf */; };
 		4698EFA31D8F86C900A57085 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 4698EFA21D8F86BD00A57085 /* fire.png */; };
 		4698EFA41D8F86CD00A57085 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 4698EFA21D8F86BD00A57085 /* fire.png */; };
 		4698EFA51D8F88DC00A57085 /* grossini.png in Resources */ = {isa = PBXBuildFile; fileRef = 467361EC1D8902A2005B6797 /* grossini.png */; };
@@ -2445,6 +2449,8 @@
 		467361E01D86A3A9005B6797 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../tests/cpp-empty-test/Resources/button.png"; sourceTree = "<group>"; };
 		467361E11D86A3A9005B6797 /* buttonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttonHighlighted.png; path = "../tests/cpp-empty-test/Resources/buttonHighlighted.png"; sourceTree = "<group>"; };
 		467361EC1D8902A2005B6797 /* grossini.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = grossini.png; path = "../tests/cpp-empty-test/Resources/grossini.png"; sourceTree = "<group>"; };
+		4680330F1D8FBD3300E5C4C3 /* configure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = configure.json; path = "../tests/cpp-empty-test/Resources/configure.json"; sourceTree = "<group>"; };
+		468033121D8FE23400E5C4C3 /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = arial.ttf; path = "../tests/cpp-empty-test/Resources/arial.ttf"; sourceTree = "<group>"; };
 		4698EFA21D8F86BD00A57085 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = "../tests/cpp-empty-test/Resources/fire.png"; sourceTree = "<group>"; };
 		4698EFAA1D8F90C200A57085 /* effect0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect0.mp3; path = "../tests/cpp-empty-test/Resources/effect0.mp3"; sourceTree = "<group>"; };
 		4698EFAB1D8F90C200A57085 /* effect1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect1.mp3; path = "../tests/cpp-empty-test/Resources/effect1.mp3"; sourceTree = "<group>"; };
@@ -3377,6 +3383,8 @@
 		1AC358FD18CEC1EF00F37B72 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				468033121D8FE23400E5C4C3 /* arial.ttf */,
+				4680330F1D8FBD3300E5C4C3 /* configure.json */,
 				4698EFAA1D8F90C200A57085 /* effect0.mp3 */,
 				4698EFAB1D8F90C200A57085 /* effect1.mp3 */,
 				4698EFAC1D8F90C200A57085 /* effect2.mp3 */,
@@ -5948,6 +5956,7 @@
 				4698EFB61D8F90CB00A57085 /* effect2.mp3 in Resources */,
 				1AC358F518CEC1D400F37B72 /* InfoPlist.strings in Resources */,
 				467361E21D86A3AF005B6797 /* button.png in Resources */,
+				468033101D8FBD3C00E5C4C3 /* configure.json in Resources */,
 				4698EFBD1D8F90CB00A57085 /* effect9.mp3 in Resources */,
 				4698EFB71D8F90CB00A57085 /* effect3.mp3 in Resources */,
 				1AC358F818CEC1D400F37B72 /* Icon.icns in Resources */,
@@ -5955,6 +5964,7 @@
 				4698EFBA1D8F90CB00A57085 /* effect6.mp3 in Resources */,
 				1AC358F618CEC1D400F37B72 /* MainMenu.xib in Resources */,
 				4698EFB41D8F90CB00A57085 /* effect0.mp3 in Resources */,
+				468033131D8FE2A400E5C4C3 /* arial.ttf in Resources */,
 				4698EFBC1D8F90CB00A57085 /* effect8.mp3 in Resources */,
 				4698EFA31D8F86C900A57085 /* fire.png in Resources */,
 			);
@@ -5990,6 +6000,7 @@
 				1AC358DB18CEC1CB00F37B72 /* Default-568h@2x.png in Resources */,
 				4698EFBF1D8F90CF00A57085 /* effect1.mp3 in Resources */,
 				4698EFA61D8F88E000A57085 /* grossini.png in Resources */,
+				468033141D8FE2A600E5C4C3 /* arial.ttf in Resources */,
 				1AC358DF18CEC1CB00F37B72 /* Icon-100.png in Resources */,
 				4698EFC51D8F90CF00A57085 /* effect7.mp3 in Resources */,
 				4698EFC31D8F90CF00A57085 /* effect5.mp3 in Resources */,
@@ -6005,6 +6016,7 @@
 				1AC358DC18CEC1CB00F37B72 /* Default.png in Resources */,
 				527B1F3119EF9819000A1F82 /* Default-736h@3x.png in Resources */,
 				4698EFBE1D8F90CF00A57085 /* effect0.mp3 in Resources */,
+				468033111D8FBD4100E5C4C3 /* configure.json in Resources */,
 				4698EFC41D8F90CF00A57085 /* effect6.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

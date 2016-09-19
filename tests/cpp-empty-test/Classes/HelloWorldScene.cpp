@@ -2,6 +2,7 @@
 #include "AppMacros.h"
 #include "ui/UIButton.h"
 #include "audio/include/AudioEngine.h"
+#include "json/document.h"
 
 USING_NS_CC;
 
@@ -32,6 +33,8 @@ USING_NS_CC;
 // 游戏资源消耗等级9：ID=3；CPU=4,GPU=8
 // 游戏资源消耗等级10：ID=3；CPU=5,GPU=9
 
+std::vector<int> HelloWorld::_durations = {};
+
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
     {0,   0,    0, 0, 0}, // CPU=0,GPU=0
     {25,  25,   25, 10, 5}, // CPU=1,GPU=1
@@ -53,6 +56,7 @@ Scene* HelloWorld::scene()
     
     // 'layer' is an autorelease object
     HelloWorld *layer = HelloWorld::create();
+    HelloWorld::parseJson();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -71,6 +75,17 @@ bool HelloWorld::init()
         return false;
     }
     
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto origin = Director::getInstance()->getVisibleOrigin();
+    
+    // whether to enable auto testing
+    _autoTestingLabel = Label::createWithTTF("enable auto test", "arial.ttf", 10);
+    auto menuItem = MenuItemLabel::create(_autoTestingLabel, CC_CALLBACK_1(HelloWorld::autoTestingCallback, this));
+    menuItem->setPosition(Vec2(origin.x + 40, origin.y + 100));
+    auto menu = Menu::create(menuItem, nullptr);
+    menu->setPosition(Vec2(origin.x, origin.y));
+    this->addChild(menu);
+    
     // init _emitter
     _emitter = ParticleSun::create();
     _emitter->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
@@ -78,9 +93,6 @@ bool HelloWorld::init()
     _emitter->setPosition(Vec2(100, 100));
     _emitter->pause();
     this->addChild(_emitter);
-    
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto origin = Director::getInstance()->getVisibleOrigin();
     
     // add child to contain resources: node, sprite, particle
     auto resourceParentNode = Node::create();
@@ -122,6 +134,50 @@ bool HelloWorld::init()
     return true;
 }
 
+void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
+{
+    this->_enableAutoTesting = !this->_enableAutoTesting;
+    
+    if (_enableAutoTesting)
+    {
+        _autoTestingLabel->setString("disabel auto testing");
+        
+        this->_currentResourceLevel = 0;
+        
+        // disable all listview
+        static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
+        
+        Vector<FiniteTimeAction*> actions;
+        for (int duration : _durations)
+        {
+            actions.pushBack(CallFunc::create(CC_CALLBACK_0(HelloWorld::actionCallback, this)));
+            actions.pushBack(DelayTime::create(duration));
+        }
+        auto sequence = Sequence::create(actions);
+        this->runAction(sequence);
+    }
+    else
+    {
+        // stop sequence
+        this->stopAllActions();
+        
+        _autoTestingLabel->setString("enable auto testing");
+        
+        // enable all listview
+        static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(true);
+    }
+}
+
+void HelloWorld::actionCallback()
+{
+    this->addResources(this->_currentResourceLevel);
+    this->_currentResourceLevel++;
+}
+
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
 {
     if (type == cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END)
@@ -146,7 +202,8 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             case 1:
                 // 切换场景
             {
-                auto scene = HelloWorld::scene();
+                auto scene = Scene::create();
+                scene->addChild(HelloWorld::create());
                 Director::getInstance()->replaceScene(scene);
             }
                 break;
@@ -225,6 +282,8 @@ void HelloWorld::addResources(int level)
 {
     assert(level < 10);
     
+    CCLOG("add resources level: %d", level);
+    
     // remove previous resources
     auto resourceParentNode = this->getChildByTag(RESOURCE_PARENT_NODE_FLAG);
     resourceParentNode->removeAllChildren();
@@ -270,3 +329,18 @@ void HelloWorld::addResources(int level)
     }
 }
 
+void HelloWorld::parseJson()
+{
+    auto fileContent = FileUtils::getInstance()->getStringFromFile("configure.json");
+    rapidjson::Document document;
+    document.Parse(fileContent.c_str());
+    
+    assert(document.HasMember("duration"));
+
+    // get duration
+    const rapidjson::Value& duration = document["duration"];
+    for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
+    {
+        _durations.push_back(iter->GetInt());
+    }
+}
