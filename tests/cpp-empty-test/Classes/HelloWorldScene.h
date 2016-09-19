@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ui/UIListView.h"
+#include "2d/CCParticleExamples.h"
 
 class HelloWorld : public cocos2d::Layer
 {
@@ -21,10 +22,22 @@ public:
     CREATE_FUNC(HelloWorld);
     
 private:
-    cocos2d::ui::ListView* createListView(const std::vector<std::string>& itemTitles, const cocos2d::Vec2& position);
     
-    cocos2d::ui::ListView* _secondMenu;
-    cocos2d::ui::ListView* _thirdMenu;
+    using ResourceLevel = struct ResourceLevel
+    {
+        int nodeNumber;  // for cpu
+        int spriteNumber; // for gpu
+        int actionNumber;
+        int particleNumber;
+        int audioNumber;
+    };
+    
+    cocos2d::ui::ListView* createListView(const std::vector<std::string>& itemTitles, const cocos2d::Vec2& position);
+    void addResources(int level);
+    
+    static std::vector<ResourceLevel> _resourceLevelVector;
+    
+    cocos2d::ParticleSun *_emitter;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
