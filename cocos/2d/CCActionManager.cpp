@@ -385,7 +385,7 @@ Action* ActionManager::getActionByTag(int tag, const Node *target) const
 }
 
 // FIXME: Passing "const O *" instead of "const O&" because HASH_FIND_IT requires the address of a pointer
-// and, it is not possible to get the address of a reference
+// and, it is not possible to get the address of a reference
 ssize_t ActionManager::getNumberOfRunningActionsInTarget(const Node *target) const
 {
     tHashElement *element = nullptr;
@@ -396,6 +396,11 @@ ssize_t ActionManager::getNumberOfRunningActionsInTarget(const Node *target) con
     }
 
     return 0;
+}
+
+ssize_t ActionManager::getNumberOfRunningActions() const
+{
+    return HASH_COUNT(_targets);
 }
 
 // main loop

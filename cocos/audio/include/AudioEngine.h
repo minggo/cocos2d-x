@@ -45,6 +45,7 @@
  */
 
 NS_CC_BEGIN
+
     namespace experimental{
 
 /**
@@ -293,6 +294,11 @@ public:
      * @param callback A callback which will be called after loading is finished.
      */
     static void preload(const std::string& filePath, std::function<void(bool isSuccess)> callback);
+
+    /**
+     *  Gets playing audio count.
+     */
+    static int getPlayingAudioCount();
 
 protected:
     static void addTask(const std::function<void()>& task);

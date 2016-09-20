@@ -549,3 +549,9 @@ void AudioEngine::addTask(const std::function<void()>& task)
         s_threadPool->addTask(task);
     }
 }
+
+//static
+int AudioEngine::getPlayingAudioCount()
+{
+    return _audioIDInfoMap.size();
+}

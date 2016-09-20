@@ -13,7 +13,7 @@ android {
 
     sourceSets.main {
         aidl.srcDir "../java/src"
-        java.srcDir "../java/src"
+        java.srcDirs("../java/src", "../../../../../HuaweiGameSDK/src")
         manifest.srcFile "AndroidManifest.xml"
     }
 

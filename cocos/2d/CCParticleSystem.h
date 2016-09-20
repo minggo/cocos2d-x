@@ -250,7 +250,11 @@ public:
      * @js NA
      */
     static ParticleSystem* createWithTotalParticles(int numberOfParticles);
-    
+
+    /** Gets all ParticleSystem references
+     */
+    static Vector<ParticleSystem*>& getAllParticleSystems();
+public:
     void addParticles(int count);
     
     void stopSystem();
@@ -971,6 +975,8 @@ protected:
     /** is the emitter paused */
     bool _paused;
 
+    static Vector<ParticleSystem*> __allInstances;
+    
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ParticleSystem);
 };
