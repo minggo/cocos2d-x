@@ -13,6 +13,12 @@ USING_NS_CC;
 
 #define RESOURCE_PARENT_NODE_FLAG 14
 
+#define SDK_TEST_MENU_FLAG 15
+#define SDK_FPS_MENU_TEST_FLAG 16
+#define SDK_EFFECT_MNUE_TEST_FLAG 17
+#define SDK_AUDIO_MENU_TEST_FLAG 18
+#define SDK_TEST_SECOND_MENU_FLAG 19
+
 //using ResourceLevel = struct ResourceLevel
 //{
 //    int nodeNumber;  // for cpu
@@ -81,7 +87,7 @@ bool HelloWorld::init()
     // whether to enable auto testing
     _autoTestingLabel = Label::createWithTTF("enable auto test", "arial.ttf", 10);
     auto menuItem = MenuItemLabel::create(_autoTestingLabel, CC_CALLBACK_1(HelloWorld::autoTestingCallback, this));
-    menuItem->setPosition(Vec2(origin.x + 40, origin.y + 100));
+    menuItem->setPosition(Vec2(origin.x + 40, origin.y + 40));
     auto menu = Menu::create(menuItem, nullptr);
     menu->setPosition(Vec2(origin.x, origin.y));
     this->addChild(menu);
@@ -131,6 +137,37 @@ bool HelloWorld::init()
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::fpsSelectedMenuSelectedItemEvent, this));
     this->addChild(listView);
     
+    // sdk test
+    titles = { "SDK test" };
+    listView = this->createListView(titles, Vec2(origin.x, origin.y + 50));
+    listView->setTag(SDK_TEST_MENU_FLAG);
+    listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKTestSelectedItemEvent, this));
+    this->addChild(listView);
+    
+    // sdk second menu
+    titles = { "fps", "effect", "audio" };
+    listView = this->createListView(titles, Vec2(origin.x + 50, origin.y + 50));
+    listView->setTag(SDK_TEST_SECOND_MENU_FLAG);
+    listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKSecondMenuSelectedItemEvent, this));
+    listView->setVisible(false);
+    this->addChild(listView);
+    
+    // sdk fps
+    titles = { "25", "30", "40", "60" };
+    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView->setTag(SDK_FPS_MENU_TEST_FLAG);
+    listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKFPSSelectedItemEvent, this));
+    listView->setVisible(false);
+    this->addChild(listView);
+    
+    // sdk effect
+    titles = { "1.0", "0.8", "0.6", "0.4", "0.2", "0" };
+    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView->setTag(SDK_EFFECT_MNUE_TEST_FLAG);
+    listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKEffectSelectedItemEvent, this));
+    listView->setVisible(false);
+    this->addChild(listView);
+    
     return true;
 }
 
@@ -148,6 +185,10 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(false);
         static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(false);
         static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
         
         Vector<FiniteTimeAction*> actions;
         for (int duration : _durations)
@@ -169,6 +210,10 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(true);
         static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(true);
         static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(true);
+        static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(true);
     }
 }
 
@@ -196,7 +241,10 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             case 0:
                 // 选择等级
                 this->getChildByTag(FPS_MENU_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
+                
                 this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG)->setVisible(true);
+                static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(true);
                 break;
                 
             case 1:
@@ -210,7 +258,10 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             case 2:
                 // 帧率选择
                 this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
+                
                 this->getChildByTag(FPS_MENU_FLAG)->setVisible(true);
+                static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
                 break;
                 
             default:
@@ -254,6 +305,122 @@ void HelloWorld::fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d:
             default:
                 break;
         }
+    }
+}
+
+// SDK related test: event call back
+
+void HelloWorld::SDKTestSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
+{
+    if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
+    {
+        this->getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(true);
+    }
+}
+
+void HelloWorld::SDKSecondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
+{
+    if (type ==  ui::ListView::EventType::ON_SELECTED_ITEM_END)
+    {
+        auto listView = static_cast<ui::ListView*>(sender);
+        switch (listView->getCurSelectedIndex()) {
+            case 0:
+                // fps
+                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
+                
+                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(true);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(true);
+                break;
+            case 1:
+                // effect
+                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(true);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(true);
+                
+                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+                
+                break;
+            case 2:
+                // audio
+                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
+                
+                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(false);
+                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
+{
+    if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
+    {
+        float fps = 0.f;
+        auto listView = static_cast<ui::ListView*>(sender);
+        switch (listView->getCurSelectedIndex()) {
+            case 0:
+                fps = 25.f;
+                break;
+            case 1:
+                fps = 30.f;
+                break;
+            case 2:
+                fps = 40.f;
+                break;
+            case 3:
+                fps = 60.f;
+                break;
+                
+            default:
+                break;
+        }
+        // notify
+    }
+}
+
+void HelloWorld::SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
+{
+    if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
+    {
+        float effectLevel = 0.0f;
+        auto listView = static_cast<ui::ListView*>(sender);
+        switch (listView->getCurSelectedIndex()) {
+            case 0:
+                effectLevel = 1.0f;
+                break;
+            case 1:
+                effectLevel = 0.8f;
+                break;
+            case 2:
+                effectLevel = 0.6f;
+                break;
+            case 3:
+                effectLevel = 0.4f;
+                break;
+            case 4:
+                effectLevel = 0.2f;
+                break;
+            case 5:
+                effectLevel = 0.0f;
+                break;
+                
+            default:
+                break;
+        }
+        // notify
+    }
+}
+
+void HelloWorld::SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
+{
+    if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
+    {
+        // disable audio effect
     }
 }
 
@@ -321,7 +488,6 @@ void HelloWorld::addResources(int level)
     
     // play audioes
     int audioNumber = resourceLevel.audioNumber;
-    
     for (int i = 0 ; i < audioNumber; ++i)
     {
         auto audioPath = StringUtils::format("effect%d.mp3", i % 10);
