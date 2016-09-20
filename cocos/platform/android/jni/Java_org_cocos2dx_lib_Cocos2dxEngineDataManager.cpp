@@ -225,7 +225,6 @@ int EngineDataManager::getTotalParticleCount()
     auto& particleSystems = ParticleSystem::getAllParticleSystems();
     if (particleSystems.empty())
     {
-        LOGD("There isn't any ParticleSystem instance!");
         return 0;
     }
 
