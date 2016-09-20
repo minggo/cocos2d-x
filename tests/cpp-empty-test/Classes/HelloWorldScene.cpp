@@ -46,19 +46,17 @@ USING_NS_CC;
 std::vector<int> HelloWorld::_durations = {};
 
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
-    {400,  400,  0, 0, 0}, // CPU=0,GPU=0
-    {800,  800,  0, 0, 0}, // CPU=1,GPU=1
-    {1000, 1000, 0, 0, 0}, // CPU=1,GPU=2
-    {1800, 1000, 0, 0, 0}, // CPU=2,GPU=3
+    {250,  200,  0,   0,   0}, // CPU=0,GPU=0
+    {500,  400,  100, 100,   3}, // CPU=1,GPU=1
+    {500,  500,  100, 100,   3}, // CPU=1,GPU=2
+    {600,  550,  200, 200, 6}, // CPU=2,GPU=3
+    {750,  600,  200, 200, 6}, // CPU=2,GPU=4
+    {1000, 650,  300, 300, 9}, // CPU=3,GPU=5
     
-    
-    {100, 200,  0, 0, 0}, // CPU=2,GPU=4
-    {200, 100,  0, 0, 0}, // CPU=3,GPU=5
-    // todo
-    {200, 100,  0, 0, 0}, // CPU=3,GPU=6
-    {100, 200,  0, 0, 0}, // CPU=4,GPU=7
-    {200, 100,  0, 0, 0}, // CPU=4,GPU=8
-    {200, 100,  0, 0, 0}, // CPU=5,GPU=9
+    {1000, 700,  300, 300, 9}, // CPU=3,GPU=6
+    {2000, 700,  400, 400, 12}, // CPU=4,GPU=7
+    {3000, 725,  400, 400, 12}, // CPU=4,GPU=8
+    {5000, 750,  500, 500, 24}, // CPU=5,GPU=9
 };
 
 Scene* HelloWorld::scene()
@@ -265,6 +263,7 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
                 // 切换场景
             {
                 auto scene = Scene::create();
+                experimental::AudioEngine::stopAll();
                 scene->addChild(HelloWorld::create());
                 Director::getInstance()->replaceScene(scene);
             }
@@ -458,6 +457,8 @@ void HelloWorld::addResources(int level)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
     int spriteNumber = resourceLevel.spriteNumber;
+    // consider the UI of the demo
+    spriteNumber -= 30;
     int actionNumber = resourceLevel.actionNumber;
     int drawcallNumber = resourceLevel.drawcallNumber;
     int drawcall = 0;
