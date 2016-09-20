@@ -4,6 +4,10 @@
 #include "audio/include/AudioEngine.h"
 #include "json/document.h"
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
+#endif
+
 USING_NS_CC;
 
 #define GAME_SETTING_MENU_FLAG 10
@@ -43,7 +47,7 @@ std::vector<int> HelloWorld::_durations = {};
 
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
     {0,   0,    0, 0, 0}, // CPU=0,GPU=0
-    {25,  25,   25, 10, 5}, // CPU=1,GPU=1
+    {25,  25,   25, 500, 5}, // CPU=1,GPU=1
     {0,   50,   0, 0, 0}, // CPU=1,GPU=2
     {200, 100,  0, 0, 0}, // CPU=2,GPU=3
     {100, 200,  0, 0, 0}, // CPU=2,GPU=4
@@ -85,9 +89,9 @@ bool HelloWorld::init()
     auto origin = Director::getInstance()->getVisibleOrigin();
     
     // whether to enable auto testing
-    _autoTestingLabel = Label::createWithTTF("enable auto test", "arial.ttf", 10);
+    _autoTestingLabel = Label::createWithTTF("enable auto test", "arial.ttf", 15);
     auto menuItem = MenuItemLabel::create(_autoTestingLabel, CC_CALLBACK_1(HelloWorld::autoTestingCallback, this));
-    menuItem->setPosition(Vec2(origin.x + 40, origin.y + 40));
+    menuItem->setPosition(Vec2(origin.x + 60, origin.y + 30));
     auto menu = Menu::create(menuItem, nullptr);
     menu->setPosition(Vec2(origin.x, origin.y));
     this->addChild(menu);
@@ -123,7 +127,7 @@ bool HelloWorld::init()
     // resource requirement menu
     titles = { "资源需求等级1", "资源需求等级2", "资源需求等级3", "资源需求等级4", "资源需求等级5",
                "资源需求等级6", "资源需求等级7", "资源需求等级8", "资源需求等级9", "资源需求等级10" };
-    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5 - 20, origin.y + 50));
     listView->setTag(RESOURCE_REQUIREMENT_MENU_FLAG);
     listView->setVisible(false);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::resourceRequirementMenuSelectedItemEvent, this));
@@ -161,10 +165,18 @@ bool HelloWorld::init()
     this->addChild(listView);
     
     // sdk effect
-    titles = { "1.0", "0.8", "0.6", "0.4", "0.2", "0" };
+    titles = { "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
     listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
     listView->setTag(SDK_EFFECT_MNUE_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKEffectSelectedItemEvent, this));
+    listView->setVisible(false);
+    this->addChild(listView);
+    
+    // skd audio
+    titles = { "on", "off" };
+    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView->setTag(SDK_AUDIO_MENU_TEST_FLAG);
+    listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKAudioSelectedItemEvent, this));
     listView->setVisible(false);
     this->addChild(listView);
     
@@ -180,15 +192,8 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         _autoTestingLabel->setString("disabel auto testing");
         
         this->_currentResourceLevel = 0;
-        
-        // disable all listview
-        static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+ 
+        this->disableAllListViews();
         
         Vector<FiniteTimeAction*> actions;
         for (int duration : _durations)
@@ -196,6 +201,7 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
             actions.pushBack(CallFunc::create(CC_CALLBACK_0(HelloWorld::actionCallback, this)));
             actions.pushBack(DelayTime::create(duration));
         }
+        actions.pushBack(CallFunc::create(CC_CALLBACK_0(HelloWorld::lastActionCallback, this)));
         auto sequence = Sequence::create(actions);
         this->runAction(sequence);
     }
@@ -205,15 +211,8 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         this->stopAllActions();
         
         _autoTestingLabel->setString("enable auto testing");
-        
-        // enable all listview
-        static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(true);
-        static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(true);
+
+        this->enableAllListViews();
     }
 }
 
@@ -221,6 +220,19 @@ void HelloWorld::actionCallback()
 {
     this->addResources(this->_currentResourceLevel);
     this->_currentResourceLevel++;
+}
+
+void HelloWorld::lastActionCallback()
+{
+    auto resourceParentNode = this->getChildByTag(RESOURCE_PARENT_NODE_FLAG);
+    resourceParentNode->removeAllChildren();
+    
+    // stop all audios
+    experimental::AudioEngine::stopAll();
+    
+    this->enableAllListViews();
+    
+    _autoTestingLabel->setString("enable auto testing");
 }
 
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
@@ -261,7 +273,7 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
                 static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
                 
                 this->getChildByTag(FPS_MENU_FLAG)->setVisible(true);
-                static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
+                static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
                 break;
                 
             default:
@@ -326,28 +338,23 @@ void HelloWorld::SDKSecondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::u
         switch (listView->getCurSelectedIndex()) {
             case 0:
                 // fps
-                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(false);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
+                this->enableSDKEffect(false);
+                this->enableSDKAudio(false);
+                this->enableSDKFPS(true);
                 
-                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(true);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(true);
                 break;
             case 1:
                 // effect
-                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(true);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(true);
-                
-                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(false);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+                this->enableSDKAudio(false);
+                this->enableSDKFPS(false);
+                this->enableSDKEffect(true);
                 
                 break;
             case 2:
                 // audio
-                this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(false);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
-                
-                this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(false);
-                static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+                this->enableSDKFPS(false);
+                this->enableSDKEffect(false);
+                this->enableSDKAudio(true);
                 break;
                 
             default:
@@ -379,7 +386,9 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
             default:
                 break;
         }
-        // notify
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_FPS_RATE, fps, 0);
+#endif
     }
 }
 
@@ -387,32 +396,10 @@ void HelloWorld::SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::L
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-        float effectLevel = 0.0f;
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         auto listView = static_cast<ui::ListView*>(sender);
-        switch (listView->getCurSelectedIndex()) {
-            case 0:
-                effectLevel = 1.0f;
-                break;
-            case 1:
-                effectLevel = 0.8f;
-                break;
-            case 2:
-                effectLevel = 0.6f;
-                break;
-            case 3:
-                effectLevel = 0.4f;
-                break;
-            case 4:
-                effectLevel = 0.2f;
-                break;
-            case 5:
-                effectLevel = 0.0f;
-                break;
-                
-            default:
-                break;
-        }
-        // notify
+        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_SPECIAL_EFFECTS, listView->getCurSelectedIndex(), 0);
+#endif
     }
 }
 
@@ -420,7 +407,10 @@ void HelloWorld::SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::Li
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-        // disable audio effect
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+        auto listView = static_cast<ui::ListView*>(sender);
+        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_MUTE_ENABLED, listView->getCurSelectedIndex(), 0);
+#endif
     }
 }
 
@@ -430,15 +420,16 @@ cocos2d::ui::ListView* HelloWorld::createListView(const std::vector<std::string>
     
     auto listView = ui::ListView::create();
     listView->setDirection(ui::ScrollView::Direction::VERTICAL);
+    listView->setItemsMargin(10);
     listView->setPosition(position);
-    listView->setContentSize(Size(visibleSize.width / 7, visibleSize.height / 4 * 3));
+    listView->setContentSize(Size(visibleSize.width / 7 + 20, visibleSize.height / 4 * 3));
     
     for (const auto& item: itemTitles)
     {
         auto button = ui::Button::create("button.png", "buttonHighlighted.png");
         button->setTitleText(item);
         button->setScale9Enabled(true);
-        button->setContentSize(button->getTitleRenderer()->getContentSize());
+        button->setContentSize(button->getTitleRenderer()->getContentSize() * 1.3);
         listView->pushBackCustomItem(button);
     }
     
@@ -495,9 +486,55 @@ void HelloWorld::addResources(int level)
     }
 }
 
+void HelloWorld::enableAllListViews()
+{
+    static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(true);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_AUDIO_MENU_TEST_FLAG))->setEnabled(true);
+}
+
+void HelloWorld::disableAllListViews()
+{
+    static_cast<ui::ListView*>(this->getChildByTag(GAME_SETTING_MENU_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(SECOND_MENU_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_TEST_MENU_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(false);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_AUDIO_MENU_TEST_FLAG))->setEnabled(false);
+}
+
+void HelloWorld::enableSDKAudio(bool enabled)
+{
+    this->getChildByTag(SDK_AUDIO_MENU_TEST_FLAG)->setVisible(enabled);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_AUDIO_MENU_TEST_FLAG))->setEnabled(enabled);
+}
+
+void HelloWorld::enableSDKEffect(bool enabled)
+{
+    this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(enabled);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG))->setEnabled(enabled);
+}
+
+void HelloWorld::enableSDKFPS(bool enabled)
+{
+    this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(enabled);
+    static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(enabled);
+}
+
 void HelloWorld::parseJson()
 {
-    auto fileContent = FileUtils::getInstance()->getStringFromFile("configure.json");
+    auto fileUtils = FileUtils::getInstance();
+    fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
+    CCLOG("writable path is %s", fileUtils->getWritablePath().c_str());
+    
+    auto fileContent = fileUtils->getStringFromFile("configure.json");
     rapidjson::Document document;
     document.Parse(fileContent.c_str());
     

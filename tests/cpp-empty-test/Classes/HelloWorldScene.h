@@ -24,6 +24,7 @@ public:
     void fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void autoTestingCallback(cocos2d::Ref* sender);
     void actionCallback();
+    void lastActionCallback();
     
     void SDKTestSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void SDKSecondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
@@ -49,6 +50,11 @@ private:
     
     cocos2d::ui::ListView* createListView(const std::vector<std::string>& itemTitles, const cocos2d::Vec2& position);
     void addResources(int level);
+    void enableAllListViews();
+    void disableAllListViews();
+    void enableSDKAudio(bool enabled);
+    void enableSDKEffect(bool enabled);
+    void enableSDKFPS(bool enabled);
     
     static std::vector<ResourceLevel> _resourceLevelVector;
     static std::vector<int> _durations;
