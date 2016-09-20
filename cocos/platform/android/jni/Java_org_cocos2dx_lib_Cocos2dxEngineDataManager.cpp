@@ -593,16 +593,13 @@ void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject th
     }
 }
 
-void EngineDataManager::nativeOnChangeMuteEnabled(JNIEnv* env, jobject thiz, jboolean enabled)
+void EngineDataManager::nativeOnChangeMuteEnabled(JNIEnv* env, jobject thiz, jboolean isMuteEnabled)
 {
     if (!_isSupported)
         return;
 
-    LOGD("nativeOnChangeMuteEnabled, enabled: %d", enabled);
-    if (enabled)
-    {
-        cocos2d::experimental::AudioEngine::stopAll();
-    }
+    LOGD("nativeOnChangeMuteEnabled, isMuteEnabled: %d", isMuteEnabled);
+    cocos2d::experimental::AudioEngine::setEnabled(!isMuteEnabled);
 }
 
 } // namespace cocos2d {
