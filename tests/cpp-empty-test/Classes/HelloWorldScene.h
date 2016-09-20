@@ -39,8 +39,8 @@ private:
     
     using ResourceLevel = struct ResourceLevel
     {
-        int nodeNumber;  // for cpu
-        int spriteNumber; // for gpu
+        int spriteNumber;
+        int drawcallNumber;
         int actionNumber;
         int particleNumber;
         int audioNumber;

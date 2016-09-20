@@ -25,8 +25,8 @@ USING_NS_CC;
 
 //using ResourceLevel = struct ResourceLevel
 //{
-//    int nodeNumber;  // for cpu
-//    int spriteNumber; // for gpu
+//    int spriteNumber;
+//    int drawcallNumber;
 //    int actionNumber;
 //    int particleNumber;
 //    int audioNumber;
@@ -46,10 +46,12 @@ USING_NS_CC;
 std::vector<int> HelloWorld::_durations = {};
 
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
-    {0,   0,    0, 0, 0}, // CPU=0,GPU=0
-    {25,  25,   25, 500, 5}, // CPU=1,GPU=1
-    {0,   50,   0, 0, 0}, // CPU=1,GPU=2
-    {200, 100,  0, 0, 0}, // CPU=2,GPU=3
+    {400,  400,  0, 0, 0}, // CPU=0,GPU=0
+    {800,  800,  0, 0, 0}, // CPU=1,GPU=1
+    {1000, 1000, 0, 0, 0}, // CPU=1,GPU=2
+    {1800, 1000, 0, 0, 0}, // CPU=2,GPU=3
+    
+    
     {100, 200,  0, 0, 0}, // CPU=2,GPU=4
     {200, 100,  0, 0, 0}, // CPU=3,GPU=5
     // todo
@@ -451,26 +453,37 @@ void HelloWorld::addResources(int level)
     
     auto resourceLevel = HelloWorld::_resourceLevelVector[level];
     
-    // add Nodes
-    int nodeNumber = resourceLevel.nodeNumber;
-    for (int i = 0; i < nodeNumber; ++i)
-        resourceParentNode->addChild(Node::create());
-    
+
     // add Sprites and run actions if needed
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
     int spriteNumber = resourceLevel.spriteNumber;
     int actionNumber = resourceLevel.actionNumber;
+    int drawcallNumber = resourceLevel.drawcallNumber;
+    int drawcall = 0;
     for (int i = 0; i < spriteNumber; ++i)
     {
-        auto sprite = Sprite::create("grossini.png");
+        Sprite *sprite;
+        if (drawcall < drawcallNumber)
+        {
+            auto spritePath = StringUtils::format("sprite%d.png", drawcall % 2);
+            sprite = Sprite::create(spritePath.c_str());
+        }
+        else
+        {
+            sprite = Sprite::create("sprite0.png");
+        }
+        ++drawcall;
+        
         float x = origin.x + visibleSize.width * (std::rand() * 1.0 / RAND_MAX);
         float y = origin.y + visibleSize.height * (std::rand() * 1.0 / RAND_MAX);
         sprite->setPosition(Vec2(x, y));
         resourceParentNode->addChild(sprite);
         
         if (i < actionNumber)
+        {
             sprite->runAction(RepeatForever::create(RotateBy::create(3, 360)));
+        }
     }
     
     // add particles
