@@ -87,11 +87,12 @@ struct CpuLevelInfo
 };
 
 const CpuLevelInfo _cpuLevelArr[] = {
-    {50 ,  100, 20,  2},
-    {100,  200, 40,  6},
-    {300,  300, 60,  12},
-    {700,  400, 70,  18},
-    {1500, 500, 100, 24}
+    {500 , 500,  500,   6},
+    {1250, 1500, 2000,  20},
+    {1750, 2000, 3000,  32},
+    {2750, 2500, 7000,  50},
+    {4000, 3500, 10000, 80},
+    {9000, 4000, 12000, 100}
 };
 
 // GPU Level
@@ -103,16 +104,16 @@ struct GpuLevelInfo
 };
 
 const GpuLevelInfo _gpuLevelArr[] = {
-    {1000, 20},
-    {2000, 30},
-    {3000, 40},
-    {4000, 50},
-    {6000, 60},
-    {8000, 70},
-    {10000, 80},
-    {15000, 100},
-    {20000, 120},
-    {25000, 150}
+    {2000, 400},
+    {4000, 800},
+    {6000, 1000},
+    {8000, 1100},
+    {10000, 1200},
+    {15000, 1300},
+    {22000, 1350},
+    {30000, 1400},
+    {40000, 1450},
+    {60000, 1500}
 };
 
 // Particle Level
@@ -126,13 +127,13 @@ const float _particleLevelArr[] = {
 };
 
 #if EDM_DEBUG
-int _oldCpuLevelNode = 0;
-int _oldCpuLevelParticle = 0;
-int _oldCpuLevelAction = 0;
-int _oldCpuLevelAudio = 0;
+float _oldCpuLevelNode = 0;
+float _oldCpuLevelParticle = 0;
+float _oldCpuLevelAction = 0;
+float _oldCpuLevelAudio = 0;
 
-int _oldGpuLevelVertex = 0;
-int _oldGpuLevelDraw = 0;
+float _oldGpuLevelVertex = 0;
+float _oldGpuLevelDraw = 0;
 #endif
 
 int cbCpuLevelNode(int i) { return _cpuLevelArr[i].nodeCount; }
@@ -140,33 +141,43 @@ int cbCpuLevelParticle(int i) { return _cpuLevelArr[i].particleCount; }
 int cbCpuLevelAction(int i) { return _cpuLevelArr[i].actionCount; }
 int cbCpuLevelAudio(int i) { return _cpuLevelArr[i].audioCount; }
 
-int toCpuLevelPerFactor(int value, int (*cb)(int i))
+float toCpuLevelPerFactor(int value, int (*cb)(int i))
 {
     int len = CARRAY_SIZE(_cpuLevelArr);
+    int prevStep = 0;
+    int curStep = 0;
     for (int i = 0; i < len; ++i)
     {
-        if (value < cb(i))
-            return i;
+        curStep = cb(i);
+        if (value < curStep)
+        {
+            // The return value should be a float value.
+            // Do linear interpolation here
+            return i + (1.0f / (curStep - prevStep) * (value - prevStep));
+        }
+        prevStep = curStep;
     }
     return len - 1;
 }
 
 int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
 {
-    int cpuLevelNode = toCpuLevelPerFactor(nodeCount, cbCpuLevelNode);
-    int cpuLevelParticle = toCpuLevelPerFactor(particleCount, cbCpuLevelParticle);
-    int cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
-    int cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
-    int cpuLevel = cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio;
+    float cpuLevelNode = toCpuLevelPerFactor(nodeCount, cbCpuLevelNode);
+    float cpuLevelParticle = toCpuLevelPerFactor(particleCount, cbCpuLevelParticle);
+    float cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
+    float cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
+    int cpuLevel = std::floor(cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio);
     cpuLevel = std::min(cpuLevel, CARRAY_SIZE(_cpuLevelArr) - 1);
 
 #if EDM_DEBUG
-    if (_oldCpuLevelNode != cpuLevelNode
-        || _oldCpuLevelParticle != cpuLevelParticle
-        || _oldCpuLevelAction != cpuLevelAction
-        || _oldCpuLevelAudio != cpuLevelAudio)
+    if (_oldCpuLevel != cpuLevel
+        || _oldCpuLevelNode - cpuLevelNode > 1.0f
+        || _oldCpuLevelParticle - cpuLevelParticle > 1.0f
+        || _oldCpuLevelAction - cpuLevelAction > 1.0f
+        || _oldCpuLevelAudio - cpuLevelAudio > 1.0f)
     {
-        log("cpu level: %d, node: %d, particle: %d, action: %d, audio: %d", cpuLevel, cpuLevelNode, cpuLevelParticle, cpuLevelAction, cpuLevelAudio);
+        log("cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
+            cpuLevel, cpuLevelNode, nodeCount, cpuLevelParticle, particleCount, cpuLevelAction, actionCount, cpuLevelAudio, audioCount);
         _oldCpuLevelNode = cpuLevelNode;
         _oldCpuLevelParticle = cpuLevelParticle;
         _oldCpuLevelAction = cpuLevelAction;
@@ -179,29 +190,41 @@ int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount
 int cbGpuLevelVertex(int i) { return _gpuLevelArr[i].vertexCount; }
 int cbGpuLevelDraw(int i) { return _gpuLevelArr[i].drawCount; }
 
-int toGpuLevelPerFactor(int value, int (*cb)(int i))
+float toGpuLevelPerFactor(int value, int (*cb)(int i))
 {
     int len = CARRAY_SIZE(_gpuLevelArr);
+    int prevStep = 0;
+    int curStep = 0;
+
     for (int i = 0; i < len; ++i)
     {
-        if (value < cb(i))
-            return i;
+        curStep = cb(i);
+        if (value < curStep)
+        {
+            // The return value should be a float value.
+            // Do linear interpolation here
+            return i + (1.0f / (curStep - prevStep) * (value - prevStep));
+        }
+
+        prevStep = curStep;
+
     }
     return len - 1;
 }
 
 int toGpuLevel(int vertexCount, int drawCount)
 {
-    int gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
-    int gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
-    int gpuLevel = gpuLevelVertex + gpuLevelDraw;
+    float gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
+    float gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
+    int gpuLevel = std::floor(gpuLevelVertex + gpuLevelDraw);
     gpuLevel = std::min(gpuLevel, CARRAY_SIZE(_gpuLevelArr) - 1);
 
 #if EDM_DEBUG
-    if (_oldGpuLevelVertex != gpuLevelVertex
-        || _oldGpuLevelDraw != gpuLevelDraw)
+    if (_oldGpuLevel != gpuLevel
+        || _oldGpuLevelVertex - gpuLevelVertex > 1.0f
+        || _oldGpuLevelDraw - gpuLevelDraw > 1.0f)
     {
-        log("gpu level: %d, vertex: %d, draw: %d", gpuLevel, gpuLevelVertex, gpuLevelDraw);
+        log("gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
         _oldGpuLevelVertex = gpuLevelVertex;
         _oldGpuLevelDraw = gpuLevelDraw;
     }

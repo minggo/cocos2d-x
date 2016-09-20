@@ -400,7 +400,14 @@ ssize_t ActionManager::getNumberOfRunningActionsInTarget(const Node *target) con
 
 ssize_t ActionManager::getNumberOfRunningActions() const
 {
-    return HASH_COUNT(_targets);
+    ssize_t count = 0;
+    struct _hashElement* element = nullptr;
+    struct _hashElement* tmp = nullptr;
+    HASH_ITER(hh, _targets, element, tmp)
+    {
+        count += (element->actions ? element->actions->num : 0);
+    }
+    return count;
 }
 
 // main loop
