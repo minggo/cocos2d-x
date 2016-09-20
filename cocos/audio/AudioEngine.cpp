@@ -66,6 +66,7 @@ std::unordered_map<int, AudioEngine::AudioInfo> AudioEngine::_audioIDInfoMap;
 AudioEngineImpl* AudioEngine::_audioEngineImpl = nullptr;
 
 AudioEngine::AudioEngineThreadPool* AudioEngine::s_threadPool = nullptr;
+bool AudioEngine::_isEnabled = true;
 
 class AudioEngine::AudioEngineThreadPool
 {
@@ -189,6 +190,11 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
     int ret = AudioEngine::INVALID_AUDIO_ID;
 
     do {
+        if (!isEnabled())
+        {
+            break;
+        }
+        
         if ( !lazyInit() ){
             break;
         }
@@ -524,6 +530,12 @@ AudioProfile* AudioEngine::getProfile(const std::string &name)
 
 void AudioEngine::preload(const std::string& filePath, std::function<void(bool isSuccess)> callback)
 {
+    if (!isEnabled())
+    {
+        callback(false);
+        return;
+    }
+    
     lazyInit();
 
     if (_audioEngineImpl)
@@ -550,8 +562,26 @@ void AudioEngine::addTask(const std::function<void()>& task)
     }
 }
 
-//static
 int AudioEngine::getPlayingAudioCount()
 {
-    return _audioIDInfoMap.size();
+    return static_cast<int>(_audioIDInfoMap.size());
 }
+
+void AudioEngine::setEnabled(bool isEnabled)
+{
+    if (_isEnabled != isEnabled)
+    {
+        _isEnabled = isEnabled;
+        
+        if (!_isEnabled)
+        {
+            stopAll();
+        }
+    }
+}
+
+bool AudioEngine::isEnabled()
+{
+    return _isEnabled;
+}
+
