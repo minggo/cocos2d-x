@@ -46,17 +46,18 @@ USING_NS_CC;
 std::vector<int> HelloWorld::_durations = {};
 
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
-    {250,  200,  0,   0,   0}, // CPU=0,GPU=0
-    {500,  400,  50, 100, 1}, // CPU=1,GPU=1
-    {500,  500,  50, 100, 1}, // CPU=1,GPU=2
-    {600,  550,  100, 200, 2}, // CPU=2,GPU=3
-    {750,  600,  100, 200, 2}, // CPU=2,GPU=4
-    {1000, 650,  150, 300, 3}, // CPU=3,GPU=5
+// sprite, drawCall, action, particle, audio
+    {120, 120,  0,   0,   0}, // CPU=0,GPU=0
+    {300, 300,  50, 50, 1}, // CPU=1,GPU=1
+    {350, 350,  50, 200, 1}, // CPU=1,GPU=2
+    {500, 500,  100, 300, 2}, // CPU=2,GPU=3
+    {600, 550,  100, 300, 2}, // CPU=2,GPU=4
+    {800, 650,  200, 400, 3}, // CPU=3,GPU=5
     
-    {1000, 700,  150, 300, 3}, // CPU=3,GPU=6
-    {2000, 700,  0,   300, 4}, // CPU=4,GPU=7
-    {3000, 725,  0,   300, 4}, // CPU=4,GPU=8
-    {5000, 750,  250, 500, 5}, // CPU=5,GPU=9
+    {1100, 700,  200, 400, 3}, // CPU=3,GPU=6
+    {1500, 700,  0,   400, 4}, // CPU=4,GPU=7
+    {2000, 900,  0,   400, 4}, // CPU=4,GPU=8
+    {3000, 1200,  250, 500, 5}, // CPU=5,GPU=9
 };
 
 Scene* HelloWorld::scene()
@@ -85,11 +86,12 @@ bool HelloWorld::init()
         return false;
     }
     
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
     
     // whether to enable auto testing
-    _autoTestingLabel = Label::createWithTTF("enable auto test", "arial.ttf", 15);
+    _autoTestingLabel = Label::createWithSystemFont("enable auto test", "", 15);
     auto menuItem = MenuItemLabel::create(_autoTestingLabel, CC_CALLBACK_1(HelloWorld::autoTestingCallback, this));
     menuItem->setPosition(Vec2(origin.x + 60, origin.y + 30));
     auto menu = Menu::create(menuItem, nullptr);
@@ -111,23 +113,23 @@ bool HelloWorld::init()
 
     // game setting menu
     std::vector<std::string> titles = { "游戏设置" };
-    auto listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 2, origin.y + 50));
+    auto listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 2, origin.y + 40));
     listView->setTag(GAME_SETTING_MENU_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::gameSettingMenuSelectedItemEvent, this));
     this->addChild(listView);
 
     // second level menu
     titles = { "选择等级", "切换场景", "帧率选择" };
-    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 4, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 4, origin.y + 40));
     listView->setTag(SECOND_MENU_FLAG);
     listView->setVisible(false);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::secondMenuSelectedItemEvent, this));
     this->addChild(listView);
     
     // resource requirement menu
-    titles = { "资源需求等级1", "资源需求等级2", "资源需求等级3", "资源需求等级4", "资源需求等级5",
-               "资源需求等级6", "资源需求等级7", "资源需求等级8", "资源需求等级9", "资源需求等级10" };
-    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5 - 20, origin.y + 50));
+    titles = { "资源等级1", "资源等级2", "资源等级3", "资源等级4", "资源等级5",
+               "资源等级6", "资源等级7", "资源等级8", "资源等级9", "资源等级10" };
+    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5, origin.y + 40));
     listView->setTag(RESOURCE_REQUIREMENT_MENU_FLAG);
     listView->setVisible(false);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::resourceRequirementMenuSelectedItemEvent, this));
@@ -135,7 +137,7 @@ bool HelloWorld::init()
     
     // fps menu
     titles = { "25", "30", "40", "60" };
-    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 5, origin.y + 40));
     listView->setTag(FPS_MENU_FLAG);
     listView->setVisible(false);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::fpsSelectedMenuSelectedItemEvent, this));
@@ -143,14 +145,14 @@ bool HelloWorld::init()
     
     // sdk test
     titles = { "SDK test" };
-    listView = this->createListView(titles, Vec2(origin.x, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x, origin.y + 40));
     listView->setTag(SDK_TEST_MENU_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKTestSelectedItemEvent, this));
     this->addChild(listView);
     
     // sdk second menu
     titles = { "fps", "effect", "audio" };
-    listView = this->createListView(titles, Vec2(origin.x + 50, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + 80, origin.y + 40));
     listView->setTag(SDK_TEST_SECOND_MENU_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKSecondMenuSelectedItemEvent, this));
     listView->setVisible(false);
@@ -158,7 +160,7 @@ bool HelloWorld::init()
     
     // sdk fps
     titles = { "25", "30", "40", "60" };
-    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + 160, origin.y + 40));
     listView->setTag(SDK_FPS_MENU_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKFPSSelectedItemEvent, this));
     listView->setVisible(false);
@@ -166,7 +168,7 @@ bool HelloWorld::init()
     
     // sdk effect
     titles = { "0.0", "0.2", "0.4", "0.6", "0.8", "1.0" };
-    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + 160, origin.y + 40));
     listView->setTag(SDK_EFFECT_MNUE_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKEffectSelectedItemEvent, this));
     listView->setVisible(false);
@@ -174,7 +176,7 @@ bool HelloWorld::init()
     
     // skd audio
     titles = { "on", "off" };
-    listView = this->createListView(titles, Vec2(origin.x + 100, origin.y + 50));
+    listView = this->createListView(titles, Vec2(origin.x + 160, origin.y + 40));
     listView->setTag(SDK_AUDIO_MENU_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKAudioSelectedItemEvent, this));
     listView->setVisible(false);
@@ -289,6 +291,7 @@ void HelloWorld::resourceRequirementMenuSelectedItemEvent(cocos2d::Ref* sender, 
     {
         auto listView = static_cast<ui::ListView*>(sender);
         this->addResources(static_cast<int>(listView->getCurSelectedIndex()));
+        listView->setVisible(false);
     }
 }
 
@@ -318,6 +321,7 @@ void HelloWorld::fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d:
             default:
                 break;
         }
+        listView->setVisible(false);
     }
 }
 
@@ -390,6 +394,7 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_FPS_RATE, fps, 0);
 #endif
+        listView->setVisible(false);
     }
 }
 
@@ -397,10 +402,11 @@ void HelloWorld::SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::L
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         auto listView = static_cast<ui::ListView*>(sender);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_SPECIAL_EFFECTS, listView->getCurSelectedIndex(), 0);
 #endif
+        listView->setVisible(false);
     }
 }
 
@@ -408,10 +414,11 @@ void HelloWorld::SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::Li
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         auto listView = static_cast<ui::ListView*>(sender);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_MUTE_ENABLED, listView->getCurSelectedIndex(), 0);
 #endif
+        listView->setVisible(false);
     }
 }
 
@@ -423,16 +430,19 @@ cocos2d::ui::ListView* HelloWorld::createListView(const std::vector<std::string>
     listView->setDirection(ui::ScrollView::Direction::VERTICAL);
     listView->setItemsMargin(10);
     listView->setPosition(position);
-    listView->setContentSize(Size(visibleSize.width / 7 + 20, visibleSize.height / 4 * 3));
+    listView->setContentSize(Size(visibleSize.width / 7 + 20, visibleSize.height / 5 * 4));
     
     for (const auto& item: itemTitles)
     {
         auto button = ui::Button::create("button.png", "buttonHighlighted.png");
         button->setTitleText(item);
-        button->setScale9Enabled(true);
+        button->setScale9Enabled(false);
         button->setContentSize(button->getTitleRenderer()->getContentSize() * 1.3);
         listView->pushBackCustomItem(button);
     }
+    
+    listView->setScrollBarEnabled(false);
+    listView->setClippingType(ui::Layout::ClippingType::SCISSOR);
     
     return listView;
 }
@@ -458,7 +468,7 @@ void HelloWorld::addResources(int level)
     auto origin = Director::getInstance()->getVisibleOrigin();
     int spriteNumber = resourceLevel.spriteNumber;
     // consider the UI of the demo
-    spriteNumber -= 30;
+//    spriteNumber -= 30;
     int actionNumber = resourceLevel.actionNumber;
     int drawcallNumber = resourceLevel.drawcallNumber;
     int drawcall = 0;
@@ -478,6 +488,15 @@ void HelloWorld::addResources(int level)
         
         float x = origin.x + visibleSize.width * (std::rand() * 1.0 / RAND_MAX);
         float y = origin.y + visibleSize.height * (std::rand() * 1.0 / RAND_MAX);
+        
+        float maxRectSize = std::max(sprite->getContentSize().width, sprite->getContentSize().height);
+        
+        x = std::min(x, origin.x + visibleSize.width - maxRectSize/2);
+        x = std::max(x, origin.x + maxRectSize/2);
+        
+        y = std::min(y, origin.y + visibleSize.height - maxRectSize/2);
+        y = std::max(y, origin.y + maxRectSize/2);
+        
         sprite->setPosition(Vec2(x, y));
         resourceParentNode->addChild(sprite);
         
@@ -542,6 +561,9 @@ void HelloWorld::enableSDKFPS(bool enabled)
     static_cast<ui::ListView*>(this->getChildByTag(SDK_FPS_MENU_TEST_FLAG))->setEnabled(enabled);
 }
 
+typedef rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonDocument;
+typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonValue;
+
 void HelloWorld::parseJson()
 {
     auto fileUtils = FileUtils::getInstance();
@@ -549,13 +571,14 @@ void HelloWorld::parseJson()
     CCLOG("writable path is %s", fileUtils->getWritablePath().c_str());
     
     auto fileContent = fileUtils->getStringFromFile("configure.json");
-    rapidjson::Document document;
+    
+    RapidJsonDocument document;
     document.Parse(fileContent.c_str());
     
     assert(document.HasMember("duration"));
 
     // get duration
-    const rapidjson::Value& duration = document["duration"];
+    const RapidJsonValue& duration = document["duration"];
     for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
     {
         _durations.push_back(iter->GetInt());
