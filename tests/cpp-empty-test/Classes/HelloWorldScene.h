@@ -13,7 +13,7 @@ public:
     static cocos2d::Scene* scene();
     
     HelloWorld() :_emitter(nullptr),
-                  _enableAutoTesting(false),
+                  _enableAutoTesting(true),
                   _autoTestingLabel(nullptr),
                   _currentResourceLevel(0){}
     

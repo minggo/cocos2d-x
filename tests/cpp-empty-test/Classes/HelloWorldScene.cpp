@@ -189,8 +189,6 @@ bool HelloWorld::init()
 
 void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
 {
-    this->_enableAutoTesting = !this->_enableAutoTesting;
-    
     if (_enableAutoTesting)
     {
         _autoTestingLabel->setString("disable auto test");
@@ -218,6 +216,8 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
 
         this->enableAllListViews();
     }
+    
+    this->_enableAutoTesting = !this->_enableAutoTesting;
 }
 
 void HelloWorld::actionCallback()
@@ -231,12 +231,12 @@ void HelloWorld::lastActionCallback()
     auto resourceParentNode = this->getChildByTag(RESOURCE_PARENT_NODE_FLAG);
     resourceParentNode->removeAllChildren();
     
-    // stop all audios
     experimental::AudioEngine::stopAll();
-    
+    _emitter->setVisible(false);
     this->enableAllListViews();
     
     _autoTestingLabel->setString("enable auto test");
+    _enableAutoTesting = true;
 }
 
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
@@ -542,6 +542,7 @@ void HelloWorld::addResources(int level)
     }
     
     // add particles
+    _emitter->setVisible(true);
     _emitter->resume();
     _emitter->setTotalParticles(resourceLevel.particleNumber);
     
