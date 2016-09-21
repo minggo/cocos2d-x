@@ -64,6 +64,9 @@ private:
     cocos2d::Label *_autoTestingLabel;
     // used for acton call back
     int _currentResourceLevel;
+    
+    bool _isSDKTestExpanded;
+    bool _isGameSettingExpanded;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

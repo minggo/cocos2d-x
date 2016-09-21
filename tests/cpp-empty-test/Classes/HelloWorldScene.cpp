@@ -86,6 +86,8 @@ bool HelloWorld::init()
         return false;
     }
     
+    _isSDKTestExpanded = false;
+    _isGameSettingExpanded = false;
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
@@ -241,8 +243,19 @@ void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d:
 {
     if (type == cocos2d::ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-        // show second menu
-        this->getChildByTag(SECOND_MENU_FLAG)->setVisible(true);
+        if (_isGameSettingExpanded)
+        {
+            // hide second & third menu
+            this->getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+            this->getChildByTag(RESOURCE_REQUIREMENT_MENU_FLAG)->setVisible(false);
+            this->getChildByTag(FPS_MENU_FLAG)->setVisible(false);
+        }
+        else
+        {
+            // show second menu
+            this->getChildByTag(SECOND_MENU_FLAG)->setVisible(true);
+        }
+        _isGameSettingExpanded = !_isGameSettingExpanded;
     }
 }
 
@@ -292,6 +305,8 @@ void HelloWorld::resourceRequirementMenuSelectedItemEvent(cocos2d::Ref* sender, 
         auto listView = static_cast<ui::ListView*>(sender);
         this->addResources(static_cast<int>(listView->getCurSelectedIndex()));
         listView->setVisible(false);
+        getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+        _isGameSettingExpanded = false;
     }
 }
 
@@ -322,6 +337,8 @@ void HelloWorld::fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d:
                 break;
         }
         listView->setVisible(false);
+        getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+        _isGameSettingExpanded = false;
     }
 }
 
@@ -331,7 +348,19 @@ void HelloWorld::SDKTestSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::Lis
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-        this->getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(true);
+        if (_isSDKTestExpanded)
+        {
+            this->getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
+            this->getChildByTag(SDK_FPS_MENU_TEST_FLAG)->setVisible(false);
+            this->getChildByTag(SDK_AUDIO_MENU_TEST_FLAG)->setVisible(false);
+            this->getChildByTag(SDK_EFFECT_MNUE_TEST_FLAG)->setVisible(false);
+        }
+        else
+        {
+            this->getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(true);
+        }
+        
+        _isSDKTestExpanded = !_isSDKTestExpanded;
     }
 }
 
@@ -395,6 +424,8 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_FPS_RATE, fps, 0);
 #endif
         listView->setVisible(false);
+        getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
+        _isSDKTestExpanded = false;
     }
 }
 
@@ -407,6 +438,8 @@ void HelloWorld::SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::L
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_SPECIAL_EFFECTS, listView->getCurSelectedIndex(), 0);
 #endif
         listView->setVisible(false);
+        getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
+        _isSDKTestExpanded = false;
     }
 }
 
@@ -419,6 +452,8 @@ void HelloWorld::SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::Li
         EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_MUTE_ENABLED, listView->getCurSelectedIndex(), 0);
 #endif
         listView->setVisible(false);
+        getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
+        _isSDKTestExpanded = false;
     }
 }
 
