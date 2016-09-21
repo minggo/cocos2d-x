@@ -191,7 +191,7 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
     
     if (_enableAutoTesting)
     {
-        _autoTestingLabel->setString("disabel auto testing");
+        _autoTestingLabel->setString("disable auto testing");
         
         this->_currentResourceLevel = 0;
  
