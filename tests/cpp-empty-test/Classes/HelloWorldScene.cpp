@@ -96,7 +96,7 @@ bool HelloWorld::init()
     menuItem->setPosition(Vec2(origin.x + 60, origin.y + 30));
     auto menu = Menu::create(menuItem, nullptr);
     menu->setPosition(Vec2(origin.x, origin.y));
-    this->addChild(menu);
+    this->addChild(menu, 9999);
     
     // init _emitter
     _emitter = ParticleSun::create();
@@ -191,7 +191,7 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
     
     if (_enableAutoTesting)
     {
-        _autoTestingLabel->setString("disable auto testing");
+        _autoTestingLabel->setString("disable auto test");
         
         this->_currentResourceLevel = 0;
  
@@ -212,7 +212,7 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         // stop sequence
         this->stopAllActions();
         
-        _autoTestingLabel->setString("enable auto testing");
+        _autoTestingLabel->setString("enable auto test");
 
         this->enableAllListViews();
     }
@@ -234,7 +234,7 @@ void HelloWorld::lastActionCallback()
     
     this->enableAllListViews();
     
-    _autoTestingLabel->setString("enable auto testing");
+    _autoTestingLabel->setString("enable auto test");
 }
 
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
