@@ -100,6 +100,10 @@ bool HelloWorld::init()
     menu->setPosition(Vec2(origin.x, origin.y));
     this->addChild(menu, 9999);
     
+    _currentResourceLevelLabel = Label::createWithSystemFont("未选择资源等级", "", 10);
+    _currentResourceLevelLabel->setPosition(Vec2(origin.x + visibleSize.width/2, origin.y + visibleSize.height - 50));
+    this->addChild(_currentResourceLevelLabel, 9999);
+    
     // init _emitter
     _emitter = ParticleSun::create();
     _emitter->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
@@ -237,6 +241,7 @@ void HelloWorld::lastActionCallback()
     
     _autoTestingLabel->setString("enable auto test");
     _enableAutoTesting = true;
+    _currentResourceLevelLabel->setString("未选择资源等级");
 }
 
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
@@ -553,6 +558,8 @@ void HelloWorld::addResources(int level)
         auto audioPath = StringUtils::format("effect%d.mp3", i % 10);
         experimental::AudioEngine::play2d(audioPath.c_str(), true);
     }
+    
+    _currentResourceLevelLabel->setString(StringUtils::format("当前资源等级:%d", level + 1));
 }
 
 void HelloWorld::enableAllListViews()
@@ -604,7 +611,7 @@ void HelloWorld::parseJson()
 {
     auto fileUtils = FileUtils::getInstance();
     fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
-    CCLOG("writable path is %s", fileUtils->getWritablePath().c_str());
+    log("writable path is %s", fileUtils->getWritablePath().c_str());
     
     auto fileContent = fileUtils->getStringFromFile("configure.json");
     

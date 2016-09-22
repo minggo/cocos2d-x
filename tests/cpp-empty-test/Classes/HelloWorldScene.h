@@ -62,6 +62,7 @@ private:
     cocos2d::ParticleSun *_emitter;
     bool _enableAutoTesting;
     cocos2d::Label *_autoTestingLabel;
+    cocos2d::Label *_currentResourceLevelLabel;
     // used for acton call back
     int _currentResourceLevel;
     
