@@ -330,7 +330,7 @@ void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
     int gpuLevel = 0;
     getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
 
-    notifyGameStatus(GameStatus::SCENE_CHANGE, cpuLevel, gpuLevel);
+    notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
 }
 
 // static 
@@ -405,8 +405,7 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(Director::EVENT_AFTER_SET_NEXT_SCENE, std::bind(onAfterSetNextScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
 
-    //FIMXE: have to pass cpuLevel 10 and gpuLevel 10 ?
-    notifyGameStatus(GameStatus::START, 10, 10);
+    notifyGameStatus(GameStatus::START, 5, -1);
     _isInitialized = true;
 }
 
