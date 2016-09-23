@@ -4,6 +4,8 @@
 #include "audio/include/AudioEngine.h"
 #include "json/document.h"
 
+#include "AnotherScene.h"
+
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #endif
@@ -282,9 +284,9 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             case 1:
                 // 切换场景
             {
-                auto scene = Scene::create();
+                auto scene = AnotherScene::create();
                 experimental::AudioEngine::stopAll();
-                scene->addChild(HelloWorld::create());
+//                scene->addChild(HelloWorld::create());
                 Director::getInstance()->replaceScene(scene);
             }
                 break;
