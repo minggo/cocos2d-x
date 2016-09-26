@@ -50,6 +50,7 @@ const char* _className = "org/cocos2dx/lib/Cocos2dxEngineDataManager";
 
 bool _isInitialized = false;
 bool _isSupported = false;
+bool _isFirstSetNextScene = true;
 
 float _defaultAnimationInterval = -1.0f;
 
@@ -325,18 +326,20 @@ void EngineDataManager::calculateFrameLost()
 // static 
 void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 {
-    log("previous node count: %d", Node::getAttachedNodeCount());
-    int cpuLevel = 0;
-    int gpuLevel = 0;
-    getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
-
-    notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
+    if (_isFirstSetNextScene)
+    {// If it's the first time of setting next scene, a 'START_SCENE' event has been already triggered.
+     // So don't notify 'SCENE_CHANGE' event to system.
+        _isFirstSetNextScene = false;
+    }
+    else
+    {
+        notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
+    }
 }
 
 // static 
 void EngineDataManager::onAfterSetNextScene(EventCustom* event)
 {
-    log("current node count: %d", Node::getAttachedNodeCount());
     int cpuLevel = 0;
     int gpuLevel = 0;
     getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
@@ -510,28 +513,41 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
     if (!_isSupported)
         return;
 
-    LOGD("nativeOnChangeExpectedFps, fps: %d", fps);
     auto director = cocos2d::Director::getInstance();
+    float currentAnimationInterval = director->getAnimationInterval();
+
     if (_defaultAnimationInterval < 0)
     {
-        _defaultAnimationInterval = director->getAnimationInterval();
+        _defaultAnimationInterval = currentAnimationInterval;
     }
 
+    int currentFps = static_cast<int>(std::ceil(1.0f/currentAnimationInterval));
+    int defaultFps = static_cast<int>(std::ceil(1.0f/_defaultAnimationInterval));
+
+    LOGD("nativeOnChangeExpectedFps, set fps: %d, current fps: %d, default fps: %d", fps, currentFps, defaultFps);
+
     fps = std::min(fps, 60);
+
     if (fps > 0)
     {
         director->setAnimationInterval(1.0f/fps);
+        LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", fps);
     }
     else if (fps == -1) // -1 means to reset to default FPS
     {
         if (_defaultAnimationInterval > 0)
         {
             director->setAnimationInterval(_defaultAnimationInterval);
+            LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", defaultFps);
         }
         else
         {
-            LOGE("_defaultAnimationInterval <= 0");
+            LOGE("ERROR, the default fps wasn't saved, couldn't set fps (%d)", fps);
         }
+    }
+    else
+    {
+        LOGE("Invalid fps: %d", fps);
     }
 }
 
@@ -540,11 +556,11 @@ void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject th
     if (!_isSupported)
         return;
 
-    LOGD("nativeOnChangeSpecialEffectLevel, level: %d", level);
+    LOGD("nativeOnChangeSpecialEffectLevel, set level: %d", level);
 
     if (level < 0 || level >= CARRAY_SIZE(_particleLevelArr))
     {
-        LOGE("Pass a wrong level value: %d, only 0 ~ 5 is supported!", level);
+        LOGE("Pass a wrong level value: %d, only 0 ~ %d is supported!", level, CARRAY_SIZE(_particleLevelArr) - 1);
         return;
     }
 
