@@ -626,6 +626,7 @@ typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> Rapi
 void HelloWorld::parseJson()
 {
     auto fileUtils = FileUtils::getInstance();
+    fileUtils->addSearchPath("/sdcard", true);
     fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
     log("writable path is %s", fileUtils->getWritablePath().c_str());
     
