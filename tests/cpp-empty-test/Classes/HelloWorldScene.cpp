@@ -22,6 +22,7 @@ USING_NS_CC;
 
 #define RESOURCE_PARENT_NODE_FLAG 14
 
+#define SDK_SHOW_RESET_TO_DEFAULT_BUTTON 0
 #define SDK_TEST_MENU_FLAG 15
 #define SDK_FPS_MENU_TEST_FLAG 16
 #define SDK_EFFECT_MNUE_TEST_FLAG 17
@@ -173,7 +174,11 @@ bool HelloWorld::init()
     this->addChild(listView);
     
     // sdk fps
-    titles = { "25", "30", "40", "60" };
+    titles = { "25", "30", "40", "60",
+#if SDK_SHOW_RESET_TO_DEFAULT_BUTTON
+        "默认值"
+#endif
+    };
     listView = this->createListView(titles, Vec2(origin.x + 160, origin.y + 40));
     listView->setTag(SDK_FPS_MENU_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKFPSSelectedItemEvent, this));
@@ -424,22 +429,23 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
-        float fps = 0.f;
+        int fps = 0;
         auto listView = static_cast<ui::ListView*>(sender);
         switch (listView->getCurSelectedIndex()) {
             case 0:
-                fps = 25.f;
+                fps = 25;
                 break;
             case 1:
-                fps = 30.f;
+                fps = 30;
                 break;
             case 2:
-                fps = 40.f;
+                fps = 40;
                 break;
             case 3:
-                fps = 60.f;
+                fps = 60;
                 break;
-                
+            case 4:
+                fps = -1; // Pass -1 to set the default value
             default:
                 break;
         }

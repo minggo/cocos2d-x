@@ -120,6 +120,8 @@ bool Director::init(void)
 {
     setDefaultValues();
 
+    _animationIntervalByEngineDataManager = -1.0f;
+    
     // scenes
     _runningScene = nullptr;
     _nextScene = nullptr;
@@ -1403,7 +1405,9 @@ void DisplayLinkDirector::startAnimation()
 
     _cocos2d_thread_id = std::this_thread::get_id();
 
-    Application::getInstance()->setAnimationInterval(_animationInterval);
+    float interval = _animationIntervalByEngineDataManager > 0 ? _animationIntervalByEngineDataManager : _animationInterval;
+
+    Application::getInstance()->setAnimationInterval(interval);
 
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);

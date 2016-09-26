@@ -819,6 +819,13 @@ CC_CONSTRUCTOR_ACCESS:
 
 protected:
     virtual void updateBlendFunc();
+    
+private:
+    friend class EngineDataManager;
+    /** Internal use only, it's used by EngineDataManager class for Android platform */
+    static void setTotalParticleCountFactor(float factor) { __totalParticleCountFactor = factor; }
+    
+protected:
 
     /** whether or not the particles are using blend additive.
      If enabled, the following blending function will be used.
@@ -908,6 +915,9 @@ protected:
     
     /** Quantity of particles that are being simulated at the moment */
     int _particleCount;
+    /** The factor affects the total particle count, its value should be 0.0f ~ 1.0f, default 1.0f*/
+    static float __totalParticleCountFactor;
+    
     /** How many seconds the emitter will run. -1 means 'forever' */
     float _duration;
     /** sourcePosition of the emitter */
