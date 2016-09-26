@@ -186,6 +186,7 @@ void ParticleData::release()
 }
 
 Vector<ParticleSystem*> ParticleSystem::__allInstances;
+float ParticleSystem::__totalParticleCountFactor = 1.0f;
 
 ParticleSystem::ParticleSystem()
 : _isBlendAdditive(false)
@@ -855,15 +856,17 @@ void ParticleSystem::update(float dt)
     if (_isActive && _emissionRate)
     {
         float rate = 1.0f / _emissionRate;
+        int totalParticles = static_cast<int>(_totalParticles * __totalParticleCountFactor);
+        
         //issue #1201, prevent bursts of particles, due to too high emitCounter
-        if (_particleCount < _totalParticles)
+        if (_particleCount < totalParticles)
         {
             _emitCounter += dt;
             if (_emitCounter < 0.f)
                 _emitCounter = 0.f;
         }
         
-        int emitCount = MIN(_totalParticles - _particleCount, _emitCounter / rate);
+        int emitCount = MIN(totalParticles - _particleCount, _emitCounter / rate);
         addParticles(emitCount);
         _emitCounter -= rate * emitCount;
         

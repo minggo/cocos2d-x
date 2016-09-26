@@ -52,10 +52,6 @@ bool _isInitialized = false;
 bool _isSupported = false;
 bool _isFirstSetNextScene = true;
 
-float _defaultAnimationInterval = -1.0f;
-
-std::unordered_map<unsigned int /*Ref::_ID*/, int/*particleCount*/> _psIdCountMap;
-
 /* last time frame lost cycle was calculated */
 std::chrono::steady_clock::time_point _lastContinuousFrameLostUpdate;
 std::chrono::steady_clock::time_point _lastFrameLost100msUpdate;
@@ -513,42 +509,33 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
     if (!_isSupported)
         return;
 
-    auto director = cocos2d::Director::getInstance();
-    float currentAnimationInterval = director->getAnimationInterval();
 
-    if (_defaultAnimationInterval < 0)
+    if (fps < -1 || fps > 60)
     {
-        _defaultAnimationInterval = currentAnimationInterval;
+        LOGE("Setting fps (%d) isn't supported!", fps);
+        return;
     }
 
-    int currentFps = static_cast<int>(std::ceil(1.0f/currentAnimationInterval));
-    int defaultFps = static_cast<int>(std::ceil(1.0f/_defaultAnimationInterval));
+    auto director = cocos2d::Director::getInstance();
+    float defaultAnimationInterval = director->getAnimationInterval();
 
-    LOGD("nativeOnChangeExpectedFps, set fps: %d, current fps: %d, default fps: %d", fps, currentFps, defaultFps);
+    int defaultFps = static_cast<int>(std::ceil(1.0f/defaultAnimationInterval));
 
-    fps = std::min(fps, 60);
+    LOGD("nativeOnChangeExpectedFps, set fps: %d, default fps: %d", fps, defaultFps);
 
     if (fps > 0)
     {
-        director->setAnimationInterval(1.0f/fps);
+        director->setAnimationIntervalByEngineDataManager(1.0f/fps);
         LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", fps);
     }
     else if (fps == -1) // -1 means to reset to default FPS
     {
-        if (_defaultAnimationInterval > 0)
-        {
-            director->setAnimationInterval(_defaultAnimationInterval);
-            LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", defaultFps);
-        }
-        else
-        {
-            LOGE("ERROR, the default fps wasn't saved, couldn't set fps (%d)", fps);
-        }
+        director->setAnimationIntervalByEngineDataManager(-1.0f);
+        LOGD("nativeOnChangeExpectedFps, fps (%d) was reset successfuly!", defaultFps);
     }
-    else
-    {
-        LOGE("Invalid fps: %d", fps);
-    }
+
+    // Trigger Director::startAnimation
+    director->setAnimationInterval(defaultAnimationInterval);
 }
 
 void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject thiz, jint level)
@@ -564,48 +551,7 @@ void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject th
         return;
     }
 
-    auto& particleSystems = ParticleSystem::getAllParticleSystems();
-    if (particleSystems.empty())
-    {
-        LOGD("There isn't any ParticleSystem instance!");
-        return;
-    }
-
-    std::vector<unsigned int> validIDs;
-    validIDs.reserve(particleSystems.size());
-
-    for (auto&& system : particleSystems)
-    {
-        if (_psIdCountMap.find(system->_ID) == _psIdCountMap.end())
-        {
-            _psIdCountMap.insert(std::make_pair(system->_ID, system->getTotalParticles()));
-        }
-        validIDs.push_back(system->_ID);
-
-        int defaultParticleCount = _psIdCountMap[system->_ID];
-        int expectedParticleCount = _particleLevelArr[level] * defaultParticleCount;
-
-        LOGD("Set ParticleSystem(%p)'s total particle count from (%d) to (%d)", system, defaultParticleCount, expectedParticleCount);
-
-        system->setTotalParticles(expectedParticleCount);
-    }
-
-    // Remove unused elements in _psIdCountMap
-    std::vector<unsigned int> invalidIDs;
-    for (const auto& e : _psIdCountMap)
-    {
-        auto iter = std::find(std::begin(validIDs), std::end(validIDs), e.first);
-        if (iter == std::end(validIDs))
-        {
-            invalidIDs.push_back(e.first);
-        }
-    }
-
-    for (unsigned int id : invalidIDs)
-    {
-        LOGD("Remove unused particle system id: %u", id);
-        _psIdCountMap.erase(id);
-    }
+    ParticleSystem::setTotalParticleCountFactor(_particleLevelArr[level]);
 }
 
 void EngineDataManager::nativeOnChangeMuteEnabled(JNIEnv* env, jobject thiz, jboolean isMuteEnabled)
