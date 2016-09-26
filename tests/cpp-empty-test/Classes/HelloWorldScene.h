@@ -14,8 +14,7 @@ public:
     
     HelloWorld() :_emitter(nullptr),
                   _enableAutoTesting(true),
-                  _autoTestingLabel(nullptr),
-                  _currentResourceLevel(0){}
+                  _autoTestingLabel(nullptr){}
     
     virtual bool init() override;
     void gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
@@ -23,7 +22,7 @@ public:
     void resourceRequirementMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void autoTestingCallback(cocos2d::Ref* sender);
-    void actionCallback();
+    void actionCallback(int index);
     void lastActionCallback();
     
     void SDKTestSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
@@ -56,15 +55,17 @@ private:
     void enableSDKEffect(bool enabled);
     void enableSDKFPS(bool enabled);
     
+    static int getRandomIndex(std::vector<int>* array);
     static std::vector<ResourceLevel> _resourceLevelVector;
-    static std::vector<int> _durations;
+    static std::vector<int> __durations;
+    static std::vector<int> __indexes;
+    static int __repeatTime;
+    static bool __randomOrder;
     
     cocos2d::ParticleSun *_emitter;
     bool _enableAutoTesting;
     cocos2d::Label *_autoTestingLabel;
     cocos2d::Label *_currentResourceLevelLabel;
-    // used for acton call back
-    int _currentResourceLevel;
     
     bool _isSDKTestExpanded;
     bool _isGameSettingExpanded;

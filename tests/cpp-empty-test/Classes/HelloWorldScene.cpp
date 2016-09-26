@@ -1,10 +1,13 @@
 #include "HelloWorldScene.h"
+#include "json/document.h"
+
 #include "AppMacros.h"
 #include "ui/UIButton.h"
 #include "audio/include/AudioEngine.h"
-#include "json/document.h"
+#include "base/ccRandom.h"
 
 #include "AnotherScene.h"
+#include "MyAction.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
@@ -45,7 +48,10 @@ USING_NS_CC;
 // 游戏资源消耗等级9：ID=3；CPU=4,GPU=8
 // 游戏资源消耗等级10：ID=3；CPU=5,GPU=9
 
-std::vector<int> HelloWorld::_durations = {};
+std::vector<int> HelloWorld::__durations = {};
+std::vector<int> HelloWorld::__indexes = {};
+int HelloWorld::__repeatTime = 1;
+bool HelloWorld::__randomOrder = false;
 
 std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
 // sprite, drawCall, action, particle, audio
@@ -193,21 +199,33 @@ bool HelloWorld::init()
     return true;
 }
 
+int HelloWorld::getRandomIndex(std::vector<int>* array)
+{
+    int randomIndex = cocos2d::random(0, (int)array->size() - 1);
+    int ret = (*array)[randomIndex];
+    array->erase(array->begin() + randomIndex);
+    return ret;
+}
+
 void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
 {
     if (_enableAutoTesting)
     {
         _autoTestingLabel->setString("disable auto test");
-        
-        this->_currentResourceLevel = 0;
- 
+
         this->disableAllListViews();
         
         Vector<FiniteTimeAction*> actions;
-        for (int duration : _durations)
+        size_t durationSize = HelloWorld::__durations.size();
+        for (int i = 0; i < HelloWorld::__repeatTime; ++i)
         {
-            actions.pushBack(CallFunc::create(CC_CALLBACK_0(HelloWorld::actionCallback, this)));
-            actions.pushBack(DelayTime::create(duration));
+            auto indexes = HelloWorld::__indexes;
+            for (size_t j = 0; j < durationSize; ++j)
+            {
+                int index = HelloWorld::__randomOrder ? HelloWorld::getRandomIndex(&indexes) : (int)j;
+                actions.pushBack(MyCallFunc::create(CC_CALLBACK_1(HelloWorld::actionCallback, this), index));
+                actions.pushBack(DelayTime::create(HelloWorld::__durations[index]));
+            }
         }
         actions.pushBack(CallFunc::create(CC_CALLBACK_0(HelloWorld::lastActionCallback, this)));
         auto sequence = Sequence::create(actions);
@@ -226,10 +244,9 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
     this->_enableAutoTesting = !this->_enableAutoTesting;
 }
 
-void HelloWorld::actionCallback()
+void HelloWorld::actionCallback(int index)
 {
-    this->addResources(this->_currentResourceLevel);
-    this->_currentResourceLevel++;
+    this->addResources(index);
 }
 
 void HelloWorld::lastActionCallback()
@@ -286,7 +303,6 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             {
                 auto scene = AnotherScene::create();
                 experimental::AudioEngine::stopAll();
-//                scene->addChild(HelloWorld::create());
                 Director::getInstance()->replaceScene(scene);
             }
                 break;
@@ -509,8 +525,6 @@ void HelloWorld::addResources(int level)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
     int spriteNumber = resourceLevel.spriteNumber;
-    // consider the UI of the demo
-//    spriteNumber -= 30;
     int actionNumber = resourceLevel.actionNumber;
     int drawcallNumber = resourceLevel.drawcallNumber;
     int drawcall = 0;
@@ -621,11 +635,18 @@ void HelloWorld::parseJson()
     document.Parse(fileContent.c_str());
     
     assert(document.HasMember("duration"));
+    assert(document.HasMember("repeat_time"));
+    assert(document.HasMember("random_order"));
 
     // get duration
     const RapidJsonValue& duration = document["duration"];
-    for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
+    int i = 0;
+    for (auto iter = duration.Begin(); iter != duration.End(); ++iter, ++i)
     {
-        _durations.push_back(iter->GetInt());
+        HelloWorld::__durations.push_back(iter->GetInt());
+        HelloWorld::__indexes.push_back(i);
     }
+    
+    HelloWorld::__repeatTime = document["repeat_time"].GetInt();
+    HelloWorld::__randomOrder = document["random_order"].GetBool();
 }

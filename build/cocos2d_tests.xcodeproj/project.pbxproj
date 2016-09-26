@@ -763,6 +763,8 @@
 		460629791CDB4DBA00B44058 /* ccs-res in Resources */ = {isa = PBXBuildFile; fileRef = 460629771CDB4DBA00B44058 /* ccs-res */; };
 		460931E81D9531EF00F4BF9B /* AnotherScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460931E61D9531EF00F4BF9B /* AnotherScene.cpp */; };
 		460931E91D9531EF00F4BF9B /* AnotherScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460931E61D9531EF00F4BF9B /* AnotherScene.cpp */; };
+		460931F21D98C2B800F4BF9B /* MyAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460931F01D98C2B800F4BF9B /* MyAction.cpp */; };
+		460931F31D98C2B800F4BF9B /* MyAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460931F01D98C2B800F4BF9B /* MyAction.cpp */; };
 		463D7E7C1D227C5F00EA6BD1 /* Bug-14327.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */; };
 		463D7E7D1D227C6A00EA6BD1 /* Bug-14327.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */; };
 		463D7E7E1D227CA400EA6BD1 /* Bug-15776.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E7A1D227C3800EA6BD1 /* Bug-15776.cpp */; };
@@ -2448,6 +2450,8 @@
 		460629771CDB4DBA00B44058 /* ccs-res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "ccs-res"; path = "../tests/cpp-tests/Resources/ccs-res"; sourceTree = "<group>"; };
 		460931E61D9531EF00F4BF9B /* AnotherScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnotherScene.cpp; sourceTree = "<group>"; };
 		460931E71D9531EF00F4BF9B /* AnotherScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnotherScene.h; sourceTree = "<group>"; };
+		460931F01D98C2B800F4BF9B /* MyAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyAction.cpp; sourceTree = "<group>"; };
+		460931F11D98C2B800F4BF9B /* MyAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAction.h; sourceTree = "<group>"; };
 		463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Bug-14327.cpp"; sourceTree = "<group>"; };
 		463D7E791D227C3800EA6BD1 /* Bug-14327.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bug-14327.h"; sourceTree = "<group>"; };
 		463D7E7A1D227C3800EA6BD1 /* Bug-15776.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Bug-15776.cpp"; sourceTree = "<group>"; };
@@ -3341,6 +3345,8 @@
 				1AC358BF18CEC1BF00F37B72 /* HelloWorldScene.h */,
 				460931E61D9531EF00F4BF9B /* AnotherScene.cpp */,
 				460931E71D9531EF00F4BF9B /* AnotherScene.h */,
+				460931F01D98C2B800F4BF9B /* MyAction.cpp */,
+				460931F11D98C2B800F4BF9B /* MyAction.h */,
 			);
 			name = Classes;
 			path = "../tests/cpp-empty-test/Classes";
@@ -6796,6 +6802,7 @@
 			files = (
 				460931E81D9531EF00F4BF9B /* AnotherScene.cpp in Sources */,
 				1AC358C218CEC1BF00F37B72 /* HelloWorldScene.cpp in Sources */,
+				460931F21D98C2B800F4BF9B /* MyAction.cpp in Sources */,
 				1AC358C018CEC1BF00F37B72 /* AppDelegate.cpp in Sources */,
 				1AC358F918CEC1D400F37B72 /* main.cpp in Sources */,
 			);
@@ -6815,6 +6822,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AC358DA18CEC1CB00F37B72 /* AppController.mm in Sources */,
+				460931F31D98C2B800F4BF9B /* MyAction.cpp in Sources */,
 				1AC358EB18CEC1CB00F37B72 /* RootViewController.mm in Sources */,
 				1AC358C318CEC1BF00F37B72 /* HelloWorldScene.cpp in Sources */,
 				1AC358EA18CEC1CB00F37B72 /* main.m in Sources */,
