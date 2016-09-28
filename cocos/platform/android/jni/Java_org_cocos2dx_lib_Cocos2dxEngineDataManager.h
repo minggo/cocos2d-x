@@ -61,13 +61,13 @@ public:
 private:
     static void notifyContinuousFrameLost(int frameLostCycle, int continueFrameLostThreshold, int times);
     static void notifyLowFps(int lowFpsCycle, float lowFpsThreshold, int frames);
+    static void notifyGameStatusIfCpuOrGpuLevelChanged();
 
     static void calculateFrameLost();
     static void getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel);
 
     static void onBeforeSetNextScene(EventCustom* event);
-    static void onAfterSetNextScene(EventCustom* event);
-    static void onAfterVisitScene(EventCustom* event);
+    static void onAfterDrawScene(EventCustom* event);
     static void onEnterForeground(EventCustom* event);
 
     static int getTotalParticleCount();

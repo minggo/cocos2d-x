@@ -68,8 +68,8 @@ int _lowFpsCycle = 1000;
 float _lowFpsThreshold = 0.3f;
 int _lowFpsCounter = 0;
 
-int _oldCpuLevel = 0;
-int _oldGpuLevel = 0;
+int _oldCpuLevel = -1;
+int _oldGpuLevel = -1;
 
 #define CARRAY_SIZE(arr) ((int)(sizeof(arr) / sizeof(arr[0])))
 
@@ -329,25 +329,18 @@ void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
     }
     else
     {
+        // Reset the old status since we have changed CPU/GPU level manually.
+        // If the CPU level isn't 5 and GPU level isn't 0 in the next time of checking CPU/GPU level,
+        // Make sure that the changed CPU/GPU level will be notified.
+        _oldCpuLevel = -1;
+        _oldGpuLevel = -1;
+
         notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
     }
 }
 
-// static 
-void EngineDataManager::onAfterSetNextScene(EventCustom* event)
+void EngineDataManager::notifyGameStatusIfCpuOrGpuLevelChanged()
 {
-    int cpuLevel = 0;
-    int gpuLevel = 0;
-    getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
-
-    notifyGameStatus(GameStatus::IN_SCENE, cpuLevel, gpuLevel);
-}
-
-// static
-void EngineDataManager::onAfterVisitScene(EventCustom* event)
-{
-    calculateFrameLost();
-
     // calculate CPU & GPU levels
     int cpuLevel = 0;
     int gpuLevel = 0;
@@ -360,6 +353,14 @@ void EngineDataManager::onAfterVisitScene(EventCustom* event)
         _oldCpuLevel = cpuLevel;
         _oldGpuLevel = gpuLevel;
     }
+}
+
+// static
+void EngineDataManager::onAfterDrawScene(EventCustom* event)
+{
+    calculateFrameLost();
+
+    notifyGameStatusIfCpuOrGpuLevelChanged();
 }
 
 void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
@@ -384,7 +385,22 @@ void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
 // static
 void EngineDataManager::onEnterForeground(EventCustom* event)
 {
-    resetLastTime();
+    static bool isFirstTime = true;
+    LOGD("onEnterForeground, isFirstTime: %d", isFirstTime);
+
+    if (isFirstTime)
+    {
+        isFirstTime = false;
+    }
+    else
+    {
+        resetLastTime();
+        // Reset the old status
+        _oldCpuLevel = -1;
+        _oldGpuLevel = -1;
+        // Notify CPU/GPU level to system since old levels have been changed.
+        notifyGameStatusIfCpuOrGpuLevelChanged();  
+    }
 }
 
 // static
@@ -399,9 +415,8 @@ void EngineDataManager::init()
     resetLastTime();
 
     auto dispatcher = Director::getInstance()->getEventDispatcher();
-    dispatcher->addCustomEventListener(Director::EVENT_AFTER_VISIT, std::bind(onAfterVisitScene, std::placeholders::_1));
+    dispatcher->addCustomEventListener(Director::EVENT_AFTER_DRAW, std::bind(onAfterDrawScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(Director::EVENT_BEFORE_SET_NEXT_SCENE, std::bind(onBeforeSetNextScene, std::placeholders::_1));
-    dispatcher->addCustomEventListener(Director::EVENT_AFTER_SET_NEXT_SCENE, std::bind(onAfterSetNextScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
 
     notifyGameStatus(GameStatus::START, 5, -1);
