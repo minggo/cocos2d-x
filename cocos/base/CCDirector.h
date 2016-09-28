@@ -91,6 +91,10 @@ enum class MATRIX_STACK_TYPE
 class CC_DLL Director : public Ref
 {
 public:
+    /** Director will trigger an event before set next scene. */
+    static const char* EVENT_BEFORE_SET_NEXT_SCENE;
+    /** Director will trigger an event after set next scene. */
+    static const char* EVENT_AFTER_SET_NEXT_SCENE;
     /** Director will trigger an event when projection type is changed. */
     static const char *EVENT_PROJECTION_CHANGED;
     /** Director will trigger an event after Schedule::update() is invoked. */
@@ -485,6 +489,10 @@ public:
     void resetMatrixStack();
 
 protected:
+    friend class EngineDataManager;
+    /** Internal use only, it's used by EngineDataManager class for Android platform */
+    void setAnimationIntervalByEngineDataManager(float interval) { _animationIntervalByEngineDataManager = interval; }
+    
     void reset();
     
     void purgeDirector();
@@ -495,6 +503,7 @@ protected:
     
     void setNextScene();
     
+    void updateFrameRate();
     void showStats();
     void createStatsLabel();
     void calculateMPF();
@@ -527,7 +536,7 @@ protected:
      @since v3.0
      */
     EventDispatcher* _eventDispatcher;
-    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate;
+    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate, *_beforeSetNextScene, *_afterSetNextScene;
         
     /* delta time since last tick to main loop */
 	float _deltaTime;
@@ -597,6 +606,7 @@ protected:
     /* Console for the director */
     Console *_console;
 
+    float _animationIntervalByEngineDataManager;
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
 };
