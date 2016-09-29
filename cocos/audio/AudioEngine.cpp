@@ -59,6 +59,7 @@ AudioEngine::ProfileHelper* AudioEngine::_defaultProfileHelper = nullptr;
 std::unordered_map<int, AudioEngine::AudioInfo> AudioEngine::_audioIDInfoMap;
 AudioEngineImpl* AudioEngine::_audioEngineImpl = nullptr;
 
+bool AudioEngine::_isEnabled = true;
 void AudioEngine::end()
 {
     delete _audioEngineImpl;
@@ -88,6 +89,11 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
     int ret = AudioEngine::INVALID_AUDIO_ID;
 
     do {
+        if (!isEnabled())
+        {
+            break;
+        }
+        
         if ( !lazyInit() ){
             break;
         }
@@ -411,6 +417,29 @@ AudioProfile* AudioEngine::getProfile(const std::string &name)
     } else {
         return nullptr;
     }
+}
+
+int AudioEngine::getPlayingAudioCount()
+{
+    return static_cast<int>(_audioIDInfoMap.size());
+}
+
+void AudioEngine::setEnabled(bool isEnabled)
+{
+    if (_isEnabled != isEnabled)
+    {
+        _isEnabled = isEnabled;
+        
+        if (!_isEnabled)
+        {
+            stopAll();
+        }
+    }
+}
+
+bool AudioEngine::isEnabled()
+{
+    return _isEnabled;
 }
 
 #endif

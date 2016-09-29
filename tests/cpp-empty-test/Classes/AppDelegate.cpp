@@ -29,7 +29,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::create("Cpp Empty Test");
+        glview = GLViewImpl::createWithRect("Cpp Empty Test", Rect(0, 0, 1920, 1024));
+        glview->setFrameZoomFactor(0.8f);
         director->setOpenGLView(glview);
     }
 
