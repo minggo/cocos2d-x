@@ -84,6 +84,7 @@ void Application::setAnimationInterval(double interval)
   else
   {
     methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
+    methodInfo.env->DeleteLocalRef(methodInfo.classID);
   }
 }
 

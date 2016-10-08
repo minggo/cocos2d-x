@@ -213,6 +213,21 @@ public:
      */
     static AudioProfile* getProfile(const std::string &name);
 
+    /**
+     * Gets playing audio count.
+     */
+    static int getPlayingAudioCount();
+    
+    /**
+     * Whether to enable playing audios
+     * @note If it's disabled, current playing audios will be stopped and the later 'preload', 'play2d' methods will take no effects.
+     */
+    static void setEnabled(bool isEnabled);
+    /**
+     * Check whether AudioEngine is enabled.
+     */
+    static bool isEnabled();
+
 protected:
     
     static void remove(int audioID);
@@ -268,6 +283,8 @@ protected:
     
     static AudioEngineImpl* _audioEngineImpl;
     
+    static bool _isEnabled;
+
     friend class AudioEngineImpl;
 };
 

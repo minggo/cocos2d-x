@@ -113,6 +113,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         if(mWebViewHelper == null){
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
+
+        Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions
@@ -132,6 +134,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         Cocos2dxHelper.onResume();
         this.mGLSurfaceView.onResume();
+        Cocos2dxEngineDataManager.resume();
     }
 
     @Override
@@ -140,11 +143,13 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         
         Cocos2dxHelper.onPause();
         this.mGLSurfaceView.onPause();
+        Cocos2dxEngineDataManager.pause();
     }
     
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Cocos2dxEngineDataManager.destroy();
     }
 
     @Override

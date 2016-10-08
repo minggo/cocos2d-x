@@ -108,6 +108,16 @@ public:
      */
     ssize_t getNumberOfRunningActionsInTarget(const Node *target) const;
 
+    /** Returns the numbers of actions that are running in all targets.
+     * Composable actions are counted as 1 action. Example:
+     * - If you are running 1 Sequence of 7 actions, it will return 1.
+     * - If you are running 7 Sequences of 2 actions, it will return 7.
+     *
+     * @return  The numbers of actions that are running in a certain target.
+     * @js NA
+     */
+    ssize_t getNumberOfRunningActions() const;
+
     /** @deprecated use getNumberOfRunningActionsInTarget() instead */
     CC_DEPRECATED_ATTRIBUTE inline ssize_t numberOfRunningActionsInTarget(Node *target) const { return getNumberOfRunningActionsInTarget(target); }
 
