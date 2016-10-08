@@ -31,6 +31,9 @@ THE SOFTWARE.
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 #include "android/asset_manager.h"
 #include "android/asset_manager_jni.h"
+#include "base/CCDirector.h"
+#include "base/CCEventDispatcher.h"
+#include "base/CCEventType.h"
 
 #include <stdlib.h>
 
@@ -140,6 +143,8 @@ Data FileUtilsAndroid::getData(const std::string& filename, bool forString)
     {
         return Data::Null;
     }
+
+    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_BEFORE_READ_FILE);
     
     unsigned char* data = nullptr;
     ssize_t size = 0;
@@ -263,6 +268,8 @@ unsigned char* FileUtilsAndroid::getFileData(const std::string& filename, const 
     {
         return 0;
     }
+
+    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_BEFORE_READ_FILE);
     
     string fullPath = fullPathForFilename(filename);
     
