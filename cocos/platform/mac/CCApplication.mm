@@ -109,9 +109,14 @@ int Application::run()
     return 0;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval)
 {
     _animationInterval = interval*1000.0f;
+}
+
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    setAnimationInterval(interval);
 }
 
 Application::Platform Application::getTargetPlatform()

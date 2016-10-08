@@ -123,6 +123,12 @@ public:
     static Node * create();
 
     /**
+     * Gets count of nodes those are attached to scene graph.
+     */
+    static int getAttachedNodeCount();
+public:
+    
+    /**
      * Gets the description string. It makes debugging easier.
      * @return A string
      * @js NA
@@ -1623,6 +1629,8 @@ protected:
     std::function<void()> _onExitCallback;
     std::function<void()> _onEnterTransitionDidFinishCallback;
     std::function<void()> _onExitTransitionDidStartCallback;
+
+    static int __attachedNodeCount;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Node);

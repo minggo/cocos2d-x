@@ -52,7 +52,8 @@ public:
     @brief	Callback by Director for limit FPS.
     @param interval The time, which expressed in second in second, between current frame and next.
     */
-    virtual void setAnimationInterval(double interval);
+    virtual void setAnimationInterval(float interval) override;
+    virtual void setAnimationInterval(float interval, SetIntervalReason reason) override;
         
     /**
     @brief	Get status bar rectangle in GLView window.

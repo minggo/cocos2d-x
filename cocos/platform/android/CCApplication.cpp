@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "base/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
+#include "jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "jni/JniHelper.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 #include "CCApplication.h"
@@ -66,9 +67,14 @@ int Application::run()
     return -1;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval)
 {
-    // NYI
+    setAnimationInterval(interval, SetIntervalReason::BY_ENGINE);
+}
+
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    EngineDataManager::setAnimationInterval(interval, reason);
 }
 
 //////////////////////////////////////////////////////////////////////////

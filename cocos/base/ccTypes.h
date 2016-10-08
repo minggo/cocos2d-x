@@ -500,6 +500,15 @@ public:
 extern const std::string STD_STRING_EMPTY;
 extern const ssize_t CC_INVALID_INDEX;
 
+enum class SetIntervalReason : char
+{
+    BY_GAME = 0,
+    BY_ENGINE,
+    BY_SYSTEM,
+    BY_SCENE_CHANGE,
+    BY_DIRECTOR_PAUSE
+};
+
 NS_CC_END
 
 #endif //__BASE_CCTYPES_H__

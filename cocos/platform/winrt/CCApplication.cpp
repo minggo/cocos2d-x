@@ -79,11 +79,16 @@ int Application::run()
 	return 0;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval)
 {
     LARGE_INTEGER nFreq;
     QueryPerformanceFrequency(&nFreq);
     m_nAnimationInterval.QuadPart = (LONGLONG)(interval * nFreq.QuadPart);
+}
+
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    setAnimationInterval(interval);
 }
 
 //////////////////////////////////////////////////////////////////////////

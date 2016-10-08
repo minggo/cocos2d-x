@@ -103,6 +103,13 @@ public:
      */
     ssize_t getNumberOfRunningActionsInTarget(const Node *target) const;
 
+    /** Returns the numbers of actions that are running in all targets.
+     *
+     * @return  The numbers of actions that are running in a all target.
+     * @js NA
+     */
+    ssize_t getNumberOfRunningActions() const;
+
     /** @deprecated use getNumberOfRunningActionsInTarget() instead */
     CC_DEPRECATED_ATTRIBUTE inline ssize_t numberOfRunningActionsInTarget(Node *target) const { return getNumberOfRunningActionsInTarget(target); }
 

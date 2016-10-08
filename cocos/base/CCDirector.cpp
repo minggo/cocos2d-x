@@ -62,6 +62,10 @@ THE SOFTWARE.
 #include "math/CCMath.h"
 #include "CCApplication.h"
 #include "CCGLView.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
+#endif
+
 
 /**
  Position of the FPS
@@ -83,6 +87,8 @@ static DisplayLinkDirector *s_SharedDirector = nullptr;
 #define kDefaultFPS        60  // 60 frames per second
 extern const char* cocos2dVersion(void);
 
+const char *Director::EVENT_BEFORE_SET_NEXT_SCENE = "director_before_set_next_scene";
+const char *Director::EVENT_AFTER_SET_NEXT_SCENE = "director_after_set_next_scene";
 const char *Director::EVENT_PROJECTION_CHANGED = "director_projection_changed";
 const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
@@ -123,6 +129,7 @@ bool Director::init(void)
     _totalFrames = _frames = 0;
     _lastUpdate = new struct timeval;
 
+    _frames = 0;
     // paused ?
     _paused = false;
 
@@ -142,6 +149,11 @@ bool Director::init(void)
     _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
 
     _eventDispatcher = new EventDispatcher();
+    
+    _beforeSetNextScene = new (std::nothrow) EventCustom(EVENT_BEFORE_SET_NEXT_SCENE);
+    _beforeSetNextScene->setUserData(this);
+    _afterSetNextScene = new (std::nothrow) EventCustom(EVENT_AFTER_SET_NEXT_SCENE);
+    _afterSetNextScene->setUserData(this);
     _eventAfterDraw = new EventCustom(EVENT_AFTER_DRAW);
     _eventAfterDraw->setUserData(this);
     _eventAfterVisit = new EventCustom(EVENT_AFTER_VISIT);
@@ -161,6 +173,10 @@ bool Director::init(void)
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     _console = new Console;
 #endif
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::init();
+#endif
     return true;
 }
 
@@ -177,10 +193,12 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
     
-    delete _eventAfterUpdate;
-    delete _eventAfterDraw;
-    delete _eventAfterVisit;
-    delete _eventProjectionChanged;
+    CC_SAFE_RELEASE(_beforeSetNextScene);
+    CC_SAFE_RELEASE(_afterSetNextScene);
+    CC_SAFE_RELEASE(_eventAfterUpdate);
+    CC_SAFE_RELEASE(_eventAfterDraw);
+    CC_SAFE_RELEASE(_eventAfterVisit);
+    CC_SAFE_RELEASE(_eventProjectionChanged);
 
     delete _renderer;
 
@@ -297,6 +315,8 @@ void Director::drawScene()
         _notificationNode->visit(_renderer, Mat4::IDENTITY, false);
     }
 
+    updateFrameRate();
+    
     if (_displayStats)
     {
         showStats();
@@ -991,12 +1011,17 @@ void Director::purgeDirector()
         _openGLView = nullptr;
     }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::destroy();
+#endif
     // delete Director
     release();
 }
 
 void Director::setNextScene()
 {
+    _eventDispatcher->dispatchEvent(_beforeSetNextScene);
+    
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
     bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
 
@@ -1030,6 +1055,8 @@ void Director::setNextScene()
         _runningScene->onEnter();
         _runningScene->onEnterTransitionDidFinish();
     }
+    
+    _eventDispatcher->dispatchEvent(_afterSetNextScene);
 }
 
 void Director::pause()
@@ -1042,7 +1069,7 @@ void Director::pause()
     _oldAnimationInterval = _animationInterval;
 
     // when paused, don't consume CPU
-    setAnimationInterval(1 / 4.0);
+    setAnimationInterval(1 / 4.0, SetIntervalReason::BY_DIRECTOR_PAUSE);
     _paused = true;
 }
 
@@ -1053,12 +1080,25 @@ void Director::resume()
         return;
     }
 
-    setAnimationInterval(_oldAnimationInterval);
+    setAnimationInterval(_oldAnimationInterval, SetIntervalReason::BY_ENGINE);
 
     _paused = false;
     _deltaTime = 0;
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
+}
+
+void Director::updateFrameRate()
+{
+//    static const float FPS_FILTER = 0.1f;
+//    static float prevDeltaTime = 0.016f; // 60FPS
+//    
+//    float dt = _deltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
+//    prevDeltaTime = dt;
+//    _frameRate = 1.0f/dt;
+
+    // Frame rate should be the real value of current frame.
+    _frameRate = 1.0f / _deltaTime;
 }
 
 // display the FPS using a LabelAtlas
@@ -1073,16 +1113,14 @@ void Director::showStats()
     
     if (_displayStats && _FPSLabel && _drawnBatchesLabel && _drawnVerticesLabel)
     {
-        char buffer[30];
+        char buffer[30] = {0};
 
         if (_accumDt > CC_DIRECTOR_STATS_INTERVAL)
         {
-            _frameRate = _frames / _accumDt;
-            _frames = 0;
-            _accumDt = 0;
-
-            sprintf(buffer, "%.1f / %.3f", _frameRate, _secondsPerFrame);
+            sprintf(buffer, "%.1f / %.3f", _frames / _accumDt, _secondsPerFrame);
             _FPSLabel->setString(buffer);
+            _accumDt = 0;
+            _frames = 0;
         }
 
         auto currentCalls = (unsigned long)_renderer->getDrawnBatches();
@@ -1244,6 +1282,11 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
 // so we now only support DisplayLinkDirector
 void DisplayLinkDirector::startAnimation()
 {
+    startAnimation(SetIntervalReason::BY_ENGINE);
+}
+
+void DisplayLinkDirector::startAnimation(SetIntervalReason reason)
+{
     if (gettimeofday(_lastUpdate, nullptr) != 0)
     {
         CCLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
@@ -1251,8 +1294,8 @@ void DisplayLinkDirector::startAnimation()
 
     _invalid = false;
 
-    Application::getInstance()->setAnimationInterval(_animationInterval);
-    
+    Application::getInstance()->setAnimationInterval(_animationInterval, reason);
+
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
 }
@@ -1280,12 +1323,17 @@ void DisplayLinkDirector::stopAnimation()
 
 void DisplayLinkDirector::setAnimationInterval(double interval)
 {
+    setAnimationInterval(interval, SetIntervalReason::BY_GAME);
+}
+
+void DisplayLinkDirector::setAnimationInterval(float interval, SetIntervalReason reason)
+{
     _animationInterval = interval;
     if (! _invalid)
     {
         stopAnimation();
-        startAnimation();
-    }    
+        startAnimation(reason);
+    }
 }
 
 NS_CC_END

@@ -107,10 +107,15 @@ int Application::run()
     return -1;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval)
 {
     //TODO do something else
     _animationInterval = interval*1000.0f;
+}
+
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    setAnimationInterval(interval);
 }
 
 void Application::setResourceRootPath(const std::string& rootResDir)

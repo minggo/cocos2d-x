@@ -81,6 +81,9 @@ NS_CC_BEGIN
 //  cocos2d uses a another approach, but the results are almost identical. 
 //
 
+Vector<ParticleSystem*> ParticleSystem::__allInstances;
+float ParticleSystem::__totalParticleCountFactor = 1.0f;
+
 ParticleSystem::ParticleSystem()
 : _isBlendAdditive(false)
 , _isAutoRemoveOnFinish(false)
@@ -159,6 +162,17 @@ ParticleSystem* ParticleSystem::createWithTotalParticles(int numberOfParticles)
     }
     CC_SAFE_DELETE(ret);
     return ret;
+}
+
+// static
+Vector<ParticleSystem*>& ParticleSystem::getAllParticleSystems()
+{
+    return __allInstances;
+}
+
+void ParticleSystem::setTotalParticleCountFactor(float factor)
+{
+    __totalParticleCountFactor = factor;
 }
 
 bool ParticleSystem::init()
@@ -628,12 +642,21 @@ void ParticleSystem::onEnter()
     
     // update after action in run!
     this->scheduleUpdateWithPriority(1);
+    
+    __allInstances.pushBack(this);
 }
 
 void ParticleSystem::onExit()
 {
     this->unscheduleUpdate();
     Node::onExit();
+    
+    auto iter = std::find(std::begin(__allInstances), std::end(__allInstances), this);
+    if (iter != std::end(__allInstances))
+    {
+        __allInstances.erase(iter);
+    }
+
 }
 
 void ParticleSystem::stopSystem()
@@ -666,13 +689,15 @@ void ParticleSystem::update(float dt)
     if (_isActive && _emissionRate)
     {
         float rate = 1.0f / _emissionRate;
+        int totalParticles = static_cast<int>(_totalParticles * __totalParticleCountFactor);
+        
         //issue #1201, prevent bursts of particles, due to too high emitCounter
-        if (_particleCount < _totalParticles)
+        if (_particleCount < totalParticles)
         {
             _emitCounter += dt;
         }
         
-        while (_particleCount < _totalParticles && _emitCounter > rate) 
+        while (_particleCount < totalParticles && _emitCounter > rate) 
         {
             this->addParticle();
             _emitCounter -= rate;

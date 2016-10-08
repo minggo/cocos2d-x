@@ -57,9 +57,14 @@ int Application::run()
     return 0;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval)
 {
     [[CCDirectorCaller sharedDirectorCaller] setAnimationInterval: interval ];
+}
+
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    setAnimationInterval(interval);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
