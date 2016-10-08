@@ -108,6 +108,10 @@ public:
     Mat4 getMatrix(MATRIX_STACK_TYPE type);
     void resetMatrixStack();
 public:
+    /** Director will trigger an event before set next scene. */
+    static const char* EVENT_BEFORE_SET_NEXT_SCENE;
+    /** Director will trigger an event after set next scene. */
+    static const char* EVENT_AFTER_SET_NEXT_SCENE;
     static const char *EVENT_PROJECTION_CHANGED;
     static const char* EVENT_AFTER_UPDATE;
     static const char* EVENT_AFTER_VISIT;
@@ -405,9 +409,15 @@ public:
     float getFrameRate() const { return _frameRate; }
 
 protected:
+    friend class EngineDataManager;
+    /** Internal use only, it's used by EngineDataManager class for Android platform */
+    void setAnimationIntervalByEngineDataManager(float interval) { _animationIntervalByEngineDataManager = interval; }
+    
     void purgeDirector();
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
     
+    void updateFrameRate();
+
     void setNextScene();
     
     void showStats();
@@ -436,7 +446,7 @@ protected:
      @since v3.0
      */
     EventDispatcher* _eventDispatcher;
-    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate;
+    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate, *_beforeSetNextScene, *_afterSetNextScene;
         
     /* delta time since last tick to main loop */
 	float _deltaTime;
@@ -507,6 +517,8 @@ protected:
     /* Console for the director */
     Console *_console;
 #endif
+
+    float _animationIntervalByEngineDataManager;
 
     // GLViewProtocol will recreate stats labels to fit visible rect
     friend class GLViewProtocol;
