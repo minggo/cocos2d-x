@@ -62,6 +62,10 @@ THE SOFTWARE.
 #include "math/CCMath.h"
 #include "CCApplication.h"
 #include "CCGLView.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
+#endif
+
 
 /**
  Position of the FPS
@@ -83,6 +87,8 @@ static DisplayLinkDirector *s_SharedDirector = nullptr;
 #define kDefaultFPS        60  // 60 frames per second
 extern const char* cocos2dVersion(void);
 
+const char *Director::EVENT_BEFORE_SET_NEXT_SCENE = "director_before_set_next_scene";
+const char *Director::EVENT_AFTER_SET_NEXT_SCENE = "director_after_set_next_scene";
 const char *Director::EVENT_PROJECTION_CHANGED = "director_projection_changed";
 const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
@@ -142,6 +148,11 @@ bool Director::init(void)
     _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
 
     _eventDispatcher = new EventDispatcher();
+    
+    _beforeSetNextScene = new (std::nothrow) EventCustom(EVENT_BEFORE_SET_NEXT_SCENE);
+    _beforeSetNextScene->setUserData(this);
+    _afterSetNextScene = new (std::nothrow) EventCustom(EVENT_AFTER_SET_NEXT_SCENE);
+    _afterSetNextScene->setUserData(this);
     _eventAfterDraw = new EventCustom(EVENT_AFTER_DRAW);
     _eventAfterDraw->setUserData(this);
     _eventAfterVisit = new EventCustom(EVENT_AFTER_VISIT);
@@ -161,6 +172,10 @@ bool Director::init(void)
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     _console = new Console;
 #endif
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::init();
+#endif
     return true;
 }
 
@@ -177,10 +192,12 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
     
-    delete _eventAfterUpdate;
-    delete _eventAfterDraw;
-    delete _eventAfterVisit;
-    delete _eventProjectionChanged;
+    CC_SAFE_RELEASE(_beforeSetNextScene);
+    CC_SAFE_RELEASE(_afterSetNextScene);
+    CC_SAFE_RELEASE(_eventAfterUpdate);
+    CC_SAFE_RELEASE(_eventAfterDraw);
+    CC_SAFE_RELEASE(_eventAfterVisit);
+    CC_SAFE_RELEASE(_eventProjectionChanged);
 
     delete _renderer;
 
@@ -297,6 +314,8 @@ void Director::drawScene()
         _notificationNode->visit(_renderer, Mat4::IDENTITY, false);
     }
 
+    updateFrameRate();
+    
     if (_displayStats)
     {
         showStats();
@@ -991,12 +1010,17 @@ void Director::purgeDirector()
         _openGLView = nullptr;
     }
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::destroy();
+#endif
     // delete Director
     release();
 }
 
 void Director::setNextScene()
 {
+    _eventDispatcher->dispatchEvent(_beforeSetNextScene);
+    
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
     bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
 
@@ -1030,6 +1054,8 @@ void Director::setNextScene()
         _runningScene->onEnter();
         _runningScene->onEnterTransitionDidFinish();
     }
+    
+    _eventDispatcher->dispatchEvent(_afterSetNextScene);
 }
 
 void Director::pause()
@@ -1061,6 +1087,16 @@ void Director::resume()
     setNextDeltaTimeZero(true);
 }
 
+void Director::updateFrameRate()
+{
+    static float prevDeltaTime  = 0.016f; // 60FPS
+    static const float FPS_FILTER = 0.10f;
+    
+    float dt = _deltaTime * FPS_FILTER + (1-FPS_FILTER) * prevDeltaTime;
+    prevDeltaTime = dt;
+    _frameRate = 1/dt;
+}
+
 // display the FPS using a LabelAtlas
 // updates the FPS every frame
 void Director::showStats()
@@ -1073,11 +1109,10 @@ void Director::showStats()
     
     if (_displayStats && _FPSLabel && _drawnBatchesLabel && _drawnVerticesLabel)
     {
-        char buffer[30];
+        char buffer[30] = {0};
 
         if (_accumDt > CC_DIRECTOR_STATS_INTERVAL)
         {
-            _frameRate = _frames / _accumDt;
             _frames = 0;
             _accumDt = 0;
 
@@ -1252,7 +1287,7 @@ void DisplayLinkDirector::startAnimation()
     _invalid = false;
 
     Application::getInstance()->setAnimationInterval(_animationInterval);
-    
+
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
 }
