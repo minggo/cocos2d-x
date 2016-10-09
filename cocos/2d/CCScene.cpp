@@ -30,6 +30,8 @@ THE SOFTWARE.
 #include "2d/CCCamera.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventListenerCustom.h"
+#include "base/CCEventType.h"
+
 #include "renderer/CCRenderer.h"
 #include "deprecated/CCString.h"
 
@@ -44,6 +46,8 @@ Scene::Scene()
 : _physicsWorld(nullptr)
 #endif
 {
+    _eventDispatcher->dispatchCustomEvent(EVENT_CREATE_SCENE);
+    
     _ignoreAnchorPointForPosition = true;
     setAnchorPoint(Vec2(0.5f, 0.5f));
     
