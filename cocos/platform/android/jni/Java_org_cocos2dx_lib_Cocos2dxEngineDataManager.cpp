@@ -24,6 +24,7 @@ THE SOFTWARE.
 
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "platform/android/jni/JniHelper.h"
+#include "platform/CCFileUtils.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventType.h"
@@ -31,6 +32,7 @@ THE SOFTWARE.
 #include "2d/CCParticleSystem.h"
 #include "2d/CCActionManager.h"
 #include "audio/include/AudioEngine.h"
+#include "json/document.h"
 
 #include <android/log.h>
 
@@ -43,6 +45,9 @@ THE SOFTWARE.
 #define JNI_FUNC_PREFIX(func) Java_org_cocos2dx_lib_Cocos2dxEngineDataManager_##func
 
 using namespace cocos2d;
+
+typedef rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonDocument;
+typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonValue;
 
 namespace {
 
@@ -71,7 +76,7 @@ int _lowFpsCounter = 0;
 int _oldCpuLevel = -1;
 int _oldGpuLevel = -1;
 
-#define CARRAY_SIZE(arr) ((int)(sizeof(arr) / sizeof(arr[0])))
+#define CARRAY_SIZE(arr) ((int)(arr.size()))
 
 // CPU Level
 
@@ -83,13 +88,12 @@ struct CpuLevelInfo
     unsigned int audioCount;
 };
 
-const CpuLevelInfo _cpuLevelArr[] = {
+std::vector<CpuLevelInfo> _cpuLevelArr = {
     {500 , 500,  500,   6},
     {1250, 1500, 2000,  20},
     {1750, 2000, 3000,  32},
     {2750, 2500, 7000,  50},
-    {4000, 3500, 10000, 80},
-    {9000, 4000, 12000, 100}
+    {4000, 3500, 10000, 80}
 };
 
 // GPU Level
@@ -100,7 +104,7 @@ struct GpuLevelInfo
     unsigned int drawCount;
 };
 
-const GpuLevelInfo _gpuLevelArr[] = {
+std::vector<GpuLevelInfo> _gpuLevelArr = {
     {2000, 400},
     {4000, 800},
     {6000, 1000},
@@ -109,12 +113,11 @@ const GpuLevelInfo _gpuLevelArr[] = {
     {15000, 1300},
     {22000, 1350},
     {30000, 1400},
-    {40000, 1450},
-    {60000, 1500}
+    {40000, 1450}
 };
 
 // Particle Level
-const float _particleLevelArr[] = {
+const std::vector<float> _particleLevelArr = {
     0.0f,
     0.2f,
     0.4f,
@@ -234,6 +237,81 @@ void resetLastTime()
     _lastFrameLost100msUpdate = std::chrono::steady_clock::now();
     _lastContinuousFrameLostUpdate = _lastFrameLost100msUpdate;
     _lastLowFpsUpdate = _lastFrameLost100msUpdate;
+}
+
+void parseDebugConfig()
+{
+#if EDM_DEBUG
+    auto fileUtils = FileUtils::getInstance();
+
+    const char* configPath = "/sdcard/cc-res-level.json";
+
+    if (!fileUtils->isFileExist(configPath))
+    {
+        return;
+    }
+
+    LOGD("Using debug level config: %s", configPath);
+    std::string resLevelConfig = fileUtils->getStringFromFile(configPath);
+
+    RapidJsonDocument document;
+    document.Parse<0>(resLevelConfig.c_str());
+    
+    {
+        assert(document.HasMember("cpu_level"));
+        const RapidJsonValue& cpu = document["cpu_level"];
+        assert(cpu.IsArray());
+        assert(_cpuLevelArr.size() == cpu.Size());
+
+        _cpuLevelArr.clear();
+        CpuLevelInfo cpuLevelInfo;
+        for (auto i = 0; i < cpu.Size(); ++i)
+        {
+            assert(cpu[i].IsObject());
+
+            cpuLevelInfo.nodeCount = cpu[i]["node"].GetUint();
+            cpuLevelInfo.particleCount = cpu[i]["particle"].GetUint();
+            cpuLevelInfo.actionCount = cpu[i]["action"].GetUint();
+            cpuLevelInfo.audioCount = cpu[i]["audio"].GetUint();
+            
+            _cpuLevelArr.push_back(cpuLevelInfo);
+        }
+    }
+    
+    {
+        assert(document.HasMember("gpu_level"));
+
+        const RapidJsonValue& gpu = document["gpu_level"];
+        assert(gpu.IsArray());
+        assert(_gpuLevelArr.size() == gpu.Size());
+        
+        _gpuLevelArr.clear();
+        GpuLevelInfo gpuLevelInfo;
+        for (auto i = 0; i < gpu.Size(); ++i)
+        {
+            assert(gpu[i].IsObject());
+            
+            gpuLevelInfo.vertexCount = gpu[i]["vertex"].GetUint();
+            gpuLevelInfo.drawCount = gpu[i]["draw"].GetUint();
+            
+            _gpuLevelArr.push_back(gpuLevelInfo);
+        }
+    }
+    
+    LOGD("-----------------------------------------");
+    for (auto&& level : _cpuLevelArr)
+    {
+        LOGD("cpu level: %u, %u, %u, %u", level.nodeCount, level.particleCount, level.actionCount, level.audioCount);
+    }
+    LOGD("-----------------------------------------");
+    
+    LOGD("=========================================");
+    for (auto&& level : _gpuLevelArr)
+    {
+        LOGD("gpu level: %u, %u", level.vertexCount, level.drawCount);
+    }
+    LOGD("=========================================");
+#endif // EDM_DEBUG
 }
 
 } // namespace {
@@ -420,6 +498,9 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(EVENT_CREATE_SCENE, std::bind(onCreateScene, std::placeholders::_1));
 
     notifyGameStatus(GameStatus::START, 5, -1);
+
+    parseDebugConfig();
+
     _isInitialized = true;
 }
 
