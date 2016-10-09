@@ -8,15 +8,19 @@ LOCAL_MODULE_FILENAME := libcpp_empty_test
 
 LOCAL_SRC_FILES := main.cpp \
                    ../../Classes/AppDelegate.cpp \
-                   ../../Classes/HelloWorldScene.cpp
+                   ../../Classes/HelloWorldScene.cpp \
+                   ../../Classes/AnotherScene.cpp \
+                   ../../Classes/MyAction.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
                     $(LOCAL_PATH)/../../../../extensions \
                     $(LOCAL_PATH)/../../../.. \
                     $(LOCAL_PATH)/../../../../cocos/editor-support
 
-LOCAL_STATIC_LIBRARIES := cocos2dx_static
+LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static cocosdenshion_static
 
 include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module,.)
+$(call import-module,extensions)
+$(call import-module,ui)

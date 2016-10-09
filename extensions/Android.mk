@@ -30,7 +30,7 @@ physics-nodes/CCPhysicsDebugNode.cpp \
 physics-nodes/CCPhysicsSprite.cpp
 
 LOCAL_STATIC_LIBRARIES := cocos2dx_internal_static
-LOCAL_STATIC_LIBRARIES += cocos_curl_static
+LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
 LOCAL_STATIC_LIBRARIES += box2d_static
 
 LOCAL_CXXFLAGS += -fexceptions
@@ -43,3 +43,4 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/. \
                            $(LOCAL_PATH)/GUI/CCScrollView 
                     
 include $(BUILD_STATIC_LIBRARY)
+$(call import-module,curl/prebuilt/android)

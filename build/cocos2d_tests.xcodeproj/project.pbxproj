@@ -95,10 +95,30 @@
 		15EFA66F198B356E000C57D3 /* libluacocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EFA665198B33EE000C57D3 /* libluacocos2d iOS.a */; };
 		15EFA68B198B3AD8000C57D3 /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46A15FBE1807A4F9005B8026 /* libcocos2d iOS.a */; };
 		15EFA68D198B3AD8000C57D3 /* libluacocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EFA665198B33EE000C57D3 /* libluacocos2d iOS.a */; };
+		1A00A3831DAB78110017A7DF /* AnotherScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A00A37E1DAB78080017A7DF /* AnotherScene.cpp */; };
+		1A00A3841DAB78130017A7DF /* MyAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A00A3811DAB78080017A7DF /* MyAction.cpp */; };
+		1A00A3961DAB78380017A7DF /* arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3851DAB78380017A7DF /* arial.ttf */; };
+		1A00A3971DAB78380017A7DF /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3861DAB78380017A7DF /* button.png */; };
+		1A00A3981DAB78380017A7DF /* buttonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3871DAB78380017A7DF /* buttonHighlighted.png */; };
+		1A00A3991DAB78380017A7DF /* configure.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3881DAB78380017A7DF /* configure.json */; };
+		1A00A39A1DAB78380017A7DF /* effect0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3891DAB78380017A7DF /* effect0.mp3 */; };
+		1A00A39B1DAB78380017A7DF /* effect1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38A1DAB78380017A7DF /* effect1.mp3 */; };
+		1A00A39C1DAB78380017A7DF /* effect2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38B1DAB78380017A7DF /* effect2.mp3 */; };
+		1A00A39D1DAB78380017A7DF /* effect3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38C1DAB78380017A7DF /* effect3.mp3 */; };
+		1A00A39E1DAB78380017A7DF /* effect4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38D1DAB78380017A7DF /* effect4.mp3 */; };
+		1A00A39F1DAB78380017A7DF /* effect5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38E1DAB78380017A7DF /* effect5.mp3 */; };
+		1A00A3A01DAB78380017A7DF /* effect6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A38F1DAB78380017A7DF /* effect6.mp3 */; };
+		1A00A3A11DAB78380017A7DF /* effect7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3901DAB78380017A7DF /* effect7.mp3 */; };
+		1A00A3A21DAB78380017A7DF /* effect8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3911DAB78380017A7DF /* effect8.mp3 */; };
+		1A00A3A31DAB78380017A7DF /* effect9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3921DAB78380017A7DF /* effect9.mp3 */; };
+		1A00A3A41DAB78380017A7DF /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3931DAB78380017A7DF /* fire.png */; };
+		1A00A3A51DAB78380017A7DF /* sprite0.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3941DAB78380017A7DF /* sprite0.png */; };
+		1A00A3A61DAB78380017A7DF /* sprite1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A00A3951DAB78380017A7DF /* sprite1.png */; };
+		1A00A3A81DAB78AA0017A7DF /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00A3A71DAB78AA0017A7DF /* libz.tbd */; };
+		1A00A3AA1DAB78B30017A7DF /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00A3A91DAB78B30017A7DF /* libsqlite3.tbd */; };
 		1A0EE2A218CDF6DA004CD58F /* libcocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46A15FB01807A4F9005B8026 /* libcocos2d Mac.a */; };
 		1A0EE2A518CDF6DA004CD58F /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDCC747E17C455FD007B692C /* IOKit.framework */; };
 		1A0EE2A618CDF6DA004CD58F /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9F808C177E98A600D9A1CB /* libcurl.dylib */; };
-		1A0EE2A718CDF6DA004CD58F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C6482E165F399D007D4F18 /* libz.dylib */; };
 		1A0EE2A818CDF6DA004CD58F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C64832165F3AFD007D4F18 /* Foundation.framework */; };
 		1A0EE2A918CDF6DA004CD58F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C6482C165F3988007D4F18 /* AudioToolbox.framework */; };
 		1A0EE2AA18CDF6DA004CD58F /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C6482A165F3979007D4F18 /* ApplicationServices.framework */; };
@@ -1070,6 +1090,29 @@
 		15CBA9EB196F7BD8005877BB /* lua_cocos2dx_controller_auto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lua_cocos2dx_controller_auto.cpp; path = "../../../../cocos/scripting/lua-bindings/auto/lua_cocos2dx_controller_auto.cpp"; sourceTree = "<group>"; };
 		15CBA9EC196F7BD8005877BB /* lua_cocos2dx_controller_auto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = lua_cocos2dx_controller_auto.hpp; path = "../../../../cocos/scripting/lua-bindings/auto/lua_cocos2dx_controller_auto.hpp"; sourceTree = "<group>"; };
 		15EE465A19A7200300AF29F1 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../external/curl/prebuilt/ios/libcurl.a; sourceTree = "<group>"; };
+		1A00A37E1DAB78080017A7DF /* AnotherScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnotherScene.cpp; sourceTree = "<group>"; };
+		1A00A37F1DAB78080017A7DF /* AnotherScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnotherScene.h; sourceTree = "<group>"; };
+		1A00A3811DAB78080017A7DF /* MyAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyAction.cpp; sourceTree = "<group>"; };
+		1A00A3821DAB78080017A7DF /* MyAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAction.h; sourceTree = "<group>"; };
+		1A00A3851DAB78380017A7DF /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = arial.ttf; path = "../tests/cpp-empty-test/Resources/arial.ttf"; sourceTree = "<group>"; };
+		1A00A3861DAB78380017A7DF /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = "../tests/cpp-empty-test/Resources/button.png"; sourceTree = "<group>"; };
+		1A00A3871DAB78380017A7DF /* buttonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttonHighlighted.png; path = "../tests/cpp-empty-test/Resources/buttonHighlighted.png"; sourceTree = "<group>"; };
+		1A00A3881DAB78380017A7DF /* configure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = configure.json; path = "../tests/cpp-empty-test/Resources/configure.json"; sourceTree = "<group>"; };
+		1A00A3891DAB78380017A7DF /* effect0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect0.mp3; path = "../tests/cpp-empty-test/Resources/effect0.mp3"; sourceTree = "<group>"; };
+		1A00A38A1DAB78380017A7DF /* effect1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect1.mp3; path = "../tests/cpp-empty-test/Resources/effect1.mp3"; sourceTree = "<group>"; };
+		1A00A38B1DAB78380017A7DF /* effect2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect2.mp3; path = "../tests/cpp-empty-test/Resources/effect2.mp3"; sourceTree = "<group>"; };
+		1A00A38C1DAB78380017A7DF /* effect3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect3.mp3; path = "../tests/cpp-empty-test/Resources/effect3.mp3"; sourceTree = "<group>"; };
+		1A00A38D1DAB78380017A7DF /* effect4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect4.mp3; path = "../tests/cpp-empty-test/Resources/effect4.mp3"; sourceTree = "<group>"; };
+		1A00A38E1DAB78380017A7DF /* effect5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect5.mp3; path = "../tests/cpp-empty-test/Resources/effect5.mp3"; sourceTree = "<group>"; };
+		1A00A38F1DAB78380017A7DF /* effect6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect6.mp3; path = "../tests/cpp-empty-test/Resources/effect6.mp3"; sourceTree = "<group>"; };
+		1A00A3901DAB78380017A7DF /* effect7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect7.mp3; path = "../tests/cpp-empty-test/Resources/effect7.mp3"; sourceTree = "<group>"; };
+		1A00A3911DAB78380017A7DF /* effect8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect8.mp3; path = "../tests/cpp-empty-test/Resources/effect8.mp3"; sourceTree = "<group>"; };
+		1A00A3921DAB78380017A7DF /* effect9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect9.mp3; path = "../tests/cpp-empty-test/Resources/effect9.mp3"; sourceTree = "<group>"; };
+		1A00A3931DAB78380017A7DF /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = "../tests/cpp-empty-test/Resources/fire.png"; sourceTree = "<group>"; };
+		1A00A3941DAB78380017A7DF /* sprite0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sprite0.png; path = "../tests/cpp-empty-test/Resources/sprite0.png"; sourceTree = "<group>"; };
+		1A00A3951DAB78380017A7DF /* sprite1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sprite1.png; path = "../tests/cpp-empty-test/Resources/sprite1.png"; sourceTree = "<group>"; };
+		1A00A3A71DAB78AA0017A7DF /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		1A00A3A91DAB78B30017A7DF /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		1A0EE2B218CDF6DA004CD58F /* cpp-empty-test Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cpp-empty-test Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0EE31418CDF733004CD58F /* lua-empty-test Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lua-empty-test Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0EE41318CDF775004CD58F /* cpp-empty-test iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cpp-empty-test iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1774,10 +1817,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A00A3AA1DAB78B30017A7DF /* libsqlite3.tbd in Frameworks */,
+				1A00A3A81DAB78AA0017A7DF /* libz.tbd in Frameworks */,
 				1A0EE2A218CDF6DA004CD58F /* libcocos2d Mac.a in Frameworks */,
 				1A0EE2A518CDF6DA004CD58F /* IOKit.framework in Frameworks */,
 				1A0EE2A618CDF6DA004CD58F /* libcurl.dylib in Frameworks */,
-				1A0EE2A718CDF6DA004CD58F /* libz.dylib in Frameworks */,
 				1A0EE2A818CDF6DA004CD58F /* Foundation.framework in Frameworks */,
 				1A0EE2A918CDF6DA004CD58F /* AudioToolbox.framework in Frameworks */,
 				1A0EE2AA18CDF6DA004CD58F /* ApplicationServices.framework in Frameworks */,
@@ -2072,6 +2116,10 @@
 		1AC358BA18CEC1BF00F37B72 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1A00A37E1DAB78080017A7DF /* AnotherScene.cpp */,
+				1A00A37F1DAB78080017A7DF /* AnotherScene.h */,
+				1A00A3811DAB78080017A7DF /* MyAction.cpp */,
+				1A00A3821DAB78080017A7DF /* MyAction.h */,
 				1AC358BB18CEC1BF00F37B72 /* AppDelegate.cpp */,
 				1AC358BC18CEC1BF00F37B72 /* AppDelegate.h */,
 				1AC358BD18CEC1BF00F37B72 /* AppMacros.h */,
@@ -2128,6 +2176,23 @@
 		1AC358FD18CEC1EF00F37B72 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1A00A3851DAB78380017A7DF /* arial.ttf */,
+				1A00A3861DAB78380017A7DF /* button.png */,
+				1A00A3871DAB78380017A7DF /* buttonHighlighted.png */,
+				1A00A3881DAB78380017A7DF /* configure.json */,
+				1A00A3891DAB78380017A7DF /* effect0.mp3 */,
+				1A00A38A1DAB78380017A7DF /* effect1.mp3 */,
+				1A00A38B1DAB78380017A7DF /* effect2.mp3 */,
+				1A00A38C1DAB78380017A7DF /* effect3.mp3 */,
+				1A00A38D1DAB78380017A7DF /* effect4.mp3 */,
+				1A00A38E1DAB78380017A7DF /* effect5.mp3 */,
+				1A00A38F1DAB78380017A7DF /* effect6.mp3 */,
+				1A00A3901DAB78380017A7DF /* effect7.mp3 */,
+				1A00A3911DAB78380017A7DF /* effect8.mp3 */,
+				1A00A3921DAB78380017A7DF /* effect9.mp3 */,
+				1A00A3931DAB78380017A7DF /* fire.png */,
+				1A00A3941DAB78380017A7DF /* sprite0.png */,
+				1A00A3951DAB78380017A7DF /* sprite1.png */,
 				1AC358FE18CEC1FB00F37B72 /* bang.png */,
 				1AC358FF18CEC1FB00F37B72 /* fonts */,
 				1AC3590018CEC1FB00F37B72 /* ipad */,
@@ -3671,6 +3736,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A00A3A91DAB78B30017A7DF /* libsqlite3.tbd */,
+				1A00A3A71DAB78AA0017A7DF /* libz.tbd */,
 				15EE465A19A7200300AF29F1 /* libcurl.a */,
 				15CBA9DC196EEAA6005877BB /* libz.dylib */,
 				15CBA9DA196EEA90005877BB /* CoreMotion.framework */,
@@ -4229,11 +4296,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AC3590918CEC1FB00F37B72 /* ipadhd in Resources */,
+				1A00A3971DAB78380017A7DF /* button.png in Resources */,
+				1A00A3A21DAB78380017A7DF /* effect8.mp3 in Resources */,
+				1A00A3A41DAB78380017A7DF /* fire.png in Resources */,
+				1A00A39E1DAB78380017A7DF /* effect4.mp3 in Resources */,
+				1A00A39C1DAB78380017A7DF /* effect2.mp3 in Resources */,
 				1AC358F518CEC1D400F37B72 /* InfoPlist.strings in Resources */,
 				1AC3590318CEC1FB00F37B72 /* bang.png in Resources */,
 				1AC3590718CEC1FB00F37B72 /* ipad in Resources */,
+				1A00A3961DAB78380017A7DF /* arial.ttf in Resources */,
 				1AC3590B18CEC1FB00F37B72 /* iphone in Resources */,
 				1AC358F818CEC1D400F37B72 /* Icon.icns in Resources */,
+				1A00A39D1DAB78380017A7DF /* effect3.mp3 in Resources */,
+				1A00A3A51DAB78380017A7DF /* sprite0.png in Resources */,
+				1A00A39F1DAB78380017A7DF /* effect5.mp3 in Resources */,
+				1A00A3991DAB78380017A7DF /* configure.json in Resources */,
+				1A00A39B1DAB78380017A7DF /* effect1.mp3 in Resources */,
+				1A00A3A61DAB78380017A7DF /* sprite1.png in Resources */,
+				1A00A3A31DAB78380017A7DF /* effect9.mp3 in Resources */,
+				1A00A3981DAB78380017A7DF /* buttonHighlighted.png in Resources */,
+				1A00A39A1DAB78380017A7DF /* effect0.mp3 in Resources */,
+				1A00A3A01DAB78380017A7DF /* effect6.mp3 in Resources */,
+				1A00A3A11DAB78380017A7DF /* effect7.mp3 in Resources */,
 				1AC3590518CEC1FB00F37B72 /* fonts in Resources */,
 				1AC358F618CEC1D400F37B72 /* MainMenu.xib in Resources */,
 			);
@@ -4643,7 +4727,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A00A3831DAB78110017A7DF /* AnotherScene.cpp in Sources */,
 				1AC358C218CEC1BF00F37B72 /* HelloWorldScene.cpp in Sources */,
+				1A00A3841DAB78130017A7DF /* MyAction.cpp in Sources */,
 				1AC358C018CEC1BF00F37B72 /* AppDelegate.cpp in Sources */,
 				1AC358F918CEC1D400F37B72 /* main.cpp in Sources */,
 			);
@@ -5358,6 +5444,7 @@
 					"$(inherited)",
 					CC_TARGET_OS_MAC,
 				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/../tests/cpp-empty-test/proj.mac/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../cocos/platform/mac $(SRCROOT)/../external/glfw3/include/mac";
@@ -5372,6 +5459,7 @@
 					"$(inherited)",
 					CC_TARGET_OS_MAC,
 				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/../tests/cpp-empty-test/proj.mac/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../cocos/platform/mac $(SRCROOT)/../external/glfw3/include/mac";
