@@ -5,8 +5,9 @@ LOCAL_MODULE    := cocos_extension_static
 
 LOCAL_MODULE_FILENAME := libextension
 
+# assets-manager/AssetsManager.cpp \
+
 LOCAL_SRC_FILES := \
-assets-manager/AssetsManager.cpp \
 GUI/CCControlExtension/CCControl.cpp \
 GUI/CCControlExtension/CCControlButton.cpp \
 GUI/CCControlExtension/CCControlColourPicker.cpp \
@@ -31,7 +32,7 @@ physics-nodes/CCPhysicsSprite.cpp
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
+# LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
 LOCAL_WHOLE_STATIC_LIBRARIES += box2d_static
 LOCAL_WHOLE_STATIC_LIBRARIES += libwebsockets_static
 
@@ -47,7 +48,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,.)
 $(call import-module,audio/android)
-$(call import-module,curl/prebuilt/android)
+# $(call import-module,curl/prebuilt/android)
 $(call import-module,Box2D)
 $(call import-module,websockets/prebuilt/android)
 
