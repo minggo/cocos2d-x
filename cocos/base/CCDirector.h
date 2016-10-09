@@ -108,10 +108,6 @@ public:
     Mat4 getMatrix(MATRIX_STACK_TYPE type);
     void resetMatrixStack();
 public:
-    /** Director will trigger an event before set next scene. */
-    static const char* EVENT_BEFORE_SET_NEXT_SCENE;
-    /** Director will trigger an event after set next scene. */
-    static const char* EVENT_AFTER_SET_NEXT_SCENE;
     static const char *EVENT_PROJECTION_CHANGED;
     static const char* EVENT_AFTER_UPDATE;
     static const char* EVENT_AFTER_VISIT;
@@ -446,7 +442,7 @@ protected:
      @since v3.0
      */
     EventDispatcher* _eventDispatcher;
-    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate, *_beforeSetNextScene, *_afterSetNextScene;
+    EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate;
         
     /* delta time since last tick to main loop */
 	float _deltaTime;
