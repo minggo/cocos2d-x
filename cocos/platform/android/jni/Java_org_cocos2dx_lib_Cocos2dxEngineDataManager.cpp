@@ -344,6 +344,11 @@ void EngineDataManager::calculateFrameLost()
     if (_lowFpsThreshold > 0 && _continuousFrameLostThreshold > 0)
     {
         float animationInterval = director->getAnimationInterval();
+        if (director->_animationIntervalByEngineDataManager > 0.0f)
+        {
+            animationInterval = director->_animationIntervalByEngineDataManager;
+        }
+
         float frameRate = director->getFrameRate();
 
         float expectedFPS = 1.0f / animationInterval;
@@ -568,7 +573,13 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
     {
         jboolean isCopy = JNI_FALSE;
         jint* expectedFps = env->GetIntArrayElements(arrExpectedFps, &isCopy);
-        *expectedFps = (int)std::ceil(1.0f / cocos2d::Director::getInstance()->getAnimationInterval());
+        auto director = Director::getInstance();
+        float animationInterval = director->getAnimationInterval();
+        if (director->_animationIntervalByEngineDataManager > 0.0f)
+        {
+            animationInterval = director->_animationIntervalByEngineDataManager;
+        }
+        *expectedFps = (int)std::ceil(1.0f / animationInterval);
         env->ReleaseIntArrayElements(arrExpectedFps, expectedFps, 0);
 
         jint* realFps = env->GetIntArrayElements(arrRealFps, &isCopy);
