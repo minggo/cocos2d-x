@@ -3,8 +3,9 @@
 #include <vector>
 #include <string>
 
-#include "HelloWorldScene.h"
 #include "AppMacros.h"
+#include "LoadingScene.h"
+#include "HelloWorldScene.h"
 
 //Uncomment the following line to use localize manager
 //#include "editor-support/cocostudio/LocalizationManager.h"
@@ -85,7 +86,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     director->setAnimationInterval(1.0f / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::scene();
+    auto mainScene = HelloWorld::scene();
+    auto scene = LoadingScene::create(mainScene);
 
     // run
     director->runWithScene(scene);

@@ -8,6 +8,7 @@
 
 #include "AnotherScene.h"
 #include "MyAction.h"
+#include "LoadingScene.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
@@ -306,7 +307,7 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
             case 1:
                 // 切换场景
             {
-                auto scene = AnotherScene::create();
+                auto scene = LoadingScene::create(AnotherScene::create());
                 experimental::AudioEngine::stopAll();
                 Director::getInstance()->replaceScene(scene);
             }
