@@ -157,7 +157,7 @@ float toCpuLevelPerFactor(int value, int (*cb)(int i))
         }
         prevStep = curStep;
     }
-    return len - 1;
+    return len;
 }
 
 int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
@@ -167,7 +167,7 @@ int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount
     float cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
     float cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
     int cpuLevel = std::floor(cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio);
-    cpuLevel = std::min(cpuLevel, CARRAY_SIZE(_cpuLevelArr) - 1);
+    cpuLevel = std::min(cpuLevel, CARRAY_SIZE(_cpuLevelArr));
 
 #if EDM_DEBUG
     if (_oldCpuLevel != cpuLevel
@@ -209,7 +209,7 @@ float toGpuLevelPerFactor(int value, int (*cb)(int i))
         prevStep = curStep;
 
     }
-    return len - 1;
+    return len;
 }
 
 int toGpuLevel(int vertexCount, int drawCount)
@@ -217,7 +217,7 @@ int toGpuLevel(int vertexCount, int drawCount)
     float gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
     float gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
     int gpuLevel = std::floor(gpuLevelVertex + gpuLevelDraw);
-    gpuLevel = std::min(gpuLevel, CARRAY_SIZE(_gpuLevelArr) - 1);
+    gpuLevel = std::min(gpuLevel, CARRAY_SIZE(_gpuLevelArr));
 
 #if EDM_DEBUG
     if (_oldGpuLevel != gpuLevel
