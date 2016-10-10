@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include "base/CCDirector.h"
 #include "2d/CCLayer.h"
 #include "2d/CCSprite.h"
+#include "base/CCEventType.h"
+
 #include "2d/CCSpriteBatchNode.h"
 #include "physics/CCPhysicsWorld.h"
 #include "deprecated/CCString.h"
@@ -40,6 +42,8 @@ Scene::Scene()
 : _physicsWorld(nullptr)
 #endif
 {
+    _eventDispatcher->dispatchCustomEvent(EVENT_CREATE_SCENE);
+    
     _ignoreAnchorPointForPosition = true;
     setAnchorPoint(Vec2(0.5f, 0.5f));
 }
