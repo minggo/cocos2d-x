@@ -66,9 +66,10 @@ private:
     static void calculateFrameLost();
     static void getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel);
 
-    static void onBeforeSetNextScene(EventCustom* event);
     static void onAfterDrawScene(EventCustom* event);
     static void onEnterForeground(EventCustom* event);
+
+    static void onCreateScene(EventCustom* event);
 
     static int getTotalParticleCount();
 
