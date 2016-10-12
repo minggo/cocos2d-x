@@ -14,9 +14,11 @@ public:
     
     HelloWorld() :_emitter(nullptr),
                   _enableAutoTesting(true),
-                  _autoTestingLabel(nullptr){}
+                  _autoTestingLabel(nullptr),
+                  _currentResourceLevel(-1){}
     
     virtual bool init() override;
+    virtual void update(float dt) override;
     void gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
     void resourceRequirementMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
@@ -66,6 +68,7 @@ private:
     bool _enableAutoTesting;
     cocos2d::Label *_autoTestingLabel;
     cocos2d::Label *_currentResourceLevelLabel;
+    int _currentResourceLevel;
     
     bool _isSDKTestExpanded;
     bool _isGameSettingExpanded;

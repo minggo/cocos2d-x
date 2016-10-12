@@ -96,6 +96,8 @@ bool HelloWorld::init()
         return false;
     }
     
+    this->scheduleUpdate();
+    
     _isSDKTestExpanded = false;
     _isGameSettingExpanded = false;
     
@@ -205,6 +207,24 @@ bool HelloWorld::init()
     return true;
 }
 
+void HelloWorld::update(float dt)
+{
+    if (_currentResourceLevel == -1)
+        return;
+    
+    // do some operation to simulate game logic
+    Mat4 mat4;
+    Mat4::createPerspective(60, 4.0 / 3.0, 0.1, 100, &mat4);
+    int loopTime = 1000 * (_currentResourceLevel + 1);
+    for (int i = 0; i < loopTime; ++i)
+    {
+        mat4.multiply(mat4);
+        mat4.inverse();
+        mat4.multiply(mat4);
+        mat4.inverse();
+    }
+}
+
 int HelloWorld::getRandomIndex(std::vector<int>* array)
 {
     int randomIndex = cocos2d::random(0, (int)array->size() - 1);
@@ -267,6 +287,7 @@ void HelloWorld::lastActionCallback()
     _autoTestingLabel->setString("enable auto test");
     _enableAutoTesting = true;
     _currentResourceLevelLabel->setString("未选择资源等级");
+    _currentResourceLevel = -1;
 }
 
 void HelloWorld::gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type)
@@ -517,6 +538,8 @@ void HelloWorld::addResources(int level)
     assert(level < 10);
     
     CCLOG("add resources level: %d", level);
+    
+    _currentResourceLevel = level;
     
     // remove previous resources
     auto resourceParentNode = this->getChildByTag(RESOURCE_PARENT_NODE_FLAG);
