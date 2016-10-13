@@ -90,6 +90,8 @@ static DisplayLinkDirector *s_SharedDirector = nullptr;
 #define kDefaultFPS        60  // 60 frames per second
 extern const char* cocos2dVersion(void);
 
+const char *Director::EVENT_BEFORE_SET_NEXT_SCENE = "director_before_set_next_scene";
+const char *Director::EVENT_AFTER_SET_NEXT_SCENE = "director_after_set_next_scene";
 const char *Director::EVENT_PROJECTION_CHANGED = "director_projection_changed";
 const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
@@ -163,6 +165,10 @@ bool Director::init(void)
 
     _eventDispatcher = new (std::nothrow) EventDispatcher();
     
+    _beforeSetNextScene = new (std::nothrow) EventCustom(EVENT_BEFORE_SET_NEXT_SCENE);
+    _beforeSetNextScene->setUserData(this);
+    _afterSetNextScene = new (std::nothrow) EventCustom(EVENT_AFTER_SET_NEXT_SCENE);
+    _afterSetNextScene->setUserData(this);
     _eventAfterDraw = new (std::nothrow) EventCustom(EVENT_AFTER_DRAW);
     _eventAfterDraw->setUserData(this);
     _eventAfterVisit = new (std::nothrow) EventCustom(EVENT_AFTER_VISIT);
@@ -201,6 +207,8 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_actionManager);
     CC_SAFE_DELETE(_defaultFBO);
     
+    CC_SAFE_RELEASE(_beforeSetNextScene);
+    CC_SAFE_RELEASE(_afterSetNextScene);
     CC_SAFE_RELEASE(_eventBeforeUpdate);
     CC_SAFE_RELEASE(_eventAfterUpdate);
     CC_SAFE_RELEASE(_eventAfterDraw);
@@ -1105,6 +1113,8 @@ void Director::restartDirector()
 
 void Director::setNextScene()
 {
+    _eventDispatcher->dispatchEvent(_beforeSetNextScene);
+
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
     bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
 
@@ -1138,6 +1148,8 @@ void Director::setNextScene()
         _runningScene->onEnter();
         _runningScene->onEnterTransitionDidFinish();
     }
+    
+    _eventDispatcher->dispatchEvent(_afterSetNextScene);
 }
 
 void Director::pause()
