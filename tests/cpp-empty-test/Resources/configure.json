@@ -1,5 +1,6 @@
 {
     "duration": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     "repeat_time": 1,
-    "random_order": false
+    "random_order": false,
+    "show_status": true
 }

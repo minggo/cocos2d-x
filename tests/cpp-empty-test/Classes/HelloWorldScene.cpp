@@ -669,6 +669,11 @@ void HelloWorld::parseJson()
     assert(document.HasMember("duration"));
     assert(document.HasMember("repeat_time"));
     assert(document.HasMember("random_order"));
+    assert(document.HasMember("show_status"));
+    
+    // whether to show status(fps, drawcall and so on)
+    bool showStatus = document["show_status"].GetBool();
+    Director::getInstance()->setDisplayStats(showStatus);
 
     // get duration
     const RapidJsonValue& duration = document["duration"];
