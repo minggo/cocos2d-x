@@ -51,7 +51,7 @@ USING_NS_CC;
 // 游戏资源消耗等级10：ID=3；CPU=5,GPU=9
 
 std::vector<int> HelloWorld::__durations = {};
-std::vector<int> HelloWorld::__indexes = {};
+std::vector<int> HelloWorld::__runningOrder = {};
 int HelloWorld::__repeatTime = 1;
 bool HelloWorld::__randomOrder = false;
 
@@ -246,10 +246,10 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         size_t durationSize = HelloWorld::__durations.size();
         for (int i = 0; i < HelloWorld::__repeatTime; ++i)
         {
-            auto indexes = HelloWorld::__indexes;
+            auto orders = HelloWorld::__runningOrder;
             for (size_t j = 0; j < durationSize; ++j)
             {
-                int index = HelloWorld::__randomOrder ? HelloWorld::getRandomIndex(&indexes) : (int)j;
+                int index = HelloWorld::__randomOrder ? HelloWorld::getRandomIndex(&orders) : orders[j] - 1;
                 actions.pushBack(MyCallFunc::create(CC_CALLBACK_1(HelloWorld::actionCallback, this), index));
                 actions.pushBack(DelayTime::create(HelloWorld::__durations[index]));
             }
@@ -677,13 +677,27 @@ void HelloWorld::parseJson()
 
     // get duration
     const RapidJsonValue& duration = document["duration"];
-    int i = 0;
-    for (auto iter = duration.Begin(); iter != duration.End(); ++iter, ++i)
+    for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
     {
         HelloWorld::__durations.push_back(iter->GetInt());
-        HelloWorld::__indexes.push_back(i);
     }
     
-    HelloWorld::__repeatTime = document["repeat_time"].GetInt();
-    HelloWorld::__randomOrder = document["random_order"].GetBool();
+    if (document.HasMember("running_order"))
+    {
+        // ignore repeat and random
+        HelloWorld::__randomOrder = false;
+        HelloWorld::__repeatTime = 1;
+        
+        const RapidJsonValue& runningOrder = document["running_order"];
+        for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
+        {
+            HelloWorld::__runningOrder.push_back(iter->GetInt());
+        }
+    }
+    else
+    {
+        HelloWorld::__runningOrder = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        HelloWorld::__repeatTime = document["repeat_time"].GetInt();
+        HelloWorld::__randomOrder = document["random_order"].GetBool();
+    }
 }

@@ -60,7 +60,7 @@ private:
     static int getRandomIndex(std::vector<int>* array);
     static std::vector<ResourceLevel> _resourceLevelVector;
     static std::vector<int> __durations;
-    static std::vector<int> __indexes;
+    static std::vector<int> __runningOrder;
     static int __repeatTime;
     static bool __randomOrder;
     
