@@ -58,6 +58,8 @@ bool _isSupported = false;
 bool _isFirstSetNextScene = true;
 bool _isReplaceScene = false;
 bool _isReadFile = false;
+uint32_t _drawCountInterval = 0;
+const uint32_t _drawCountThreshold = 30;
 
 /* last time frame lost cycle was calculated */
 std::chrono::steady_clock::time_point _lastContinuousFrameLostUpdate;
@@ -454,21 +456,21 @@ void EngineDataManager::onAfterDrawScene(EventCustom* event)
 
     if (_isReplaceScene)
     {
-        if (_isReadFile)
+        ++_drawCountInterval;
+
+        if (_drawCountInterval > _drawCountThreshold)
         {
-            _oldCpuLevel = -1;
-            _oldGpuLevel = -1;
-            notifyGameStatus(GameStatus::IN_SCENE, 5, 0);
-            _isReadFile = false;
-        }
-        else
-        {
+            _drawCountInterval = 0;
             _isReplaceScene = false;
-            notifyGameStatusIfCpuOrGpuLevelChanged();
         }
+        else if (_isReadFile)
+        {
+            _drawCountInterval = 0;
+        }
+        _isReadFile = false;
     }
     else
-    {        
+    {
         notifyGameStatusIfCpuOrGpuLevelChanged();
     }
 }
