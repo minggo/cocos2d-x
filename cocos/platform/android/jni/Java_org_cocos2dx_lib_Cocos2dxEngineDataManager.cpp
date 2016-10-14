@@ -56,6 +56,10 @@ const char* _className = "org/cocos2dx/lib/Cocos2dxEngineDataManager";
 bool _isInitialized = false;
 bool _isSupported = false;
 bool _isFirstSetNextScene = true;
+bool _isReplaceScene = false;
+bool _isReadFile = false;
+uint32_t _drawCountInterval = 0;
+const uint32_t _drawCountThreshold = 30;
 
 /* last time frame lost cycle was calculated */
 std::chrono::steady_clock::time_point _lastContinuousFrameLostUpdate;
@@ -405,6 +409,8 @@ void EngineDataManager::calculateFrameLost()
 // static 
 void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 {
+    _isReplaceScene = true;
+
     if (_isFirstSetNextScene)
     {// If it's the first time of setting next scene, a 'START_SCENE' event has been already triggered.
      // So don't notify 'SCENE_CHANGE' event to system.
@@ -420,6 +426,11 @@ void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 
         notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
     }
+}
+
+void EngineDataManager::onBeforeReadFile(EventCustom* event)
+{
+    _isReadFile = true;
 }
 
 void EngineDataManager::notifyGameStatusIfCpuOrGpuLevelChanged()
@@ -443,7 +454,25 @@ void EngineDataManager::onAfterDrawScene(EventCustom* event)
 {
     calculateFrameLost();
 
-    notifyGameStatusIfCpuOrGpuLevelChanged();
+    if (_isReplaceScene)
+    {
+        ++_drawCountInterval;
+
+        if (_drawCountInterval > _drawCountThreshold)
+        {
+            _drawCountInterval = 0;
+            _isReplaceScene = false;
+        }
+        else if (_isReadFile)
+        {
+            _drawCountInterval = 0;
+        }
+        _isReadFile = false;
+    }
+    else
+    {
+        notifyGameStatusIfCpuOrGpuLevelChanged();
+    }
 }
 
 void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
@@ -501,6 +530,7 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(Director::EVENT_AFTER_DRAW, std::bind(onAfterDrawScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(Director::EVENT_BEFORE_SET_NEXT_SCENE, std::bind(onBeforeSetNextScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
+    dispatcher->addCustomEventListener(EVENT_BEFORE_READ_FILE, std::bind(onBeforeReadFile, std::placeholders::_1));
 
     notifyGameStatus(GameStatus::START, 5, -1);
 
