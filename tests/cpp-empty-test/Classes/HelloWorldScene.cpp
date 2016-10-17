@@ -243,13 +243,14 @@ void HelloWorld::autoTestingCallback(cocos2d::Ref* sender)
         this->disableAllListViews();
         
         Vector<FiniteTimeAction*> actions;
-        size_t durationSize = HelloWorld::__durations.size();
+        size_t loopSize = HelloWorld::__runningOrder.size();
         for (int i = 0; i < HelloWorld::__repeatTime; ++i)
         {
             auto orders = HelloWorld::__runningOrder;
-            for (size_t j = 0; j < durationSize; ++j)
+            for (size_t j = 0; j < loopSize; ++j)
             {
-                int index = HelloWorld::__randomOrder ? HelloWorld::getRandomIndex(&orders) : orders[j] - 1;
+                int index = HelloWorld::__randomOrder ? HelloWorld::getRandomIndex(&orders) : orders[j];
+                index -= 1;
                 actions.pushBack(MyCallFunc::create(CC_CALLBACK_1(HelloWorld::actionCallback, this), index));
                 actions.pushBack(DelayTime::create(HelloWorld::__durations[index]));
             }

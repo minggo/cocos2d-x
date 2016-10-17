@@ -44,7 +44,7 @@ void LoadingScene::update(float dt)
         _newScene = nullptr;
     }
     
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         Director::getInstance()->getTextureCache()->addImage("Hello.png");
         Director::getInstance()->getTextureCache()->removeUnusedTextures();
@@ -66,5 +66,5 @@ void LoadingScene::update(float dt)
         break;
     }
     
-    _index += 50;
+    _index += 10;
 }
