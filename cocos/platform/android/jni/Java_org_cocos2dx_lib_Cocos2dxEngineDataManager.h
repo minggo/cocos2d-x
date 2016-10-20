@@ -45,8 +45,10 @@ public:
 
     enum class GameStatus
     {
-        START = 0,
-        SCENE_CHANGE,
+        LAUNCH_BEGIN = 0,
+        LAUNCH_END,
+        SCENE_CHANGE_BEGIN,
+        SCENE_CHANGE_END,
         IN_SCENE,
 
         TEST_CHANGE_FPS_RATE,
