@@ -409,23 +409,25 @@ void EngineDataManager::calculateFrameLost()
 // static 
 void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 {
-    _isReplaceScene = true;
+    // Reset the old status since we have changed CPU/GPU level manually.
+    // If the CPU level isn't 5 and GPU level isn't 0 in the next time of checking CPU/GPU level,
+    // Make sure that the changed CPU/GPU level will be notified.
+    _oldCpuLevel = -1;
+    _oldGpuLevel = -1;
 
     if (_isFirstSetNextScene)
-    {// If it's the first time of setting next scene, a 'START_SCENE' event has been already triggered.
-     // So don't notify 'SCENE_CHANGE' event to system.
-        _isFirstSetNextScene = false;
-    }
-    else
     {
-        // Reset the old status since we have changed CPU/GPU level manually.
-        // If the CPU level isn't 5 and GPU level isn't 0 in the next time of checking CPU/GPU level,
-        // Make sure that the changed CPU/GPU level will be notified.
-        _oldCpuLevel = -1;
-        _oldGpuLevel = -1;
-
-        notifyGameStatus(GameStatus::SCENE_CHANGE, 5, 0);
+        _isFirstSetNextScene = false;
+        notifyGameStatus(GameStatus::LAUNCH_END, -1, -1);
     }
+    else if (_isReplaceScene)
+    {
+        notifyGameStatus(GameStatus::SCENE_CHANGE_END, -1, -1);
+    }
+
+    notifyGameStatus(GameStatus::SCENE_CHANGE_BEGIN, 5, 0);
+
+    _isReplaceScene = true;
 }
 
 void EngineDataManager::onBeforeReadFile(EventCustom* event)
@@ -462,6 +464,10 @@ void EngineDataManager::onAfterDrawScene(EventCustom* event)
         {
             _drawCountInterval = 0;
             _isReplaceScene = false;
+
+            _oldCpuLevel = -1;
+            _oldGpuLevel = -1;
+            notifyGameStatus(GameStatus::SCENE_CHANGE_END, -1, -1);
         }
         else if (_isReadFile)
         {
@@ -532,7 +538,7 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_BEFORE_READ_FILE, std::bind(onBeforeReadFile, std::placeholders::_1));
 
-    notifyGameStatus(GameStatus::START, 5, -1);
+    notifyGameStatus(GameStatus::LAUNCH_BEGIN, 5, -1);
 
     parseDebugConfig();
 
