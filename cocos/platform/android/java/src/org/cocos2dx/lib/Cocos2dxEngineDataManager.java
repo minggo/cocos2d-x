@@ -35,12 +35,30 @@ import org.cocos2dx.enginedata.IEngineDataManager;
 public class Cocos2dxEngineDataManager {
     private static final String TAG = "CCEngineDataManager";
     private static EngineDataManager sManager = new EngineDataManager();
-//    private static Context sContext;
+    private static boolean sIsEnabled = true;
 
     private Cocos2dxEngineDataManager() {
 
     }
 
+    // Whether to disable Cocos2dxEngineDataManager, invoke it if you don't wanna
+    // this optimization. You could invoke `Cocos2dxEngineDataManager.disable` before
+    // `super.onCreate` in game's Activity. The following code snippet demonstrates how to disable it.
+    /*
+    public class AppActivity extends Cocos2dxActivity {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            Cocos2dxEngineDataManager.disable(); // disable before `super.onCreate`
+            super.onCreate(savedInstanceState);
+            ...
+            ...
+        }
+    }
+     */
+    // Currently, it only supports HuaWei mobile phones.
+    public static void disable() {
+        sIsEnabled = false;
+    }
 
     // Lifecycle functions
     public static boolean init(Context context, final GLSurfaceView glSurfaceView) {
@@ -53,8 +71,6 @@ public class Cocos2dxEngineDataManager {
             Log.e(TAG, "glSurfaceView is null");
             return false;
         }
-
-//        sContext = context;
 
         final IEngineDataManager.OnSystemCommandListener listener = new IEngineDataManager.OnSystemCommandListener() {
 
@@ -121,27 +137,40 @@ public class Cocos2dxEngineDataManager {
             }
         };
 
-        boolean ret = sManager.init(listener);
+        boolean ret = false;
+        if (sIsEnabled) {
+            ret = sManager.init(listener);
+        }
+
         nativeSetSupportOptimization(ret);
+
         return ret;
     }
 
     public static void destroy() {
-//        sContext = null;
-        sManager.destroy();
+        if (sIsEnabled) {
+            sManager.destroy();
+        }
     }
 
     public static void pause() {
-        sManager.pause();
+        if (sIsEnabled) {
+            sManager.pause();
+        }
     }
 
     public static void resume() {
-        sManager.resume();
+        if (sIsEnabled) {
+            sManager.resume();
+        }
     }
     //
 
     public static String getVendorInfo() {
-        return sManager.getVendorInfo();
+        if (sIsEnabled) {
+            return sManager.getVendorInfo();
+        }
+        return "";
     }
 
     private static IEngineDataManager.GameStatus convertIntegerToGameStatus(int gameStatus) {
@@ -161,6 +190,11 @@ public class Cocos2dxEngineDataManager {
      * @param gpuLevel Current game wastes how much GPU resources, the range is [0,10]
      */
     public static void notifyGameStatus(int gameStatus, int cpuLevel, int gpuLevel) {
+        if (!sIsEnabled) {
+            nativeSetSupportOptimization(false);
+            return;
+        }
+
         IEngineDataManager.GameStatus status = convertIntegerToGameStatus(gameStatus);
         if (status == IEngineDataManager.GameStatus.INVALID) {
             Log.e(TAG, "Invalid game status: " + gameStatus);
@@ -178,6 +212,11 @@ public class Cocos2dxEngineDataManager {
      * @times How many times of `Continuous Frame Lost` event happens in a `cycle'
      */
     public static void notifyContinuousFrameLost(int cycle, int continuousFrameLostThreshold, int times) {
+        if (!sIsEnabled) {
+            nativeSetSupportOptimization(false);
+            return;
+        }
+
         sManager.notifyContinuousFrameLost(cycle, continuousFrameLostThreshold, times);
     }
 
@@ -190,6 +229,11 @@ public class Cocos2dxEngineDataManager {
      * @param lostFrameCount How many frames are lost in a 'cycle'
      */
     public static void notifyLowFps(int cycle, float lowFpsThreshold, int lostFrameCount) {
+        if (!sIsEnabled) {
+            nativeSetSupportOptimization(false);
+            return;
+        }
+
         sManager.notifyLowFps(cycle, lowFpsThreshold, lostFrameCount);
     }
 
