@@ -3,7 +3,8 @@
 
 #include "AppMacros.h"
 #include "ui/UIButton.h"
-#include "audio/include/AudioEngine.h"
+//#include "audio/include/AudioEngine.h"
+#include "audio/include/SimpleAudioEngine.h"
 #include "base/ccRandom.h"
 
 #include "AnotherScene.h"
@@ -29,6 +30,8 @@ USING_NS_CC;
 #define SDK_EFFECT_MNUE_TEST_FLAG 17
 #define SDK_AUDIO_MENU_TEST_FLAG 18
 #define SDK_TEST_SECOND_MENU_FLAG 19
+
+#define TEST_SIMPLE_AUDIO_ENGINE 1
 
 //using ResourceLevel = struct ResourceLevel
 //{
@@ -280,8 +283,13 @@ void HelloWorld::lastActionCallback()
 {
     auto resourceParentNode = this->getChildByTag(RESOURCE_PARENT_NODE_FLAG);
     resourceParentNode->removeAllChildren();
-    
+
+#if TEST_SIMPLE_AUDIO_ENGINE
+    CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
+    CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+#else
     experimental::AudioEngine::stopAll();
+#endif
     _emitter->setVisible(false);
     this->enableAllListViews();
     
@@ -330,7 +338,12 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
                 // 切换场景
             {
                 auto scene = LoadingScene::create(AnotherScene::create());
+#if TEST_SIMPLE_AUDIO_ENGINE
+                CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
+                CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+#else
                 experimental::AudioEngine::stopAll();
+#endif
                 Director::getInstance()->replaceScene(scene);
             }
                 break;
@@ -547,10 +560,14 @@ void HelloWorld::addResources(int level)
     resourceParentNode->removeAllChildren();
     
     // stop all audios
+#if TEST_SIMPLE_AUDIO_ENGINE
+    CocosDenshion::SimpleAudioEngine::getInstance()->stopAllEffects();
+    CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+#else
     experimental::AudioEngine::stopAll();
-    
+#endif
+
     auto resourceLevel = HelloWorld::_resourceLevelVector[level];
-    
 
     // add Sprites and run actions if needed
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -599,11 +616,18 @@ void HelloWorld::addResources(int level)
     _emitter->setTotalParticles(resourceLevel.particleNumber);
     
     // play audioes
+#if TEST_SIMPLE_AUDIO_ENGINE
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("background.mp3", true);
+#endif
     int audioNumber = resourceLevel.audioNumber;
     for (int i = 0 ; i < audioNumber; ++i)
     {
         auto audioPath = StringUtils::format("effect%d.mp3", i % 10);
+#if TEST_SIMPLE_AUDIO_ENGINE
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(audioPath.c_str(), true);
+#else
         experimental::AudioEngine::play2d(audioPath.c_str(), true);
+#endif
     }
     
     _currentResourceLevelLabel->setString(StringUtils::format("当前资源等级:%d", level + 1));

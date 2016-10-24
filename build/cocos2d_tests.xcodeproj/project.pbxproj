@@ -227,6 +227,7 @@
 		1A0EE43318CDF799004CD58F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABCA39E18CD9EE50087CE3A /* UIKit.framework */; };
 		1A0EE43418CDF799004CD58F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABCA39C18CD9ED80087CE3A /* AVFoundation.framework */; };
 		1A0EE43518CDF799004CD58F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C64832165F3AFD007D4F18 /* Foundation.framework */; };
+		1A2CBB581DBDEB7700EBBADB /* background.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A2CBB571DBDEB7700EBBADB /* background.mp3 */; };
 		1A78A5521D1A3C9B00B61B27 /* ccs-res in Resources */ = {isa = PBXBuildFile; fileRef = 460629771CDB4DBA00B44058 /* ccs-res */; };
 		1A78A5531D1A3CE800B61B27 /* ccs-res in Resources */ = {isa = PBXBuildFile; fileRef = 460629771CDB4DBA00B44058 /* ccs-res */; };
 		1A78A5541D1A3D0F00B61B27 /* ccs-res in Resources */ = {isa = PBXBuildFile; fileRef = 460629771CDB4DBA00B44058 /* ccs-res */; };
@@ -1931,6 +1932,7 @@
 		1A0EE31418CDF733004CD58F /* lua-empty-test Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lua-empty-test Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0EE41318CDF775004CD58F /* cpp-empty-test iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cpp-empty-test iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0EE47E18CDF799004CD58F /* lua-empty-test iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lua-empty-test iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A2CBB571DBDEB7700EBBADB /* background.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = background.mp3; path = "../tests/cpp-empty-test/Resources/background.mp3"; sourceTree = "<group>"; };
 		1A9F808C177E98A600D9A1CB /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
 		1ABCA27618CD90A40087CE3A /* cocos2d_lua_bindings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_lua_bindings.xcodeproj; path = "../cocos/scripting/lua-bindings/proj.ios_mac/cocos2d_lua_bindings.xcodeproj"; sourceTree = "<group>"; };
 		1ABCA28618CD91510087CE3A /* lua-tests Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lua-tests Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3407,6 +3409,7 @@
 		1AC358FD18CEC1EF00F37B72 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1A2CBB571DBDEB7700EBBADB /* background.mp3 */,
 				4609324D1DAA4A5D00F4BF9B /* Hello.png */,
 				4680331E1D91353E00E5C4C3 /* sprite0.png */,
 				4680331F1D91353E00E5C4C3 /* sprite1.png */,
@@ -5992,6 +5995,7 @@
 				1AC358F618CEC1D400F37B72 /* MainMenu.xib in Resources */,
 				468033201D91354700E5C4C3 /* sprite0.png in Resources */,
 				4698EFB41D8F90CB00A57085 /* effect0.mp3 in Resources */,
+				1A2CBB581DBDEB7700EBBADB /* background.mp3 in Resources */,
 				468033131D8FE2A400E5C4C3 /* arial.ttf in Resources */,
 				4698EFBC1D8F90CB00A57085 /* effect8.mp3 in Resources */,
 				4698EFA31D8F86C900A57085 /* fire.png in Resources */,
