@@ -49,8 +49,13 @@ public class Cocos2dxMusic {
     private float mLeftVolume;
     private float mRightVolume;
     private boolean mPaused; // whether music is paused state.
+    private boolean mIsStopped = true;
     private boolean mIsLoop = false;
     private boolean mManualPaused = false; // whether music is paused manually before the program is switched to the background.
+    // Whether the game is being played in low battery mode.
+    // Currently, it only supports HuaWei Android devices.
+    private boolean mIsInLowBatteryMode = false;
+
     private String mCurrentPath;
 
     // ===========================================================
@@ -115,17 +120,15 @@ public class Cocos2dxMusic {
             Log.e(Cocos2dxMusic.TAG, "playBackgroundMusic: background media player is null");
         } else {
             try {
-                // if the music is playing or paused, stop it
-                if (mPaused) {
-                    mBackgroundMediaPlayer.seekTo(0);
-                    mBackgroundMediaPlayer.start();
-                } else if (mBackgroundMediaPlayer.isPlaying()) {
-                    mBackgroundMediaPlayer.seekTo(0);
-                } else {
+                mBackgroundMediaPlayer.seekTo(0);
+
+                if (!mIsInLowBatteryMode) {
                     mBackgroundMediaPlayer.start();
                 }
+
                 mBackgroundMediaPlayer.setLooping(isLoop);
                 mPaused = false;
+                mIsStopped = false;
                 mIsLoop = isLoop;
             } catch (final Exception e) {
                 Log.e(Cocos2dxMusic.TAG, "playBackgroundMusic: error state");
@@ -143,13 +146,16 @@ public class Cocos2dxMusic {
              * play -> pause -> stop -> resume
              */
             this.mPaused = false;
+            this.mIsStopped = true;
         }
     }
 
     public void pauseBackgroundMusic() {
         try {
-            if (this.mBackgroundMediaPlayer != null && this.mBackgroundMediaPlayer.isPlaying()) {
-                this.mBackgroundMediaPlayer.pause();
+            if (this.mBackgroundMediaPlayer != null && !this.mPaused && !this.mIsStopped) {
+                if (!mIsInLowBatteryMode) {
+                    this.mBackgroundMediaPlayer.pause();
+                }
                 this.mPaused = true;
                 this.mManualPaused = true;
             }
@@ -160,9 +166,12 @@ public class Cocos2dxMusic {
 
     public void resumeBackgroundMusic() {
         try {
-            if (this.mBackgroundMediaPlayer != null && this.mPaused) {
-                this.mBackgroundMediaPlayer.start();
+            if (this.mBackgroundMediaPlayer != null && (this.mPaused || this.mIsStopped)) {
+                if (!mIsInLowBatteryMode) {
+                    this.mBackgroundMediaPlayer.start();
+                }
                 this.mPaused = false;
+                this.mIsStopped = false;
                 this.mManualPaused = false;
             }
         } catch (IllegalStateException e) {
@@ -233,8 +242,10 @@ public class Cocos2dxMusic {
 
     public void onEnterBackground(){
         try {
-            if (this.mBackgroundMediaPlayer != null && this.mBackgroundMediaPlayer.isPlaying()) {
-                this.mBackgroundMediaPlayer.pause();
+            if (this.mBackgroundMediaPlayer != null && !this.mPaused) {
+                if (mBackgroundMediaPlayer.isPlaying() && !mIsInLowBatteryMode) {
+                    this.mBackgroundMediaPlayer.pause();
+                }
                 this.mPaused = true;
             }
         } catch (IllegalStateException e) {
@@ -246,7 +257,9 @@ public class Cocos2dxMusic {
         try {
             if (!this.mManualPaused) {
                 if (this.mBackgroundMediaPlayer != null && this.mPaused) {
-                    this.mBackgroundMediaPlayer.start();
+                    if (!mIsInLowBatteryMode) {
+                        this.mBackgroundMediaPlayer.start();
+                    }
                     this.mPaused = false;
                 }
             }
@@ -254,7 +267,35 @@ public class Cocos2dxMusic {
             Log.e(TAG, "onEnterForeground, IllegalStateException was triggered!");
         }
     }
-    
+
+    void setInLowBatteryMode(boolean isInLowBatterMode) {
+        if (mIsInLowBatteryMode != isInLowBatterMode) {
+            mIsInLowBatteryMode = isInLowBatterMode;
+
+            Log.d(TAG, "setInLowBatteryMode: " + mIsInLowBatteryMode);
+            if (mBackgroundMediaPlayer == null) {
+                return;
+            }
+
+            try {
+                if (mIsInLowBatteryMode) {
+                    // While in low battery mode, pause background music
+                    if (mBackgroundMediaPlayer.isPlaying()) {
+                        Log.d(TAG, "setInLowBatteryMode, pause background music!");
+                        mBackgroundMediaPlayer.pause();
+                    }
+                } else {
+                    if (!mPaused && !mIsStopped && !mBackgroundMediaPlayer.isPlaying()) {
+                        Log.d(TAG, "setInLowBatteryMode, resume background music!");
+                        mBackgroundMediaPlayer.start();
+                    }
+                }
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "setInLowBatteryMode, IllegalStateException was triggered!");
+            }
+        }
+    }
+
     private void initData() {
         this.mLeftVolume = 0.5f;
         this.mRightVolume = 0.5f;

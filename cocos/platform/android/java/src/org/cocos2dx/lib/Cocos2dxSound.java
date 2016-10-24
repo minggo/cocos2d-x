@@ -53,6 +53,8 @@ public class Cocos2dxSound {
     private float mLeftVolume;
     private float mRightVolume;
 
+    private boolean mIsInLowBatteryMode = false;
+
     // sound path and stream ids map
     // a file may be played many times at the same time
     // so there is an array map to a file path
@@ -299,6 +301,12 @@ public class Cocos2dxSound {
         }
 
     private int doPlayEffect(final String path, final int soundId, final boolean loop, float pitch, float pan, float gain) {
+
+        // In low battery mode, effects should not be played.
+        if (mIsInLowBatteryMode) {
+            return INVALID_SOUND_ID;
+        }
+
         float leftVolume = this.mLeftVolume * gain * (1.0f - this.clamp(pan, 0.0f, 1.0f));
         float rightVolume = this.mRightVolume * gain * (1.0f - this.clamp(-pan, 0.0f, 1.0f));
         float soundRate = this.clamp(SOUND_RATE * pitch, 0.5f, 2.0f);
@@ -323,6 +331,15 @@ public class Cocos2dxSound {
 
     public void onEnterForeground(){
         this.mSoundPool.autoResume();
+    }
+
+    void setInLowBatteryMode(boolean isInLowBatteryMode) {
+        if (mIsInLowBatteryMode != isInLowBatteryMode) {
+            mIsInLowBatteryMode = isInLowBatteryMode;
+            if (mIsInLowBatteryMode) {
+                stopAllEffects();
+            }
+        }
     }
 
     // ===========================================================
