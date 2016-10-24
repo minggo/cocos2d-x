@@ -3,7 +3,7 @@
 
 #include "AppMacros.h"
 #include "ui/UIButton.h"
-//#include "audio/include/AudioEngine.h"
+#include "audio/include/AudioEngine.h"
 #include "audio/include/SimpleAudioEngine.h"
 #include "base/ccRandom.h"
 
