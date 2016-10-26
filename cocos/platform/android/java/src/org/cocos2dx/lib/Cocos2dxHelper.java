@@ -435,6 +435,11 @@ public class Cocos2dxHelper {
         Cocos2dxHelper.sCocos2dSound.stopAllEffects();
     }
 
+    private static void setInLowBatteryMode(boolean isInLowBatterMode) {
+        Cocos2dxHelper.sCocos2dMusic.setInLowBatteryMode(isInLowBatterMode);
+        Cocos2dxHelper.sCocos2dSound.setInLowBatteryMode(isInLowBatterMode);
+    }
+
     public static void end() {
         Cocos2dxHelper.sCocos2dMusic.end();
         Cocos2dxHelper.sCocos2dSound.end();

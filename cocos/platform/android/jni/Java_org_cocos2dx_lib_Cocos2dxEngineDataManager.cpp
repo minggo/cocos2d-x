@@ -80,6 +80,8 @@ int _lowFpsCounter = 0;
 int _oldCpuLevel = -1;
 int _oldGpuLevel = -1;
 
+bool _isMuteEnabled = false;
+
 #define CARRAY_SIZE(arr) ((int)(arr.size()))
 
 // CPU Level
@@ -702,8 +704,14 @@ void EngineDataManager::nativeOnChangeMuteEnabled(JNIEnv* env, jobject thiz, jbo
     if (!_isSupported)
         return;
 
-    LOGD("nativeOnChangeMuteEnabled, isMuteEnabled: %d", isMuteEnabled);
-    cocos2d::experimental::AudioEngine::setEnabled(!isMuteEnabled);
+    if (_isMuteEnabled == isMuteEnabled)
+        return;
+
+    _isMuteEnabled = isMuteEnabled;
+    LOGD("nativeOnChangeMuteEnabled, isMuteEnabled: %d", _isMuteEnabled);
+    // cocos2d::experimental::AudioEngine::setEnabled(!isMuteEnabled);
+
+    JniHelper::callStaticVoidMethod("org/cocos2dx/lib/Cocos2dxHelper", "setInLowBatteryMode", _isMuteEnabled);
 }
 
 } // namespace cocos2d {
