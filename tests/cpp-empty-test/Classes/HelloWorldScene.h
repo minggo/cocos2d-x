@@ -7,6 +7,8 @@
 #include "ui/UIListView.h"
 #include "2d/CCParticleExamples.h"
 
+#include "Utils.h"
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -38,15 +40,6 @@ public:
     
 private:
     
-    using ResourceLevel = struct ResourceLevel
-    {
-        int spriteNumber;
-        int drawcallNumber;
-        int actionNumber;
-        int particleNumber;
-        int audioNumber;
-    };
-    
     static void parseJson();
     
     cocos2d::ui::ListView* createListView(const std::vector<std::string>& itemTitles, const cocos2d::Vec2& position);
@@ -58,7 +51,7 @@ private:
     void enableSDKFPS(bool enabled);
     
     static int getRandomIndex(std::vector<int>* array);
-    static std::vector<ResourceLevel> _resourceLevelVector;
+    static std::vector<myutils::ResourceInfo> _resourceLevelVector;
     static std::vector<int> __durations;
     static std::vector<int> __runningOrder;
     static int __repeatTime;
@@ -69,6 +62,7 @@ private:
     cocos2d::Label *_autoTestingLabel;
     cocos2d::Label *_currentResourceLevelLabel;
     int _currentResourceLevel;
+    std::vector<int> _audioIDVec;
     
     bool _isSDKTestExpanded;
     bool _isGameSettingExpanded;

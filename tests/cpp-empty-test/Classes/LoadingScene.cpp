@@ -75,4 +75,3 @@ void LoadingScene::load(int level)
         Director::getInstance()->getTextureCache()->removeUnusedTextures();
     }
 }
-

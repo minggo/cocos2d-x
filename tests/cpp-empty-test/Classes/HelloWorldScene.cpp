@@ -55,7 +55,7 @@ std::vector<int> HelloWorld::__runningOrder = {};
 int HelloWorld::__repeatTime = 1;
 bool HelloWorld::__randomOrder = false;
 
-std::vector<HelloWorld::ResourceLevel> HelloWorld::_resourceLevelVector = {
+std::vector<myutils::ResourceInfo> HelloWorld::_resourceLevelVector = {
 // sprite, drawCall, action, particle, audio
     {120, 120,  0,   0,   0}, // CPU=0,GPU=0
     {300, 300,  50, 50, 1}, // CPU=1,GPU=1
@@ -551,62 +551,7 @@ void HelloWorld::addResources(int level)
     experimental::AudioEngine::stopAll();
     
     auto resourceLevel = HelloWorld::_resourceLevelVector[level];
-    
-
-    // add Sprites and run actions if needed
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto origin = Director::getInstance()->getVisibleOrigin();
-    int spriteNumber = resourceLevel.spriteNumber;
-    int actionNumber = resourceLevel.actionNumber;
-    int drawcallNumber = resourceLevel.drawcallNumber;
-    int drawcall = 0;
-    for (int i = 0; i < spriteNumber; ++i)
-    {
-        Sprite *sprite;
-        if (drawcall < drawcallNumber)
-        {
-            auto spritePath = StringUtils::format("sprite%d.png", drawcall % 2);
-            sprite = Sprite::create(spritePath.c_str());
-        }
-        else
-        {
-            sprite = Sprite::create("sprite0.png");
-        }
-        ++drawcall;
-        
-        float x = origin.x + visibleSize.width * (std::rand() * 1.0 / RAND_MAX);
-        float y = origin.y + visibleSize.height * (std::rand() * 1.0 / RAND_MAX);
-        
-        float maxRectSize = std::max(sprite->getContentSize().width, sprite->getContentSize().height);
-        
-        x = std::min(x, origin.x + visibleSize.width - maxRectSize/2);
-        x = std::max(x, origin.x + maxRectSize/2);
-        
-        y = std::min(y, origin.y + visibleSize.height - maxRectSize/2);
-        y = std::max(y, origin.y + maxRectSize/2);
-        
-        sprite->setPosition(Vec2(x, y));
-        resourceParentNode->addChild(sprite);
-        
-        if (i < actionNumber)
-        {
-            sprite->runAction(RepeatForever::create(RotateBy::create(3, 360)));
-        }
-    }
-    
-    // add particles
-    _emitter->setVisible(true);
-    _emitter->resume();
-    _emitter->setTotalParticles(resourceLevel.particleNumber);
-    
-    // play audioes
-    int audioNumber = resourceLevel.audioNumber;
-    for (int i = 0 ; i < audioNumber; ++i)
-    {
-        auto audioPath = StringUtils::format("effect%d.mp3", i % 10);
-        experimental::AudioEngine::play2d(audioPath.c_str(), true);
-    }
-    
+    myutils::addResource(resourceParentNode, _emitter, resourceLevel, _audioIDVec);
     _currentResourceLevelLabel->setString(StringUtils::format("当前资源等级:%d", level + 1));
 }
 
@@ -657,48 +602,54 @@ typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> Rapi
 
 void HelloWorld::parseJson()
 {
-    auto fileUtils = FileUtils::getInstance();
-    fileUtils->addSearchPath("/sdcard", true);
-    fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
-    log("writable path is %s", fileUtils->getWritablePath().c_str());
-    
-    auto fileContent = fileUtils->getStringFromFile("configure.json");
-    
-    RapidJsonDocument document;
-    document.Parse(fileContent.c_str());
-    
-    assert(document.HasMember("duration"));
-    assert(document.HasMember("repeat_time"));
-    assert(document.HasMember("random_order"));
-    assert(document.HasMember("show_status"));
-    
-    // whether to show status(fps, drawcall and so on)
-    bool showStatus = document["show_status"].GetBool();
-    Director::getInstance()->setDisplayStats(showStatus);
-
-    // get duration
-    const RapidJsonValue& duration = document["duration"];
-    for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
+    static bool parsed = false;
+    if (!parsed)
     {
-        HelloWorld::__durations.push_back(iter->GetInt());
-    }
-    
-    if (document.HasMember("running_order"))
-    {
-        // ignore repeat and random
-        HelloWorld::__randomOrder = false;
-        HelloWorld::__repeatTime = 1;
+        auto fileUtils = FileUtils::getInstance();
+        fileUtils->addSearchPath("/sdcard", true);
+        fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
+        log("writable path is %s", fileUtils->getWritablePath().c_str());
         
-        const RapidJsonValue& runningOrder = document["running_order"];
-        for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
+        auto fileContent = fileUtils->getStringFromFile("configure.json");
+        
+        RapidJsonDocument document;
+        document.Parse(fileContent.c_str());
+        
+        assert(document.HasMember("duration"));
+        assert(document.HasMember("repeat_time"));
+        assert(document.HasMember("random_order"));
+        assert(document.HasMember("show_status"));
+        
+        // whether to show status(fps, drawcall and so on)
+        bool showStatus = document["show_status"].GetBool();
+        Director::getInstance()->setDisplayStats(showStatus);
+        
+        // get duration
+        const RapidJsonValue& duration = document["duration"];
+        for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
         {
-            HelloWorld::__runningOrder.push_back(iter->GetInt());
+            HelloWorld::__durations.push_back(iter->GetInt());
         }
-    }
-    else
-    {
-        HelloWorld::__runningOrder = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        HelloWorld::__repeatTime = document["repeat_time"].GetInt();
-        HelloWorld::__randomOrder = document["random_order"].GetBool();
+        
+        if (document.HasMember("running_order"))
+        {
+            // ignore repeat and random
+            HelloWorld::__randomOrder = false;
+            HelloWorld::__repeatTime = 1;
+            
+            const RapidJsonValue& runningOrder = document["running_order"];
+            for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
+            {
+                HelloWorld::__runningOrder.push_back(iter->GetInt());
+            }
+        }
+        else
+        {
+            HelloWorld::__runningOrder = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            HelloWorld::__repeatTime = document["repeat_time"].GetInt();
+            HelloWorld::__randomOrder = document["random_order"].GetBool();
+        }
+        
+        parsed = true;
     }
 }
