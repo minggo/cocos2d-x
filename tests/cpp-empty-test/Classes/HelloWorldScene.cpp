@@ -213,17 +213,17 @@ void HelloWorld::update(float dt)
         return;
     
     // do some operation to simulate game logic
-    Mat4 mat4;
-    Mat4::createPerspective(60, 4.0 / 3.0, 0.1, 100, &mat4);
-    int cpuLevel[10] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5 };
-    int loopTime = 2000 * cpuLevel[_currentResourceLevel];
-    for (int i = 0; i < loopTime; ++i)
-    {
-        mat4.multiply(mat4);
-        mat4.inverse();
-        mat4.multiply(mat4);
-        mat4.inverse();
-    }
+//    Mat4 mat4;
+//    Mat4::createPerspective(60, 4.0 / 3.0, 0.1, 100, &mat4);
+//    int cpuLevel[10] = { 0, 1, 1, 2, 2, 3, 3, 4, 4, 5 };
+//    int loopTime = 2000 * cpuLevel[_currentResourceLevel];
+//    for (int i = 0; i < loopTime; ++i)
+//    {
+//        mat4.multiply(mat4);
+//        mat4.inverse();
+//        mat4.multiply(mat4);
+//        mat4.inverse();
+//    }
 }
 
 int HelloWorld::getRandomIndex(std::vector<int>* array)

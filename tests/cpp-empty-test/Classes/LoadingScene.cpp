@@ -27,6 +27,8 @@ LoadingScene::LoadingScene(Scene* newScene)
     _newScene->retain();
     this->scheduleUpdate();
     
+    this->schedule(CC_CALLBACK_1(LoadingScene::replaceScene, this), 6, "replaceScene");
+    
     auto origin = Director::getInstance()->getVisibleOrigin();
     auto size = Director::getInstance()->getVisibleSize();
     auto label = Label::createWithSystemFont("loading...", "", 15);
@@ -35,36 +37,42 @@ LoadingScene::LoadingScene(Scene* newScene)
     this->addChild(label);
 }
 
+void LoadingScene::replaceScene(float dt)
+{
+    Director::getInstance()->replaceScene(_newScene);
+    _newScene->release();
+    _newScene = nullptr;
+}
+
 void LoadingScene::update(float dt)
 {
-    if (_index >= 1000)
-    {
-        Director::getInstance()->replaceScene(_newScene);
-        _newScene->release();
-        _newScene = nullptr;
-    }
+//    auto label = static_cast<Label*>(getChildByTag(100));
+//    switch(_index % 3)
+//    {
+//        case 0:
+//            label->setString("loading.");
+//            break;
+//        case 1:
+//            label->setString("loading..");
+//            break;
+//        case 2:
+//            label->setString("loading...");
+//            break;
+//        default:
+//            break;
+//    }
     
-    for (int i = 0; i < 10; ++i)
+    load(_index % 6);
+    _index++;
+}
+
+
+void LoadingScene::load(int level)
+{
+    for (int i = 0; i < level; ++i)
     {
         Director::getInstance()->getTextureCache()->addImage("Hello.png");
         Director::getInstance()->getTextureCache()->removeUnusedTextures();
     }
-    
-    auto label = static_cast<Label*>(getChildByTag(100));
-    switch(_index % 3)
-    {
-    case 0:
-        label->setString("loading.");
-        break;
-    case 1:
-        label->setString("loading..");
-        break;
-    case 2:
-        label->setString("loading...");
-        break;
-    default:
-        break;
-    }
-    
-    _index += 10;
 }
+

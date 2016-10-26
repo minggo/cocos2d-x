@@ -19,7 +19,11 @@ public:
     LoadingScene(cocos2d::Scene* newScene);
     virtual void update(float dt) override;
     
+    void replaceScene(float dt);
 private:
+
+    void load(int level);
+    
     int _index;
     cocos2d::Scene* _newScene;
 };
