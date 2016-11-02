@@ -58,6 +58,8 @@ bool _isSupported = false;
 bool _isFirstSetNextScene = true;
 bool _isReplaceScene = false;
 bool _isReadFile = false;
+bool _isInBackground = false;
+
 uint32_t _drawCountInterval = 0;
 const uint32_t _drawCountThreshold = 30;
 
@@ -503,6 +505,8 @@ void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
 // static
 void EngineDataManager::onEnterForeground(EventCustom* event)
 {
+    _isInBackground = false;
+
     static bool isFirstTime = true;
     LOGD("onEnterForeground, isFirstTime: %d", isFirstTime);
 
@@ -521,6 +525,12 @@ void EngineDataManager::onEnterForeground(EventCustom* event)
     }
 }
 
+void EngineDataManager::onEnterBackground(EventCustom* event)
+{
+    LOGD("EngineDataManager::onEnterBackground ...");
+    _isInBackground = true;
+}
+
 // static
 void EngineDataManager::init()
 {
@@ -536,6 +546,7 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(Director::EVENT_AFTER_DRAW, std::bind(onAfterDrawScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(Director::EVENT_BEFORE_SET_NEXT_SCENE, std::bind(onBeforeSetNextScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
+    dispatcher->addCustomEventListener(EVENT_COME_TO_BACKGROUND, std::bind(onEnterBackground, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_BEFORE_READ_FILE, std::bind(onBeforeReadFile, std::placeholders::_1));
 
     notifyGameStatus(GameStatus::LAUNCH_BEGIN, 5, -1);
@@ -609,10 +620,6 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
         jint* expectedFps = env->GetIntArrayElements(arrExpectedFps, &isCopy);
         auto director = Director::getInstance();
         float animationInterval = director->getAnimationInterval();
-        if (director->_animationIntervalByEngineDataManager > 0.0f)
-        {
-            animationInterval = director->_animationIntervalByEngineDataManager;
-        }
         *expectedFps = (int)std::ceil(1.0f / animationInterval);
         env->ReleaseIntArrayElements(arrExpectedFps, expectedFps, 0);
 
@@ -652,7 +659,6 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
     if (!_isSupported)
         return;
 
-
     if (fps < -1 || fps > 60)
     {
         LOGE("Setting fps (%d) isn't supported!", fps);
@@ -677,8 +683,11 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
         LOGD("nativeOnChangeExpectedFps, fps (%d) was reset successfuly!", defaultFps);
     }
 
-    // Trigger Director::startAnimation
-    director->setAnimationInterval(defaultAnimationInterval);
+    if (!_isInBackground)
+    {
+        director->stopAnimation();
+        director->startAnimation();
+    }
 }
 
 void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject thiz, jint level)
