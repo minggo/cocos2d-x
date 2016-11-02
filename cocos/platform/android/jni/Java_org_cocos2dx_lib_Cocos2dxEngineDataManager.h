@@ -71,6 +71,7 @@ private:
     static void onBeforeSetNextScene(EventCustom* event);
     static void onAfterDrawScene(EventCustom* event);
     static void onEnterForeground(EventCustom* event);
+    static void onEnterBackground(EventCustom* event);
     static void onBeforeReadFile(EventCustom* event);
 
     static int getTotalParticleCount();

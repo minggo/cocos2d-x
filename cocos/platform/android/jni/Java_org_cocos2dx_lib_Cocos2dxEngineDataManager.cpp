@@ -51,13 +51,16 @@ typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> Rapi
 
 namespace {
 
-const char* _className = "org/cocos2dx/lib/Cocos2dxEngineDataManager";
+const char* CLASS_NAME_ENGINE_DATA_MANAGER = "org/cocos2dx/lib/Cocos2dxEngineDataManager";
+const char* CLASS_NAME_RENDERER = "org/cocos2dx/lib/Cocos2dxRenderer";
 
 bool _isInitialized = false;
 bool _isSupported = false;
 bool _isFirstSetNextScene = true;
 bool _isReplaceScene = false;
 bool _isReadFile = false;
+bool _isInBackground = false;
+
 uint32_t _drawCountInterval = 0;
 const uint32_t _drawCountThreshold = 30;
 
@@ -79,6 +82,9 @@ int _lowFpsCounter = 0;
 
 int _oldCpuLevel = -1;
 int _oldGpuLevel = -1;
+
+float _animationIntervalSetBySystem = -1.0f;
+float _animationIntervalWhenSceneChange = -1.0f;
 
 #define CARRAY_SIZE(arr) ((int)(arr.size()))
 
@@ -318,6 +324,38 @@ void parseDebugConfig()
 #endif // EDM_DEBUG
 }
 
+void setAnimationIntervalSetBySystem(float interval)
+{
+    if (!_isSupported)
+        return;
+
+    _animationIntervalSetBySystem = interval;
+    LOGD("Set FPS %f by system", std::ceil(1.0f / interval));
+
+    JniMethodInfo methodInfo;
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalSetBySystem", "(F)V"))
+    {
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
+        methodInfo.env->DeleteLocalRef(methodInfo.classID);
+    }
+}
+
+void setAnimationIntervalWhenSceneChange(float interval)
+{
+    if (!_isSupported)
+        return;
+
+    LOGD("Set FPS %f while changing scene", std::ceil(1.0f / interval));
+    _animationIntervalWhenSceneChange = interval;
+
+    JniMethodInfo methodInfo;
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalWhenSceneChange", "(F)V"))
+    {
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
+        methodInfo.env->DeleteLocalRef(methodInfo.classID);
+    }
+}
+
 } // namespace {
 
 namespace cocos2d {
@@ -348,9 +386,9 @@ void EngineDataManager::calculateFrameLost()
     if (_lowFpsThreshold > 0 && _continuousFrameLostThreshold > 0)
     {
         float animationInterval = director->getAnimationInterval();
-        if (director->_animationIntervalByEngineDataManager > 0.0f)
+        if (_animationIntervalSetBySystem > 0.0f)
         {
-            animationInterval = director->_animationIntervalByEngineDataManager;
+            animationInterval = _animationIntervalSetBySystem;
         }
 
         float frameRate = director->getFrameRate();
@@ -427,6 +465,13 @@ void EngineDataManager::onBeforeSetNextScene(EventCustom* event)
 
     notifyGameStatus(GameStatus::SCENE_CHANGE_BEGIN, 5, 0);
 
+    // Set _animationIntervalWhenSceneChange to 1.0f/60.0f while there isn't in replacing scene.
+    if (!_isReplaceScene)
+    {
+        // Modify fps to 60 
+        setAnimationIntervalWhenSceneChange(1.0f/60.0f);
+    }
+
     _isReplaceScene = true;
 }
 
@@ -464,6 +509,10 @@ void EngineDataManager::onAfterDrawScene(EventCustom* event)
         {
             _drawCountInterval = 0;
             _isReplaceScene = false;
+
+            // Reset _animationIntervalWhenSceneChange to -1.0f to
+            // make developer's or huawei's FPS setting take effect.
+            setAnimationIntervalWhenSceneChange(-1.0f);
 
             _oldCpuLevel = -1;
             _oldGpuLevel = -1;
@@ -505,6 +554,7 @@ void EngineDataManager::onEnterForeground(EventCustom* event)
 {
     // It will not trigger `enter foreground` event when game startup in Cocos2d-x 3.5.
     // So the following check isn't needed.
+    _isInBackground = false;
     // static bool isFirstTime = true;
     // LOGD("onEnterForeground, isFirstTime: %d", isFirstTime);
 
@@ -523,6 +573,12 @@ void EngineDataManager::onEnterForeground(EventCustom* event)
     }
 }
 
+void EngineDataManager::onEnterBackground(EventCustom* event)
+{
+    LOGD("EngineDataManager::onEnterBackground ...");
+    _isInBackground = true;
+}
+
 // static
 void EngineDataManager::init()
 {
@@ -538,6 +594,7 @@ void EngineDataManager::init()
     dispatcher->addCustomEventListener(Director::EVENT_AFTER_DRAW, std::bind(onAfterDrawScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(Director::EVENT_BEFORE_SET_NEXT_SCENE, std::bind(onBeforeSetNextScene, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_COME_TO_FOREGROUND, std::bind(onEnterForeground, std::placeholders::_1));
+    dispatcher->addCustomEventListener(EVENT_COME_TO_BACKGROUND, std::bind(onEnterBackground, std::placeholders::_1));
     dispatcher->addCustomEventListener(EVENT_BEFORE_READ_FILE, std::bind(onBeforeReadFile, std::placeholders::_1));
 
     notifyGameStatus(GameStatus::LAUNCH_BEGIN, 5, -1);
@@ -561,7 +618,7 @@ void EngineDataManager::notifyGameStatus(GameStatus type, int cpuLevel, int gpuL
         return;
 
     JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, _className, "notifyGameStatus", "(III)V"))
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_ENGINE_DATA_MANAGER, "notifyGameStatus", "(III)V"))
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, (int)type, cpuLevel, gpuLevel);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
@@ -575,7 +632,7 @@ void EngineDataManager::notifyContinuousFrameLost(int continueFrameLostCycle, in
         return;
 
     JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, _className, "notifyContinuousFrameLost", "(III)V"))
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_ENGINE_DATA_MANAGER, "notifyContinuousFrameLost", "(III)V"))
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, continueFrameLostCycle, continueFrameLostThreshold, times);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
@@ -589,7 +646,7 @@ void EngineDataManager::notifyLowFps(int lowFpsCycle, float lowFpsThreshold, int
         return;
 
     JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, _className, "notifyLowFps", "(IFI)V"))
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_ENGINE_DATA_MANAGER, "notifyLowFps", "(IFI)V"))
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, lowFpsCycle, lowFpsThreshold, frames);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
@@ -611,10 +668,6 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
         jint* expectedFps = env->GetIntArrayElements(arrExpectedFps, &isCopy);
         auto director = Director::getInstance();
         float animationInterval = director->getAnimationInterval();
-        if (director->_animationIntervalByEngineDataManager > 0.0f)
-        {
-            animationInterval = director->_animationIntervalByEngineDataManager;
-        }
         *expectedFps = (int)std::ceil(1.0f / animationInterval);
         env->ReleaseIntArrayElements(arrExpectedFps, expectedFps, 0);
 
@@ -654,7 +707,6 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
     if (!_isSupported)
         return;
 
-
     if (fps < -1 || fps > 60)
     {
         LOGE("Setting fps (%d) isn't supported!", fps);
@@ -666,21 +718,24 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
 
     int defaultFps = static_cast<int>(std::ceil(1.0f/defaultAnimationInterval));
 
+    if (fps > defaultFps)
+    {
+        LOGD("nativeOnChangeExpectedFps, fps (%d) is greater than default fps (%d), reset it to default!", fps, defaultFps);
+        fps = -1;
+    }
+
     LOGD("nativeOnChangeExpectedFps, set fps: %d, default fps: %d", fps, defaultFps);
 
     if (fps > 0)
     {
-        director->setAnimationIntervalByEngineDataManager(1.0f/fps);
+        setAnimationIntervalSetBySystem(1.0f/fps);
         LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", fps);
     }
     else if (fps == -1) // -1 means to reset to default FPS
     {
-        director->setAnimationIntervalByEngineDataManager(-1.0f);
+        setAnimationIntervalSetBySystem(-1.0f);
         LOGD("nativeOnChangeExpectedFps, fps (%d) was reset successfuly!", defaultFps);
     }
-
-    // Trigger Director::startAnimation
-    director->setAnimationInterval(defaultAnimationInterval);
 }
 
 void EngineDataManager::nativeOnChangeSpecialEffectLevel(JNIEnv* env, jobject thiz, jint level)
