@@ -17,8 +17,6 @@
 
 using namespace cocos2d;
 
-std::vector<int> AnotherScene::__runningOrder = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-std::vector<int> AnotherScene::__durations = {};
 std::vector<std::string> AnotherScene::__keys = {"key1", "key2", "key3", "key4", "key5", "key6", "key7", "key8", "key9", "key10"};
 
 cocos2d::Scene* AnotherScene::create()
@@ -95,6 +93,10 @@ void AnotherScene::scheduleCallback(float dt)
         _parentNode->removeAllChildren();
         _emitter->removeFromParent();
         experimental::AudioEngine::stopAll();
+        
+        experimental::AudioEngine::end();
+        Director::getInstance()->getTextureCache()->removeUnusedTextures();
+        
         return;
     }
     
@@ -110,7 +112,7 @@ void AnotherScene::scheduleCallback(float dt)
     subResourceInfo.spriteNumber = nextResourceInfo.spriteNumber - currentResourceInfo.spriteNumber;
     subResourceInfo.actionNumber = nextResourceInfo.audioNumber - currentResourceInfo.audioNumber;
     subResourceInfo.drawcallNumber = nextResourceInfo.drawcallNumber - currentResourceInfo.drawcallNumber;
-    subResourceInfo.particleNumber = nextResourceInfo.particleNumber - currentResourceInfo.particleNumber;
+    subResourceInfo.particleNumber = nextResourceInfo.particleNumber;
     subResourceInfo.audioNumber = nextResourceInfo.audioNumber - currentResourceInfo.audioNumber;
     myutils::addResource(_parentNode, _emitter, subResourceInfo, _audioIDVecs);
     
@@ -119,36 +121,33 @@ void AnotherScene::scheduleCallback(float dt)
 
 void AnotherScene::parseJson()
 {
-    static bool parsed = false;
+
+    auto fileUtils = FileUtils::getInstance();
+    fileUtils->addSearchPath("/sdcard", true);
+    fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
     
-    if (!parsed)
+    auto fileContent = fileUtils->getStringFromFile("gameScene.json");
+    
+    RapidJsonDocument document;
+    document.Parse(fileContent.c_str());
+    
+    // get duration
+    const RapidJsonValue& duration = document["duration"];
+    for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
     {
-        auto fileUtils = FileUtils::getInstance();
-        fileUtils->addSearchPath("/sdcard", true);
-        fileUtils->addSearchPath(fileUtils->getWritablePath(), true);
-        
-        auto fileContent = fileUtils->getStringFromFile("gameScene.json");
-        
-        RapidJsonDocument document;
-        document.Parse(fileContent.c_str());
-        
-        // get duration
-        const RapidJsonValue& duration = document["duration"];
-        for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
+        __durations.push_back(iter->GetInt());
+    }
+    
+    if (document.HasMember("running_order"))
+    {
+        const RapidJsonValue& runningOrder = document["running_order"];
+        for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
         {
-            AnotherScene::__durations.push_back(iter->GetInt());
+            __runningOrder.push_back(iter->GetInt());
         }
-        
-        if (document.HasMember("running_order"))
-        {
-            AnotherScene::__runningOrder.clear();
-            const RapidJsonValue& runningOrder = document["running_order"];
-            for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
-            {
-                AnotherScene::__runningOrder.push_back(iter->GetInt());
-            }
-        }
-        
-        parsed = true;
+    }
+    else
+    {
+        __runningOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     }
 }

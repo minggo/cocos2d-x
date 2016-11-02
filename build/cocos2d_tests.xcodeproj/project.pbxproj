@@ -773,6 +773,8 @@
 		460932821DC04F7D00F4BF9B /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4609327F1DC04F7D00F4BF9B /* Utils.cpp */; };
 		460932841DC05C5000F4BF9B /* gameScene.json in Resources */ = {isa = PBXBuildFile; fileRef = 460932831DC05C5000F4BF9B /* gameScene.json */; };
 		460932851DC05C5000F4BF9B /* gameScene.json in Resources */ = {isa = PBXBuildFile; fileRef = 460932831DC05C5000F4BF9B /* gameScene.json */; };
+		460932CB1DC73F0100F4BF9B /* res in Resources */ = {isa = PBXBuildFile; fileRef = 460932CA1DC73EC400F4BF9B /* res */; };
+		460932CC1DC73F0500F4BF9B /* config in Resources */ = {isa = PBXBuildFile; fileRef = 460932C91DC73EAD00F4BF9B /* config */; };
 		463D7E7C1D227C5F00EA6BD1 /* Bug-14327.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */; };
 		463D7E7D1D227C6A00EA6BD1 /* Bug-14327.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */; };
 		463D7E7E1D227CA400EA6BD1 /* Bug-15776.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 463D7E7A1D227C3800EA6BD1 /* Bug-15776.cpp */; };
@@ -2466,6 +2468,8 @@
 		4609327F1DC04F7D00F4BF9B /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		460932801DC04F7D00F4BF9B /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		460932831DC05C5000F4BF9B /* gameScene.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gameScene.json; path = "../tests/cpp-empty-test/Resources/gameScene.json"; sourceTree = "<group>"; };
+		460932C91DC73EAD00F4BF9B /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; name = config; path = "../tests/cpp-empty-test/Resources/config"; sourceTree = "<group>"; };
+		460932CA1DC73EC400F4BF9B /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = "../tests/cpp-empty-test/Resources/res"; sourceTree = "<group>"; };
 		463D7E781D227C3800EA6BD1 /* Bug-14327.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Bug-14327.cpp"; sourceTree = "<group>"; };
 		463D7E791D227C3800EA6BD1 /* Bug-14327.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bug-14327.h"; sourceTree = "<group>"; };
 		463D7E7A1D227C3800EA6BD1 /* Bug-15776.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Bug-15776.cpp"; sourceTree = "<group>"; };
@@ -3416,6 +3420,8 @@
 		1AC358FD18CEC1EF00F37B72 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				460932CA1DC73EC400F4BF9B /* res */,
+				460932C91DC73EAD00F4BF9B /* config */,
 				460932831DC05C5000F4BF9B /* gameScene.json */,
 				4609324D1DAA4A5D00F4BF9B /* Hello.png */,
 				4680331E1D91353E00E5C4C3 /* sprite0.png */,
@@ -5988,6 +5994,7 @@
 				4698EFBB1D8F90CB00A57085 /* effect7.mp3 in Resources */,
 				468033211D91354700E5C4C3 /* sprite1.png in Resources */,
 				4609324E1DAA4A6500F4BF9B /* Hello.png in Resources */,
+				460932CC1DC73F0500F4BF9B /* config in Resources */,
 				467361E41D86A3BA005B6797 /* buttonHighlighted.png in Resources */,
 				4698EFB81D8F90CB00A57085 /* effect4.mp3 in Resources */,
 				4698EFB61D8F90CB00A57085 /* effect2.mp3 in Resources */,
@@ -6006,6 +6013,7 @@
 				468033131D8FE2A400E5C4C3 /* arial.ttf in Resources */,
 				4698EFBC1D8F90CB00A57085 /* effect8.mp3 in Resources */,
 				4698EFA31D8F86C900A57085 /* fire.png in Resources */,
+				460932CB1DC73F0100F4BF9B /* res in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

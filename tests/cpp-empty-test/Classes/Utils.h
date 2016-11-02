@@ -26,6 +26,7 @@ namespace myutils
     };
     
     void addResource(cocos2d::Node* parentNode, cocos2d::ParticleSun *_emitter, const ResourceInfo& resourceInfo, std::vector<int>& audioIDVec);
+    unsigned* md5(const char* msg, int len);
 }
 
 #endif /* Utils_hpp */

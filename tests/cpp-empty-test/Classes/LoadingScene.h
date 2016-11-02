@@ -9,6 +9,9 @@
 #ifndef LoadingScene_hpp
 #define LoadingScene_hpp
 
+#include <vector>
+#include <string>
+
 #include "2d/CCScene.h"
 
 class LoadingScene : public cocos2d::Scene
@@ -22,10 +25,14 @@ public:
     void replaceScene(float dt);
 private:
 
-    void load(int level);
+    void load();
+    void computeMD5(const std::string& fileName);
     
     int _index;
     cocos2d::Scene* _newScene;
+    bool _endOfMd5;
+    std::vector<std::string> _bitfiles;
+    std::vector<std::string> _resfiles;
 };
 
 #endif /* LoadingScene_hpp */

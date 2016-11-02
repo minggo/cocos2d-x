@@ -30,8 +30,8 @@ private:
     void parseJson();
     
     std::vector<myutils::ResourceInfo> _resourceLevelInfos;
-    static std::vector<int> __runningOrder;
-    static std::vector<int> __durations;
+    std::vector<int> __runningOrder;
+    std::vector<int> __durations;
     static std::vector<std::string> __keys;
     
     
