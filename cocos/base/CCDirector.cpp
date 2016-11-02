@@ -1405,7 +1405,7 @@ void DisplayLinkDirector::startAnimation()
 
     _cocos2d_thread_id = std::this_thread::get_id();
 
-    float interval = _animationIntervalByEngineDataManager > 0 ? _animationIntervalByEngineDataManager : _animationInterval;
+    float interval = _animationIntervalByEngineDataManager > 0.0f ? _animationIntervalByEngineDataManager : _animationInterval;
 
     Application::getInstance()->setAnimationInterval(interval);
 
@@ -1442,6 +1442,8 @@ void DisplayLinkDirector::stopAnimation()
 void DisplayLinkDirector::setAnimationInterval(float interval)
 {
     _animationInterval = interval;
+    // Reset '_animationIntervalByEngineDataManager' to -1 to use developer's FPS setting.
+    _animationIntervalByEngineDataManager = -1.0f;
     if (! _invalid)
     {
         stopAnimation();
