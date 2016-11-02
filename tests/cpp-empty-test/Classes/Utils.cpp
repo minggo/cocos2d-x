@@ -14,6 +14,8 @@
 #include "2d/CCActionInterval.h"
 #include "audio/include/AudioEngine.h"
 
+#define DARW_CALL_TAG 100
+
 using namespace cocos2d;
 
 namespace myutils
@@ -37,6 +39,7 @@ namespace myutils
                 {
                     auto spritePath = StringUtils::format("sprite%d.png", drawcall % 2);
                     sprite = Sprite::create(spritePath.c_str());
+                    sprite->setTag(DARW_CALL_TAG);
                 }
                 else
                 {
@@ -66,15 +69,46 @@ namespace myutils
         }
         else
         {
-            // remove some sprites
-            int removedSpriteNum = -spriteNumber;
+            int removedDrawcall = 0;
+            if (drawcallNumber < 0)
+                removedDrawcall = -drawcallNumber;
+            
+            // remove sprite to reduce drawcall
             auto children = parentNode->getChildren();
-            for (int i = 0; i < removedSpriteNum; ++i)
+            int removedSpriteNum = -spriteNumber;
+            int spriteRemovedByDrawcall = 0;
+            int spriteRemoved = 0;
+            if (removedDrawcall > 0)
             {
-                parentNode->removeChild(children.at(i));
+                for (auto& node : children)
+                {
+                    if (node->getTag() == DARW_CALL_TAG)
+                    {
+                        parentNode->removeChild(node);
+                        ++spriteRemovedByDrawcall;
+                        ++spriteRemoved;
+                        
+                        if (spriteRemovedByDrawcall >= removedDrawcall)
+                            break;
+                    }
+                }
             }
+            
+            children = parentNode->getChildren();
+            // remove the rest sprites
+            for (auto& node : children)
+            {
+                if (node->getTag() != DARW_CALL_TAG)
+                {
+                    parentNode->removeChild(node);
+                    ++spriteRemoved;
+                    
+                    if (spriteRemoved >= removedSpriteNum)
+                        break;
+                }
+            }
+
         }
-        
         
         
         // add particles
@@ -98,7 +132,7 @@ namespace myutils
             int stoppedAudioNum = -audioNumber;
             for (int i = 0; i < stoppedAudioNum; ++i)
             {
-                experimental::AudioEngine::stop(audioIDVec[i]);
+                experimental::AudioEngine::stop(audioIDVec[0]);
                 audioIDVec.erase(audioIDVec.begin());
             }
         }

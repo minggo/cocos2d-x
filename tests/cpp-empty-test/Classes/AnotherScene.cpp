@@ -50,16 +50,16 @@ AnotherScene::AnotherScene()
     _resourceLevelInfos = {
         // sprite, drawCall, action, particle, audio
         {120, 120,  0,   0,   0}, // CPU=0,GPU=0
-        {300, 300,  50, 50, 1}, // CPU=1,GPU=1
-        {350, 350,  50, 200, 1}, // CPU=1,GPU=2
-        {500, 500,  100, 300, 2}, // CPU=2,GPU=3
-        {600, 550,  100, 300, 2}, // CPU=2,GPU=4
-        {800, 650,  200, 400, 3}, // CPU=3,GPU=5
+        {300, 300,  0, 50, 1}, // CPU=1,GPU=1
+        {350, 350,  0, 200, 1}, // CPU=1,GPU=2
+        {500, 500,  0, 300, 2}, // CPU=2,GPU=3
+        {600, 550,  0, 300, 2}, // CPU=2,GPU=4
+        {1200, 650,  0, 500, 3}, // CPU=3,GPU=5
         
-        {1100, 700,  200, 400, 3}, // CPU=3,GPU=6
+        {1200, 700,  0, 500, 3}, // CPU=3,GPU=6
         {1500, 700,  0,   400, 4}, // CPU=4,GPU=7
         {2000, 900,  0,   400, 4}, // CPU=4,GPU=8
-        {5000, 2000,  250, 1000, 5}, // CPU=5,GPU=9
+        {5000, 2000,  0, 1000, 5}, // CPU=5,GPU=9
     };
     
     parseJson();
@@ -100,17 +100,17 @@ void AnotherScene::scheduleCallback(float dt)
         return;
     }
     
-    int nextOrder = AnotherScene::__runningOrder[nextLevel] - 1;
-    int currentOrder = AnotherScene::__runningOrder[_currentLevel] - 1;
-    std::string key = AnotherScene::__keys[nextOrder];
-    int duration = AnotherScene::__durations[nextOrder];
+    int nextOrder = __runningOrder[nextLevel] - 1;
+    int currentOrder = __runningOrder[_currentLevel] - 1;
+    std::string key = __keys[nextOrder];
+    int duration = __durations[nextOrder];
     scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
     
     auto currentResourceInfo = _resourceLevelInfos[currentOrder];
     auto nextResourceInfo = _resourceLevelInfos[nextOrder];
     myutils::ResourceInfo subResourceInfo;
     subResourceInfo.spriteNumber = nextResourceInfo.spriteNumber - currentResourceInfo.spriteNumber;
-    subResourceInfo.actionNumber = nextResourceInfo.audioNumber - currentResourceInfo.audioNumber;
+    subResourceInfo.actionNumber = nextResourceInfo.actionNumber - currentResourceInfo.actionNumber;
     subResourceInfo.drawcallNumber = nextResourceInfo.drawcallNumber - currentResourceInfo.drawcallNumber;
     subResourceInfo.particleNumber = nextResourceInfo.particleNumber;
     subResourceInfo.audioNumber = nextResourceInfo.audioNumber - currentResourceInfo.audioNumber;
