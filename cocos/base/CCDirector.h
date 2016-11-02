@@ -409,9 +409,6 @@ public:
     float getFrameRate() const { return _frameRate; }
 
 protected:
-    friend class EngineDataManager;
-    /** Internal use only, it's used by EngineDataManager class for Android platform */
-    void setAnimationIntervalByEngineDataManager(float interval) { _animationIntervalByEngineDataManager = interval; }
     
     void purgeDirector();
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
@@ -518,7 +515,6 @@ protected:
     Console *_console;
 #endif
 
-    float _animationIntervalByEngineDataManager;
 
     // GLViewProtocol will recreate stats labels to fit visible rect
     friend class GLViewProtocol;

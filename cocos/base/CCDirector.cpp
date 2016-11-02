@@ -114,8 +114,6 @@ bool Director::init(void)
 {
     setDefaultValues();
 
-    _animationIntervalByEngineDataManager = -1.0f;
-    
     // scenes
     _runningScene = nullptr;
     _nextScene = nullptr;
@@ -1288,10 +1286,8 @@ void DisplayLinkDirector::startAnimation()
 
     _invalid = false;
 
-    float interval = _animationIntervalByEngineDataManager > 0 ? _animationIntervalByEngineDataManager : _animationInterval;
-    
-    Application::getInstance()->setAnimationInterval(interval);
-    
+    Application::getInstance()->setAnimationInterval(_animationInterval);
+
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
 }
