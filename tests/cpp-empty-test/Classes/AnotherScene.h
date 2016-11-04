@@ -36,6 +36,7 @@ private:
     
     
     int _currentLevel;
+    int _index;
     std::vector<int> _audioIDVecs;
     cocos2d::ParticleSun* _emitter;
     cocos2d::Node *_parentNode;

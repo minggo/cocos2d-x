@@ -34,6 +34,7 @@ typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> Rapi
 
 AnotherScene::AnotherScene()
 : _currentLevel(0)
+, _index(0)
 {
     auto origin = Director::getInstance()->getVisibleOrigin();
     
@@ -43,6 +44,20 @@ AnotherScene::AnotherScene()
     auto menu = Menu::create(menuItem, nullptr);
     menu->setPosition(Vec2(origin.x, origin.y));
     this->addChild(menu);
+    
+    // preload resources
+    Director::getInstance()->getTextureCache()->addImage("sprite0.png");
+    Director::getInstance()->getTextureCache()->addImage("sprite1.png");
+    experimental::AudioEngine::preload("effec0.mp3");
+    experimental::AudioEngine::preload("effec1.mp3");
+    experimental::AudioEngine::preload("effec2.mp3");
+    experimental::AudioEngine::preload("effec3.mp3");
+    experimental::AudioEngine::preload("effec4.mp3");
+    experimental::AudioEngine::preload("effec5.mp3");
+    experimental::AudioEngine::preload("effec6.mp3");
+    experimental::AudioEngine::preload("effec7.mp3");
+    experimental::AudioEngine::preload("effec8.mp3");
+    experimental::AudioEngine::preload("effec9.mp3");
     
     _parentNode = Node::create();
     this->addChild(_parentNode);
@@ -64,8 +79,8 @@ AnotherScene::AnotherScene()
     
     parseJson();
     int order = AnotherScene::__runningOrder[0] - 1;
-    std::string key = AnotherScene::__keys[order];
-    int duration = AnotherScene::__durations[order];
+    std::string key = __keys[order];
+    int duration = __durations[_index];
     scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
     
     _emitter = ParticleSun::create();
@@ -103,7 +118,7 @@ void AnotherScene::scheduleCallback(float dt)
     int nextOrder = __runningOrder[nextLevel] - 1;
     int currentOrder = __runningOrder[_currentLevel] - 1;
     std::string key = __keys[nextOrder];
-    int duration = __durations[nextOrder];
+    int duration = __durations[++_index];
     scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
     
     auto currentResourceInfo = _resourceLevelInfos[currentOrder];
