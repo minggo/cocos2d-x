@@ -506,9 +506,6 @@ public:
     const std::thread::id& getCocos2dThreadId() const { return _cocos2d_thread_id; }
 
 protected:
-    friend class EngineDataManager;
-    /** Internal use only, it's used by EngineDataManager class for Android platform */
-    void setAnimationIntervalByEngineDataManager(float interval) { _animationIntervalByEngineDataManager = interval; }
     
     void reset();
     
@@ -631,7 +628,6 @@ protected:
     /* cocos2d thread id */
     std::thread::id _cocos2d_thread_id;
 
-    float _animationIntervalByEngineDataManager;
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
 };
