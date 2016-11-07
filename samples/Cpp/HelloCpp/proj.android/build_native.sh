@@ -87,6 +87,6 @@ if [[ "$buildexternalsfromsource" ]]; then
 else
     echo "Using prebuilt externals"
     set -x
-    "$NDK_ROOT"/ndk-build -C "$APP_ANDROID_ROOT" $* \
+    "$NDK_ROOT"/ndk-build -j8 -C "$APP_ANDROID_ROOT" $* \
         "NDK_MODULE_PATH=${COCOS2DX_ROOT}:${COCOS2DX_ROOT}/cocos2dx/platform/third_party/android/prebuilt"
 fi
