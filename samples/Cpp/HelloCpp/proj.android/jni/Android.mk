@@ -7,10 +7,15 @@ LOCAL_MODULE := hellocpp_shared
 LOCAL_MODULE_FILENAME := libhellocpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-                   ../../Classes/AppDelegate.cpp \
-                   ../../Classes/HelloWorldScene.cpp
+				   ../../Classes/AppDelegate.cpp \
+                   ../../Classes/HelloWorldScene.cpp \
+                   ../../Classes/AnotherScene.cpp \
+                   ../../Classes/MyAction.cpp \
+                   ../../Classes/LoadingScene.cpp \
+                   ../../Classes/Utils.cpp
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
+					$(LOCAL_PATH)/../../../../../external
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 

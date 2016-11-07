@@ -16,7 +16,7 @@ extern "C"
 jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     JniHelper::setJavaVM(vm);
-
+    AppDelegate *pAppDelegate = new AppDelegate();
     return JNI_VERSION_1_4;
 }
 
@@ -26,8 +26,7 @@ void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thi
     {
         CCEGLView *view = CCEGLView::sharedOpenGLView();
         view->setFrameSize(w, h);
-
-        AppDelegate *pAppDelegate = new AppDelegate();
+        
         CCApplication::sharedApplication()->run();
     }
     else

@@ -26,4 +26,5 @@
                       android:smallScreens="true"
                       android:anyDensity="true"
                       android:normalScreens="true"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
 </manifest> 
