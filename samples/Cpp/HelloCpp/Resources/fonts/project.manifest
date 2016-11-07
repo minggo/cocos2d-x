@@ -1,0 +1,1755 @@
+{
+    "packageUrl": "http://120.24.15.218/cdn/6c412d/",
+    "remoteManifestUrl": "http://120.24.15.218/cdn/6c412d/project.manifest",
+    "remoteVersionUrl": "http://120.24.15.218/cdn/6c412d/version.manifest",
+    "version": "areview",
+    "assets": {
+        "src/jsb_anysdk.js": {
+            "md5": "7551284fcba1c5543c0454526bb8991a"
+        },
+        "src/jsb_anysdk_constants.js": {
+            "md5": "03a1f55f34f9615052326cb5bfb81bda"
+        },
+        "src/jsb_polyfill.js": {
+            "md5": "bc671976b6847282612d6d75372868e5"
+        },
+        "src/project.dev.js": {
+            "md5": "629e51c4e931f72d38dfb79fcc3a1d84"
+        },
+        "src/settings.js": {
+            "md5": "d0d05911ca7ba265834b03843824c1ad"
+        },
+        "res/import/01/01e03e81-67b9-4f0b-ad9a-79dd016edf89.json": {
+            "md5": "cbf3b66e315f8cc29c67417426935f6d"
+        },
+        "res/import/02/0225f4c0-1363-4e7e-8268-d6205c967a08.json": {
+            "md5": "b65c9980066a3ba77feef235b0ac7090"
+        },
+        "res/import/02/02b37c82-382d-4f8d-a93b-41d793374720.json": {
+            "md5": "73febdb4840a00b098470ab214ffd805"
+        },
+        "res/import/03/03785096-9a63-402b-9e5d-6d976cd32eab.json": {
+            "md5": "d96a92d74362dc803d580b3ed90529d9"
+        },
+        "res/import/03/0386a50e-7797-4225-8c39-2bda57218f48.json": {
+            "md5": "89cf4407038646d1cf51bcfb6a71bd3b"
+        },
+        "res/import/04/04a7f0d8-b566-4bb2-91d5-23ec53e18323.json": {
+            "md5": "7d051ffe8f6c14459b41a9a11ba45a5d"
+        },
+        "res/import/05/05288512-af0d-4b41-8e72-cdd98783b5dd.json": {
+            "md5": "e7410d22e82735a593e308bb110aa1bf"
+        },
+        "res/import/05/05dc5703-734a-44b1-b2d7-5f0f2d4d6e8f.json": {
+            "md5": "0fbf4528b95bed27d46d02c5a2fe7702"
+        },
+        "res/import/06/066f7ad7-f2e8-49b4-a0b9-85ca709b1a0a.json": {
+            "md5": "d0ff43bde2e7b526f31f3267104915ad"
+        },
+        "res/import/08/08aa12e2-350a-4eab-b820-8da1915ca0d4.json": {
+            "md5": "f5825e1489cdc5bfe6ef15cc081c506e"
+        },
+        "res/import/09/09e83447-6839-4669-bc80-0605858b34a5.json": {
+            "md5": "ffa32b1dca7e4c5a6869574717428c31"
+        },
+        "res/import/0a/0ae1c27f-932e-4ebf-adbc-5ad096359ba1.json": {
+            "md5": "80f6f8cd71390c60cd8593681a060b77"
+        },
+        "res/import/0a/0ae38d94-83eb-4bac-8512-15052da58bc9.json": {
+            "md5": "f170c783e7f26aac859cd22117f7ae47"
+        },
+        "res/import/0b/0b3e49b4-2a65-4a28-8baf-1bfe10bb8931/qiandao_shuzi-export.png": {
+            "md5": "deed96cef190fe4894dc2fb46d6bbfe5"
+        },
+        "res/import/0b/0b3e49b4-2a65-4a28-8baf-1bfe10bb8931/raw-bitmap-font.fnt": {
+            "md5": "1a454626749a5315062cc98b6c4d45b1"
+        },
+        "res/import/0b/0b3e49b4-2a65-4a28-8baf-1bfe10bb8931.json": {
+            "md5": "261dbe735a63990b20826c56216fb963"
+        },
+        "res/import/0b/0bbbcb6a-7dac-42a0-8a85-3de5aa4b7bf1.json": {
+            "md5": "433e2150b443f76df2c5919857bc8a79"
+        },
+        "res/import/0c/0c4eaf3a-f9da-4d27-abe3-5ea9cc2e217a.json": {
+            "md5": "244a73f5c7e8b7f3326a65eed43d4286"
+        },
+        "res/import/0d/0d029c6b-ef71-40f6-87db-ddc8cfc42169.json": {
+            "md5": "f281b61c205c8c802040d85966d766c0"
+        },
+        "res/import/0d/0d4fb833-65db-4138-9c08-fa2bc8f1d3d5.json": {
+            "md5": "dd4313b1a58762474b4b7d7bd8a6aa4e"
+        },
+        "res/import/0e/0eb2db79-e2c3-44ab-b475-21c5a92170de.json": {
+            "md5": "a298797dc136fd6b996f275713ee4f65"
+        },
+        "res/import/10/107d1639-e4da-4ac0-ace1-0e95deb8dd0b.json": {
+            "md5": "97e7c139d2959b372de1e8f1f4f82ebd"
+        },
+        "res/import/10/10f5e1a7-1d8b-4337-a68c-0325a74faea1.json": {
+            "md5": "497a35b5ef244819c2ab577c059c9ed3"
+        },
+        "res/import/11/116a3ee5-293f-4f23-a114-189339bb32c9.json": {
+            "md5": "d28ae533ae81976e4c253d2663e5e449"
+        },
+        "res/import/11/11fbc705-2597-4a2e-9ad6-5f281da2c519.json": {
+            "md5": "c0460ce13a2bf764df75b2cdc57de12d"
+        },
+        "res/import/12/122805b9-c4b4-493f-b39f-b172c37a7a0c.json": {
+            "md5": "367a29c1f541ae5005fcc453b937b454"
+        },
+        "res/import/12/124fb0a9-76fb-419e-8981-85bb49575bd0.json": {
+            "md5": "a63dd404400d03dfb1fdc49d4d232df5"
+        },
+        "res/import/12/12e85cdb-a830-4903-8862-77b4bbca6559.json": {
+            "md5": "d2c390222e9105ca3ba28530e02f5637"
+        },
+        "res/import/13/132a39bc-7918-4888-ad28-0a53c27d34ce.json": {
+            "md5": "525e26fd10654c6719aeb705121712b2"
+        },
+        "res/import/13/13cedc4b-665c-4733-ac55-b8196d6c325a.json": {
+            "md5": "f328272125fccf5f64619ec84e9f950a"
+        },
+        "res/import/14/1461cc62-b66c-4bbd-b0b9-9306a9ad87a5.json": {
+            "md5": "6ec6d750e513c4f84e03a335cb384b43"
+        },
+        "res/import/19/19ad238c-351e-475c-942f-a0e0e96ff991.json": {
+            "md5": "6d656ba6ba7e67455d17bb865b69454c"
+        },
+        "res/import/1a/1ac5ac42-4dfd-4979-bf81-4c5a1be22a6d.json": {
+            "md5": "d895102af5b2a9732e760a3ae3ba048c"
+        },
+        "res/import/1c/1c65be35-de9f-43fa-8a02-880530f8c564.json": {
+            "md5": "1c1746a772222b2011497784b41ed772"
+        },
+        "res/import/1c/1c695f25-1685-48ca-a664-b3ad76667e0e.json": {
+            "md5": "7a8dc8d43bd04f1be42174e573231670"
+        },
+        "res/import/1e/1ecccdd5-1500-4116-8ad7-1220d27b1223.json": {
+            "md5": "d5a0db2e5ca27a7d8d72a2b2192a04ff"
+        },
+        "res/import/1f/1f534e31-b8ff-4cee-9e67-1314e3b4fae6.json": {
+            "md5": "0043f8b2ba554560ef0ced458a3dcb05"
+        },
+        "res/import/1f/1f609570-e8f3-41c8-ad57-61a42eafb681.json": {
+            "md5": "c496501bcdb459c57f85151156501586"
+        },
+        "res/import/1f/1fd679e3-4097-49be-a123-e7bc33318218.json": {
+            "md5": "36e3337a9f9c939bdad7f55491ce9758"
+        },
+        "res/import/23/23cf57da-975e-4ea4-9802-5171dcee13c5.json": {
+            "md5": "f85bf8a4332086b3af311b3e7e3b7989"
+        },
+        "res/import/24/24cebe3d-7252-44ea-9976-7be9dcc2431c.json": {
+            "md5": "0bbf3b2da2bc3220ac0ab94aedae3b29"
+        },
+        "res/import/25/251941e4-9792-42a8-ab82-238241640c45.json": {
+            "md5": "023efe9b07d25e3169939bbb881f43bc"
+        },
+        "res/import/28/2865b59b-3e90-4d85-9eb3-2200f2432995.json": {
+            "md5": "0789fe275a08064c431612afbb529430"
+        },
+        "res/import/29/29158224-f8dd-4661-a796-1ffab537140e.json": {
+            "md5": "321e6f519c8e6371949380648b18d5f0"
+        },
+        "res/import/29/295ff29b-c36d-4eaf-8ce1-3dafbe71e885.json": {
+            "md5": "4e410d70bb1ccf8548157d4ab5054721"
+        },
+        "res/import/29/2999d2ad-65b2-431c-9adf-72e2d75d4500.json": {
+            "md5": "6b08649ddfe51640b7c6358289a8b028"
+        },
+        "res/import/2a/2a964cd3-885e-43ce-9a25-12628918e922.json": {
+            "md5": "28d12e04a397a9032cc8548e78c9d7b8"
+        },
+        "res/import/2e/2ebbaf62-5629-4681-b961-45e583ef19b3.json": {
+            "md5": "2a08b8950235b2b1bb7efba667e43005"
+        },
+        "res/import/31/317a2cb1-beac-45ca-91a9-e3dd58df1c33.json": {
+            "md5": "d392160b9d517306226c48b979437abb"
+        },
+        "res/import/31/317bcca2-3ef1-4909-955c-20c481cd9920.json": {
+            "md5": "8ccef8d9e2428e1af51dcdecc2e90bb0"
+        },
+        "res/import/31/31e49622-63ae-405e-a4cc-3d6a6ca029ed.json": {
+            "md5": "b477d321dea1af656d380b6aa6646b06"
+        },
+        "res/import/32/322f4716-6567-41b4-9b30-73ba8a9fb0dc.json": {
+            "md5": "b9dbded0799f92b2583fdee847e6be48"
+        },
+        "res/import/32/32894983-8a8c-40b8-95bd-11191aaac371.json": {
+            "md5": "1826aa1f03e4761365ec3d9fd6873d4b"
+        },
+        "res/import/33/33d831d0-11b1-4edb-877c-80e1fa139473.json": {
+            "md5": "20fbb3935f358d1a073cb45d8aa56ea7"
+        },
+        "res/import/34/344e5928-3cb0-4946-94bf-0021ae413a3d.json": {
+            "md5": "6492f42e1bd364b7f3174b9f8b5c9668"
+        },
+        "res/import/34/34e73b59-8177-4619-bb1e-62e4d4fb07e3.json": {
+            "md5": "9c6d2427ad1d7e6368a8fe7081f59034"
+        },
+        "res/import/34/34f70a64-9c39-4c09-9db7-8d2bfafae426.json": {
+            "md5": "44a7fcdef73e55b21260f4e4f95bf9d0"
+        },
+        "res/import/35/35125eea-91cd-4679-a3e6-8e79ccee3ca9.json": {
+            "md5": "3ab2e5e68ca67f34b61cffafa9f40717"
+        },
+        "res/import/35/357b821d-9eeb-4f6a-a8e1-a88c3a982b0e.json": {
+            "md5": "c50b46e7851d7ecc7b8969791cb38ac8"
+        },
+        "res/import/38/387f1e3d-aa83-486a-b2f1-c24f76fb127e.json": {
+            "md5": "fdc1bc8025d1d1b76dd74d200c6d9bd6"
+        },
+        "res/import/39/39740b89-4588-4f3d-8a4e-3f4b8261df01.json": {
+            "md5": "57dab042fa42fc157917dd049b8ce43a"
+        },
+        "res/import/3a/3af7759a-3f2c-4ce7-a7be-f184c77734ce.json": {
+            "md5": "b362fac035c640dbc3b1d60a8762605b"
+        },
+        "res/import/3b/3bae0e78-1274-471a-b79e-7f56c734710b.json": {
+            "md5": "b92beb0302f2788c3df68031afd47c08"
+        },
+        "res/import/3c/3c67e8f2-311d-461d-aeb9-15ac69675ee0.json": {
+            "md5": "22791a92c4d1d5c5c170e3ffc836ec1e"
+        },
+        "res/import/3f/3fb5a4c3-3959-4cfe-b2d2-3cef7ac4fb4d.json": {
+            "md5": "276ae10948fc605d62336ac9c68d32f4"
+        },
+        "res/import/41/413d725d-a295-4355-acd4-a6fa7dd03d90.json": {
+            "md5": "b352175d76500876b61d7233be166964"
+        },
+        "res/import/44/448b9a3e-07c5-4eff-b53a-f52f249a0ba5.json": {
+            "md5": "4274d191bff314c5eacce41348d7736a"
+        },
+        "res/import/45/45ce98a6-ea81-4a4f-bf6e-769ba35f2e6c.json": {
+            "md5": "8f968ff1fb2982830dd3fc9b70c30a8c"
+        },
+        "res/import/46/4672bc78-45b0-4ac8-97be-315e0798885a.json": {
+            "md5": "10c12a462fc0e88cdc76796ec04300b8"
+        },
+        "res/import/46/46e85e46-4415-4df3-b5e8-b65d7df07b23.json": {
+            "md5": "3b4fc34c9997fb62eeefdd42c4647ca2"
+        },
+        "res/import/48/48d9a64c-aa55-4838-9d83-2af21e250143.json": {
+            "md5": "e67cd296a1a8e55088e27512c4f35c0e"
+        },
+        "res/import/48/48f7baf6-c7e4-4953-a4f0-8808e761dce0.json": {
+            "md5": "404fd9f30df6538eb0f9471d374210c5"
+        },
+        "res/import/49/497abb7d-e2e7-40ea-9a24-68fd02bc0fab.json": {
+            "md5": "761ee3bb42346ac0a5b0eee3480e881a"
+        },
+        "res/import/49/4981e335-da17-4078-9f49-4ce5c8dbaeb4.json": {
+            "md5": "f7c909bcce4c9c04e8b05553e1b85759"
+        },
+        "res/import/4a/4a3299eb-f87f-42ca-b1ac-9b495f3085b1.json": {
+            "md5": "d02e569aa4b3e416a0dbaa2280100eff"
+        },
+        "res/import/4a/4a79472d-3c92-4291-8870-d2f42b2bc703.json": {
+            "md5": "84374aa53f13d7bcf3b44e9b772afcd4"
+        },
+        "res/import/4a/4aae1689-0b2a-4490-8289-bfdfca610473.json": {
+            "md5": "a0c4b4298f76d42c56aff7d25d767481"
+        },
+        "res/import/4c/4cd71674-6bb2-4e0a-a814-a1491581ca72.json": {
+            "md5": "4094bdce3239dba05d141aa18d296a63"
+        },
+        "res/import/4e/4e8640a4-1538-4334-8f94-df9ee2736dae.json": {
+            "md5": "98022908f2f5b82ed7e835c622ba7034"
+        },
+        "res/import/4f/4f4a2f2e-717c-44b2-895b-bc7265c0b8fc.json": {
+            "md5": "9eb6cf22cafe0851f3c457e4e65db096"
+        },
+        "res/import/51/51fb44d0-e817-46ff-a240-78d90059fb7f.json": {
+            "md5": "61ed6dbbf88efca1e4e34e93da7b67c4"
+        },
+        "res/import/56/565d8071-a898-4f0a-a9b2-03ee89240b80.json": {
+            "md5": "ff6bbe5a79973c0b188fd4a19e3a8b12"
+        },
+        "res/import/56/566b8321-3229-4231-ab05-d8cc2ea28df2.json": {
+            "md5": "02a7606ef8558319a09bbc57f01d50ca"
+        },
+        "res/import/56/568b1ec4-d6f0-4221-b1b2-4ad25f2fbe50.json": {
+            "md5": "38a0b68c5c8ba20e4f99606631b4f7f0"
+        },
+        "res/import/57/57dc197c-4dff-4edd-83fe-b11399345909.json": {
+            "md5": "7318e8b86bbc50d1573f083666549911"
+        },
+        "res/import/59/597be5d5-2b00-4307-bb51-19e0af4621ca.json": {
+            "md5": "51b3437acacb54837aecbea74d1f9d3b"
+        },
+        "res/import/5a/5a386783-daee-4273-815e-6570c5352fca.json": {
+            "md5": "c421d77a4614e6df495b2b30ccd35c2b"
+        },
+        "res/import/5c/5c13d284-e787-4724-86bf-cbe4cf3cc3cc.json": {
+            "md5": "10ecd3015342a9e949e8023d960145db"
+        },
+        "res/import/5c/5c3bb932-6c3c-468f-88a9-c8c61d458641.json": {
+            "md5": "f6134ea7a538211af5d2454a48ca0dd0"
+        },
+        "res/import/5c/5caa4ab0-841d-4d39-b97b-369c118fe09c.json": {
+            "md5": "94a3837698c0497eb333d3ec870b9255"
+        },
+        "res/import/5d/5df29a40-87f0-4339-93dd-b238e430876b.json": {
+            "md5": "d085aa738c7b6af063d5a349f573692b"
+        },
+        "res/import/5e/5e5d41f7-2e79-4fd0-929f-51a3909442f1.json": {
+            "md5": "d28b81328f61830a216ab5f042aef8cf"
+        },
+        "res/import/5f/5f991030-a0fd-407b-a5af-2c92cf249296.json": {
+            "md5": "a2b01b8a9b0f75c6d0bb2d42ab6c77ee"
+        },
+        "res/import/5f/5fe5dcaa-b513-4dc5-a166-573627b3a159.json": {
+            "md5": "627e730de9fdbfd2871bb84b60ab287d"
+        },
+        "res/import/61/612ec56e-6c4a-4e36-a579-9a458e73ebae.json": {
+            "md5": "047795374f44328f65fe9d9801aa3847"
+        },
+        "res/import/61/615362c5-e03a-42a3-a756-c9b040ade607.json": {
+            "md5": "88d0ed8c0432459d8119ee1687ea247b"
+        },
+        "res/import/61/61e8bc80-a877-4fdf-9020-aff236b6f033.json": {
+            "md5": "014fb5afc074b9e3fb1fe951b50031ea"
+        },
+        "res/import/61/61f6982a-705e-4c95-ae9f-6d18df181412.json": {
+            "md5": "53b2fa537f1506897231b7b2d954c69f"
+        },
+        "res/import/64/64188803-f88c-4f81-a6bd-31cc7548eac2.json": {
+            "md5": "44b142a45393d622d241b7910ceffd53"
+        },
+        "res/import/64/64eff094-1410-4b8f-9866-25f7425537c3.json": {
+            "md5": "b1729a93253c0483443e80bb51c6917e"
+        },
+        "res/import/65/651f82f0-5ad1-4b7d-9233-13ae907bee67.json": {
+            "md5": "46e2b2deeceade9b1d0b11376f7178ca"
+        },
+        "res/import/65/655c7b3d-c7bf-4b26-a042-4fa4588c2f44.json": {
+            "md5": "ff6d6f47c36d80b682a32c38492c4e75"
+        },
+        "res/import/67/67d51bfa-bcde-4ba4-b68f-691bfe2f507f.json": {
+            "md5": "4a65f9118ab05cd7cfc95007f19f6576"
+        },
+        "res/import/67/67dec0fc-d5ee-4355-ad8e-130280838da2.json": {
+            "md5": "48fbf0cb0d0f0bed247ea097ebaf07e2"
+        },
+        "res/import/67/67e68bc9-dad5-4ad9-a2d8-7e03d458e32f.json": {
+            "md5": "536b330599d9053d608a3eaec97531b7"
+        },
+        "res/import/68/687953e9-a255-44df-be2f-046479a68459.json": {
+            "md5": "c6438afad2041fe2054f5840c5765190"
+        },
+        "res/import/6a/6a3e1333-5346-4f35-8b0a-9e9642893f9b.json": {
+            "md5": "874e086cc02c3c4438b9aacae9a9cba5"
+        },
+        "res/import/6a/6ade2b28-faec-4a45-95a1-70c42ecf40a4.json": {
+            "md5": "2f8ce01798d921289e180472e54e058e"
+        },
+        "res/import/6b/6b1291f4-7907-4232-957b-64e2ef2a8779.json": {
+            "md5": "721f12662ab33a059f8475c04220388c"
+        },
+        "res/import/6c/6c7c0852-50d2-4598-8c70-5ce107fcb942.json": {
+            "md5": "e116c53d3f96edf2c780bf58093ab539"
+        },
+        "res/import/6d/6d4a8984-7af8-49f0-8458-16014f0defb4.json": {
+            "md5": "47507133f7ac292b96d2057564e9108b"
+        },
+        "res/import/6d/6df15e1c-1ce7-4b27-be31-df185620235d.json": {
+            "md5": "5cae89a882288d652e99d1545cb9a130"
+        },
+        "res/import/6e/6ef9609d-a13d-404f-b563-bec15cfa495b.json": {
+            "md5": "ce916eb2566c521c298fe06dfe0bbc05"
+        },
+        "res/import/6f/6f20e0df-2ce8-461e-8070-a99abdf2bb11.json": {
+            "md5": "0cb42f4b3cdd434b2c22b7ca014ffaac"
+        },
+        "res/import/6f/6f7775e1-00f5-486b-aee7-5e6fa943d864.json": {
+            "md5": "60d45da814921ecdc1e7e7095c20c90b"
+        },
+        "res/import/71/71a42a6e-7552-4500-9492-e9ed2544298e.json": {
+            "md5": "ec4a11458be99176fbec4adf805ef06b"
+        },
+        "res/import/73/73ad9aba-6f2a-4d22-8b8c-f6c0e9e4535f.json": {
+            "md5": "300cf763094f02cd15dd73b270e77e79"
+        },
+        "res/import/75/7505be7b-a1b0-4e7b-ad59-9b8b2a869427.json": {
+            "md5": "d0c983bb22b3a0423959b4f2c3dbed03"
+        },
+        "res/import/76/7655d587-6750-4b63-9b41-a1d6b1f2e5fb.json": {
+            "md5": "80e32646675e69a0f67c5f83029a6f22"
+        },
+        "res/import/76/7675971a-c888-478c-87bd-420de0828046.json": {
+            "md5": "334a6159a0a8a4cf8c536d9dc911bcf8"
+        },
+        "res/import/77/7737b155-dea3-4192-9038-d6ef25b002af.json": {
+            "md5": "2e8c39dcd0120fcdf33a954dcef38d71"
+        },
+        "res/import/77/7767b2c8-12bd-4c22-ab82-db513ab7cabc.json": {
+            "md5": "b9dc87bdf238247a56972c56d8bca36b"
+        },
+        "res/import/7b/7b06d922-6b90-4ef7-9676-97c16da171f9.json": {
+            "md5": "f67d663f7c494803c8f5df5be47e094c"
+        },
+        "res/import/7b/7b9056b2-5e51-4eb8-9079-18abe51d307c.json": {
+            "md5": "32c65eaad7518e6e88ebb76525d3cc98"
+        },
+        "res/import/7b/7be174c4-c64c-4645-a327-63393553277a.json": {
+            "md5": "782d562b633c08dd902380306dcee4f1"
+        },
+        "res/import/7e/7e9e9a9d-a85e-4384-852f-fc8cd0d7cc83.json": {
+            "md5": "467b7595490e02c6d2f90c2a820286f9"
+        },
+        "res/import/82/82fa925e-0c5f-424e-9d27-f8abacbcb676.json": {
+            "md5": "2992121e9f0fd07a7a6ac11f9e255298"
+        },
+        "res/import/83/8351fb10-a687-44f0-8e01-141d8dc6586b.json": {
+            "md5": "8f3e3f82a1e85a448855402d9e8b3da5"
+        },
+        "res/import/83/839dee7d-f7d2-4d7f-8d8c-acfd04b10148.json": {
+            "md5": "9556c7a29cd881543c643a4bd3790204"
+        },
+        "res/import/83/839f3cbe-1e94-476f-8a17-d5ce0ebc5697.json": {
+            "md5": "fdc5d6ecee734e23cd781b98afcef9ee"
+        },
+        "res/import/84/84626905-2b04-4322-aa78-8c4799bc258c.json": {
+            "md5": "2949bf89b4b9dbf0f603b427d2e7b050"
+        },
+        "res/import/84/84ae5343-b1a1-437b-80d8-9725c469fbd0.json": {
+            "md5": "e06e74d6399f3cbc0d0c39bdf62fab78"
+        },
+        "res/import/85/8503561d-88d1-4670-a536-72264739c678.json": {
+            "md5": "b1f9f846980f2afe15a86fbb9c24b2ed"
+        },
+        "res/import/86/86f76039-ad53-41a5-aba4-cbb20b14c960.json": {
+            "md5": "a83e15a27964b6bc650d88aaf29527d3"
+        },
+        "res/import/87/87460cdb-fc46-443c-8140-9c65357a0cd1.json": {
+            "md5": "804cb351007176a7893554a6f4dd454b"
+        },
+        "res/import/8c/8c8a5a18-6478-4df5-9337-0fbd55e09bf8.json": {
+            "md5": "965c00badc85f9e8503001ed5bbfe3d1"
+        },
+        "res/import/8d/8d10e361-295a-4d42-b570-56add4be9eb7.json": {
+            "md5": "6516d017fb0dac82e5309b625526d98b"
+        },
+        "res/import/8d/8d7c81d6-d031-4036-861e-a04a84eb668d.json": {
+            "md5": "1c388c3fe814a6422f5fdb43bb79eb80"
+        },
+        "res/import/8d/8d9a8fba-bc6b-4c00-814a-9da6b9a3e238.json": {
+            "md5": "d3456ccdb2a1e73d09c7fd50dec23d99"
+        },
+        "res/import/8e/8e169a96-92d8-4942-b466-72e905c8fa68.json": {
+            "md5": "296abff737f9a23a415e0c4d36c3ba22"
+        },
+        "res/import/8e/8e963b5f-2faf-4dbb-bad0-70f471b48e91.json": {
+            "md5": "8c35fe24cb4868fbdd61f624343cd0bb"
+        },
+        "res/import/8f/8f15dde6-872c-4550-9971-67d145c2202b.json": {
+            "md5": "07a426120748f87da3f480f04f44273f"
+        },
+        "res/import/90/90a3d1bf-674b-4f4a-ba1f-14f35fbb2e0d.json": {
+            "md5": "f468d23cefb63174023dac3b2350f955"
+        },
+        "res/import/90/90d462fc-8873-4098-9745-9819461a9280.json": {
+            "md5": "7b31dee5a68be449f7f4d04b5af4d1d9"
+        },
+        "res/import/95/9554b805-a4dc-4035-aea5-aa36e3432594.json": {
+            "md5": "907d7d8fb02aadd9855fb38c48de5353"
+        },
+        "res/import/96/96788833-f4c7-44ec-8e21-cd051cf94133.json": {
+            "md5": "1c20259910c03c63aedfcbef5f5eec30"
+        },
+        "res/import/99/999073c0-2c9c-4068-86b4-fbf3f7cdbb9f.json": {
+            "md5": "8d726c90dc01c0fe719a616f107e9ef3"
+        },
+        "res/import/99/99fde845-7bdb-4e35-868e-5554133c7d38.json": {
+            "md5": "ea39b53fa7bd7688a3fe2bacab5df08b"
+        },
+        "res/import/9a/9abb35a0-c661-40ac-bb79-5ee5e268dd8b.json": {
+            "md5": "2ea3e8855b413dce8b38bb562754b283"
+        },
+        "res/import/9b/9bbda31e-ad49-43c9-aaf2-f7d9896bac69.json": {
+            "md5": "20f93a837c9b9455afe0f62e52501c22"
+        },
+        "res/import/9c/9c0e42d1-5317-4e63-88d7-d31c5e8a24a2.json": {
+            "md5": "fe7fe5c9359afdbb139394e88286bdc1"
+        },
+        "res/import/9c/9c355a70-2138-43bf-9ade-f61501296d93.json": {
+            "md5": "3f1390f339dbf705e35443857957472d"
+        },
+        "res/import/9c/9c3af7bc-e57b-4607-a6d3-db6a8466ae11.json": {
+            "md5": "d6ded781136334037ecfcffbe911cc76"
+        },
+        "res/import/9c/9c7b0fbb-87b9-49c0-b7b0-5a845c018938.json": {
+            "md5": "0a49fdf39fb3258f5fb0ed83014b1596"
+        },
+        "res/import/9c/9ca48cba-d254-40af-b346-83fe0b51ceab.json": {
+            "md5": "e1c40991ef26f14a2f8afb12a1cb6c41"
+        },
+        "res/import/9d/9d3cf9f6-56a4-4317-99ef-fdeac489b620.json": {
+            "md5": "120fb8afa7bdf16f407ccad510dc2b1a"
+        },
+        "res/import/9f/9f10591f-a273-4b0a-8bc7-b6dcf58ef975.json": {
+            "md5": "024d06b505f0c8d4d196b2581bba97ec"
+        },
+        "res/import/9f/9fa44bb7-b934-44f8-8bf7-3a1ee3d25a14.json": {
+            "md5": "21c16b74d4bfc266420a98f32e6133bc"
+        },
+        "res/import/a0/a0bd5d20-5f8a-4f65-ba77-4f81cb15b98d.json": {
+            "md5": "34b5fc2ffd7a7518f00c259aa384e187"
+        },
+        "res/import/a0/a0dbb5e0-9e13-42a3-85f5-62923ee0f1a3.json": {
+            "md5": "1c988954f03fae466fed95b021977467"
+        },
+        "res/import/a0/a0ea5b8a-5b51-4663-ac81-9acde9065243.json": {
+            "md5": "8cf26f13c4ba8cbc2417ad9178a274e3"
+        },
+        "res/import/a1/a124c1a2-aed4-48f7-a523-8c9399e02c89.json": {
+            "md5": "9a50ce4c17b7aca8f53f98019c3dbdce"
+        },
+        "res/import/a2/a23235d1-15db-4b95-8439-a2e005bfff91.json": {
+            "md5": "ff804d2ae1715bcb75905e1011a52f25"
+        },
+        "res/import/a3/a39472f2-3bed-435d-b4e8-14b39be55b01.json": {
+            "md5": "6d9581184f0620406990c5056ebc08df"
+        },
+        "res/import/a4/a44fc960-50dc-4aed-a7fd-2098f46d2ca2.json": {
+            "md5": "76c26403c747640b94b09bd8cd31f543"
+        },
+        "res/import/a4/a48f6964-a7a9-4be7-93a9-e67bca0b8986.json": {
+            "md5": "dfc6dbc382562f10a2e8779b621d791c"
+        },
+        "res/import/a4/a4c4328e-844a-437f-bc13-d551b5cb6994.json": {
+            "md5": "27b1532bfed2d15a39255cfd84a38741"
+        },
+        "res/import/a9/a93bd448-80ac-4eb7-8e0b-8c45c702e765.json": {
+            "md5": "65fb49e546428304f6504e5e603a2947"
+        },
+        "res/import/a9/a968652d-24d0-4018-9c2b-68bcac29d000.json": {
+            "md5": "8f5cc3eb8805aabd724f046f97de6043"
+        },
+        "res/import/aa/aaf8a77f-3070-4015-bb1b-1bb0a7e83926.json": {
+            "md5": "73f25d6bde7959826dbc3903a0294be9"
+        },
+        "res/import/ab/ab34f211-7761-4d5f-8c45-902c6418ee4a.json": {
+            "md5": "d420351fe5017935c420ddd434074561"
+        },
+        "res/import/ab/ab581858-b821-489d-9a99-700fccc75275.json": {
+            "md5": "431d862ad1f00db52decba8e35c93c29"
+        },
+        "res/import/ae/ae2ccbb5-ef04-4b55-807b-384544bf2410.json": {
+            "md5": "0c10b16ba4642d10259ff233aa5cd07e"
+        },
+        "res/import/af/af735507-f121-46a4-ab86-13ca07f6abc9.json": {
+            "md5": "d267ca85cdec0f207480af14bb9e9914"
+        },
+        "res/import/b0/b04c679c-5d47-4c13-9a43-21db2916687a.json": {
+            "md5": "fdd8e633116690879bf9ed32d77065d1"
+        },
+        "res/import/b0/b0755735-f523-4320-94c7-595093f695bf.json": {
+            "md5": "c8d1f423bfb21dcf78b9582ce4af600f"
+        },
+        "res/import/b1/b1362c24-63a5-4387-bcd6-7e418342433e.json": {
+            "md5": "a925c4e97c20105c372a9ad23093fc11"
+        },
+        "res/import/b5/b5a3dea9-2b7f-4c20-b8dc-0f3df9506757.json": {
+            "md5": "c0163294d9aa126e0846381b6e6a05ce"
+        },
+        "res/import/b8/b8117cfa-4489-4006-a050-19074fda2eb5.json": {
+            "md5": "8a825b45cd304148c9a81422860b200c"
+        },
+        "res/import/b9/b9705cba-e93b-4c79-86af-ea19b13908ec.json": {
+            "md5": "48d293aff7c1bc393bf2e415fbdadef9"
+        },
+        "res/import/b9/b9871f47-e757-48f6-abfe-8688d3f5eb28.json": {
+            "md5": "e2c12eea187c0a6ebd258eb5424dbe70"
+        },
+        "res/import/ba/ba47acb5-dd8a-4d55-9591-d885b292d719.json": {
+            "md5": "f0a07649b84f5dfcc42724beef95d3fd"
+        },
+        "res/import/bb/bb02f4e9-772b-4f7c-85c7-e2c99505d359.json": {
+            "md5": "6868be1e760c35787162fcf63d8603e6"
+        },
+        "res/import/bc/bc2cd2cf-a91a-4f1a-95e3-6f45e4581585.json": {
+            "md5": "74b8c86bbca0f20e120fb995342b29a4"
+        },
+        "res/import/bc/bc5b4d0b-0913-48de-a165-6237334f50f1.json": {
+            "md5": "7b7766541f2b7cb128bc2d12e60444f9"
+        },
+        "res/import/bc/bce54cbc-d432-47f9-b77e-60154f21d2d7.json": {
+            "md5": "c5994fde2d507680c290a0037d93f235"
+        },
+        "res/import/bd/bd721493-3228-4d9f-803e-d9df8aebc9f9.json": {
+            "md5": "fdf5ab4a3270fe43d348cede91bd3d99"
+        },
+        "res/import/bd/bdb24bc0-42d7-4b11-b52e-1864d236f196.json": {
+            "md5": "aac16adaefca30bc9a50c361e041ee65"
+        },
+        "res/import/c0/c0e5c2ec-6361-4bde-9dae-f32e164ec2a7.json": {
+            "md5": "a23b823b789e9ba5973811ecac4d5cd8"
+        },
+        "res/import/c2/c27f3409-9894-487a-b14a-a72520344912.json": {
+            "md5": "7d0d08a460dbe140083e2f8d89b51ed0"
+        },
+        "res/import/c5/c54f4027-06f6-496c-adad-931cf197b808.json": {
+            "md5": "ad4cf5f5603c08f6c22e122fe45e4ed4"
+        },
+        "res/import/c6/c6fd2cf8-777c-486a-b19d-b03723580566.json": {
+            "md5": "c338a9dc0c0102fab0d1c62c2492b274"
+        },
+        "res/import/c7/c71db157-82c8-4e0c-a182-2c942c62b1c4.json": {
+            "md5": "4711c7ba6b041b2ef571330e05477261"
+        },
+        "res/import/c7/c72d1063-640a-40c5-9107-3644cafb9bf1.json": {
+            "md5": "019274c1d1eb040e22bf57cf02c12b37"
+        },
+        "res/import/ca/ca5345b7-6654-4ae9-acc9-d36effc72c9d.json": {
+            "md5": "544822b02cc2183c1e7c7d0198922576"
+        },
+        "res/import/cb/cb139ec2-ce8d-4a9a-92ac-916d6ce17b35.json": {
+            "md5": "39745eb5d36c6c7b27464675636aed6c"
+        },
+        "res/import/cb/cb4e7b53-a23c-4990-b16f-4e905d305dc5.json": {
+            "md5": "4b8e61fddf41eb406a6bad652578b762"
+        },
+        "res/import/cc/cc1c00d7-b90b-4e22-a5a4-b80736298748.json": {
+            "md5": "5ce59b2b91c88d9ed4fac135183a3e9c"
+        },
+        "res/import/cd/cd8e932f-1329-4930-aa8a-3d99b7bd18c9.json": {
+            "md5": "addafda5ab335a45100e5392e27f78e9"
+        },
+        "res/import/cd/cdd455ac-f53e-4253-ac0e-85e4c9749608.json": {
+            "md5": "1c9a3859b3b409d4bf084e383843ddf2"
+        },
+        "res/import/ce/ceeb2d4d-60c1-4be1-bd24-b56a2ac4ae34.json": {
+            "md5": "87bed53d4893a488edd51e0b01aba7cb"
+        },
+        "res/import/cf/cf4bd1eb-4e59-4618-aca8-a893c940357b.json": {
+            "md5": "562e1ef3a70c349d81b31b711c53734d"
+        },
+        "res/import/cf/cf77d3a0-a368-4295-b648-d23149d7b895.json": {
+            "md5": "fbc477058226e1914ff5d4cfdbdf7ca0"
+        },
+        "res/import/cf/cfb7c6da-d258-4584-9efa-c17128415c8a.json": {
+            "md5": "bd2a7ba03e24c390e286d42acde0a33b"
+        },
+        "res/import/d0/d00b3679-54b2-4175-9396-bc23afae8fe1.json": {
+            "md5": "7809c2cb8995fa80bedd934185de813c"
+        },
+        "res/import/d1/d111e2b8-f127-4447-aab3-35856190c4f0.json": {
+            "md5": "b85f69dbfa7a6870cb1e0474487e8461"
+        },
+        "res/import/d1/d1e2f508-d174-4939-a2de-03b9539cb249.json": {
+            "md5": "344f09d253df442babc9e188dc794d55"
+        },
+        "res/import/d3/d3c025be-7d42-41ab-9e12-d348173439ea.json": {
+            "md5": "e7bd7f366b65c6a5520dfc5c3c771a64"
+        },
+        "res/import/d3/d3c872c6-82e1-40ed-822d-56956cf7d93c.json": {
+            "md5": "5680a363db6c4765d1768dee6445a8e7"
+        },
+        "res/import/d4/d4a10db7-5786-42c5-a284-cc9a16a750e9.json": {
+            "md5": "179d1995cd72694f5ffeb8586733a7ee"
+        },
+        "res/import/d6/d690a907-f3dd-4bb1-a789-d0db08a3fc1f.json": {
+            "md5": "366b9dfd97c9c122cbe77d388d620501"
+        },
+        "res/import/d8/d8b71f00-6a47-4484-81a6-1700b82ad09a.json": {
+            "md5": "eee8afb05b464cd03dfd03e3eff209af"
+        },
+        "res/import/db/db829cc5-30db-48d5-ab02-21b1b980f937.json": {
+            "md5": "c9258da5aae0e764aec28ded59954bf0"
+        },
+        "res/import/db/dbb98867-a2a1-4882-83cf-7925ee4cc826.json": {
+            "md5": "eaeb946d6b8f1440f99d5e5ac98c44f7"
+        },
+        "res/import/dc/dc1fc1da-9179-498f-96d7-9239565225b7.json": {
+            "md5": "d94a13386fca4c99942252e9c45ca7ed"
+        },
+        "res/import/dc/dc9784ea-235c-4bb7-b73e-e00e9ea92c8d.json": {
+            "md5": "9627223c18834f36282ab498b39c8a29"
+        },
+        "res/import/dc/dce0128c-e520-47da-8199-338a18d2655c.json": {
+            "md5": "32ab7fd5067a3a34ee1400d0115c4371"
+        },
+        "res/import/dd/dd5224cf-9eea-4e5e-b828-48e6a27dcc7e.json": {
+            "md5": "d90b37dac5124a489a14b2fd8d4fbad9"
+        },
+        "res/import/de/de5b2c26-3486-4c7b-9951-3f9db2f2cd43.json": {
+            "md5": "36475e441003878aac23a01428a89fc8"
+        },
+        "res/import/df/df5afd0a-e032-47dc-bcd8-f55c86bf6802.json": {
+            "md5": "c24cf01524c48796fb2296a0858217c1"
+        },
+        "res/import/e0/e07c00f1-ee9c-41e0-9ce3-21885336aae9.json": {
+            "md5": "7f2e2ab89765e9214193dabbe5d6fbd1"
+        },
+        "res/import/e4/e497d113-430f-4b86-86e7-c66a28521c19.json": {
+            "md5": "fb01f3ea4a142c57ea3f48571e526caf"
+        },
+        "res/import/e4/e49a5b74-c3f1-46b8-9932-40ba05bd7824.json": {
+            "md5": "7cb3ae4c20e95473b7528f20f918bc71"
+        },
+        "res/import/e4/e4b788db-2d9d-4af0-b8cb-3741aa727945.json": {
+            "md5": "1f91be9bcbdf9b295952d68a10b69668"
+        },
+        "res/import/e5/e5b553bd-f7cf-41ee-8e2e-6ff9fc9a4eaf.json": {
+            "md5": "919fde7842058e016524f08cc2b9a5b9"
+        },
+        "res/import/e6/e670ff95-cb39-4d14-99ae-eb32c4bd98a9.json": {
+            "md5": "391c6641d95ad3f0ea81aa2b39a6b131"
+        },
+        "res/import/e7/e7f41ad5-c8f1-4d6c-a270-180ba2e15abe.json": {
+            "md5": "31d32d35bcea1ab32228d38d54063078"
+        },
+        "res/import/e9/e90450f5-20a1-41d5-9b8c-9778b2f3a516.json": {
+            "md5": "0ac328410463585ba1584ea3bb658e44"
+        },
+        "res/import/e9/e91e5844-7221-4471-9836-d57f4887d453.json": {
+            "md5": "35d3beb8218935725d81985c51145187"
+        },
+        "res/import/e9/e9ec654c-97a2-4787-9325-e6a10375219a.json": {
+            "md5": "140f529b491009e9d0b4e9e5b64ad3a3"
+        },
+        "res/import/ea/eaa98e10-a4f0-4ea8-b5de-8c863ee8c397.json": {
+            "md5": "ce974226510b08214106bf442d449202"
+        },
+        "res/import/eb/eb66701b-929c-4d8b-9d27-e60a229daca6.json": {
+            "md5": "50616de08df121fba6b892f677eda31c"
+        },
+        "res/import/f0/f0048c10-f03e-4c97-b9d3-3506e1d58952.json": {
+            "md5": "9cce7d772ea5910b267faad5656597cd"
+        },
+        "res/import/f0/f098e7f2-6a24-407a-874d-484c0786a0ad.json": {
+            "md5": "17f023e75dc667319ee996013a3e9e61"
+        },
+        "res/import/f1/f11538a8-181c-479c-ac34-9f9ec429a1ec.json": {
+            "md5": "8b332a2a8838ab467f561c84f9a0b133"
+        },
+        "res/import/f2/f220ef6d-f36f-4b29-a610-ab0de43d0fa0.json": {
+            "md5": "7d65e6dc9f88f35e9b770ef76eb225d1"
+        },
+        "res/import/f2/f23c8aeb-a359-44cb-ac84-c946acd7f965.json": {
+            "md5": "966a32f52534f6476a484b5cce8791ac"
+        },
+        "res/import/f3/f34eb518-986b-42a2-8e7a-263f32229a3e.json": {
+            "md5": "2c8fa1b1a696b96a11893d769b19802b"
+        },
+        "res/import/f4/f4017e1e-2773-4c05-8d5b-d49ad9c8785b.json": {
+            "md5": "17985d6229e451c27c01f9a583844146"
+        },
+        "res/import/f4/f4f084ee-9752-4ff9-8425-1e0a26025917.json": {
+            "md5": "99e23be3779bd168dc76fe2ffa53bdf3"
+        },
+        "res/import/f5/f5b3279a-c6db-4898-8e8f-6ea131a71680.json": {
+            "md5": "c20c4c1b11c2de6696a14645915f61d1"
+        },
+        "res/import/f9/f95bae1a-a9ed-4127-8c15-f0db1f1feae6.json": {
+            "md5": "e8e16bf21401e216bc1de1c7ddcf363c"
+        },
+        "res/import/fc/fc922a52-d9f5-49c2-aaa6-7b90c8c637bb.json": {
+            "md5": "694da71c15ca95cc26f848c597873817"
+        },
+        "res/import/fc/fc994ad3-08fb-4484-a1c8-980c2e07230a/font1-export.png": {
+            "md5": "50a8a6c58c17729a06d624931946fd17"
+        },
+        "res/import/fc/fc994ad3-08fb-4484-a1c8-980c2e07230a/raw-bitmap-font.fnt": {
+            "md5": "5af5b9c3dce6bd746da8dc4b540010d2"
+        },
+        "res/import/fc/fc994ad3-08fb-4484-a1c8-980c2e07230a.json": {
+            "md5": "0cafa51846e7c68637f84d4a2e9b9ac2"
+        },
+        "res/import/fd/fdc80683-5784-47c4-9c03-6545473f0559.json": {
+            "md5": "58d5c8343d9d81f4590dcd16d55a0add"
+        },
+        "res/import/ff/ff6490b3-2d2f-4bd0-95f8-d000f0a680fe.json": {
+            "md5": "7bc8a2440a2c4dddf64f5be8fef5f869"
+        },
+        "res/import/ff/ff993d1a-f8b1-4fbb-af8b-dad672c2e4bc.json": {
+            "md5": "1c977015ca4aa70359fada0c96f086a2"
+        },
+        "res/import/ff/ffe522ee-98d2-4dcd-b7d3-ef2faad14fe9.json": {
+            "md5": "babe98acebb602baadabd98c393ea352"
+        },
+        "res/raw-assets/project.manifest": {
+            "md5": "b67d41913d8073cc46d350022400d76a"
+        },
+        "res/raw-assets/resources/font/font1-export.png": {
+            "md5": "50a8a6c58c17729a06d624931946fd17"
+        },
+        "res/raw-assets/resources/font/qiandao_shuzi-export.png": {
+            "md5": "deed96cef190fe4894dc2fb46d6bbfe5"
+        },
+        "res/raw-assets/resources/skeleton/chuntian/texture.png": {
+            "md5": "6eeaa4b537a92873ae32120bfa03d895"
+        },
+        "res/raw-assets/resources/skeleton/feiji/texture.png": {
+            "md5": "a82ba4901d81513ff990a7b6ecdef87e"
+        },
+        "res/raw-assets/resources/skeleton/huojian/texture.png": {
+            "md5": "c7ec2aa7d46002128f0c690080f0370b"
+        },
+        "res/raw-assets/resources/skeleton/liandui/texture.png": {
+            "md5": "00b80fbf00010f505b8290fd1c688550"
+        },
+        "res/raw-assets/resources/skeleton/zhadan/texture.png": {
+            "md5": "8b2aa2dfa74c38e5134b0d230c6b94df"
+        },
+        "res/raw-assets/resources/sounds/common/boom.mp3": {
+            "md5": "c424c930711c614ea4a191a67881747a"
+        },
+        "res/raw-assets/resources/sounds/common/duijukaishi.mp3": {
+            "md5": "576d482a7a5c62a9ba91493cacc700f6"
+        },
+        "res/raw-assets/resources/sounds/common/feiji.mp3": {
+            "md5": "1e90b3f752f8498cb37f3fdc4a42e581"
+        },
+        "res/raw-assets/resources/sounds/common/give.mp3": {
+            "md5": "ec9c5e30cbbe71ad36451ddcb6689618"
+        },
+        "res/raw-assets/resources/sounds/common/givecard.mp3": {
+            "md5": "7e73cb732043cbd0e4b14da98e533543"
+        },
+        "res/raw-assets/resources/sounds/common/liandui.mp3": {
+            "md5": "f3c84c8fb4417e0ba6a56edb262e2dcf"
+        },
+        "res/raw-assets/resources/sounds/common/lose.mp3": {
+            "md5": "eb175c64e607e43c72dc316c832490c5"
+        },
+        "res/raw-assets/resources/sounds/common/rocket.mp3": {
+            "md5": "493451cc7746d281290cce54079b69ee"
+        },
+        "res/raw-assets/resources/sounds/common/shunzi.mp3": {
+            "md5": "ed586dff3de4eaab59fa97b558d45da3"
+        },
+        "res/raw-assets/resources/sounds/common/win.mp3": {
+            "md5": "4a0645142c26eab70d29eb4f5014870b"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_0.mp3": {
+            "md5": "d3b94d088b2d6fcef37c56a93bb8a54c"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_1.mp3": {
+            "md5": "f2c12f05bfdce37ea1582809b1ce4d48"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_10.mp3": {
+            "md5": "d165cece91388228278112d12220c41c"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_11.mp3": {
+            "md5": "56bc6e2ad3bdf15c3680d1f7e737d0f1"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_12.mp3": {
+            "md5": "834f0e8b0f2f7b29f29941827a8d93c6"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_13.mp3": {
+            "md5": "d8113162463cc2e78faa063ec32b66c9"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_14.mp3": {
+            "md5": "9d7d03a12c0c4597593752038666d202"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_1_point.mp3": {
+            "md5": "b029e7099cb53e1b62e902e657e6a484"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_2.mp3": {
+            "md5": "671bde30c43a9116a6bc537a801d9a8c"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_2_point.mp3": {
+            "md5": "850a9711cb275152ae738783ccf29949"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_3.mp3": {
+            "md5": "e44e3d525c7596326376236d3a9efa0a"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_3_point.mp3": {
+            "md5": "07f18cb4d90c0fde32dc5750bd261661"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_4.mp3": {
+            "md5": "c83587aecf25c360bda378ed12379d8a"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_5.mp3": {
+            "md5": "eb3293734d710dfe8e497e0bca79ef3c"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_6.mp3": {
+            "md5": "ae1b1923a8928a9fe2bfb96c1bd9fd2c"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_7.mp3": {
+            "md5": "f632b6fb0e0c6c6eee6093b24c947ea0"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_8.mp3": {
+            "md5": "cc2def288676e785467a2c2582be2f37"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_9.mp3": {
+            "md5": "30543fa13860747b4663fa0a5ed508dd"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_I_got_left_one_cards.mp3": {
+            "md5": "7ae8ddcc5f91ae12a3beae067e6c46a8"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_I_got_left_two_cards.mp3": {
+            "md5": "bf442dd3cec13c4d639b935bbe84c6fa"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_airplane.mp3": {
+            "md5": "d692eb6513dc5dc5eb5b8f451b948538"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_airplane_with_wing.mp3": {
+            "md5": "db0027100932c670e9b86551f14550f9"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_bomb.mp3": {
+            "md5": "a4d0a6d2055e0bee2bbbe478bee5a652"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_continuous_pair.mp3": {
+            "md5": "e1fd7d354c58f75b1925dcae135dbfa1"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_four_with_two.mp3": {
+            "md5": "4beefb36fd2f701e7a223f6ade1354ff"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_four_with_two_pair.mp3": {
+            "md5": "56a4cc09ee91f3aed549c4bddda73369"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_no.mp3": {
+            "md5": "302d04bc2b95064efadb8706f625d6da"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_not_call.mp3": {
+            "md5": "d9849623c87b0c4c8c3510d7211ed92e"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair0.mp3": {
+            "md5": "bde583038a0f7f5caec10a17203de7a6"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair1.mp3": {
+            "md5": "4d6c38f0a75ecc9a0b86e7890aeca57e"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair10.mp3": {
+            "md5": "76c2edc68d1fd268e962ff61a8104efb"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair11.mp3": {
+            "md5": "b3848f549f60e7ba620816ca0b6777e0"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair12.mp3": {
+            "md5": "7043f2b49b949f6d45bbc1d15f25fa88"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair2.mp3": {
+            "md5": "b2d94b4e47cdc29daaa576481b1b0767"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair3.mp3": {
+            "md5": "84c1327350127a3de62d7fc7de40323d"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair4.mp3": {
+            "md5": "63026e65431fb210cdbdfb8a91b7a347"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair5.mp3": {
+            "md5": "108a57d4b36c546427af8f64ed6e9960"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair6.mp3": {
+            "md5": "d2d1326c7a1b81ab31d50b3e18723783"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair7.mp3": {
+            "md5": "c2a7db60c5f3604a89f4eaa3944a1501"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair8.mp3": {
+            "md5": "8a1f7af213fbb546302029e6f819146e"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pair9.mp3": {
+            "md5": "9f859fa0ce7ba08a85bd987e7947adcf"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_pass.mp3": {
+            "md5": "0b6d869859b25130d47757074981145e"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_rocket.mp3": {
+            "md5": "be1cb4b40ac405e87b56008950f473d9"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_shunzi.mp3": {
+            "md5": "25a4cc93e8c6cb1d4c10b084f8346085"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_three_one.mp3": {
+            "md5": "25c8cd62b7523e91ac36c4100961deac"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_three_with_one.mp3": {
+            "md5": "0346dbf534cf1bbda351406b804a74a2"
+        },
+        "res/raw-assets/resources/sounds/female_voice/female_three_with_one_pair.mp3": {
+            "md5": "a440f019defc8abd62bd1693acbb152a"
+        },
+        "res/raw-assets/resources/sounds/hall_background_music.mp3": {
+            "md5": "2ce4fb60ace098a07052ca8533e3d28c"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_0.mp3": {
+            "md5": "9689b0715c8ff57627ba17d5820065af"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_1.mp3": {
+            "md5": "eeab24fb6cb02bc99720d00ed71ab850"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_10.mp3": {
+            "md5": "e0017d7160de61dc5949069595eb5ec3"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_11.mp3": {
+            "md5": "9610d312113309325bc9818d9626ad49"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_12.mp3": {
+            "md5": "71e66c43a5ddca589b248687b86ee6d4"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_13.mp3": {
+            "md5": "f5b1c0a5f3871af927fb93f671571ac4"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_14.mp3": {
+            "md5": "8fa44f17e88007e0181a3584932f46ed"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_1_point.mp3": {
+            "md5": "262aa6a7c35dd89844812a29a0055389"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_2.mp3": {
+            "md5": "b1a22f97641dfdb999a6cc541aadbf96"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_2_point.mp3": {
+            "md5": "5dcbfd69bdb028dbe211523876fca45f"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_3.mp3": {
+            "md5": "6b356fd3bbae21f22b99f9d7ea819bf1"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_3_point.mp3": {
+            "md5": "7f8340f63041ee76020aa0d3c2ffe837"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_4.mp3": {
+            "md5": "4feb744f44587d506d0325ca134431ce"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_5.mp3": {
+            "md5": "51ffb53c08b973b60e31d67ce29b46ae"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_6.mp3": {
+            "md5": "1c50de24669e738e319edb80ff5e57ab"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_7.mp3": {
+            "md5": "0052b33104a1273e8e50777317aa5d52"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_8.mp3": {
+            "md5": "4d86b77e9a1d0282b2e0482aab98c699"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_9.mp3": {
+            "md5": "9a7a87b474c0d8dda6cb18bc49e82e25"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_I_got_left_one_cards.mp3": {
+            "md5": "57196cdc3bbd25b4e6aef554ddd9f723"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_I_got_left_two_cards.mp3": {
+            "md5": "435e9b9967dd931f56d67d87e779c188"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_airplane.mp3": {
+            "md5": "436199d718cf7d992d37c0ac09ab626c"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_airplane_with_wings.mp3": {
+            "md5": "248f156a9b0356fcfb98424d8a71533f"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_bomb.mp3": {
+            "md5": "8e28d4ab4e91bb65cec0f8812e32484d"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_continuous_pair.mp3": {
+            "md5": "fb4b8a6edfc110f67e5521007df06a9a"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_four_with_two.mp3": {
+            "md5": "0b4725946dce05015a065e0fdf573123"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_four_with_two_pair.mp3": {
+            "md5": "f20246131685cf67a19b126e5e64d7fa"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_no.mp3": {
+            "md5": "75232f89e619797d058a61b62f3af64a"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_not_call.mp3": {
+            "md5": "316ddd4599ca959949f534c891bd38b1"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair0.mp3": {
+            "md5": "ed4c9886d6447f25259693711fff287e"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair1.mp3": {
+            "md5": "91c70f30255b52865020983207d24dad"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair10.mp3": {
+            "md5": "98170ac9eea4dc5a4004859f8520fdcc"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair11.mp3": {
+            "md5": "2bf16df2bb78711676faf81711a38b51"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair12.mp3": {
+            "md5": "3df846d35f1ca9417483dc22cac4c42d"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair2.mp3": {
+            "md5": "154f62ec2571eb300c0e37f7c63f68c3"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair3.mp3": {
+            "md5": "e90cb217d6cc6e6223194f58a6927d56"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair4.mp3": {
+            "md5": "654853aab3c45bc0927738f11f0d1a31"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair5.mp3": {
+            "md5": "326334717be4f3a7a93b3526d5a9ef99"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair6.mp3": {
+            "md5": "52e99e24849c028cde2c29cebb5d8fb0"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair7.mp3": {
+            "md5": "afeafd3090c829b5daadd0a9ab1a4707"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair8.mp3": {
+            "md5": "bc3b58695aeed620cecf7dad92fb0710"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pair9.mp3": {
+            "md5": "4d7cc327358675eb21d312b88899d5ae"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_pass.mp3": {
+            "md5": "9ed26d3606de17c34301290e591d7561"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_rocket.mp3": {
+            "md5": "f3c4d3d3e004928cb129256cf1dc2cd7"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_shunzi.mp3": {
+            "md5": "536d5aaba828ecbbb61e8540e4ecc3ce"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_three_one.mp3": {
+            "md5": "ad707685869e9c13a2ff9e0203fcc16d"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_three_with_one.mp3": {
+            "md5": "047351b685574c3a58aee608f5aa3487"
+        },
+        "res/raw-assets/resources/sounds/male_voice/male_three_with_one_pair.mp3": {
+            "md5": "29169e2311faedb88b392c994bf6dced"
+        },
+        "res/raw-assets/resources/texture/card/Design_1.png": {
+            "md5": "7e9cf2abe4c8b25082e429667552b0ed"
+        },
+        "res/raw-assets/resources/texture/card/Design_1_11.png": {
+            "md5": "123d70a33610016b1d9a9cab0c25b6b4"
+        },
+        "res/raw-assets/resources/texture/card/Design_1_12.png": {
+            "md5": "1e247a16eb67025d52e92aab8b45b327"
+        },
+        "res/raw-assets/resources/texture/card/Design_1_13.png": {
+            "md5": "f293c9b49de4b42821fc9bc262fa9670"
+        },
+        "res/raw-assets/resources/texture/card/Design_2.png": {
+            "md5": "566ea28b58b62c0573f89d7c2de37284"
+        },
+        "res/raw-assets/resources/texture/card/Design_2_11.png": {
+            "md5": "63d5ac26a61c584f6667ef2470f82d7d"
+        },
+        "res/raw-assets/resources/texture/card/Design_2_12.png": {
+            "md5": "93a9dcf0a80071a8fcd64dea2e5824c4"
+        },
+        "res/raw-assets/resources/texture/card/Design_2_13.png": {
+            "md5": "9c7980f307f160da369619761e860301"
+        },
+        "res/raw-assets/resources/texture/card/Design_3.png": {
+            "md5": "173fe4be3c15826c6728f52533d9e22d"
+        },
+        "res/raw-assets/resources/texture/card/Design_3_11.png": {
+            "md5": "a8e59a4be501f56b3b752d614cce9c88"
+        },
+        "res/raw-assets/resources/texture/card/Design_3_12.png": {
+            "md5": "14e9b8813ee4cd24b4298ea8c9768208"
+        },
+        "res/raw-assets/resources/texture/card/Design_3_13.png": {
+            "md5": "30caa61e5fd62107d0a413cce9e82477"
+        },
+        "res/raw-assets/resources/texture/card/Design_4.png": {
+            "md5": "e1759f674c2e0c5e4be7ac006607bff5"
+        },
+        "res/raw-assets/resources/texture/card/Design_4_11.png": {
+            "md5": "993fad5f371228c17b1fb75d63d5b88d"
+        },
+        "res/raw-assets/resources/texture/card/Design_4_12.png": {
+            "md5": "25915deddf555db02f2759689c0fd2ee"
+        },
+        "res/raw-assets/resources/texture/card/Design_4_13.png": {
+            "md5": "7bab648e56202fd870fcb549badb5a66"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_1.png": {
+            "md5": "5d99e75a5936a194b9360526c70e481c"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_2.png": {
+            "md5": "3ea051f2346e600dc3206e8d811aeb4d"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_21.png": {
+            "md5": "597535bc95562771faa0950d1ba13d06"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_22.png": {
+            "md5": "e417cd884efb5169d3408bcf978e0d1c"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_3.png": {
+            "md5": "def8ee899990d15944dcd5c265d933c2"
+        },
+        "res/raw-assets/resources/texture/card/Design_color_4.png": {
+            "md5": "3528fc31aee8a7c9733b70933d57c5d2"
+        },
+        "res/raw-assets/resources/texture/card/back.png": {
+            "md5": "8b0ba2ed0bef71101de874db7509e66a"
+        },
+        "res/raw-assets/resources/texture/card/bg.png": {
+            "md5": "d7202ce054c5c2c28c79157598d9aaff"
+        },
+        "res/raw-assets/resources/texture/card/black_10.png": {
+            "md5": "e688de8dd13fe072ae4c233197b08912"
+        },
+        "res/raw-assets/resources/texture/card/black_11.png": {
+            "md5": "58a24b34ecf61c636a879bf6fcba330b"
+        },
+        "res/raw-assets/resources/texture/card/black_12.png": {
+            "md5": "da3d58c8d7e7ce1f3445152a037b0998"
+        },
+        "res/raw-assets/resources/texture/card/black_13.png": {
+            "md5": "826bc2c2e117708d2654bfc423cee1da"
+        },
+        "res/raw-assets/resources/texture/card/black_14.png": {
+            "md5": "8702a739298558739eb05abf1a525c13"
+        },
+        "res/raw-assets/resources/texture/card/black_16.png": {
+            "md5": "f64718eeb4637a29757b3edbbad8836f"
+        },
+        "res/raw-assets/resources/texture/card/black_3.png": {
+            "md5": "c3650d6c464543ac496baaed03238e69"
+        },
+        "res/raw-assets/resources/texture/card/black_4.png": {
+            "md5": "e41feed6cf3a7c939ce039a72d64d686"
+        },
+        "res/raw-assets/resources/texture/card/black_5.png": {
+            "md5": "3a9b9bba189579ad2b2244a147eb8b87"
+        },
+        "res/raw-assets/resources/texture/card/black_6.png": {
+            "md5": "89fc32fc557353587947ebb743073073"
+        },
+        "res/raw-assets/resources/texture/card/black_7.png": {
+            "md5": "835d4145573004cf7b70d4b056e94028"
+        },
+        "res/raw-assets/resources/texture/card/black_8.png": {
+            "md5": "476c353108f473b524e7bee758e1b018"
+        },
+        "res/raw-assets/resources/texture/card/black_9.png": {
+            "md5": "b8fdd716d3bd2e9ebe0e5e7ffb708bed"
+        },
+        "res/raw-assets/resources/texture/card/heipai.png": {
+            "md5": "3158b1fb2938b4d832211cefd52cac2e"
+        },
+        "res/raw-assets/resources/texture/card/red_10.png": {
+            "md5": "0fa0518ecc5a07739e345539a63b8346"
+        },
+        "res/raw-assets/resources/texture/card/red_11.png": {
+            "md5": "0c6138f0832c6ab2ceb40ad4cd4e60c9"
+        },
+        "res/raw-assets/resources/texture/card/red_12.png": {
+            "md5": "2b3648a00321e1de2bcc7eea32ed705d"
+        },
+        "res/raw-assets/resources/texture/card/red_13.png": {
+            "md5": "b700bad6602c5554f86ed62d919e0df8"
+        },
+        "res/raw-assets/resources/texture/card/red_14.png": {
+            "md5": "1a3de819a8727ce6675a9616df7f2f70"
+        },
+        "res/raw-assets/resources/texture/card/red_16.png": {
+            "md5": "ac5e3d125d5292fed152ad0566669cfe"
+        },
+        "res/raw-assets/resources/texture/card/red_3.png": {
+            "md5": "3e27cb3c927834bd39ca333f67cd79f6"
+        },
+        "res/raw-assets/resources/texture/card/red_4.png": {
+            "md5": "f4fc7c944168e16854bba13419e17073"
+        },
+        "res/raw-assets/resources/texture/card/red_5.png": {
+            "md5": "c12a705a4bc19d5a3c1fa6cdd5af760b"
+        },
+        "res/raw-assets/resources/texture/card/red_6.png": {
+            "md5": "a378c8c16899cbd82d88108a4e6cf5dc"
+        },
+        "res/raw-assets/resources/texture/card/red_7.png": {
+            "md5": "5f3b8795f3252912f09fec2012c9faa4"
+        },
+        "res/raw-assets/resources/texture/card/red_8.png": {
+            "md5": "0e952e46b7dae97607f6c663a29e4dea"
+        },
+        "res/raw-assets/resources/texture/card/red_9.png": {
+            "md5": "f1bea48ecd92b33cf1849016a5cd0f9d"
+        },
+        "res/raw-assets/resources/texture/common/huangzuan.png": {
+            "md5": "6d87b8e705366de0dc1842c5acf5a4e7"
+        },
+        "res/raw-assets/resources/texture/common/main_hongzhuan.png": {
+            "md5": "bc9ae8ce0f65816e914813814e129729"
+        },
+        "res/raw-assets/resources/texture/common/main_lanzhuan.png": {
+            "md5": "3e9a82e4bd3e78d5c160c06a998b7ff0"
+        },
+        "res/raw-assets/resources/texture/common/play_jinbi.png": {
+            "md5": "8685de50e36112cc45c98df66b38734f"
+        },
+        "res/raw-assets/resources/texture/common/set_kuang.png": {
+            "md5": "6257cc9161b38258b6887d0fd601f13f"
+        },
+        "res/raw-assets/resources/texture/create/createroom_bg.png": {
+            "md5": "29d7f5ba9430ffbd93167c0e89f771e1"
+        },
+        "res/raw-assets/resources/texture/create/createroom_biaoti.png": {
+            "md5": "237c48c319e206b1813f50d5fd6f8523"
+        },
+        "res/raw-assets/resources/texture/create/createroom_chuangjianfangjian1.png": {
+            "md5": "0cce2d2edd965000961dabb5e314b9b0"
+        },
+        "res/raw-assets/resources/texture/create/createroom_chuangjianyoux3.png": {
+            "md5": "0397c1f9703810a6cc6e456564cd8c8c"
+        },
+        "res/raw-assets/resources/texture/create/createroom_gou.png": {
+            "md5": "2dcdcba05aaddb396a4572880e18e330"
+        },
+        "res/raw-assets/resources/texture/create/createroom_jinkuang.png": {
+            "md5": "64175c93c2edbecc65f22e400288e6fd"
+        },
+        "res/raw-assets/resources/texture/create/createroom_quxiao.png": {
+            "md5": "a8d0e05fef7574b39ace0e0dd88f3fb3"
+        },
+        "res/raw-assets/resources/texture/create/createroom_touxiangk.png": {
+            "md5": "25c966c814fc8d3ca03c57aa66ab719d"
+        },
+        "res/raw-assets/resources/texture/create/createroom_zi3.png": {
+            "md5": "61ef94a1f798ed64c304504581ad3f3a"
+        },
+        "res/raw-assets/resources/texture/create/createroom_zi4.png": {
+            "md5": "41a9825b06c02d5a249344e1a4d731d4"
+        },
+        "res/raw-assets/resources/texture/create/createroom_zi5.png": {
+            "md5": "7b05fbbdbad59299d82fb10ee32011ba"
+        },
+        "res/raw-assets/resources/texture/create/createroom_zi8.png": {
+            "md5": "b0c544a01ea0b892ac9f95662ec7492b"
+        },
+        "res/raw-assets/resources/texture/game/dizhuku.png": {
+            "md5": "22bd3ccd326d2cd639085443f253f6db"
+        },
+        "res/raw-assets/resources/texture/game/dizhuxiao.png": {
+            "md5": "d595cf7d7a7cc8d2ff0b6cdf4cba8790"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_fanhui.png": {
+            "md5": "df67f74e4894d4243f2ad31dc77a76ad"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_fenx.png": {
+            "md5": "e5844743f6d5515479d73e49aebda596"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_paijujieshu.png": {
+            "md5": "ed6ac4c4cdc150c7de0a2d85d10e2630"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_shenglishibai.png": {
+            "md5": "28fcf1a35518d467f0c765204c735e43"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_win.png": {
+            "md5": "bedde5346dafafd4f0ab102bb960cddd"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_xuanyao.png": {
+            "md5": "b779655e4c9374ef5f279ede3097ab85"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/over_zongchengji.png": {
+            "md5": "07fdc22aaa19106912b56d822b90abf9"
+        },
+        "res/raw-assets/resources/texture/game/gameEnd/zanji_zhujiem.png": {
+            "md5": "c4780f019a2c646f95851afbd784e621"
+        },
+        "res/raw-assets/resources/texture/game/hint_queding1.png": {
+            "md5": "502f3fd51460231fbe3faeb442091ba4"
+        },
+        "res/raw-assets/resources/texture/game/hint_tongyi.png": {
+            "md5": "0eb1015442174a0e2c2ac2e9249b95e0"
+        },
+        "res/raw-assets/resources/texture/game/kuang.png": {
+            "md5": "a895ec2511e483c3ce8ff690f0b02b7f"
+        },
+        "res/raw-assets/resources/texture/game/lixian.png": {
+            "md5": "863aa916bc1fe983e0cefb237c1d9cab"
+        },
+        "res/raw-assets/resources/texture/game/nongmku.png": {
+            "md5": "a6dffd68b5fb178dc751ad003b619192"
+        },
+        "res/raw-assets/resources/texture/game/nongmxiao.png": {
+            "md5": "30184fcd53aa43ccd061e8634108856f"
+        },
+        "res/raw-assets/resources/texture/game/over_bj.jpg": {
+            "md5": "b789e3e2efa716429bf099bcffa57c15"
+        },
+        "res/raw-assets/resources/texture/game/over_dqdf.png": {
+            "md5": "747568edd952ed0384213e9c2d755ffd"
+        },
+        "res/raw-assets/resources/texture/game/over_fangzhu.png": {
+            "md5": "45e27651769f32e2319faf16ba351723"
+        },
+        "res/raw-assets/resources/texture/game/over_shengli.png": {
+            "md5": "f962abf184769e9d6dd2c2afed01d6d4"
+        },
+        "res/raw-assets/resources/texture/game/over_shibai.png": {
+            "md5": "a85255d7a3501b201d97d436dacf8368"
+        },
+        "res/raw-assets/resources/texture/game/over_xiaojie.png": {
+            "md5": "583450020e29fa7f0128717496b6d367"
+        },
+        "res/raw-assets/resources/texture/game/over_zi1.png": {
+            "md5": "c87d1909bada1d301fc308a8f3937410"
+        },
+        "res/raw-assets/resources/texture/game/over_zi3.png": {
+            "md5": "0b8fea3b21727987c085e59c8ed9b7e6"
+        },
+        "res/raw-assets/resources/texture/game/overplus.png": {
+            "md5": "2e2a5aa315cc13d000067ac7b6bce2a1"
+        },
+        "res/raw-assets/resources/texture/game/play_bei.png": {
+            "md5": "51e597daa7e6f08550586e59baa3db2d"
+        },
+        "res/raw-assets/resources/texture/game/play_beijingdi.png": {
+            "md5": "8e47a1d1830ff084486b91f1544c5f86"
+        },
+        "res/raw-assets/resources/texture/game/play_beishu.png": {
+            "md5": "4cfbbd3e42f1509215db19805cc9b054"
+        },
+        "res/raw-assets/resources/texture/game/play_buchu.png": {
+            "md5": "75fb94c3a1888ad6fa54bdab32f06e70"
+        },
+        "res/raw-assets/resources/texture/game/play_buchu1.png": {
+            "md5": "75fb94c3a1888ad6fa54bdab32f06e70"
+        },
+        "res/raw-assets/resources/texture/game/play_bujiao.png": {
+            "md5": "111c3ba06fb29a0498f62a87f24f9246"
+        },
+        "res/raw-assets/resources/texture/game/play_bujiao1.png": {
+            "md5": "111c3ba06fb29a0498f62a87f24f9246"
+        },
+        "res/raw-assets/resources/texture/game/play_chupai.png": {
+            "md5": "bb1349d05877a474cf3449ffe8839cdf"
+        },
+        "res/raw-assets/resources/texture/game/play_difen.png": {
+            "md5": "f9492c8b20714c53605bfc5b650ff203"
+        },
+        "res/raw-assets/resources/texture/game/play_dizhu.png": {
+            "md5": "2ade42cd35fdaadb7e1d43a91d435d75"
+        },
+        "res/raw-assets/resources/texture/game/play_efen.png": {
+            "md5": "9028ca7c94ef6e92b88e2dcf0feac7d4"
+        },
+        "res/raw-assets/resources/texture/game/play_efen2.png": {
+            "md5": "9028ca7c94ef6e92b88e2dcf0feac7d4"
+        },
+        "res/raw-assets/resources/texture/game/play_hint.png": {
+            "md5": "0b5190cfdfabb9eff021269d59d24212"
+        },
+        "res/raw-assets/resources/texture/game/play_huatong.png": {
+            "md5": "72cfac50b93c56d436aa6f19622dcbec"
+        },
+        "res/raw-assets/resources/texture/game/play_jinniu.png": {
+            "md5": "4a774ecb2a5fc10ed763e436a5174d11"
+        },
+        "res/raw-assets/resources/texture/game/play_jinying.png": {
+            "md5": "aef1935a1b04103be0febbb2e0cb7c19"
+        },
+        "res/raw-assets/resources/texture/game/play_jinying1.png": {
+            "md5": "d17ec311dadfecf0a85c2c025c6a91c6"
+        },
+        "res/raw-assets/resources/texture/game/play_liaotian.png": {
+            "md5": "8e2f70e8f45a8d2aef3b01586d473ff2"
+        },
+        "res/raw-assets/resources/texture/game/play_lvniu.png": {
+            "md5": "c06ca3e050d1ea4dd2178e541bc9d96e"
+        },
+        "res/raw-assets/resources/texture/game/play_nongm.png": {
+            "md5": "35f3f01fea621357432ad826112f41b3"
+        },
+        "res/raw-assets/resources/texture/game/play_sanfen.png": {
+            "md5": "1697ca82a65c46e2c45a317f01217f28"
+        },
+        "res/raw-assets/resources/texture/game/play_sanfen3.png": {
+            "md5": "1697ca82a65c46e2c45a317f01217f28"
+        },
+        "res/raw-assets/resources/texture/game/play_shezhi.png": {
+            "md5": "5558a4d3c8e085db40991fdd05c11247"
+        },
+        "res/raw-assets/resources/texture/game/play_tanchu1.png": {
+            "md5": "5b8117780a8a81509a121f52df246fda"
+        },
+        "res/raw-assets/resources/texture/game/play_time.png": {
+            "md5": "6d982fb9be6bd846ca1afca430910f2b"
+        },
+        "res/raw-assets/resources/texture/game/play_tip_bufuheguize.png": {
+            "md5": "cef48cc9d08462cc0c061045f19f1167"
+        },
+        "res/raw-assets/resources/texture/game/play_tip_dabuguo.png": {
+            "md5": "0282ec9dc7967fcec666e2c13152f776"
+        },
+        "res/raw-assets/resources/texture/game/play_touxiang.png": {
+            "md5": "eec8b074fb69282a7937d77aaea65957"
+        },
+        "res/raw-assets/resources/texture/game/play_touxiang1.png": {
+            "md5": "290f4bed9fb74a73a11f693e83b4e8f2"
+        },
+        "res/raw-assets/resources/texture/game/play_xinxik.png": {
+            "md5": "5e29e914fdda6859bc4ea541ec18fab3"
+        },
+        "res/raw-assets/resources/texture/game/play_yifen.png": {
+            "md5": "64fee1c4e2fb049571f349c024fc4385"
+        },
+        "res/raw-assets/resources/texture/game/play_yifen1.png": {
+            "md5": "64fee1c4e2fb049571f349c024fc4385"
+        },
+        "res/raw-assets/resources/texture/game/set_bj3.png": {
+            "md5": "1a5f5cb52e72f51110ca679f631966f6"
+        },
+        "res/raw-assets/resources/texture/game/set_jujue.png": {
+            "md5": "078a19a96d011c8b5dc10e739a56fa13"
+        },
+        "res/raw-assets/resources/texture/game/set_shenqing.png": {
+            "md5": "24334d66570651abd8d99b11abf28df5"
+        },
+        "res/raw-assets/resources/texture/game/set_zhong.png": {
+            "md5": "8323c4418c57052f394f4b143ab2321d"
+        },
+        "res/raw-assets/resources/texture/game/shezhikuang.png": {
+            "md5": "7a0a8a4f748dfe358d927a05d0eaca63"
+        },
+        "res/raw-assets/resources/texture/game/wait_jiesan.png": {
+            "md5": "aa73905145b141f38102d1e78ad7430a"
+        },
+        "res/raw-assets/resources/texture/game/wait_pipei.png": {
+            "md5": "cfca322c6dce2bd44712649c377b3ffa"
+        },
+        "res/raw-assets/resources/texture/game/wait_tuichu.png": {
+            "md5": "4959b2a2e0507a82b4f2b4d41a714c9f"
+        },
+        "res/raw-assets/resources/texture/game/wait_yaoqweix.png": {
+            "md5": "d4a989a805f0bbd5c145694b0f2a81ad"
+        },
+        "res/raw-assets/resources/texture/game/wait_zhunbei.png": {
+            "md5": "1b3de7c06bf2686f150c78fa0617368d"
+        },
+        "res/raw-assets/resources/texture/game/wifi.png": {
+            "md5": "12c67aee8aa9f7083e33265f5662c5de"
+        },
+        "res/raw-assets/resources/texture/game/wifi1.png": {
+            "md5": "ede548ca996b5c4e3a9dbeb585d9430f"
+        },
+        "res/raw-assets/resources/texture/game/wifi2.png": {
+            "md5": "54995aabe745d094485a630578b8d156"
+        },
+        "res/raw-assets/resources/texture/guild/guize_kuang.png": {
+            "md5": "43ec7b5f7c2f6ed4402ebd815d3b3cb2"
+        },
+        "res/raw-assets/resources/texture/guild/guize_wanfa.png": {
+            "md5": "e082c5732ef8fad341ba9020edf5f5c3"
+        },
+        "res/raw-assets/resources/texture/guild/guize_ziti.png": {
+            "md5": "9731a1f8709243aef38c742796408ae5"
+        },
+        "res/raw-assets/resources/texture/head/head_1.png": {
+            "md5": "68e356c26dfad30d057e4d9936fc4059"
+        },
+        "res/raw-assets/resources/texture/head/head_10.png": {
+            "md5": "5bd5dea84bc2ec292c5402cc907c9aea"
+        },
+        "res/raw-assets/resources/texture/head/head_2.png": {
+            "md5": "01d8efa44e2601a82abb74f87b4f5095"
+        },
+        "res/raw-assets/resources/texture/head/head_3.png": {
+            "md5": "f5352ff4f681ab1cf20b0411d2511c30"
+        },
+        "res/raw-assets/resources/texture/head/head_4.png": {
+            "md5": "bdb5daec84ffa5f6256f6e4ef86b3407"
+        },
+        "res/raw-assets/resources/texture/head/head_5.png": {
+            "md5": "ef660debb73e1f300c976b7f1caf8a2d"
+        },
+        "res/raw-assets/resources/texture/head/head_6.png": {
+            "md5": "6f111ea7c57b3dab0c7bd865647e3e56"
+        },
+        "res/raw-assets/resources/texture/head/head_7.png": {
+            "md5": "bd1283b2c9853b92b58bd261c01e12f4"
+        },
+        "res/raw-assets/resources/texture/head/head_8.png": {
+            "md5": "348a8f45cf288484f9b4cbaf88000009"
+        },
+        "res/raw-assets/resources/texture/head/head_9.png": {
+            "md5": "a2bbb2058bf0fc8377a7419af05c335d"
+        },
+        "res/raw-assets/resources/texture/history/zhanji_gerenzhanji.png": {
+            "md5": "46620499eaae2e5d1b0000572be0deb0"
+        },
+        "res/raw-assets/resources/texture/join/createroom_chaungjiang.png": {
+            "md5": "720654081dbf063381bd209b7d81e0df"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_0.png": {
+            "md5": "7a9a22be6afdf7340358fbfcdb139115"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_1.png": {
+            "md5": "96d3a9e66f6023f62240e658aec4f6af"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_2.png": {
+            "md5": "21b8065256b63db1959b43bf70c81f5c"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_3.png": {
+            "md5": "d269bc6e87e5b73e65743c05c9801572"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_4.png": {
+            "md5": "e28c6b13adae6704a3d6d27455985649"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_5.png": {
+            "md5": "61031a7b683d9f41ebdd004969a45524"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_6.png": {
+            "md5": "95b49e8e26a4ab5a6d44fe53590b33f6"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_7.png": {
+            "md5": "e426da2b9aea1234881ea14e92877e3e"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_8.png": {
+            "md5": "870de03292fe90b8ee6560a0e869de3e"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_9.png": {
+            "md5": "850db76dbbbf5f94cbcc3fdefaffba64"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_anjian.png": {
+            "md5": "53974d62482c48e2d94e6a1efd316e0c"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_anjian1.png": {
+            "md5": "2edfdd256929a0f647587619028e2b4b"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_bg.png": {
+            "md5": "b0b5b2ab0e586a143d1a10c14051933d"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_shanchu.png": {
+            "md5": "671d4ad4d4cdbebe45da25e09bebe810"
+        },
+        "res/raw-assets/resources/texture/join/selectroom_shuzixian.png": {
+            "md5": "c0f1b8764e37cc402e12038f990e5103"
+        },
+        "res/raw-assets/resources/texture/login/loading_bar.png": {
+            "md5": "fc729f8a0bca02fdccb8c70fdd08c745"
+        },
+        "res/raw-assets/resources/texture/login/loading_bar_bg.png": {
+            "md5": "1f1ca776cebc86dbc9f6b9aea652d8da"
+        },
+        "res/raw-assets/resources/texture/login/loginBg.jpg": {
+            "md5": "e049c5b3350704c2ba37ed43886c0ead"
+        },
+        "res/raw-assets/resources/texture/login/logo.png": {
+            "md5": "8770d2c417172971ba5d5652cc8ea4d9"
+        },
+        "res/raw-assets/resources/texture/login/logo_ddz.png": {
+            "md5": "eb71f444c6d33779df153813794c7e2f"
+        },
+        "res/raw-assets/resources/texture/login/set_bj5.png": {
+            "md5": "140783f767a61d1180e253d710682e6f"
+        },
+        "res/raw-assets/resources/texture/login/startgame.png": {
+            "md5": "9dfd6ed415cf8aadd646564ffb845c41"
+        },
+        "res/raw-assets/resources/texture/login/tip_queding.png": {
+            "md5": "93ce007673a8c37a7777dedaf7620130"
+        },
+        "res/raw-assets/resources/texture/login/tip_quxiao.png": {
+            "md5": "2ed963aa381ee197242856a805102875"
+        },
+        "res/raw-assets/resources/texture/login/weixin1.png": {
+            "md5": "1f20402de7d2334afbfcc08b41f848d0"
+        },
+        "res/raw-assets/resources/texture/login/weixin2.png": {
+            "md5": "b1eda8cc0c10acf69b204ef77f544a3c"
+        },
+        "res/raw-assets/resources/texture/login/zhonggao.png": {
+            "md5": "eb7629fa1ac6ba25fbf4decc1148cc1a"
+        },
+        "res/raw-assets/resources/texture/main/main_BJ.jpg": {
+            "md5": "a47a2aa887b95d9044987e27eaf97ec3"
+        },
+        "res/raw-assets/resources/texture/main/main_OUT.png": {
+            "md5": "718e1a1cd2b0a05aeeb5e847aa3212ad"
+        },
+        "res/raw-assets/resources/texture/main/main_ceshi.png": {
+            "md5": "a077ad0e30614697efd8ae417e7807d0"
+        },
+        "res/raw-assets/resources/texture/main/main_chongzhi.png": {
+            "md5": "191936615be1d4ee7741e5f6554182ff"
+        },
+        "res/raw-assets/resources/texture/main/main_choujiang.png": {
+            "md5": "e524be341297ade83a8874a7f9dacedb"
+        },
+        "res/raw-assets/resources/texture/main/main_dating.png": {
+            "md5": "8d8f2be89df6b7abc00f743267159da2"
+        },
+        "res/raw-assets/resources/texture/main/main_gonggao.png": {
+            "md5": "60e577ad8e9d8a1757f15ec0a46b7997"
+        },
+        "res/raw-assets/resources/texture/main/main_gonggaotiao.png": {
+            "md5": "434b051bcf7545ed19a20073018bc4d6"
+        },
+        "res/raw-assets/resources/texture/main/main_guize.png": {
+            "md5": "085276e80bd3ca89268cb2bee56457a3"
+        },
+        "res/raw-assets/resources/texture/main/main_haoyoutongwan.png": {
+            "md5": "13d0ab66b3a3743f56c39594234a0cee"
+        },
+        "res/raw-assets/resources/texture/main/main_jiaru.png": {
+            "md5": "b91845907977f14cc1405a644d9504a0"
+        },
+        "res/raw-assets/resources/texture/main/main_meinv.png": {
+            "md5": "f13b67dfeb713e38e747da84b52767de"
+        },
+        "res/raw-assets/resources/texture/main/main_mianban.png": {
+            "md5": "b3397cebda907b868233c24378af085a"
+        },
+        "res/raw-assets/resources/texture/main/main_mingzikuang.png": {
+            "md5": "91510d5e5c09c11de03445b6040bbdc3"
+        },
+        "res/raw-assets/resources/texture/main/main_new.png": {
+            "md5": "735c40c11a3618bc7707c32fb1244b36"
+        },
+        "res/raw-assets/resources/texture/main/main_new1.png": {
+            "md5": "0b074969c0ca58e604795483c87b9198"
+        },
+        "res/raw-assets/resources/texture/main/main_shezhi.png": {
+            "md5": "5a97f10a62962f5f85a2514295e8eb09"
+        },
+        "res/raw-assets/resources/texture/main/main_shop.png": {
+            "md5": "17d1fd555220d97e29a73fbedb78c5c5"
+        },
+        "res/raw-assets/resources/texture/main/main_touxiangk.png": {
+            "md5": "31faba64f00de988109fc3dd76a8ca4a"
+        },
+        "res/raw-assets/resources/texture/main/main_touxiangk1.png": {
+            "md5": "e8e7b03c3bf44602434dc0abfa53f900"
+        },
+        "res/raw-assets/resources/texture/main/main_zhanji.png": {
+            "md5": "798fb354e09b683a7c48a11fed78079b"
+        },
+        "res/raw-assets/resources/texture/option/coin_zkuang.png": {
+            "md5": "4077bb96d65e6b9942fd3dd89aeaf481"
+        },
+        "res/raw-assets/resources/texture/option/set_bj4.png": {
+            "md5": "881e2810ea2e96eff52061ef14ab28ca"
+        },
+        "res/raw-assets/resources/texture/option/set_guan.png": {
+            "md5": "d84ddf342f52d3a2dcd22430807092c5"
+        },
+        "res/raw-assets/resources/texture/option/set_kai.png": {
+            "md5": "b78504d55081ce88cc5be7091e86cb65"
+        },
+        "res/raw-assets/resources/texture/option/set_shengxiao.png": {
+            "md5": "20ae12a21f7d708bbd9c00524f18b12d"
+        },
+        "res/raw-internal/image/default_btn_disabled.png": {
+            "md5": "4b67943a77ffa169f2d7cd92e9d8a419"
+        },
+        "res/raw-internal/image/default_btn_normal.png": {
+            "md5": "f26c70eedfa804df6aab34a8ed31f0bd"
+        },
+        "res/raw-internal/image/default_btn_pressed.png": {
+            "md5": "e3ff2f1c49b0cfadd1b55fc6c02c3ccb"
+        },
+        "res/raw-internal/image/default_panel.png": {
+            "md5": "c071c67767e690e78448148344997934"
+        },
+        "res/raw-internal/image/default_progressbar.png": {
+            "md5": "a7fa5c6311aadef2d2654480c8744719"
+        },
+        "res/raw-internal/image/default_scrollbar_vertical.png": {
+            "md5": "3b702c6f04be1e92f6cab15f5e6862a6"
+        },
+        "res/raw-internal/image/default_scrollbar_vertical_bg.png": {
+            "md5": "582e100e7ce6940b1f1ea2e5e0149336"
+        },
+        "res/raw-internal/image/default_sprite_splash.png": {
+            "md5": "5db1eca7213a22613f5928ea2f8e85e1"
+        }
+    },
+    "searchPaths": []
+}

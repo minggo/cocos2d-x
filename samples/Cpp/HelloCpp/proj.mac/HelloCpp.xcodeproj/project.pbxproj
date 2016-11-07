@@ -7,10 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1514DA3F163004980095A81C /* ipad in Resources */ = {isa = PBXBuildFile; fileRef = 1514DA3C163004980095A81C /* ipad */; };
-		1514DA40163004980095A81C /* ipadhd in Resources */ = {isa = PBXBuildFile; fileRef = 1514DA3D163004980095A81C /* ipadhd */; };
-		1514DA41163004980095A81C /* iphone in Resources */ = {isa = PBXBuildFile; fileRef = 1514DA3E163004980095A81C /* iphone */; };
 		15C156BB1683155600D239F2 /* libcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15C156B81683151A00D239F2 /* libcocos2dx.a */; };
+		1ABF95C21DD0771E00CFCDFC /* arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95AB1DD0771E00CFCDFC /* arial.ttf */; };
+		1ABF95C31DD0771E00CFCDFC /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95AC1DD0771E00CFCDFC /* button.png */; };
+		1ABF95C41DD0771E00CFCDFC /* buttonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95AD1DD0771E00CFCDFC /* buttonHighlighted.png */; };
+		1ABF95C51DD0771E00CFCDFC /* config in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95AE1DD0771E00CFCDFC /* config */; };
+		1ABF95C61DD0771E00CFCDFC /* configure.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95AF1DD0771E00CFCDFC /* configure.json */; };
+		1ABF95C71DD0771E00CFCDFC /* effect0.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B01DD0771E00CFCDFC /* effect0.mp3 */; };
+		1ABF95C81DD0771E00CFCDFC /* effect1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B11DD0771E00CFCDFC /* effect1.mp3 */; };
+		1ABF95C91DD0771E00CFCDFC /* effect2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B21DD0771E00CFCDFC /* effect2.mp3 */; };
+		1ABF95CA1DD0771E00CFCDFC /* effect3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B31DD0771E00CFCDFC /* effect3.mp3 */; };
+		1ABF95CB1DD0771E00CFCDFC /* effect4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B41DD0771E00CFCDFC /* effect4.mp3 */; };
+		1ABF95CC1DD0771E00CFCDFC /* effect5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B51DD0771E00CFCDFC /* effect5.mp3 */; };
+		1ABF95CD1DD0771E00CFCDFC /* effect6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B61DD0771E00CFCDFC /* effect6.mp3 */; };
+		1ABF95CE1DD0771E00CFCDFC /* effect7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */; };
+		1ABF95CF1DD0771E00CFCDFC /* effect8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */; };
+		1ABF95D01DD0771E00CFCDFC /* effect9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */; };
+		1ABF95D11DD0771E00CFCDFC /* effects in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BA1DD0771E00CFCDFC /* effects */; };
+		1ABF95D21DD0771E00CFCDFC /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BB1DD0771E00CFCDFC /* fire.png */; };
+		1ABF95D31DD0771E00CFCDFC /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BC1DD0771E00CFCDFC /* fonts */; };
+		1ABF95D41DD0771E00CFCDFC /* gameScene.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BD1DD0771E00CFCDFC /* gameScene.json */; };
+		1ABF95D51DD0771E00CFCDFC /* Hello.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BE1DD0771E00CFCDFC /* Hello.png */; };
+		1ABF95D61DD0771E00CFCDFC /* res in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BF1DD0771E00CFCDFC /* res */; };
+		1ABF95D71DD0771E00CFCDFC /* sprite0.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95C01DD0771E00CFCDFC /* sprite0.png */; };
+		1ABF95D81DD0771E00CFCDFC /* sprite1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95C11DD0771E00CFCDFC /* sprite1.png */; };
+		1ABF95E11DD0772C00CFCDFC /* AnotherScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ABF95D91DD0772C00CFCDFC /* AnotherScene.cpp */; };
+		1ABF95E21DD0772C00CFCDFC /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ABF95DA1DD0772C00CFCDFC /* Utils.cpp */; };
+		1ABF95E31DD0772C00CFCDFC /* MyAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ABF95DC1DD0772C00CFCDFC /* MyAction.cpp */; };
+		1ABF95E41DD0772C00CFCDFC /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ABF95DD1DD0772C00CFCDFC /* LoadingScene.cpp */; };
 		41BC70AD15BF7CCE006A0A6C /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 41BC70AC15BF7CCE006A0A6C /* Icon.icns */; };
 		41CD6C6515BF7574005E6F29 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 41CD6C6315BF7574005E6F29 /* AppController.mm */; };
 		41CD6C6615BF7574005E6F29 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41CD6C6415BF7574005E6F29 /* main.m */; };
@@ -48,11 +72,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1514DA3C163004980095A81C /* ipad */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ipad; path = ../Resources/ipad; sourceTree = "<group>"; };
-		1514DA3D163004980095A81C /* ipadhd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ipadhd; path = ../Resources/ipadhd; sourceTree = "<group>"; };
-		1514DA3E163004980095A81C /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; name = iphone; path = ../Resources/iphone; sourceTree = "<group>"; };
 		15A6969B1630E63B00D7A229 /* AppMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppMacros.h; path = ../Classes/AppMacros.h; sourceTree = "<group>"; };
 		15C156B01683151A00D239F2 /* cocos2dx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2dx.xcodeproj; path = ../../../../cocos2dx/proj.mac/cocos2dx.xcodeproj; sourceTree = "<group>"; };
+		1ABF95AB1DD0771E00CFCDFC /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = arial.ttf; path = ../Resources/arial.ttf; sourceTree = "<group>"; };
+		1ABF95AC1DD0771E00CFCDFC /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = ../Resources/button.png; sourceTree = "<group>"; };
+		1ABF95AD1DD0771E00CFCDFC /* buttonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = buttonHighlighted.png; path = ../Resources/buttonHighlighted.png; sourceTree = "<group>"; };
+		1ABF95AE1DD0771E00CFCDFC /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; name = config; path = ../Resources/config; sourceTree = "<group>"; };
+		1ABF95AF1DD0771E00CFCDFC /* configure.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = configure.json; path = ../Resources/configure.json; sourceTree = "<group>"; };
+		1ABF95B01DD0771E00CFCDFC /* effect0.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect0.mp3; path = ../Resources/effect0.mp3; sourceTree = "<group>"; };
+		1ABF95B11DD0771E00CFCDFC /* effect1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect1.mp3; path = ../Resources/effect1.mp3; sourceTree = "<group>"; };
+		1ABF95B21DD0771E00CFCDFC /* effect2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect2.mp3; path = ../Resources/effect2.mp3; sourceTree = "<group>"; };
+		1ABF95B31DD0771E00CFCDFC /* effect3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect3.mp3; path = ../Resources/effect3.mp3; sourceTree = "<group>"; };
+		1ABF95B41DD0771E00CFCDFC /* effect4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect4.mp3; path = ../Resources/effect4.mp3; sourceTree = "<group>"; };
+		1ABF95B51DD0771E00CFCDFC /* effect5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect5.mp3; path = ../Resources/effect5.mp3; sourceTree = "<group>"; };
+		1ABF95B61DD0771E00CFCDFC /* effect6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect6.mp3; path = ../Resources/effect6.mp3; sourceTree = "<group>"; };
+		1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect7.mp3; path = ../Resources/effect7.mp3; sourceTree = "<group>"; };
+		1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect8.mp3; path = ../Resources/effect8.mp3; sourceTree = "<group>"; };
+		1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect9.mp3; path = ../Resources/effect9.mp3; sourceTree = "<group>"; };
+		1ABF95BA1DD0771E00CFCDFC /* effects */ = {isa = PBXFileReference; lastKnownFileType = folder; name = effects; path = ../Resources/effects; sourceTree = "<group>"; };
+		1ABF95BB1DD0771E00CFCDFC /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../Resources/fire.png; sourceTree = "<group>"; };
+		1ABF95BC1DD0771E00CFCDFC /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../Resources/fonts; sourceTree = "<group>"; };
+		1ABF95BD1DD0771E00CFCDFC /* gameScene.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gameScene.json; path = ../Resources/gameScene.json; sourceTree = "<group>"; };
+		1ABF95BE1DD0771E00CFCDFC /* Hello.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Hello.png; path = ../Resources/Hello.png; sourceTree = "<group>"; };
+		1ABF95BF1DD0771E00CFCDFC /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../Resources/res; sourceTree = "<group>"; };
+		1ABF95C01DD0771E00CFCDFC /* sprite0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sprite0.png; path = ../Resources/sprite0.png; sourceTree = "<group>"; };
+		1ABF95C11DD0771E00CFCDFC /* sprite1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sprite1.png; path = ../Resources/sprite1.png; sourceTree = "<group>"; };
+		1ABF95D91DD0772C00CFCDFC /* AnotherScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AnotherScene.cpp; path = ../Classes/AnotherScene.cpp; sourceTree = "<group>"; };
+		1ABF95DA1DD0772C00CFCDFC /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utils.cpp; path = ../Classes/Utils.cpp; sourceTree = "<group>"; };
+		1ABF95DB1DD0772C00CFCDFC /* MyAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyAction.h; path = ../Classes/MyAction.h; sourceTree = "<group>"; };
+		1ABF95DC1DD0772C00CFCDFC /* MyAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyAction.cpp; path = ../Classes/MyAction.cpp; sourceTree = "<group>"; };
+		1ABF95DD1DD0772C00CFCDFC /* LoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LoadingScene.cpp; path = ../Classes/LoadingScene.cpp; sourceTree = "<group>"; };
+		1ABF95DE1DD0772C00CFCDFC /* LoadingScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingScene.h; path = ../Classes/LoadingScene.h; sourceTree = "<group>"; };
+		1ABF95DF1DD0772C00CFCDFC /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utils.h; path = ../Classes/Utils.h; sourceTree = "<group>"; };
+		1ABF95E01DD0772C00CFCDFC /* AnotherScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnotherScene.h; path = ../Classes/AnotherScene.h; sourceTree = "<group>"; };
 		41BC70AC15BF7CCE006A0A6C /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		41CD6C5115BF748C005E6F29 /* HelloCpp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloCpp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41CD6C6215BF7574005E6F29 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
@@ -123,11 +175,19 @@
 		41CD6C5D15BF750B005E6F29 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				15A6969B1630E63B00D7A229 /* AppMacros.h */,
+				1ABF95D91DD0772C00CFCDFC /* AnotherScene.cpp */,
+				1ABF95E01DD0772C00CFCDFC /* AnotherScene.h */,
 				41CD6C7115BF76FB005E6F29 /* AppDelegate.cpp */,
 				41CD6C7215BF76FB005E6F29 /* AppDelegate.h */,
+				15A6969B1630E63B00D7A229 /* AppMacros.h */,
 				41CD6C7315BF76FB005E6F29 /* HelloWorldScene.cpp */,
 				41CD6C7415BF76FB005E6F29 /* HelloWorldScene.h */,
+				1ABF95DD1DD0772C00CFCDFC /* LoadingScene.cpp */,
+				1ABF95DE1DD0772C00CFCDFC /* LoadingScene.h */,
+				1ABF95DC1DD0772C00CFCDFC /* MyAction.cpp */,
+				1ABF95DB1DD0772C00CFCDFC /* MyAction.h */,
+				1ABF95DA1DD0772C00CFCDFC /* Utils.cpp */,
+				1ABF95DF1DD0772C00CFCDFC /* Utils.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -166,9 +226,29 @@
 		41CD6C6115BF7556005E6F29 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1514DA3C163004980095A81C /* ipad */,
-				1514DA3D163004980095A81C /* ipadhd */,
-				1514DA3E163004980095A81C /* iphone */,
+				1ABF95AB1DD0771E00CFCDFC /* arial.ttf */,
+				1ABF95AC1DD0771E00CFCDFC /* button.png */,
+				1ABF95AD1DD0771E00CFCDFC /* buttonHighlighted.png */,
+				1ABF95AE1DD0771E00CFCDFC /* config */,
+				1ABF95AF1DD0771E00CFCDFC /* configure.json */,
+				1ABF95B01DD0771E00CFCDFC /* effect0.mp3 */,
+				1ABF95B11DD0771E00CFCDFC /* effect1.mp3 */,
+				1ABF95B21DD0771E00CFCDFC /* effect2.mp3 */,
+				1ABF95B31DD0771E00CFCDFC /* effect3.mp3 */,
+				1ABF95B41DD0771E00CFCDFC /* effect4.mp3 */,
+				1ABF95B51DD0771E00CFCDFC /* effect5.mp3 */,
+				1ABF95B61DD0771E00CFCDFC /* effect6.mp3 */,
+				1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */,
+				1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */,
+				1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */,
+				1ABF95BA1DD0771E00CFCDFC /* effects */,
+				1ABF95BB1DD0771E00CFCDFC /* fire.png */,
+				1ABF95BC1DD0771E00CFCDFC /* fonts */,
+				1ABF95BD1DD0771E00CFCDFC /* gameScene.json */,
+				1ABF95BE1DD0771E00CFCDFC /* Hello.png */,
+				1ABF95BF1DD0771E00CFCDFC /* res */,
+				1ABF95C01DD0771E00CFCDFC /* sprite0.png */,
+				1ABF95C11DD0771E00CFCDFC /* sprite1.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -258,12 +338,32 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1ABF95CF1DD0771E00CFCDFC /* effect8.mp3 in Resources */,
+				1ABF95D21DD0771E00CFCDFC /* fire.png in Resources */,
+				1ABF95D81DD0771E00CFCDFC /* sprite1.png in Resources */,
+				1ABF95D11DD0771E00CFCDFC /* effects in Resources */,
+				1ABF95D31DD0771E00CFCDFC /* fonts in Resources */,
+				1ABF95C61DD0771E00CFCDFC /* configure.json in Resources */,
 				41CD6C6E15BF7673005E6F29 /* InfoPlist.strings in Resources */,
+				1ABF95CB1DD0771E00CFCDFC /* effect4.mp3 in Resources */,
+				1ABF95C51DD0771E00CFCDFC /* config in Resources */,
+				1ABF95C81DD0771E00CFCDFC /* effect1.mp3 in Resources */,
+				1ABF95C31DD0771E00CFCDFC /* button.png in Resources */,
+				1ABF95CA1DD0771E00CFCDFC /* effect3.mp3 in Resources */,
+				1ABF95CC1DD0771E00CFCDFC /* effect5.mp3 in Resources */,
+				1ABF95CD1DD0771E00CFCDFC /* effect6.mp3 in Resources */,
 				41CD6C6F15BF7673005E6F29 /* MainMenu.xib in Resources */,
+				1ABF95C21DD0771E00CFCDFC /* arial.ttf in Resources */,
+				1ABF95C91DD0771E00CFCDFC /* effect2.mp3 in Resources */,
+				1ABF95D51DD0771E00CFCDFC /* Hello.png in Resources */,
+				1ABF95D41DD0771E00CFCDFC /* gameScene.json in Resources */,
+				1ABF95D71DD0771E00CFCDFC /* sprite0.png in Resources */,
 				41BC70AD15BF7CCE006A0A6C /* Icon.icns in Resources */,
-				1514DA3F163004980095A81C /* ipad in Resources */,
-				1514DA40163004980095A81C /* ipadhd in Resources */,
-				1514DA41163004980095A81C /* iphone in Resources */,
+				1ABF95CE1DD0771E00CFCDFC /* effect7.mp3 in Resources */,
+				1ABF95C41DD0771E00CFCDFC /* buttonHighlighted.png in Resources */,
+				1ABF95D61DD0771E00CFCDFC /* res in Resources */,
+				1ABF95C71DD0771E00CFCDFC /* effect0.mp3 in Resources */,
+				1ABF95D01DD0771E00CFCDFC /* effect9.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +375,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				41CD6C6515BF7574005E6F29 /* AppController.mm in Sources */,
+				1ABF95E31DD0772C00CFCDFC /* MyAction.cpp in Sources */,
+				1ABF95E21DD0772C00CFCDFC /* Utils.cpp in Sources */,
+				1ABF95E11DD0772C00CFCDFC /* AnotherScene.cpp in Sources */,
 				41CD6C6615BF7574005E6F29 /* main.m in Sources */,
+				1ABF95E41DD0772C00CFCDFC /* LoadingScene.cpp in Sources */,
 				41CD6C7515BF76FB005E6F29 /* AppDelegate.cpp in Sources */,
 				41CD6C7615BF76FB005E6F29 /* HelloWorldScene.cpp in Sources */,
 			);
@@ -316,6 +420,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -342,6 +448,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -360,7 +468,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libc++";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -380,10 +489,11 @@
 					"\"$(SRCROOT)/../../../../cocos2dx\"",
 					"\"$(SRCROOT)/../../../../cocos2dx/platform/mac\"",
 					"\"$(SRCROOT)/../../../../cocos2dx/kazmath/include\"",
+					"\"$(SRCROOT)/../../../../external\"",
 				);
 				INFOPLIST_FILE = HelloCpp_Info.plist;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = HelloCpp;
@@ -395,7 +505,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libc++";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -414,10 +525,11 @@
 					"\"$(SRCROOT)/../../../../cocos2dx\"",
 					"\"$(SRCROOT)/../../../../cocos2dx/platform/mac\"",
 					"\"$(SRCROOT)/../../../../cocos2dx/kazmath/include\"",
+					"\"$(SRCROOT)/../../../../external\"",
 				);
 				INFOPLIST_FILE = HelloCpp_Info.plist;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = HelloCpp;

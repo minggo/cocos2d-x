@@ -36,7 +36,7 @@ static AppDelegate s_sharedApplication;
 		// create the window
 		// note that using NSResizableWindowMask causes the window to be a little
 		// smaller and therefore ipad graphics are not loaded
-		NSRect rect = NSMakeRect(0, 0, 2048, 1536);
+		NSRect rect = NSMakeRect(0, 0, 1920, 1024);
 		window = [[NSWindow alloc] initWithContentRect:rect
 			styleMask:( NSClosableWindowMask | NSTitledWindowMask )
 			backing:NSBackingStoreBuffered
@@ -53,7 +53,7 @@ static AppDelegate s_sharedApplication;
 		[window makeKeyAndOrderFront:self];
 		[window setAcceptsMouseMovedEvents:NO];
         
-        [glView setFrameZoomFactor:0.4];
+        [glView setFrameZoomFactor:0.8];
 
 		cocos2d::CCApplication::sharedApplication()->run();
 	}
