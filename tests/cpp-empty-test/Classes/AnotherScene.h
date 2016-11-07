@@ -22,6 +22,7 @@ public:
     static cocos2d::Scene* create();
     
     AnotherScene();
+    virtual void onEnter() override;
     void returnSceneCallback(cocos2d::Ref* sender);
     void scheduleCallback(float dt);
     
@@ -30,12 +31,10 @@ private:
     void parseJson();
     
     std::vector<myutils::ResourceInfo> _resourceLevelInfos;
-    std::vector<int> __runningOrder;
-    std::vector<int> __durations;
+    std::vector<int> _runningOrder;
+    std::vector<int> _durations;
     static std::vector<std::string> __keys;
     
-    
-    int _currentLevel;
     int _index;
     std::vector<int> _audioIDVecs;
     cocos2d::ParticleSun* _emitter;

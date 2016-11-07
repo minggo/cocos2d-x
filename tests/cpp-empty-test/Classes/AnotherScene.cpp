@@ -33,8 +33,7 @@ typedef rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> R
 typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonValue;
 
 AnotherScene::AnotherScene()
-: _currentLevel(0)
-, _index(0)
+: _index(0)
 {
     auto origin = Director::getInstance()->getVisibleOrigin();
     
@@ -65,23 +64,19 @@ AnotherScene::AnotherScene()
     _resourceLevelInfos = {
         // sprite, drawCall, action, particle, audio
         {120, 120,  0,   0,   0}, // CPU=0,GPU=0
-        {300, 300,  0, 50, 1}, // CPU=1,GPU=1
+        {300, 300,  0, 50, 2}, // CPU=1,GPU=1
         {350, 350,  0, 200, 1}, // CPU=1,GPU=2
-        {500, 500,  0, 300, 2}, // CPU=2,GPU=3
-        {600, 550,  0, 300, 2}, // CPU=2,GPU=4
-        {1200, 650,  0, 500, 3}, // CPU=3,GPU=5
+        {500, 500,  0, 300, 3}, // CPU=2,GPU=3
+        {700, 550,  0, 300, 2}, // CPU=2,GPU=4
+        {900, 550,  0, 500, 3}, // CPU=3,GPU=5
         
         {1200, 700,  0, 500, 3}, // CPU=3,GPU=6
-        {1500, 700,  0,   400, 4}, // CPU=4,GPU=7
+        {1500, 700,  0,   400, 5}, // CPU=4,GPU=7
         {2000, 900,  0,   400, 4}, // CPU=4,GPU=8
         {5000, 2000,  0, 1000, 5}, // CPU=5,GPU=9
     };
     
     parseJson();
-    int order = AnotherScene::__runningOrder[0] - 1;
-    std::string key = __keys[order];
-    int duration = __durations[_index];
-    scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
     
     _emitter = ParticleSun::create();
     _emitter->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
@@ -89,8 +84,19 @@ AnotherScene::AnotherScene()
     _emitter->setPosition(Vec2(100, 100));
     _emitter->pause();
     this->addChild(_emitter);
+}
+
+void AnotherScene::onEnter()
+{
+    Node::onEnter();
     
-    myutils::addResource(_parentNode, _emitter, _resourceLevelInfos[order], _audioIDVecs);
+    int level = _runningOrder[0] - 1;
+    std::string key = __keys[level];
+    int duration = _durations[0];
+    
+    myutils::addResource(_parentNode, _emitter, _resourceLevelInfos[level], _audioIDVecs);
+    scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
+    log("schedule start %d", duration);
 }
 
 void AnotherScene::returnSceneCallback(cocos2d::Ref* sender)
@@ -102,8 +108,9 @@ void AnotherScene::returnSceneCallback(cocos2d::Ref* sender)
 
 void AnotherScene::scheduleCallback(float dt)
 {
-    int nextLevel = _currentLevel + 1;
-    if (nextLevel >= 10)
+    log("schedule start %f", dt);
+    ++_index;
+    if (_index >= _runningOrder.size())
     {
         _parentNode->removeAllChildren();
         _emitter->removeFromParent();
@@ -115,14 +122,13 @@ void AnotherScene::scheduleCallback(float dt)
         return;
     }
     
-    int nextOrder = __runningOrder[nextLevel] - 1;
-    int currentOrder = __runningOrder[_currentLevel] - 1;
-    std::string key = __keys[nextOrder];
-    int duration = __durations[++_index];
-    scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
+    int nextLevel = _runningOrder[_index] - 1;
+    int currentLevel = _runningOrder[_index - 1] - 1;
+    std::string key = __keys[nextLevel];
+    int duration = _durations[_index];
     
-    auto currentResourceInfo = _resourceLevelInfos[currentOrder];
-    auto nextResourceInfo = _resourceLevelInfos[nextOrder];
+    auto currentResourceInfo = _resourceLevelInfos[currentLevel];
+    auto nextResourceInfo = _resourceLevelInfos[nextLevel];
     myutils::ResourceInfo subResourceInfo;
     subResourceInfo.spriteNumber = nextResourceInfo.spriteNumber - currentResourceInfo.spriteNumber;
     subResourceInfo.actionNumber = nextResourceInfo.actionNumber - currentResourceInfo.actionNumber;
@@ -131,7 +137,7 @@ void AnotherScene::scheduleCallback(float dt)
     subResourceInfo.audioNumber = nextResourceInfo.audioNumber - currentResourceInfo.audioNumber;
     myutils::addResource(_parentNode, _emitter, subResourceInfo, _audioIDVecs);
     
-    _currentLevel = nextLevel;
+    scheduleOnce(CC_CALLBACK_1(AnotherScene::scheduleCallback, this), duration, key);
 }
 
 void AnotherScene::parseJson()
@@ -150,7 +156,7 @@ void AnotherScene::parseJson()
     const RapidJsonValue& duration = document["duration"];
     for (auto iter = duration.Begin(); iter != duration.End(); ++iter)
     {
-        __durations.push_back(iter->GetInt());
+        _durations.push_back(iter->GetInt());
     }
     
     if (document.HasMember("running_order"))
@@ -158,11 +164,11 @@ void AnotherScene::parseJson()
         const RapidJsonValue& runningOrder = document["running_order"];
         for (auto iter = runningOrder.Begin(); iter != runningOrder.End(); ++ iter)
         {
-            __runningOrder.push_back(iter->GetInt());
+            _runningOrder.push_back(iter->GetInt());
         }
     }
     else
     {
-        __runningOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        _runningOrder = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     }
 }
