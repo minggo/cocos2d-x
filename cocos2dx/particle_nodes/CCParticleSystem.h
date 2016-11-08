@@ -31,6 +31,8 @@ THE SOFTWARE.
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCString.h"
 
+#include <vector>
+
 NS_CC_BEGIN
 
 /**
@@ -426,11 +428,26 @@ public:
     //! should be overridden by subclasses
     virtual void postStep();
 
+    virtual void onEnter();
+    virtual void onExit();
     virtual void update(float dt);
     virtual void updateWithNoTime(void);
 
+    /** Gets all ParticleSystem references
+     */
+    static std::vector<CCParticleSystem*>& getAllParticleSystems();
+
+private:
+    friend class EngineDataManager;
+    /** Internal use only, it's used by EngineDataManager class for Android platform */
+    static void setTotalParticleCountFactor(float factor);
+
 protected:
     virtual void updateBlendFunc();
+
+    static std::vector<CCParticleSystem*> g_allInstances;
+    /** The factor affects the total particle count, its value should be 0.0f ~ 1.0f, default 1.0f*/
+    static float g_totalParticleCountFactor;
 };
 
 // end of particle_nodes group

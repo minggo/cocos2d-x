@@ -104,6 +104,16 @@ public:
      */
     unsigned int numberOfRunningActionsInTarget(CCObject *pTarget);
 
+    /** Returns the numbers of actions that are running in all targets.
+     * Composable actions are counted as 1 action. Example:
+     * - If you are running 1 Sequence of 7 actions, it will return 1.
+     * - If you are running 7 Sequences of 2 actions, it will return 7.
+     *
+     * @return  The numbers of actions that are running in a certain target.
+     * @js NA
+     */
+    unsigned int numberOfRunningActions() const;
+
     /** Pauses the target: all running actions and newly added actions will be paused.
     */
     void pauseTarget(CCObject *pTarget);

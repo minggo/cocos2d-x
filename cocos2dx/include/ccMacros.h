@@ -246,7 +246,13 @@ It should work same as apples CFSwapInt32LittleToHost(..)
  The number of calls per frame are displayed on the screen when the CCDirector's stats are enabled.
  */
 extern unsigned int CC_DLL g_uNumberOfDraws;
-#define CC_INCREMENT_GL_DRAWS(__n__) g_uNumberOfDraws += __n__
+extern unsigned int CC_DLL g_uNumberOfVertex;
+
+#define CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(__drawcalls__, __vertices__) \
+    do {                                                                \
+        g_uNumberOfDraws += __drawcalls__;                   \
+        g_uNumberOfVertex += __vertices__;                   \
+    } while(0)
 
 /*******************/
 /** Notifications **/
