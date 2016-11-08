@@ -58,6 +58,7 @@ THE SOFTWARE.
 #include "CCGL.h"
 
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -80,6 +81,9 @@ NS_CC_BEGIN
 // 'Radius Mode' in Particle Designer uses a fixed emit rate of 30 hz. Since that can't be guaranteed in cocos2d,
 //  cocos2d uses a another approach, but the results are almost identical. 
 //
+
+std::vector<CCParticleSystem*> CCParticleSystem::g_allInstances;
+float CCParticleSystem::g_totalParticleCountFactor = 1.0f;
 
 CCParticleSystem::CCParticleSystem()
 : m_sPlistFile("")
@@ -599,6 +603,22 @@ bool CCParticleSystem::isFull()
     return (m_uParticleCount == m_uTotalParticles);
 }
 
+void CCParticleSystem::onEnter()
+{
+    CCNode::onEnter();
+    g_allInstances.push_back(this);
+}
+
+void CCParticleSystem::onExit()
+{
+    CCNode::onExit();
+    std::vector<CCParticleSystem*>::iterator iter = std::find(g_allInstances.begin(), g_allInstances.end(), this);
+    if (iter != g_allInstances.end())
+    {
+        g_allInstances.erase(iter);
+    }
+}
+
 // ParticleSystem - MainLoop
 void CCParticleSystem::update(float dt)
 {
@@ -607,13 +627,14 @@ void CCParticleSystem::update(float dt)
     if (m_bIsActive && m_fEmissionRate)
     {
         float rate = 1.0f / m_fEmissionRate;
+        unsigned int totalParticles = static_cast<unsigned int>(m_uTotalParticles * g_totalParticleCountFactor);
         //issue #1201, prevent bursts of particles, due to too high emitCounter
-        if (m_uParticleCount < m_uTotalParticles)
+        if (m_uParticleCount < totalParticles)
         {
             m_fEmitCounter += dt;
         }
         
-        while (m_uParticleCount < m_uTotalParticles && m_fEmitCounter > rate) 
+        while (m_uParticleCount < totalParticles && m_fEmitCounter > rate) 
         {
             this->addParticle();
             m_fEmitCounter -= rate;

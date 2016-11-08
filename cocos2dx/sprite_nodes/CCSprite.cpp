@@ -604,7 +604,7 @@ void CCSprite::draw(void)
     ccDrawPoly(vertices, 4, true);
 #endif // CC_SPRITE_DEBUG_DRAW
 
-    CC_INCREMENT_GL_DRAWS(1);
+    CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, 4);
 
     CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, "CCSprite - draw");
 }

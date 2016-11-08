@@ -65,7 +65,9 @@ THE SOFTWARE.
 #include "CCEGLView.h"
 #include "CCConfiguration.h"
 
-
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
+#endif
 
 /**
  Position of the FPS
@@ -79,6 +81,7 @@ THE SOFTWARE.
 using namespace std;
 
 unsigned int g_uNumberOfDraws = 0;
+unsigned int g_uNumberOfVertex = 0;
 
 NS_CC_BEGIN
 // XXX it should be a Director ivar. Move it there once support for multiple directors is added
@@ -109,6 +112,10 @@ bool CCDirector::init(void)
 {
 	setDefaultValues();
 
+    m_hookBeforeSetNextScene = NULL;
+    m_hookAfterDraw = NULL;
+    m_fDeltaTime = 0.0f;
+
     // scenes
     m_pRunningScene = NULL;
     m_pNextScene = NULL;
@@ -131,6 +138,7 @@ bool CCDirector::init(void)
     m_pszFPS = new char[10];
     m_pLastUpdate = new struct cc_timeval();
     m_fSecondsPerFrame = 0.0f;
+    CCTime::gettimeofdayCocos2d(m_pLastUpdate, NULL);
 
     // paused ?
     m_bPaused = false;
@@ -161,6 +169,10 @@ bool CCDirector::init(void)
 
     // create autorelease pool
     CCPoolManager::sharedPoolManager()->push();
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::init();
+#endif
 
     return true;
 }
@@ -271,6 +283,8 @@ void CCDirector::drawScene(void)
     // draw the scene
     if (m_pRunningScene)
     {
+        //clear draw stats
+        g_uNumberOfDraws = g_uNumberOfVertex = 0;
         m_pRunningScene->visit();
     }
 
@@ -280,6 +294,8 @@ void CCDirector::drawScene(void)
         m_pNotificationNode->visit();
     }
     
+    updateFrameRate();
+
     if (m_bDisplayStats)
     {
         showStats();
@@ -288,6 +304,11 @@ void CCDirector::drawScene(void)
     kmGLPopMatrix();
 
     m_uTotalFrames++;
+
+    if (m_hookAfterDraw != NULL)
+    {
+        m_hookAfterDraw();
+    }
 
     // swap buffers
     if (m_pobOpenGLView)
@@ -750,12 +771,21 @@ void CCDirector::purgeDirector()
     m_pobOpenGLView->end();
     m_pobOpenGLView = NULL;
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    EngineDataManager::destroy();
+#endif
+
     // delete CCDirector
     release();
 }
 
 void CCDirector::setNextScene(void)
 {
+    if (m_hookBeforeSetNextScene != NULL)
+    {
+        m_hookBeforeSetNextScene();
+    }
+
     bool runningIsTransition = dynamic_cast<CCTransitionScene*>(m_pRunningScene) != NULL;
     bool newIsTransition = dynamic_cast<CCTransitionScene*>(m_pNextScene) != NULL;
 
@@ -823,6 +853,16 @@ void CCDirector::resume(void)
     m_fDeltaTime = 0;
 }
 
+void CCDirector::updateFrameRate()
+{
+    static const float FPS_FILTER = 0.1f;
+    static float prevDeltaTime = 0.016f;
+
+    float dt = m_fDeltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
+    prevDeltaTime = dt;
+    m_fFrameRate = 1.0f/dt;
+}
+
 // display the FPS using a LabelAtlas
 // updates the FPS every frame
 void CCDirector::showStats(void)
@@ -839,7 +879,6 @@ void CCDirector::showStats(void)
                 sprintf(m_pszFPS, "%.3f", m_fSecondsPerFrame);
                 m_pSPFLabel->setString(m_pszFPS);
                 
-                m_fFrameRate = m_uFrames / m_fAccumDt;
                 m_uFrames = 0;
                 m_fAccumDt = 0;
                 
@@ -855,8 +894,6 @@ void CCDirector::showStats(void)
             m_pSPFLabel->visit();
         }
     }    
-    
-    g_uNumberOfDraws = 0;
 }
 
 void CCDirector::calculateMPF()

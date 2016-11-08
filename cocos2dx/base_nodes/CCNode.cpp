@@ -51,6 +51,7 @@ NS_CC_BEGIN
 
 // XXX: Yes, nodes might have a sort problem once every 15 days if the game runs at 60 FPS and each frame sprites are reordered.
 static int s_globalOrderOfArrival = 1;
+int CCNode::s_attachedNodeCount = 0;
 
 CCNode::CCNode(void)
 : m_fRotationX(0.0f)
@@ -910,6 +911,7 @@ void CCNode::transform()
 
 void CCNode::onEnter()
 {
+    ++s_attachedNodeCount;
     //fix setTouchEnabled not take effect when called the function in onEnter in JSBinding.
     m_bRunning = true;
 
@@ -968,6 +970,7 @@ void CCNode::onExit()
     {
         CCScriptEngineManager::sharedManager()->getScriptEngine()->executeNodeEvent(this, kCCNodeOnExit);
     }
+    --s_attachedNodeCount;
 }
 
 void CCNode::registerScriptHandler(int nHandler)

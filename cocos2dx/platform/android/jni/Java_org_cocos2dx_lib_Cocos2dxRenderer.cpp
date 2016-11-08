@@ -5,6 +5,7 @@
 #include "CCEventType.h"
 #include "support/CCNotificationCenter.h"
 #include "JniHelper.h"
+#include "Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include <jni.h>
 
 using namespace cocos2d;
@@ -15,6 +16,7 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnPause() {
+        EngineDataManager::onEnterBackground();
         CCApplication::sharedApplication()->applicationDidEnterBackground();
 
         CCNotificationCenter::sharedNotificationCenter()->postNotification(EVENT_COME_TO_BACKGROUND, NULL);
@@ -22,6 +24,7 @@ extern "C" {
 
     JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnResume() {
         if (CCDirector::sharedDirector()->getOpenGLView()) {
+            EngineDataManager::onEnterForeground();
             CCApplication::sharedApplication()->applicationWillEnterForeground();
         }
     }

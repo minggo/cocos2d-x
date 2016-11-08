@@ -93,6 +93,7 @@ platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxBitmap.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxHelper.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxRenderer.cpp \
 platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxAccelerometer.cpp \
+platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.cpp \
 platform/android/jni/JniHelper.cpp \
 platform/android/jni/IMEJni.cpp \
 platform/android/jni/TouchesJni.cpp \
@@ -148,6 +149,7 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/platform/android
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
+					$(LOCAL_PATH)/../external \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/kazmath/include \
                     $(LOCAL_PATH)/platform/android

@@ -121,6 +121,11 @@ unsigned char* CCFileUtilsAndroid::getFileDataForAsync(const char* pszFileName, 
 
 unsigned char* CCFileUtilsAndroid::doGetFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize, bool forAsync)
 {
+    if (m_beforeReadFileHook != NULL)
+    {
+        m_beforeReadFileHook();
+    }
+
     unsigned char * pData = 0;
     
     if ((! pszFileName) || (! pszMode) || 0 == strlen(pszFileName))
