@@ -682,7 +682,7 @@ void CCTextureAtlas::drawNumberOfQuads(unsigned int n, unsigned int start)
 
 #endif // CC_TEXTURE_ATLAS_USE_VAO
 
-    CC_INCREMENT_GL_DRAWS(1);
+    CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, n*6);
     CHECK_GL_ERROR_DEBUG();
 }
 

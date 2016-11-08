@@ -531,22 +531,23 @@ void CCProgressTimer::draw(void)
     if(m_eType == kCCProgressTimerTypeRadial)
     {
         glDrawArrays(GL_TRIANGLE_FAN, 0, m_nVertexDataCount);
+        CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1,m_nVertexDataCount);
     } 
     else if (m_eType == kCCProgressTimerTypeBar)
     {
         if (!m_bReverseDirection) 
         {
             glDrawArrays(GL_TRIANGLE_STRIP, 0, m_nVertexDataCount);
+            CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1,m_nVertexDataCount);
         } 
         else 
         {
             glDrawArrays(GL_TRIANGLE_STRIP, 0, m_nVertexDataCount/2);
             glDrawArrays(GL_TRIANGLE_STRIP, 4, m_nVertexDataCount/2);
             // 2 draw calls
-            CC_INCREMENT_GL_DRAWS(1);
+            CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(2, m_nVertexDataCount);
         }
     }
-    CC_INCREMENT_GL_DRAWS(1);
 }
 
 NS_CC_END
