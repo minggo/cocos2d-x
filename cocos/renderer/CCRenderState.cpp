@@ -104,7 +104,11 @@ void RenderState::bind(Pass* pass)
     CC_ASSERT(pass);
 
     if (_texture)
+    {
         GL::bindTexture2D(_texture->getName());
+        if (_texture->getAlphaTextureName() > 0)
+            GL::bindTexture2DN(1, _texture->getAlphaTextureName());
+    }
 
     // Get the combined modified state bits for our RenderState hierarchy.
     long stateOverrideBits = _state ? _state->_bits : 0;

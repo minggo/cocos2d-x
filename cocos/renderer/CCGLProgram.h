@@ -216,6 +216,9 @@ public:
     static const char* SHADER_NAME_LABEL_DISTANCEFIELD_NORMAL;
     static const char* SHADER_NAME_LABEL_DISTANCEFIELD_GLOW;
 
+    /** ETC1 ALPHA supports for 3d */
+    static const char* SHADER_ETC1AS_3D_SKINPOSITION_TEXTURE;
+
     /**Built in shader used for 3D, support Position vertex attribute, with color specified by a uniform.*/
     static const char* SHADER_3D_POSITION;
     /**Built in shader used for 3D, support Position and Texture vertex attribute, with color specified by a uniform.*/

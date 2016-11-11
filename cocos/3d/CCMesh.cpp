@@ -38,6 +38,7 @@
 #include "renderer/CCPass.h"
 #include "renderer/CCRenderer.h"
 #include "renderer/CCVertexAttribBinding.h"
+#include "renderer/CCGLProgramCache.h"
 #include "math/Mat4.h"
 
 using namespace std;
@@ -133,6 +134,7 @@ Mesh::Mesh()
 , _blendDirty(true)
 , _force2DQueue(false)
 , _texFile("")
+, _alphaTextureId(-1)
 {
     
 }
@@ -283,6 +285,9 @@ void Mesh::setTexture(Texture2D* tex)
 
 void Mesh::setTexture(Texture2D* tex, NTextureData::Usage usage, bool cacheFileName)
 {
+    if (tex->getAlphaTextureName() > 0)
+        _alphaTextureId = tex->getAlphaTextureName();
+    
     // Texture must be saved for future use
     // it doesn't matter if the material is already set or not
     // This functionality is added for compatibility issues
@@ -351,6 +356,9 @@ void Mesh::setMaterial(Material* material)
         {
             for (auto pass: technique->getPasses())
             {
+                if (_alphaTextureId > 0)
+                    pass->getGLProgramState()->setGLProgram(GLProgramCache::getInstance()->getGLProgram(GLProgram::SHADER_ETC1AS_3D_SKINPOSITION_TEXTURE));
+                
                 auto vertexAttribBinding = VertexAttribBinding::create(_meshIndexData, pass->getGLProgramState());
                 pass->setVertexAttribBinding(vertexAttribBinding);
             }

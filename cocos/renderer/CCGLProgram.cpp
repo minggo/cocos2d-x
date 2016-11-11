@@ -97,6 +97,7 @@ const char* GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_GLOW = "ShaderLabelDFGlow
 const char* GLProgram::SHADER_NAME_LABEL_NORMAL = "ShaderLabelNormal";
 const char* GLProgram::SHADER_NAME_LABEL_OUTLINE = "ShaderLabelOutline";
 
+const char* GLProgram::SHADER_ETC1AS_3D_SKINPOSITION_TEXTURE = "ShaderETC1ASPositionTexture";
 const char* GLProgram::SHADER_3D_POSITION = "Shader3DPosition";
 const char* GLProgram::SHADER_3D_POSITION_TEXTURE = "Shader3DPositionTexture";
 const char* GLProgram::SHADER_3D_SKINPOSITION_TEXTURE = "Shader3DSkinPositionTexture";

@@ -69,9 +69,15 @@ bool HelloWorld::init()
 
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize / 2) + origin);
+    
+    
 
-    // add the sprite as a child to this layer
-    this->addChild(sprite);
+//    // add the sprite as a child to this layer
+//    this->addChild(sprite);
+    
+    auto sprite3d = Sprite3D::create("etc1/S_Xiong.c3b");
+    sprite3d->setPosition(200, 50);
+    this->addChild(sprite3d);
     
     return true;
 }

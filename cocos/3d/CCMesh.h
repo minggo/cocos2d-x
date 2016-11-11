@@ -269,6 +269,7 @@ protected:
     std::vector<float> _spotLightUniformRangeInverseValues;
 
     std::string _texFile;
+    int _alphaTextureId;
 };
 
 // end of 3d group
