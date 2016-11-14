@@ -767,6 +767,12 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
 
     int defaultFps = static_cast<int>(std::ceil(1.0f/defaultAnimationInterval));
 
+    if (fps > defaultFps)
+    {
+        LOGD("nativeOnChangeExpectedFps, fps (%d) is greater than default fps (%d), reset it to default!", fps, defaultFps);
+        fps = -1;
+    }
+
     LOGD("nativeOnChangeExpectedFps, set fps: %d, default fps: %d", fps, defaultFps);
 
     if (fps > 0)
