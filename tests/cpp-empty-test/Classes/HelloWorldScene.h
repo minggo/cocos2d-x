@@ -2,21 +2,70 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include <vector>
+
+#include "ui/UIListView.h"
+#include "2d/CCParticleExamples.h"
+
+#include "Utils.h"
 
 class HelloWorld : public cocos2d::Layer
 {
 public:
-    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
-    virtual bool init();  
-
-    // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* scene();
     
-    // a selector callback
-    void menuCloseCallback(Ref* sender);
+    HelloWorld() :_emitter(nullptr),
+                  _enableAutoTesting(true),
+                  _autoTestingLabel(nullptr),
+                  _currentResourceLevel(-1){}
     
-    // implement the "static node()" method manually
+    virtual bool init() override;
+    virtual void update(float dt) override;
+    void gameSettingMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void resourceRequirementMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void fpsSelectedMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void autoTestingCallback(cocos2d::Ref* sender);
+    void actionCallback(int index);
+    void lastActionCallback();
+    
+    void SDKTestSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void SDKSecondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+    void SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::ListView::EventType type);
+
+    // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+    
+private:
+    
+    static void parseJson();
+    
+    cocos2d::ui::ListView* createListView(const std::vector<std::string>& itemTitles, const cocos2d::Vec2& position);
+    void addResources(int level);
+    void enableAllListViews();
+    void disableAllListViews();
+    void enableSDKAudio(bool enabled);
+    void enableSDKEffect(bool enabled);
+    void enableSDKFPS(bool enabled);
+    
+    static int getRandomIndex(std::vector<int>* array);
+    static std::vector<myutils::ResourceInfo> _resourceLevelVector;
+    static std::vector<int> __durations;
+    static std::vector<int> __runningOrder;
+    static int __repeatTime;
+    static bool __randomOrder;
+    
+    cocos2d::ParticleSun *_emitter;
+    bool _enableAutoTesting;
+    cocos2d::Label *_autoTestingLabel;
+    cocos2d::Label *_currentResourceLevelLabel;
+    int _currentResourceLevel;
+    std::vector<int> _audioIDVec;
+    
+    bool _isSDKTestExpanded;
+    bool _isGameSettingExpanded;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

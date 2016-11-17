@@ -3,8 +3,12 @@
 #include <vector>
 #include <string>
 
-#include "HelloWorldScene.h"
 #include "AppMacros.h"
+#include "LoadingScene.h"
+#include "HelloWorldScene.h"
+
+//Uncomment the following line to use localize manager
+//#include "editor-support/cocostudio/LocalizationManager.h"
 
 USING_NS_CC;
 using namespace std;
@@ -17,24 +21,26 @@ AppDelegate::~AppDelegate()
 {
 }
 
-bool AppDelegate::applicationDidFinishLaunching() {
+void AppDelegate::initGLContextAttrs()
+{
+//    GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
+//
+//    GLView::setGLContextAttrs(glContextAttrs);
+}
+
+bool AppDelegate::applicationDidFinishLaunching()
+{
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("Cpp Empty Test");
-        director->setOpenGLView(glview);
+        glview = GLView::createWithRect("Cpp Empty Test", Rect(0, 0, 1920, 1024), 0.8f);
     }
 
     director->setOpenGLView(glview);
 
     // Set the design resolution
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
-    // a bug in DirectX 11 level9-x on the device prevents ResolutionPolicy::NO_BORDER from working correctly
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::SHOW_ALL);
-#else
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
-#endif
 
 	Size frameSize = glview->getFrameSize();
     
@@ -69,15 +75,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     // set searching path
     FileUtils::getInstance()->setSearchPaths(searchPath);
-	
-    // turn on display FPS
-    director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0 / 60);
+    director->setAnimationInterval(1.0f / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::scene();
+    auto mainScene = HelloWorld::scene();
+    auto scene = LoadingScene::create(mainScene);
 
     // run
     director->runWithScene(scene);
@@ -85,11 +89,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     return true;
 }
 
-// This function will be called when the app is inactive. When comes a phone call,it's be invoked too
-void AppDelegate::applicationDidEnterBackground() {
+// This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.
+void AppDelegate::applicationDidEnterBackground()
+{
     Director::getInstance()->stopAnimation();
 
-    // if you use SimpleAudioEngine, it must be pause
+    // if you use SimpleAudioEngine, it must be paused
     // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 }
 
