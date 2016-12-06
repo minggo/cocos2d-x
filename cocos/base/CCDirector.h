@@ -508,7 +508,9 @@ public:
 protected:
     
     void reset();
-    
+
+    virtual void setAnimationIntervalInternal(float interval) = 0;
+
     void purgeDirector();
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
     
@@ -628,6 +630,10 @@ protected:
     /* cocos2d thread id */
     std::thread::id _cocos2d_thread_id;
 
+    /* Whether animation interval is set by game */
+    bool _isAnimationIntervalSetByGame;
+    friend class Application;
+
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
 };
@@ -659,6 +665,8 @@ public:
     virtual void setAnimationInterval(float value) override;
     virtual void startAnimation() override;
     virtual void stopAnimation() override;
+protected:
+    virtual void setAnimationIntervalInternal(float interval) override;
 
 protected:
     bool _invalid;

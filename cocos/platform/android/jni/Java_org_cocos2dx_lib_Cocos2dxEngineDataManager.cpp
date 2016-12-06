@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
+#include "platform/android/CCApplication-android.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventType.h"
@@ -331,7 +332,7 @@ void setAnimationIntervalSetBySystem(float interval)
 
     _animationIntervalSetBySystem = interval;
     LOGD("Set FPS %f by system", std::ceil(1.0f / interval));
-    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationIntervalSetBySystem", interval);
+    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationInterval", interval, ANIMATION_INTERVAL_SET_BY_SYSTEM);
 }
 
 void setAnimationIntervalWhenSceneChange(float interval)
@@ -341,7 +342,7 @@ void setAnimationIntervalWhenSceneChange(float interval)
 
     LOGD("Set FPS %f while changing scene", std::ceil(1.0f / interval));
     _animationIntervalWhenSceneChange = interval;
-    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationIntervalWhenSceneChange", interval);
+    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationInterval", interval, ANIMATION_INTERVAL_WHEN_SCENE_CHANGE);
 }
 
 } // namespace {

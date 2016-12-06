@@ -24,6 +24,7 @@ THE SOFTWARE.
 package org.cocos2dx.lib;
 
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -32,14 +33,18 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     // Constants
     // ===========================================================
 
+    private final static String TAG = "Cocos2dxRenderer";
+
     private final static long NANOSECONDSPERSECOND = 1000000000L;
     private final static long NANOSECONDSPERMICROSECOND = 1000000;
 
     // The final animation interval which is used in 'onDrawFrame'
     private static long sAnimationInterval = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
 
-    // The animation interval set by developer
-    private static long sAnimationIntervalSetDeveloper = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
+    // The animation interval set by engine.
+    // It could be updated by 'Director::getInstance()->setAnimationInterval(value);'
+    // or 'Director::getInstance()->resume();', 'Director::getInstance()->startAnimation();'.
+    private static long sAnimationIntervalSetByEngine = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
 
     // The animation interval set by system.
     // System could set this variable through EngineDataManager to override the default FPS set by developer.
@@ -50,12 +55,23 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private static long sAnimationIntervalSetBySystem = -1;
 
     // The animation interval when scene is changing.
-    // sAnimationIntervalSetDeveloper & sAnimationIntervalSetBySystem will not take effect
+    // sAnimationIntervalSetByEngine & sAnimationIntervalSetBySystem will not take effect
     // while sAnimationIntervalWhenSceneChange is greater than 0,
-    // but sAnimationIntervalSetDeveloper will be effective while
+    // but sAnimationIntervalSetByEngine will be effective while
     // Its priority is highest while it's valid ( > 0) , and it will be invalid (set to -1) after changing scene finishes.
     // Currently, only HuaWei Android devices may use this variable.
     private static long sAnimationIntervalWhenSceneChange = -1;
+
+    // The animation interval when director is paused.
+    // It could be updated by 'Director::getInstance()->pause();'
+    // Its priority is higher than sAnimationIntervalSetBySystem.
+    private static long sAnimationIntervalWhenDirectorPaused = -1;
+
+    private static final int ANIMATION_INTERVAL_SET_BY_ENGINE = 0;
+    private static final int ANIMATION_INTERVAL_SET_BY_ENGINE_DONT_RESET_SYSTEM = 1;
+    private static final int ANIMATION_INTERVAL_SET_BY_SYSTEM = 2;
+    private static final int ANIMATION_INTERVAL_WHEN_SCENE_CHANGE = 3;
+    private static final int ANIMATION_INTERVAL_WHEN_DIRECTOR_PAUSED = 4;
 
     // ===========================================================
     // Fields
@@ -76,35 +92,51 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 
     private static void updateFinalAnimationInterval() {
         if (sAnimationIntervalWhenSceneChange > 0) {
+            Log.d(TAG, "set by scene change...");
             sAnimationInterval = sAnimationIntervalWhenSceneChange;
+        } else if (sAnimationIntervalWhenDirectorPaused > 0) {
+            Log.d(TAG, "set by director paused");
+            sAnimationInterval = sAnimationIntervalWhenDirectorPaused;
         } else if (sAnimationIntervalSetBySystem > 0) {
+            Log.d(TAG, "set by system");
             sAnimationInterval = sAnimationIntervalSetBySystem;
         } else {
-            sAnimationInterval = sAnimationIntervalSetDeveloper;
+            Log.d(TAG, "set by engine");
+            sAnimationInterval = sAnimationIntervalSetByEngine;
         }
+        Log.d(TAG, "updateFinalAnimationInterval: " + Cocos2dxRenderer.NANOSECONDSPERSECOND / sAnimationInterval);
     }
 
-    public static void setAnimationInterval(float animationInterval) {
-        // Reset sAnimationIntervalSetBySystem to -1 to make developer's FPS configuration take effect.
-        sAnimationIntervalSetBySystem = -1;
-        sAnimationIntervalSetDeveloper = (long) (animationInterval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        updateFinalAnimationInterval();
+    // For backward compatibility
+    public static void setAnimationInterval(float interval) {
+        setAnimationInterval(interval, ANIMATION_INTERVAL_SET_BY_ENGINE);
     }
 
-    private static void setAnimationIntervalSetBySystem(float interval) {
-        if (interval > 0.0f) {
-            sAnimationIntervalSetBySystem = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        } else {
+    private static void setAnimationInterval(float interval, int type) {
+        Log.d(TAG, "setAnimationInterval: " + Math.ceil(1.0f/interval) + ", type: " + type);
+        final long nanoValue = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
+        if (type == ANIMATION_INTERVAL_SET_BY_ENGINE) {
+            sAnimationIntervalWhenDirectorPaused = -1;
+            // Reset sAnimationIntervalSetBySystem to -1 to make developer's FPS configuration take effect.
             sAnimationIntervalSetBySystem = -1;
-        }
-        updateFinalAnimationInterval();
-    }
-
-    private static void setAnimationIntervalWhenSceneChange(float interval) {
-        if (interval > 0.0f) {
-            sAnimationIntervalWhenSceneChange = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        } else {
-            sAnimationIntervalWhenSceneChange = -1;
+            sAnimationIntervalSetByEngine = nanoValue;
+        } else if (type == ANIMATION_INTERVAL_SET_BY_ENGINE_DONT_RESET_SYSTEM) {
+            sAnimationIntervalWhenDirectorPaused = -1;
+            sAnimationIntervalSetByEngine = nanoValue;
+        } else if (type == ANIMATION_INTERVAL_SET_BY_SYSTEM) {
+            if (interval > 0.0f) {
+                sAnimationIntervalSetBySystem = nanoValue;
+            } else {
+                sAnimationIntervalSetBySystem = -1;
+            }
+        } else if (type == ANIMATION_INTERVAL_WHEN_SCENE_CHANGE) {
+            if (interval > 0.0f) {
+                sAnimationIntervalWhenSceneChange = nanoValue;
+            } else {
+                sAnimationIntervalWhenSceneChange = -1;
+            }
+        } else if (type == ANIMATION_INTERVAL_WHEN_DIRECTOR_PAUSED) {
+            sAnimationIntervalWhenDirectorPaused = nanoValue;
         }
         updateFinalAnimationInterval();
     }

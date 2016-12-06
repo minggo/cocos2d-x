@@ -113,6 +113,7 @@ Director* Director::getInstance()
 
 Director::Director()
 : _isStatusLabelUpdated(true)
+, _isAnimationIntervalSetByGame(false)
 {
 }
 
@@ -1158,10 +1159,10 @@ void Director::pause()
     }
 
     _oldAnimationInterval = _animationInterval;
+    _paused = true;
 
     // when paused, don't consume CPU
-    setAnimationInterval(1 / 4.0);
-    _paused = true;
+    setAnimationIntervalInternal(1 / 4.0);
 }
 
 void Director::resume()
@@ -1171,9 +1172,10 @@ void Director::resume()
         return;
     }
 
-    setAnimationInterval(_oldAnimationInterval);
-
     _paused = false;
+
+    setAnimationIntervalInternal(_oldAnimationInterval);
+
     _deltaTime = 0;
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
@@ -1437,12 +1439,19 @@ void DisplayLinkDirector::stopAnimation()
 
 void DisplayLinkDirector::setAnimationInterval(float interval)
 {
+    _isAnimationIntervalSetByGame = true;
+    setAnimationIntervalInternal(interval);
+    _isAnimationIntervalSetByGame = false;
+}
+
+void DisplayLinkDirector::setAnimationIntervalInternal(float interval)
+{
     _animationInterval = interval;
     if (! _invalid)
     {
         stopAnimation();
         startAnimation();
-    }    
+    }
 }
 
 NS_CC_END

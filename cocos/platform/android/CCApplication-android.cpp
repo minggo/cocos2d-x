@@ -48,6 +48,13 @@ static const std::string helperClassName = "org/cocos2dx/lib/Cocos2dxHelper";
 
 NS_CC_BEGIN
 
+// The values have to be the same as which defined in Cocos2dxRenderer.java
+int ANIMATION_INTERVAL_SET_BY_ENGINE = 0;
+int ANIMATION_INTERVAL_SET_BY_ENGINE_DONT_RESET_SYSTEM = 1;
+int ANIMATION_INTERVAL_SET_BY_SYSTEM = 2;
+int ANIMATION_INTERVAL_WHEN_SCENE_CHANGE = 3;
+int ANIMATION_INTERVAL_WHEN_DIRECTOR_PAUSED = 4;
+
 // sharedApplication pointer
 Application * Application::sm_pSharedApplication = nullptr;
 
@@ -74,8 +81,26 @@ int Application::run()
     return -1;
 }
 
-void Application::setAnimationInterval(float interval) {
-    JniHelper::callStaticVoidMethod("org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", interval);
+void Application::setAnimationInterval(float interval)
+{
+    auto director = Director::getInstance();
+    bool isPaused = director->isPaused();
+    bool isAnimationSetByGame = director->_isAnimationIntervalSetByGame;
+    int type = ANIMATION_INTERVAL_SET_BY_ENGINE;
+    if (isPaused)
+    {
+        type = ANIMATION_INTERVAL_WHEN_DIRECTOR_PAUSED;
+    }
+    else if (isAnimationSetByGame)
+    {
+        type = ANIMATION_INTERVAL_SET_BY_ENGINE;
+    }
+    else
+    {
+        type = ANIMATION_INTERVAL_SET_BY_ENGINE_DONT_RESET_SYSTEM;
+    }
+
+    JniHelper::callStaticVoidMethod("org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", interval, type);
 }
 
 //////////////////////////////////////////////////////////////////////////
