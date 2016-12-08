@@ -108,7 +108,7 @@ int Application::run()
     return 0;
 }
 
-void Application::setAnimationInterval(float interval)
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
 {
     _animationInterval = interval*1000.0f;
 }
