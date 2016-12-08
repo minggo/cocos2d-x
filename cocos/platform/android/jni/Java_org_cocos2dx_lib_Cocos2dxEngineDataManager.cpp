@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
+#include "platform/android/CCApplication-android.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventType.h"
@@ -331,13 +332,7 @@ void setAnimationIntervalSetBySystem(float interval)
 
     _animationIntervalSetBySystem = interval;
     LOGD("Set FPS %f by system", std::ceil(1.0f / interval));
-
-    JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalSetBySystem", "(F)V"))
-    {
-        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
-        methodInfo.env->DeleteLocalRef(methodInfo.classID);
-    }
+    Application::getInstance()->setAnimationInterval(interval, SetIntervalReason::BY_SYSTEM);
 }
 
 void setAnimationIntervalWhenSceneChange(float interval)
@@ -349,7 +344,7 @@ void setAnimationIntervalWhenSceneChange(float interval)
     _animationIntervalWhenSceneChange = interval;
 
     JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalWhenSceneChange", "(F)V"))
+    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationIntervalWhenSceneChange", interval);
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);

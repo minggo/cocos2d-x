@@ -1068,7 +1068,7 @@ void Director::pause()
     _oldAnimationInterval = _animationInterval;
 
     // when paused, don't consume CPU
-    setAnimationInterval(1 / 4.0);
+    setAnimationInterval(1 / 4.0, SetIntervalReason::BY_DIRECTOR_PAUSE);
     _paused = true;
 }
 
@@ -1079,7 +1079,7 @@ void Director::resume()
         return;
     }
 
-    setAnimationInterval(_oldAnimationInterval);
+    setAnimationInterval(_oldAnimationInterval, SetIntervalReason::BY_ENGINE);
 
     _paused = false;
     _deltaTime = 0;
@@ -1279,6 +1279,11 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
 // so we now only support DisplayLinkDirector
 void DisplayLinkDirector::startAnimation()
 {
+    startAnimation(SetIntervalReason::BY_ENGINE);
+}
+
+void DisplayLinkDirector::startAnimation(SetIntervalReason reason)
+{
     if (gettimeofday(_lastUpdate, nullptr) != 0)
     {
         CCLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
@@ -1286,7 +1291,7 @@ void DisplayLinkDirector::startAnimation()
 
     _invalid = false;
 
-    Application::getInstance()->setAnimationInterval(_animationInterval);
+    Application::getInstance()->setAnimationInterval(_animationInterval, reason);
 
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
@@ -1313,14 +1318,19 @@ void DisplayLinkDirector::stopAnimation()
     _invalid = true;
 }
 
-void DisplayLinkDirector::setAnimationInterval(double interval)
+void DisplayLinkDirector::setAnimationInterval(float interval)
+{
+    setAnimationInterval(interval, SetIntervalReason::BY_GAME);
+}
+
+void DisplayLinkDirector::setAnimationInterval(float interval, SetIntervalReason reason)
 {
     _animationInterval = interval;
     if (! _invalid)
     {
         stopAnimation();
-        startAnimation();
-    }    
+        startAnimation(reason);
+    }
 }
 
 NS_CC_END
