@@ -74,8 +74,9 @@ int Application::run()
     return -1;
 }
 
-void Application::setAnimationInterval(float interval) {
-    JniHelper::callStaticVoidMethod("org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", interval);
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    JniHelper::callStaticVoidMethod("org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", interval, static_cast<int>(reason));
 }
 
 //////////////////////////////////////////////////////////////////////////

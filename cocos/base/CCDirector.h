@@ -508,7 +508,10 @@ public:
 protected:
     
     void reset();
-    
+
+    virtual void startAnimation(SetIntervalReason reason) = 0;
+    virtual void setAnimationInterval(float interval, SetIntervalReason reason) = 0;
+
     void purgeDirector();
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
     
@@ -659,6 +662,9 @@ public:
     virtual void setAnimationInterval(float value) override;
     virtual void startAnimation() override;
     virtual void stopAnimation() override;
+protected:
+    virtual void startAnimation(SetIntervalReason reason) override;
+    virtual void setAnimationInterval(float interval, SetIntervalReason reason) override;
 
 protected:
     bool _invalid;
