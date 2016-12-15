@@ -67,6 +67,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     private Cocos2dxEditBoxHelper mEditBoxHelper = null;
     private boolean hasFocus = false;
 
+    // whether register succeed
+    public static boolean sRegistered = false;
+
     public Cocos2dxGLSurfaceView getGLSurfaceView(){
         return  mGLSurfaceView;
     }
@@ -285,7 +288,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
+        sRegistered = Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions
