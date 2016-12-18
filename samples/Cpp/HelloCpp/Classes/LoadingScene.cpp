@@ -261,6 +261,9 @@ LoadingScene::LoadingScene(CCScene* newScene)
     {
         _resfiles.push_back(resfiles[i]);
     }
+
+    // set fps to 30 for loading
+    CCDirector::sharedDirector()->setAnimationInterval(1 / 30.0f);
 }
 
 void LoadingScene::replaceScene(float dt)
@@ -294,9 +297,12 @@ void LoadingScene::update(float dt)
             for (int i = 0; i < 10 && _index < _resfiles.size(); ++i, ++_index)
                 CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(_resfiles[_index].c_str());
         }
-        
         else
+        {
             replaceScene(0);
+            // reset fps to 60 after loading
+            CCDirector::sharedDirector()->setAnimationInterval(1 / 60.0);
+        }
     }
 }
 

@@ -80,7 +80,8 @@ void ListView::onMenuItemClicked(cocos2d::CCObject* sender)
 
 #define RESOURCE_PARENT_NODE_FLAG 14
 
-#define SDK_SHOW_RESET_TO_DEFAULT_BUTTON 0
+#define SDK_SHOW_COCOS_TEST_BUTTON 0
+
 #define SDK_TEST_MENU_FLAG 15
 #define SDK_FPS_MENU_TEST_FLAG 16
 #define SDK_EFFECT_MNUE_TEST_FLAG 17
@@ -202,6 +203,10 @@ bool HelloWorld::init()
     titles.push_back("选择等级");
     titles.push_back("切换场景");
     titles.push_back("帧率选择");
+#if SDK_SHOW_COCOS_TEST_BUTTON
+    titles.push_back("pause");
+    titles.push_back("resume");
+#endif
 
     listView = ListView::create(titles, ccp(origin.x + visibleSize.width / 6 * 4, origin.y + 40));
     listView->setTag(SECOND_MENU_FLAG);
@@ -267,7 +272,7 @@ bool HelloWorld::init()
     titles.push_back("30");
     titles.push_back("40");
     titles.push_back("60");
-#if SDK_SHOW_RESET_TO_DEFAULT_BUTTON
+#if SDK_SHOW_COCOS_TEST_BUTTON
     titles.push_back("默认值");
 #endif
 
@@ -439,7 +444,18 @@ void HelloWorld::secondMenuSelectedItemEvent(ListView* listView, int index)
                 this->getChildByTag(FPS_MENU_FLAG)->setVisible(true);
                 static_cast<ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
                 break;
-                
+
+            case 3:
+                // Director::pause
+                getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+                CCDirector::sharedDirector()->pause();
+                break;
+
+            case 4:
+                // Director::resume
+                getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+                CCDirector::sharedDirector()->resume();
+                break;
             default:
                 break;
         }

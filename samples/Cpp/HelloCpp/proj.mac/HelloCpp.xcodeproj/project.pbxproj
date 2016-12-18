@@ -23,7 +23,6 @@
 		1ABF95CE1DD0771E00CFCDFC /* effect7.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */; };
 		1ABF95CF1DD0771E00CFCDFC /* effect8.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */; };
 		1ABF95D01DD0771E00CFCDFC /* effect9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */; };
-		1ABF95D11DD0771E00CFCDFC /* effects in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BA1DD0771E00CFCDFC /* effects */; };
 		1ABF95D21DD0771E00CFCDFC /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BB1DD0771E00CFCDFC /* fire.png */; };
 		1ABF95D31DD0771E00CFCDFC /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BC1DD0771E00CFCDFC /* fonts */; };
 		1ABF95D41DD0771E00CFCDFC /* gameScene.json in Resources */ = {isa = PBXBuildFile; fileRef = 1ABF95BD1DD0771E00CFCDFC /* gameScene.json */; };
@@ -89,7 +88,6 @@
 		1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect7.mp3; path = ../Resources/effect7.mp3; sourceTree = "<group>"; };
 		1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect8.mp3; path = ../Resources/effect8.mp3; sourceTree = "<group>"; };
 		1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = effect9.mp3; path = ../Resources/effect9.mp3; sourceTree = "<group>"; };
-		1ABF95BA1DD0771E00CFCDFC /* effects */ = {isa = PBXFileReference; lastKnownFileType = folder; name = effects; path = ../Resources/effects; sourceTree = "<group>"; };
 		1ABF95BB1DD0771E00CFCDFC /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../Resources/fire.png; sourceTree = "<group>"; };
 		1ABF95BC1DD0771E00CFCDFC /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../Resources/fonts; sourceTree = "<group>"; };
 		1ABF95BD1DD0771E00CFCDFC /* gameScene.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gameScene.json; path = ../Resources/gameScene.json; sourceTree = "<group>"; };
@@ -241,7 +239,6 @@
 				1ABF95B71DD0771E00CFCDFC /* effect7.mp3 */,
 				1ABF95B81DD0771E00CFCDFC /* effect8.mp3 */,
 				1ABF95B91DD0771E00CFCDFC /* effect9.mp3 */,
-				1ABF95BA1DD0771E00CFCDFC /* effects */,
 				1ABF95BB1DD0771E00CFCDFC /* fire.png */,
 				1ABF95BC1DD0771E00CFCDFC /* fonts */,
 				1ABF95BD1DD0771E00CFCDFC /* gameScene.json */,
@@ -341,7 +338,6 @@
 				1ABF95CF1DD0771E00CFCDFC /* effect8.mp3 in Resources */,
 				1ABF95D21DD0771E00CFCDFC /* fire.png in Resources */,
 				1ABF95D81DD0771E00CFCDFC /* sprite1.png in Resources */,
-				1ABF95D11DD0771E00CFCDFC /* effects in Resources */,
 				1ABF95D31DD0771E00CFCDFC /* fonts in Resources */,
 				1ABF95C61DD0771E00CFCDFC /* configure.json in Resources */,
 				41CD6C6E15BF7673005E6F29 /* InfoPlist.strings in Resources */,
