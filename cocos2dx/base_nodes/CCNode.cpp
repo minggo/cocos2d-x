@@ -911,7 +911,10 @@ void CCNode::transform()
 
 void CCNode::onEnter()
 {
-    ++s_attachedNodeCount;
+    if (!m_bRunning)
+    {
+        ++s_attachedNodeCount;
+    }
     //fix setTouchEnabled not take effect when called the function in onEnter in JSBinding.
     m_bRunning = true;
 
@@ -960,6 +963,10 @@ void CCNode::onExitTransitionDidStart()
 
 void CCNode::onExit()
 {
+    if (m_bRunning)
+    {
+        --s_attachedNodeCount;
+    }
     this->pauseSchedulerAndActions();
 
     m_bRunning = false;
@@ -970,7 +977,6 @@ void CCNode::onExit()
     {
         CCScriptEngineManager::sharedManager()->getScriptEngine()->executeNodeEvent(this, kCCNodeOnExit);
     }
-    --s_attachedNodeCount;
 }
 
 void CCNode::registerScriptHandler(int nHandler)
