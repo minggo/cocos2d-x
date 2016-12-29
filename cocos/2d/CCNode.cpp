@@ -1276,7 +1276,10 @@ Mat4 Node::transform(const Mat4& parentTransform)
 
 void Node::onEnter()
 {
-    ++__attachedNodeCount;
+    if (!_running)
+    {
+        ++__attachedNodeCount;
+    }
 #if CC_ENABLE_SCRIPT_BINDING
     if (_scriptType == kScriptTypeJavascript)
     {
@@ -1361,6 +1364,10 @@ void Node::onExitTransitionDidStart()
 
 void Node::onExit()
 {
+    if (_running)
+    {
+        --__attachedNodeCount;
+    }
 #if CC_ENABLE_SCRIPT_BINDING
     if (_scriptType == kScriptTypeJavascript)
     {
@@ -1390,8 +1397,6 @@ void Node::onExit()
         ScriptEngineManager::sendNodeEventToLua(this, kNodeOnExit);
     }
 #endif
-    
-    --__attachedNodeCount;
 }
 
 void Node::setEventDispatcher(EventDispatcher* dispatcher)
