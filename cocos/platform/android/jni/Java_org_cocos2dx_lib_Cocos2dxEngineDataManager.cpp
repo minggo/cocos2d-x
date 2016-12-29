@@ -187,7 +187,7 @@ int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount
         || _oldCpuLevelAction - cpuLevelAction > 1.0f
         || _oldCpuLevelAudio - cpuLevelAudio > 1.0f)
     {
-        log("cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
+        LOGD("cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
             cpuLevel, cpuLevelNode, nodeCount, cpuLevelParticle, particleCount, cpuLevelAction, actionCount, cpuLevelAudio, audioCount);
         _oldCpuLevelNode = cpuLevelNode;
         _oldCpuLevelParticle = cpuLevelParticle;
@@ -235,7 +235,7 @@ int toGpuLevel(int vertexCount, int drawCount)
         || _oldGpuLevelVertex - gpuLevelVertex > 1.0f
         || _oldGpuLevelDraw - gpuLevelDraw > 1.0f)
     {
-        log("gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
+        LOGD("gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
         _oldGpuLevelVertex = gpuLevelVertex;
         _oldGpuLevelDraw = gpuLevelDraw;
     }
@@ -394,7 +394,7 @@ void EngineDataManager::calculateFrameLost()
         {
             ++_frameLostCounter;
             ++_lowFpsCounter;
-//            log("_frameLostCounter: %d, _lowFpsCounter=%d", _frameLostCounter, _lowFpsCounter);
+//            LOGD("_frameLostCounter: %d, _lowFpsCounter=%d", _frameLostCounter, _lowFpsCounter);
         }
         
         auto now = std::chrono::steady_clock::now();
@@ -419,7 +419,7 @@ void EngineDataManager::calculateFrameLost()
                 // notify continuous frame lost event to system
                 notifyContinuousFrameLost(_continuousFrameLostCycle, _continuousFrameLostThreshold, _continuousFrameLostCount);
 
-                log("continuous frame lost: %d", _continuousFrameLostCount);
+                LOGD("continuous frame lost: %d", _continuousFrameLostCount);
                 _continuousFrameLostCount = 0;
             }
         }
@@ -432,7 +432,7 @@ void EngineDataManager::calculateFrameLost()
             {
                 // notify low fps event to system
                 notifyLowFps(_lowFpsCycle, _lowFpsThreshold, _lowFpsCounter);
-                log("low fps frame count: %d", _lowFpsCounter);
+                LOGD("low fps frame count: %d", _lowFpsCounter);
                 _lowFpsCounter = 0;
             }
         }
