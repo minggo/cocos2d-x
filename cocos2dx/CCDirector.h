@@ -373,6 +373,8 @@ public:
     static CCDirector* sharedDirector(void);
 
 protected:
+    virtual void startAnimation(SetIntervalReason reason) = 0;
+    virtual void setAnimationInterval(double interval, SetIntervalReason reason) = 0;
 
     void purgeDirector();
     bool m_bPurgeDirecotorInNextLoop; // this flag will be set to true in end()
@@ -481,6 +483,8 @@ public:
     virtual void stopAnimation();
 
 protected:
+    virtual void startAnimation(SetIntervalReason reason);
+    virtual void setAnimationInterval(double interval, SetIntervalReason reason);
     bool m_bInvalid;
 };
 

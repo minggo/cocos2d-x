@@ -25,6 +25,7 @@ THE SOFTWARE.
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
+#include "platform/android/CCApplication.h"
 #include "CCDirector.h"
 #include "particle_nodes/CCParticleSystem.h"
 #include "actions/CCActionManager.h"
@@ -383,12 +384,7 @@ void setAnimationIntervalSetBySystem(float interval)
     _animationIntervalSetBySystem = interval;
     LOGD("Set FPS %f by system", std::ceil(1.0f / interval));
 
-    JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalSetBySystem", "(F)V"))
-    {
-        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
-        methodInfo.env->DeleteLocalRef(methodInfo.classID);
-    }
+    CCApplication::sharedApplication()->setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_SYSTEM);
 }
 
 void setAnimationIntervalWhenSceneChange(float interval)
@@ -399,12 +395,7 @@ void setAnimationIntervalWhenSceneChange(float interval)
     LOGD("Set FPS %f while changing scene", std::ceil(1.0f / interval));
     _animationIntervalWhenSceneChange = interval;
 
-    JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationIntervalWhenSceneChange", "(F)V"))
-    {
-        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
-        methodInfo.env->DeleteLocalRef(methodInfo.classID);
-    }
+    CCApplication::sharedApplication()->setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_SCENE_CHANGE);
 }
 
 } // namespace {

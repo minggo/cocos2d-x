@@ -18,7 +18,8 @@ public:
     @brief    Callback by CCDirector to limit FPS.
     @interval       The time, expressed in seconds, between current frame and next. 
     */
-    void setAnimationInterval(double interval);
+    virtual void setAnimationInterval(double interval);
+    virtual void setAnimationIntervalForReason(double interval, SetIntervalReason reason);
 
     /**
     @brief    Run the message loop.

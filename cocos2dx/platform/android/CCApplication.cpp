@@ -38,18 +38,23 @@ int CCApplication::run()
     return -1;
 }
 
-void CCApplication::setAnimationInterval(double interval)
+void CCApplication::setAnimationIntervalForReason(double interval, SetIntervalReason reason)
 {
     JniMethodInfo methodInfo;
     if (! JniHelper::getStaticMethodInfo(methodInfo, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", 
-        "(D)V"))
+        "(FI)V"))
     {
         CCLOG("%s %d: error to get methodInfo", __FILE__, __LINE__);
     }
     else
     {
-        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval, static_cast<int>(reason));
     }
+}
+
+void CCApplication::setAnimationInterval(double interval)
+{
+    setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_ENGINE);
 }
 
 //////////////////////////////////////////////////////////////////////////
