@@ -590,7 +590,7 @@ void HelloWorld::SDKEffectSelectedItemEvent(ListView* listView, int index)
 {
     {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::nativeOnChangeExpectedFps(NULL, NULL, index);
+        EngineDataManager::nativeOnChangeSpecialEffectLevel(NULL, NULL, index);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
