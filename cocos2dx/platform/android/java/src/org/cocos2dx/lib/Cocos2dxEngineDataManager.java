@@ -36,6 +36,7 @@ public class Cocos2dxEngineDataManager {
     private static final String TAG = "CCEngineDataManager";
     private static EngineDataManager sManager = new EngineDataManager();
     private static boolean sIsEnabled = true;
+    private static boolean sIsInited = false;
 
     private Cocos2dxEngineDataManager() {
 
@@ -58,6 +59,10 @@ public class Cocos2dxEngineDataManager {
     // Currently, it only supports HuaWei mobile phones.
     public static void disable() {
         sIsEnabled = false;
+    }
+
+    public static boolean isInited() {
+        return sIsInited;
     }
 
     // Lifecycle functions
@@ -137,14 +142,13 @@ public class Cocos2dxEngineDataManager {
             }
         };
 
-        boolean ret = false;
         if (sIsEnabled) {
-            ret = sManager.init(listener);
+            sIsInited = sManager.init(listener);
         }
 
-        nativeSetSupportOptimization(ret);
+        nativeSetSupportOptimization(sIsInited);
 
-        return ret;
+        return sIsInited;
     }
 
     public static void destroy() {
@@ -235,6 +239,15 @@ public class Cocos2dxEngineDataManager {
         }
 
         sManager.notifyLowFps(cycle, lowFpsThreshold, lostFrameCount);
+    }
+
+    public static void notifyFpsChanged(float oldFps, float newFps) {
+        if (!sIsEnabled) {
+            nativeSetSupportOptimization(false);
+            return;
+        }
+
+        sManager.notifyFpsChanged(oldFps, newFps);
     }
 
     // Native methods

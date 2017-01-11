@@ -47,13 +47,7 @@ public:
         LAUNCH_END,
         SCENE_CHANGE_BEGIN,
         SCENE_CHANGE_END,
-        IN_SCENE,
-
-        TEST_CHANGE_FPS_RATE,
-        TEST_CHANGE_SPECIAL_EFFECTS,
-        TEST_MUTE_ENABLED,
-        TEST_CHANGE_CONTINOUS_FPS_MISSED_RATE,
-        TEST_DX_FPS_RATE,
+        IN_SCENE
     };
 
     static void notifyGameStatus(GameStatus type, int cpuLevel, int gpuLevel);

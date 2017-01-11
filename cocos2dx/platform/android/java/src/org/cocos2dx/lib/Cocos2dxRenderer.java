@@ -26,6 +26,7 @@ package org.cocos2dx.lib;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.cocos2dx.enginedata.EngineDataManager;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import android.opengl.GLSurfaceView;
 
@@ -108,9 +109,20 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private static void setAnimationInterval(float interval, int type) {
         final long nanoValue = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
         if (type == ANIMATION_INTERVAL_BY_GAME) {
+            long oldValue = sAnimationIntervalBySystem != -1 ? sAnimationIntervalBySystem : sAnimationIntervalByEngineOrGame;
             sAnimationIntervalByDirectorPaused = -1;
             // Reset sAnimationIntervalBySystem to -1 to make developer's FPS configuration take effect.
             sAnimationIntervalBySystem = -1;
+
+            // Notify system that FPS configuration has been changed by game.
+            if (Cocos2dxEngineDataManager.isInited() && oldValue != nanoValue)
+            {
+                Cocos2dxEngineDataManager.notifyFpsChanged(
+                        (float)Math.ceil(1.0f/ oldValue * Cocos2dxRenderer.NANOSECONDSPERSECOND),
+                        (float)Math.ceil(1.0f/interval)
+                );
+            }
+
             sAnimationIntervalByEngineOrGame = nanoValue;
         } else if (type == ANIMATION_INTERVAL_BY_ENGINE) {
             sAnimationIntervalByDirectorPaused = -1;
