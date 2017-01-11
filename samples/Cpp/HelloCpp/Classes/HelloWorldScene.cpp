@@ -578,7 +578,7 @@ void HelloWorld::SDKFPSSelectedItemEvent(ListView* listView, int index)
                 break;
         }
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::TEST_CHANGE_FPS_RATE, fps, 0);
+        EngineDataManager::nativeOnChangeExpectedFps(NULL, NULL, fps);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
@@ -590,7 +590,7 @@ void HelloWorld::SDKEffectSelectedItemEvent(ListView* listView, int index)
 {
     {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::TEST_CHANGE_SPECIAL_EFFECTS, index, 0);
+        EngineDataManager::nativeOnChangeExpectedFps(NULL, NULL, index);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
@@ -602,7 +602,7 @@ void HelloWorld::SDKAudioSelectedItemEvent(ListView* listView, int index)
 {
     {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::TEST_MUTE_ENABLED, index, 0);
+        EngineDataManager::nativeOnChangeMuteEnabled(NULL, NULL, index);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
