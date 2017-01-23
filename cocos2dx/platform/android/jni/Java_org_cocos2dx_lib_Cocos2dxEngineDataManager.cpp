@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "actions/CCActionManager.h"
 #include <android/log.h>
 #include <cmath>
+#include <limits.h>
 
 #define LOG_TAG    "EngineDataManager.cpp"
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
@@ -39,6 +40,7 @@ THE SOFTWARE.
 #define EDM_DEBUG 1
 
 #if EDM_DEBUG
+#include "ProcessCpuTracker.h"
 #include "json/document.h"
 typedef rapidjson::GenericDocument<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonDocument;
 typedef rapidjson::GenericValue<rapidjson::UTF8<>, rapidjson::CrtAllocator> RapidJsonValue;
@@ -66,6 +68,16 @@ bool _isInBackground = false;
 uint32_t _drawCountInterval = 0;
 const uint32_t _drawCountThreshold = 30;
 
+#if EDM_DEBUG
+uint32_t _printCpuGpuLevelCounter = 0;
+uint32_t _printCpuGpuLevelThreshold = UINT_MAX; // Print cpu/gpu level in every 60 frames even if levels aren't changed.
+
+uint32_t _printCpuUsageCounter = 0;
+uint32_t _printCpuUsageThreshold = UINT_MAX;
+
+ProcessCpuTracker _cpuTracker;
+#endif
+
 /* last time frame lost cycle was calculated */ 
 struct timespec _lastContinuousFrameLostUpdate = {0, 0};
 struct timespec _lastFrameLost100msUpdate = {0, 0};
@@ -84,9 +96,47 @@ int _lowFpsCounter = 0;
 
 int _oldCpuLevel = -1;
 int _oldGpuLevel = -1;
+int _oldCpuLevelMulFactor = -1;
+int _oldGpuLevelMulFactor = -1;
 
-float _animationIntervalSetBySystem = -1.0f;
-float _animationIntervalWhenSceneChange = -1.0f;
+float _levelDecreaseThreshold = 0.2f;
+
+float _cpuFpsFactor = 1.0f;
+float _gpuFpsFactor = 1.0f;
+bool _isFpsChanged = false;
+float _oldRealFps = 60.0f;
+float _lowRealFpsThreshold = 0.25f;
+bool _isLowRealFpsInPreFrame = false;
+
+const float DEFAULT_INTERVAL = (1.0f / 60.0f);
+// The final animation interval which is used in 'onDrawFrame'
+float _animationInterval = DEFAULT_INTERVAL;
+
+// The animation interval set by engine.
+// It could be updated by 'Director::getInstance()->setAnimationInterval(value);'
+// or 'Director::getInstance()->resume();', 'Director::getInstance()->startAnimation();'.
+float _animationIntervalByEngineOrGame = DEFAULT_INTERVAL;
+
+// The animation interval set by system.
+// System could set this variable through EngineDataManager to override the default FPS set by developer.
+// By using this variable, system will be able to control temperature better
+// and waste less power while device is in low battery mode, so game could be played longer when battery is nearly dead.
+// setAnimationInterval will reset _animationIntervalBySystem to -1 since last change last takes effect.
+// Currently, only HuaWei Android devices may use this variable.
+float _animationIntervalBySystem = -1.0f;
+
+// The animation interval when scene is changing.
+// _animationIntervalByEngineOrGame & _animationIntervalBySystem will not take effect
+// while _animationIntervalBySceneChange is greater than 0,
+// but _animationIntervalByEngineOrGame will be effective while
+// Its priority is highest while it's valid ( > 0) , and it will be invalid (set to -1) after changing scene finishes.
+// Currently, only HuaWei Android devices may use this variable.
+float _animationIntervalBySceneChange = -1.0f;
+
+// The animation interval when director is paused.
+// It could be updated by 'Director::getInstance()->pause();'
+// Its priority is higher than _animationIntervalBySystem.
+float _animationIntervalByDirectorPaused = -1.0f;
 
 #define CARRAY_SIZE(arr) ((int)(arr.size()))
 
@@ -172,20 +222,86 @@ float _particleLevelCArray[] = {
 
 const std::vector<float> _particleLevelArr(_particleLevelCArray, _particleLevelCArray + sizeof(_particleLevelCArray) / sizeof(_particleLevelCArray[0]));
 
-#if EDM_DEBUG
-float _oldCpuLevelNode = 0;
-float _oldCpuLevelParticle = 0;
-float _oldCpuLevelAction = 0;
-float _oldCpuLevelAudio = 0;
-
-float _oldGpuLevelVertex = 0;
-float _oldGpuLevelDraw = 0;
-#endif
-
 inline float getInterval(const struct timespec& newTime, const struct timespec& oldTime)
 {
     return (newTime.tv_sec + newTime.tv_nsec / 1000000000.0f) - (oldTime.tv_sec + oldTime.tv_nsec / 1000000000.0f);
 }
+
+class FpsUpdatedWatcher
+{
+public:
+    FpsUpdatedWatcher(float threshold)
+    : _threshold(threshold)
+    , _updateCount(0)
+    , _isStarted(false)
+    {
+        _data.reserve(12);
+    }
+
+    ~FpsUpdatedWatcher()
+    {}
+
+    void start()
+    {
+        reset();
+        _isStarted = true;
+    }
+    inline bool isStarted() { return _isStarted; }
+
+    void update(float fps)
+    {
+        if (!_isStarted)
+            return;
+
+        if (_data.size() >= 12)
+            _data.erase(_data.begin());
+
+        _data.push_back(fps);
+        ++_updateCount;
+    }
+
+    void reset()
+    {
+        _data.clear();
+        _updateCount = 0;
+        _isStarted = false;
+    }
+
+    bool isStable()
+    {
+        if (_updateCount > 24)
+            return true;
+
+        if (_data.size() < 12)
+            return false;
+
+        float sum = 0.0f;
+        float average = 0.0f;
+        uint32_t stableCount = 0;
+
+        std::vector<float>::iterator iter = _data.begin();
+        for (; iter != _data.end(); ++iter)
+            sum += *iter;
+
+        average = sum / _data.size();
+
+        iter = _data.begin();
+        for (; iter != _data.end(); ++iter)
+        {
+            if (fabs(*iter - average) < _threshold)
+                ++stableCount;
+        }
+
+        return stableCount > 9;
+    }
+private:
+    std::vector<float> _data; // Collect 12 frames data
+    float _threshold;
+    int _updateCount;
+    bool _isStarted;
+};
+
+FpsUpdatedWatcher _fpsUpdatedWatcher(2.0f);
 
 int cbCpuLevelNode(int i) { return _cpuLevelArr[i].nodeCount; }
 int cbCpuLevelParticle(int i) { return _cpuLevelArr[i].particleCount; }
@@ -211,33 +327,6 @@ float toCpuLevelPerFactor(int value, int (*cb)(int i))
     return len;
 }
 
-int toCpuLevel(int nodeCount, int particleCount, int actionCount, int audioCount)
-{
-    float cpuLevelNode = toCpuLevelPerFactor(nodeCount, cbCpuLevelNode);
-    float cpuLevelParticle = toCpuLevelPerFactor(particleCount, cbCpuLevelParticle);
-    float cpuLevelAction = toCpuLevelPerFactor(actionCount, cbCpuLevelAction);
-    float cpuLevelAudio = toCpuLevelPerFactor(audioCount, cbCpuLevelAudio);
-    int cpuLevel = std::floor(cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio);
-    cpuLevel = std::min(cpuLevel, CARRAY_SIZE(_cpuLevelArr));
-
-#if EDM_DEBUG
-    if (_oldCpuLevel != cpuLevel
-        || _oldCpuLevelNode - cpuLevelNode > 1.0f
-        || _oldCpuLevelParticle - cpuLevelParticle > 1.0f
-        || _oldCpuLevelAction - cpuLevelAction > 1.0f
-        || _oldCpuLevelAudio - cpuLevelAudio > 1.0f)
-    {
-        LOGD("cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
-            cpuLevel, cpuLevelNode, nodeCount, cpuLevelParticle, particleCount, cpuLevelAction, actionCount, cpuLevelAudio, audioCount);
-        _oldCpuLevelNode = cpuLevelNode;
-        _oldCpuLevelParticle = cpuLevelParticle;
-        _oldCpuLevelAction = cpuLevelAction;
-        _oldCpuLevelAudio = cpuLevelAudio;
-    }
-#endif
-    return cpuLevel;
-}
-
 int cbGpuLevelVertex(int i) { return _gpuLevelArr[i].vertexCount; }
 int cbGpuLevelDraw(int i) { return _gpuLevelArr[i].drawCount; }
 
@@ -261,26 +350,6 @@ float toGpuLevelPerFactor(int value, int (*cb)(int i))
 
     }
     return len;
-}
-
-int toGpuLevel(int vertexCount, int drawCount)
-{
-    float gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
-    float gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
-    int gpuLevel = std::floor(gpuLevelVertex + gpuLevelDraw);
-    gpuLevel = std::min(gpuLevel, CARRAY_SIZE(_gpuLevelArr));
-
-#if EDM_DEBUG
-    if (_oldGpuLevel != gpuLevel
-        || _oldGpuLevelVertex - gpuLevelVertex > 1.0f
-        || _oldGpuLevelDraw - gpuLevelDraw > 1.0f)
-    {
-        LOGD("gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
-        _oldGpuLevelVertex = gpuLevelVertex;
-        _oldGpuLevelDraw = gpuLevelDraw;
-    }
-#endif
-    return gpuLevel;
 }
 
 void resetLastTime()
@@ -310,8 +379,32 @@ void parseDebugConfig()
     document.Parse<0>((char*)resLevelConfig, size);
     delete[] resLevelConfig;
     
+    if (document.HasMember("level_log_freq"))
     {
-        assert(document.HasMember("cpu_level"));
+        _printCpuGpuLevelThreshold = document["level_log_freq"].GetUint();
+    }
+    LOGD("level_log_freq: %u", _printCpuGpuLevelThreshold);
+
+    if (document.HasMember("cpu_usage_log_freq"))
+    {
+        _printCpuUsageThreshold = document["cpu_usage_log_freq"].GetUint();
+    }
+    LOGD("cpu_usage_log_freq: %u", _printCpuUsageThreshold);
+
+    if (document.HasMember("level_decrease_threshold"))
+    {
+        _levelDecreaseThreshold = (float)document["level_decrease_threshold"].GetDouble();
+    }
+    LOGD("level_decrease_threshold: %f", _levelDecreaseThreshold);
+
+    if (document.HasMember("low_realfps_threshold"))
+    {
+        _lowRealFpsThreshold = (float)document["low_realfps_threshold"].GetDouble();
+    }
+    LOGD("low_realfps_threshold: %f", _lowRealFpsThreshold);
+
+    if (document.HasMember("cpu_level"))
+    {
         const RapidJsonValue& cpu = document["cpu_level"];
         assert(cpu.IsArray());
         assert(_cpuLevelArr.size() == cpu.Size());
@@ -330,10 +423,9 @@ void parseDebugConfig()
             _cpuLevelArr.push_back(cpuLevelInfo);
         }
     }
-    
-    {
-        assert(document.HasMember("gpu_level"));
 
+    if (document.HasMember("gpu_level"))
+    {
         const RapidJsonValue& gpu = document["gpu_level"];
         assert(gpu.IsArray());
         assert(_gpuLevelArr.size() == gpu.Size());
@@ -350,7 +442,6 @@ void parseDebugConfig()
             _gpuLevelArr.push_back(gpuLevelInfo);
         }
     }
-    
 
     {
         LOGD("-----------------------------------------");
@@ -376,26 +467,24 @@ void parseDebugConfig()
 #endif // EDM_DEBUG
 }
 
-void setAnimationIntervalSetBySystem(float interval)
+void setAnimationIntervalBySystem(float interval)
 {
     if (!_isSupported)
         return;
 
-    _animationIntervalSetBySystem = interval;
     LOGD("Set FPS %f by system", std::ceil(1.0f / interval));
 
-    CCApplication::sharedApplication()->setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_SYSTEM);
+    EngineDataManager::setAnimationInterval(interval, SET_INTERVAL_REASON_BY_SYSTEM);
 }
 
-void setAnimationIntervalWhenSceneChange(float interval)
+void setAnimationIntervalBySceneChange(float interval)
 {
     if (!_isSupported)
         return;
 
     LOGD("Set FPS %f while changing scene", std::ceil(1.0f / interval));
-    _animationIntervalWhenSceneChange = interval;
 
-    CCApplication::sharedApplication()->setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_SCENE_CHANGE);
+    EngineDataManager::setAnimationInterval(interval, SET_INTERVAL_REASON_BY_SCENE_CHANGE);
 }
 
 } // namespace {
@@ -428,16 +517,10 @@ void EngineDataManager::calculateFrameLost()
 
     if (_lowFpsThreshold > 0 && _continuousFrameLostThreshold > 0)
     {
-        float animationInterval = director->getAnimationInterval();
-        if (_animationIntervalSetBySystem > 0.0f)
-        {
-            animationInterval = _animationIntervalSetBySystem;
-        }
-
         float frameRate = director->getFrameRate();
 
-        float expectedFPS = 1.0f / animationInterval;
-        float frameLostRate = (expectedFPS - frameRate) * animationInterval;
+        float expectedFps = 1.0f / _animationInterval;
+        float frameLostRate = (expectedFps - frameRate) * _animationInterval;
         if (frameLostRate > _lowFpsThreshold)
         {
             ++_frameLostCounter;
@@ -497,6 +580,8 @@ void EngineDataManager::onBeforeSetNextScene()
     // Make sure that the changed CPU/GPU level will be notified.
     _oldCpuLevel = -1;
     _oldGpuLevel = -1;
+    _oldCpuLevelMulFactor = -1;
+    _oldGpuLevelMulFactor = -1;
 
     if (_isFirstSetNextScene)
     {
@@ -510,11 +595,11 @@ void EngineDataManager::onBeforeSetNextScene()
 
     notifyGameStatus(SCENE_CHANGE_BEGIN, 5, 0);
 
-    // Set _animationIntervalWhenSceneChange to 1.0f/60.0f while there isn't in replacing scene.
+    // SetAnimationIntervalBySceneChange to 1.0f/60.0f while there isn't in replacing scene.
     if (!_isReplaceScene)
     {
         // Modify fps to 60 
-        setAnimationIntervalWhenSceneChange(1.0f/60.0f);
+        setAnimationIntervalBySceneChange(DEFAULT_INTERVAL);
     }
 
     _isReplaceScene = true;
@@ -530,21 +615,147 @@ void EngineDataManager::notifyGameStatusIfCpuOrGpuLevelChanged()
     // calculate CPU & GPU levels
     int cpuLevel = 0;
     int gpuLevel = 0;
-    getCpuAndGpuLevel(&cpuLevel, &gpuLevel);
 
-    if (cpuLevel != _oldCpuLevel || gpuLevel != _oldGpuLevel)
+    bool needToNotify = false;
+
+    CCDirector* director = CCDirector::sharedDirector();
+    int totalNodeCount = CCNode::getAttachedNodeCount();
+    int totalParticleCount = getTotalParticleCount();
+    int totalActionCount = director->getActionManager()->numberOfRunningActions();
+    int totalPlayingAudioCount = 0;// experimental::AudioEngine::getPlayingAudioCount();
+
     {
-        notifyGameStatus(IN_SCENE, cpuLevel, gpuLevel);
+        float cpuLevelNode = toCpuLevelPerFactor(totalNodeCount, cbCpuLevelNode);
+        float cpuLevelParticle = toCpuLevelPerFactor(totalParticleCount, cbCpuLevelParticle);
+        float cpuLevelAction = toCpuLevelPerFactor(totalActionCount, cbCpuLevelAction);
+        float cpuLevelAudio = toCpuLevelPerFactor(totalPlayingAudioCount, cbCpuLevelAudio);
+        float fCpuLevel = cpuLevelNode + cpuLevelParticle + cpuLevelAction + cpuLevelAudio;
+        float highestCpuLevel = CARRAY_SIZE(_cpuLevelArr) * 1.0f;
+        fCpuLevel = fCpuLevel > highestCpuLevel ? highestCpuLevel : fCpuLevel;
+        cpuLevel = std::floor(fCpuLevel);
 
-        _oldCpuLevel = cpuLevel;
-        _oldGpuLevel = gpuLevel;
+#if EDM_DEBUG
+        if (_printCpuGpuLevelCounter > _printCpuGpuLevelThreshold)
+        {
+            LOGD("DEBUG: cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
+                cpuLevel, cpuLevelNode, totalNodeCount, cpuLevelParticle, totalParticleCount, cpuLevelAction, totalActionCount, cpuLevelAudio, totalPlayingAudioCount);
+        }
+#endif
+        if (_oldCpuLevel < 0
+            || fCpuLevel < (1.0f * _oldCpuLevel - _levelDecreaseThreshold)
+            || cpuLevel > _oldCpuLevel
+            )
+        {
+            LOGD("NOTIFY: cpu level: %d, node: (%f, %d), particle: (%f, %d), action: (%f, %d), audio: (%f, %d)", 
+                cpuLevel, cpuLevelNode, totalNodeCount, cpuLevelParticle, totalParticleCount, cpuLevelAction, totalActionCount, cpuLevelAudio, totalPlayingAudioCount);
+            needToNotify = true;
+            _oldCpuLevel = cpuLevel;
+        }
+        // else if (fCpuLevel > (1.0f * _oldCpuLevel - _levelDecreaseThreshold) && cpuLevel < _oldCpuLevel)
+        // {
+        //     LOGD("Detect CPU PINGPONG: old: %d, new: %f", _oldCpuLevel, fCpuLevel);
+        // }
     }
+
+    {
+        int vertexCount = g_uNumberOfVertex;
+        int drawCount = g_uNumberOfDraws;
+        float gpuLevelVertex = toGpuLevelPerFactor(vertexCount, cbGpuLevelVertex);
+        float gpuLevelDraw = toGpuLevelPerFactor(drawCount, cbGpuLevelDraw);
+        float fGpuLevel = gpuLevelVertex + gpuLevelDraw;
+        float highestGpuLevel = CARRAY_SIZE(_gpuLevelArr) * 1.0f;
+        fGpuLevel = fGpuLevel > highestGpuLevel ? highestGpuLevel : fGpuLevel;
+        gpuLevel = std::floor(fGpuLevel);
+
+#if EDM_DEBUG
+        if (_printCpuGpuLevelCounter > _printCpuGpuLevelThreshold)
+        {
+            LOGD("DEBUG: gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
+        }
+#endif
+        if (_oldGpuLevel < 0
+            || fGpuLevel < (1.0f * _oldGpuLevel - _levelDecreaseThreshold)
+            || gpuLevel > _oldGpuLevel
+            )
+        {
+            LOGD("NOTIFY: gpu level: %d, vertex: (%f, %d), draw: (%f, %d)", gpuLevel, gpuLevelVertex, vertexCount, gpuLevelDraw, drawCount);
+            needToNotify = true;
+            _oldGpuLevel = gpuLevel;
+        }
+        // else if (fGpuLevel > (1.0f * _oldGpuLevel - _levelDecreaseThreshold) && gpuLevel < _oldGpuLevel)
+        // {
+        //     LOGD("Detect GPU PINGPONG: old: %d, new: %f", _oldGpuLevel, fGpuLevel);
+        // }
+    }
+
+    float expectedFps = 1.0f / _animationInterval;
+    float realFps = director->getFrameRate();
+    bool isLowRealFps = false;
+    if (_fpsUpdatedWatcher.isStarted())
+    {
+        _fpsUpdatedWatcher.update(realFps);
+        if (_fpsUpdatedWatcher.isStable())
+        {
+            LOGD("FPS(%.01f) is stable now!", realFps);
+            _fpsUpdatedWatcher.reset();
+        }
+    }
+    else
+    {
+        // Low Real Fps definition:
+        // CurrentFrameTimeCost > ExpectedFrameTimeCost + ExpectedFrameTimeCost * LowRealFpsThreshold
+        isLowRealFps = (1.0f / realFps) > (_animationInterval + _animationInterval * _lowRealFpsThreshold);
+        if (isLowRealFps && !_isLowRealFpsInPreFrame)
+        {
+            LOGD("Detected low fps: real: %.01f, expected: %.01f", realFps, expectedFps);
+        }
+    }
+
+    if (needToNotify || _isFpsChanged || isLowRealFps)
+    {
+        _isFpsChanged = false;
+        
+        // LOGD("expectedFps: %f, realFps: %f", expectedFps, realFps);
+        if (isLowRealFps)
+        {
+            _cpuFpsFactor = _gpuFpsFactor = 1.0f;
+        }
+        else
+        {
+            _cpuFpsFactor = _gpuFpsFactor = expectedFps / 60.0f;
+        }
+
+        int newCpuLevelMulFactor = std::ceil(cpuLevel * _cpuFpsFactor);
+        int newGpuLevelMulFactor = std::ceil(gpuLevel * _gpuFpsFactor);
+        if ((isLowRealFps && !_isLowRealFpsInPreFrame)
+            || newCpuLevelMulFactor != _oldCpuLevelMulFactor
+            || newGpuLevelMulFactor != _oldGpuLevelMulFactor)
+        {
+            LOGD("notifyGameStatus: IN_SCENE(%d, %d), cpuLevel: %d->%d, gpuLevel %d->%d, factor: %f",
+                cpuLevel, gpuLevel,
+                _oldCpuLevelMulFactor, newCpuLevelMulFactor,
+                _oldGpuLevelMulFactor, newGpuLevelMulFactor,
+                _cpuFpsFactor);
+
+            notifyGameStatus(IN_SCENE, newCpuLevelMulFactor, newGpuLevelMulFactor);
+
+            _oldCpuLevelMulFactor = newCpuLevelMulFactor;
+            _oldGpuLevelMulFactor = newGpuLevelMulFactor;
+        }
+    }
+
+    _isLowRealFpsInPreFrame = isLowRealFps;
 }
 
 // static
 void EngineDataManager::onAfterDrawScene()
 {
     calculateFrameLost();
+
+#if EDM_DEBUG
+    ++_printCpuGpuLevelCounter;
+    ++_printCpuUsageCounter;
+#endif
 
     if (_isReplaceScene)
     {
@@ -555,12 +766,14 @@ void EngineDataManager::onAfterDrawScene()
             _drawCountInterval = 0;
             _isReplaceScene = false;
 
-            // Reset _animationIntervalWhenSceneChange to -1.0f to
+            // setAnimationIntervalWhenSceneChange to -1.0f to
             // make developer's or huawei's FPS setting take effect.
-            setAnimationIntervalWhenSceneChange(-1.0f);
+            setAnimationIntervalBySceneChange(-1.0f);
 
             _oldCpuLevel = -1;
             _oldGpuLevel = -1;
+            _oldCpuLevelMulFactor = -1;
+            _oldGpuLevelMulFactor = -1;
             notifyGameStatus(SCENE_CHANGE_END, -1, -1);
         }
         else if (_isReadFile)
@@ -573,21 +786,20 @@ void EngineDataManager::onAfterDrawScene()
     {
         notifyGameStatusIfCpuOrGpuLevelChanged();
     }
-}
 
-void EngineDataManager::getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel)
-{
-    if (cpuLevel == NULL || gpuLevel == NULL)
-        return;
+#if EDM_DEBUG
+    if (_printCpuUsageCounter > _printCpuUsageThreshold)
+    {
+        _printCpuUsageCounter = 0;
+        _cpuTracker.update();
+        _cpuTracker.printCurrentState();
+    }
 
-    CCDirector* director = CCDirector::sharedDirector();
-    int totalNodeCount = CCNode::getAttachedNodeCount();
-    int totalParticleCount = getTotalParticleCount();
-    int totalActionCount = director->getActionManager()->numberOfRunningActions();
-    int totalPlayingAudioCount = 0;// experimental::AudioEngine::getPlayingAudioCount();
-    *cpuLevel = toCpuLevel(totalNodeCount, totalParticleCount, totalActionCount, totalPlayingAudioCount);
-
-    *gpuLevel = toGpuLevel(g_uNumberOfVertex, g_uNumberOfDraws);
+    if (_printCpuGpuLevelCounter > _printCpuGpuLevelThreshold)
+    {
+        _printCpuGpuLevelCounter = 0;
+    }
+#endif
 }
 
 // static
@@ -609,6 +821,8 @@ void EngineDataManager::onEnterForeground()
         // Reset the old status
         _oldCpuLevel = -1;
         _oldGpuLevel = -1;
+        _oldCpuLevelMulFactor = -1;
+        _oldGpuLevelMulFactor = -1;
         // Notify CPU/GPU level to system since old levels have been changed.
         notifyGameStatusIfCpuOrGpuLevelChanged();  
     }
@@ -641,6 +855,9 @@ void EngineDataManager::init()
 
     parseDebugConfig();
 
+#if EDM_DEBUG
+    _cpuTracker.update();
+#endif
     _isInitialized = true;
 }
 
@@ -665,6 +882,91 @@ void EngineDataManager::notifyGameStatus(GameStatus type, int cpuLevel, int gpuL
     }
 }
 
+static void updateFinalAnimationInterval()
+{
+    if (_animationIntervalBySceneChange > 0.0f) {
+        _animationInterval = _animationIntervalBySceneChange;
+    } else if (_animationIntervalByDirectorPaused > 0.0f) {
+        _animationInterval = _animationIntervalByDirectorPaused;
+    } else if (_animationIntervalBySystem > 0.0f) {
+        _animationInterval = _animationIntervalBySystem;
+    } else {
+        _animationInterval = _animationIntervalByEngineOrGame;
+    }
+}
+
+void EngineDataManager::setAnimationInterval(float interval, SetIntervalReason reason)
+{
+    float oldFps = 0.0f;
+    float newFps = 0.0f;
+
+    if (reason == SET_INTERVAL_REASON_BY_GAME) {
+        LOGD("setAnimationInterval by game: %.04f", interval);
+
+        if (_isSupported)
+        {
+            float oldInterval = _animationIntervalBySystem > 0.0f ? _animationIntervalBySystem : _animationIntervalByEngineOrGame;
+            oldFps = (float)ceil(1.0f/oldInterval);
+            newFps = (float)ceil(1.0f/interval);
+        }
+
+        _animationIntervalByDirectorPaused = -1.0f;
+        // Reset _animationIntervalBySystem to -1 to make developer's FPS configuration take effect.
+        _animationIntervalBySystem = -1.0f;
+        _animationIntervalByEngineOrGame = interval;
+    } else if (reason == SET_INTERVAL_REASON_BY_ENGINE) {
+        LOGD("setAnimationInterval by engine: %.04f", interval);
+        _animationIntervalByDirectorPaused = -1.0f;
+        _animationIntervalByEngineOrGame = interval;
+    } else if (reason == SET_INTERVAL_REASON_BY_SYSTEM) {
+        LOGD("setAnimationInterval by system: %.04f", interval);
+        if (interval > 0.0f) {
+            _animationIntervalBySystem = interval;
+        } else {
+            _animationIntervalBySystem = -1.0f;
+        }
+    } else if (reason == SET_INTERVAL_REASON_BY_SCENE_CHANGE) {
+        LOGD("setAnimationInterval by scene change: %.04f", interval);
+        if (interval > 0.0f) {
+            _animationIntervalBySceneChange = interval;
+        } else {
+            _animationIntervalBySceneChange = -1.0f;
+        }
+    } else if (reason == SET_INTERVAL_REASON_BY_DIRECTOR_PAUSE) {
+        LOGD("setAnimationInterval by director paused: %.04f", interval);
+        _animationIntervalByDirectorPaused = interval;
+    } else {
+        LOGD("setAnimationInterval by UNKNOWN reason: %.04f", interval);
+    }
+    updateFinalAnimationInterval();
+    _isFpsChanged = true;
+
+    LOGD("JNI setAnimationInterval: %f", _animationInterval);
+
+    JniMethodInfo methodInfo;
+    if (! JniHelper::getStaticMethodInfo(methodInfo, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", 
+        "(D)V"))
+    {
+        LOGE("%s %d: error to get methodInfo", __FILE__, __LINE__);
+    }
+    else
+    {
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, (jdouble)_animationInterval);
+        methodInfo.env->DeleteLocalRef(methodInfo.classID);
+    }
+
+    if (_isSupported)
+    {
+        // Notify system that FPS configuration has been changed by game.
+        // notifyFpsChanged has to be invoked at the end.
+        if (fabs(oldFps - newFps) > 1.0f)
+        {
+            notifyFpsChanged(oldFps, newFps);
+            _fpsUpdatedWatcher.start();
+        }
+    }
+}
+
 // static
 void EngineDataManager::notifyContinuousFrameLost(int continueFrameLostCycle, int continueFrameLostThreshold, int times)
 {
@@ -675,6 +977,21 @@ void EngineDataManager::notifyContinuousFrameLost(int continueFrameLostCycle, in
     if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_ENGINE_DATA_MANAGER, "notifyContinuousFrameLost", "(III)V"))
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, continueFrameLostCycle, continueFrameLostThreshold, times);
+        methodInfo.env->DeleteLocalRef(methodInfo.classID);
+    }
+}
+
+// static
+void EngineDataManager::notifyFpsChanged(float oldFps, float newFps)
+{
+    if (!_isSupported)
+        return;
+
+    LOGD("notifyFpsChanged: %.0f -> %.0f", oldFps, newFps);
+    JniMethodInfo methodInfo;
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_ENGINE_DATA_MANAGER, "notifyFpsChanged", "(FF)V"))
+    {
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, oldFps, newFps);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);
     }
 }
@@ -698,7 +1015,6 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
     if (!_isSupported)
         return;
 
-    LOGD("nativeOnQueryFps");
     jsize arrLenExpectedFps = env->GetArrayLength(arrExpectedFps);
     jsize arrLenRealFps = env->GetArrayLength(arrRealFps);
 
@@ -706,13 +1022,14 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
     {
         jboolean isCopy = JNI_FALSE;
         jint* expectedFps = env->GetIntArrayElements(arrExpectedFps, &isCopy);
-        CCDirector* director = CCDirector::sharedDirector();
-        float animationInterval = director->getAnimationInterval();
-        *expectedFps = (int)std::ceil(1.0f / animationInterval);
-        env->ReleaseIntArrayElements(arrExpectedFps, expectedFps, 0);
-
+        *expectedFps = (int)std::ceil(1.0f / _animationInterval);
+        
         jint* realFps = env->GetIntArrayElements(arrRealFps, &isCopy);
-        *realFps = (int)cocos2d::CCDirector::sharedDirector()->getFrameRate();
+        *realFps = (int)std::ceil(cocos2d::CCDirector::sharedDirector()->getFrameRate());
+
+        // Log before expectedFps & realFps is released.
+        LOGD("nativeOnQueryFps, realFps: %d, expected: %d", *realFps, *expectedFps);
+        env->ReleaseIntArrayElements(arrExpectedFps, expectedFps, 0);
         env->ReleaseIntArrayElements(arrRealFps, realFps, 0);
     }
     else
@@ -768,12 +1085,12 @@ void EngineDataManager::nativeOnChangeExpectedFps(JNIEnv* env, jobject thiz, jin
 
     if (fps > 0)
     {
-        setAnimationIntervalSetBySystem(1.0f/fps);
+        setAnimationIntervalBySystem(1.0f/fps);
         LOGD("nativeOnChangeExpectedFps, fps (%d) was set successfuly!", fps);
     }
     else if (fps == -1) // -1 means to reset to default FPS
     {
-        setAnimationIntervalSetBySystem(-1.0f);
+        setAnimationIntervalBySystem(-1.0f);
         LOGD("nativeOnChangeExpectedFps, fps (%d) was reset successfuly!", defaultFps);
     }
 }

@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 #pragma once
 
+#include "ccTypes.h"
+
 #include <string>
 #include <vector>
 
@@ -51,6 +53,7 @@ public:
     };
 
     static void notifyGameStatus(GameStatus type, int cpuLevel, int gpuLevel);
+    static void setAnimationInterval(float interval, SetIntervalReason reason);
 
     static void onEnterForeground();
     static void onEnterBackground();
@@ -58,10 +61,10 @@ public:
 private:
     static void notifyContinuousFrameLost(int frameLostCycle, int continueFrameLostThreshold, int times);
     static void notifyLowFps(int lowFpsCycle, float lowFpsThreshold, int frames);
+    static void notifyFpsChanged(float oldFps, float newFps);
     static void notifyGameStatusIfCpuOrGpuLevelChanged();
 
     static void calculateFrameLost();
-    static void getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel);
 
     static void onBeforeSetNextScene();
     static void onAfterDrawScene();
