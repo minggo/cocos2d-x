@@ -1089,12 +1089,12 @@ void Director::resume()
 
 void Director::updateFrameRate()
 {
-    static float prevDeltaTime  = 0.016f; // 60FPS
-    static const float FPS_FILTER = 0.10f;
+    static const float FPS_FILTER = 0.1f;
+    static float prevDeltaTime = 0.016f; // 60FPS
     
-    float dt = _deltaTime * FPS_FILTER + (1-FPS_FILTER) * prevDeltaTime;
+    float dt = _deltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
     prevDeltaTime = dt;
-    _frameRate = 1/dt;
+    _frameRate = 1.0f/dt;
 }
 
 // display the FPS using a LabelAtlas
