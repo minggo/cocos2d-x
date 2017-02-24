@@ -855,12 +855,15 @@ void CCDirector::resume(void)
 
 void CCDirector::updateFrameRate()
 {
-    static const float FPS_FILTER = 0.1f;
-    static float prevDeltaTime = 0.016f;
+    // static const float FPS_FILTER = 0.1f;
+    // static float prevDeltaTime = 0.016f;
 
-    float dt = m_fDeltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
-    prevDeltaTime = dt;
-    m_fFrameRate = 1.0f/dt;
+    // float dt = m_fDeltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
+    // prevDeltaTime = dt;
+    // m_fFrameRate = 1.0f/dt;
+
+    // Frame rate should be the real value of current frame.
+    m_fFrameRate = 1.0f / m_fDeltaTime;
 }
 
 // display the FPS using a LabelAtlas
@@ -879,10 +882,11 @@ void CCDirector::showStats(void)
                 sprintf(m_pszFPS, "%.3f", m_fSecondsPerFrame);
                 m_pSPFLabel->setString(m_pszFPS);
                 
+                float avgFrameRate = m_uFrames / m_fAccumDt;
                 m_uFrames = 0;
                 m_fAccumDt = 0;
                 
-                sprintf(m_pszFPS, "%.1f", m_fFrameRate);
+                sprintf(m_pszFPS, "%.1f", avgFrameRate);
                 m_pFPSLabel->setString(m_pszFPS);
                 
                 sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
