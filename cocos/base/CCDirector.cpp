@@ -136,6 +136,7 @@ bool Director::init(void)
     _lastUpdate = std::chrono::steady_clock::now();
     
     _secondsPerFrame = 1.0f;
+    _frames = 0;
 
     // paused ?
     _paused = false;
@@ -1181,12 +1182,15 @@ void Director::resume()
 
 void Director::updateFrameRate()
 {
-    static const float FPS_FILTER = 0.1f;
-    static float prevDeltaTime = 0.016f; // 60FPS
-    
-    float dt = _deltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
-    prevDeltaTime = dt;
-    _frameRate = 1.0f/dt;
+//    static const float FPS_FILTER = 0.1f;
+//    static float prevDeltaTime = 0.016f; // 60FPS
+//    
+//    float dt = _deltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
+//    prevDeltaTime = dt;
+//    _frameRate = 1.0f/dt;
+
+    // Frame rate should be the real value of current frame.
+    _frameRate = 1.0f / _deltaTime;
 }
 
 // display the FPS using a LabelAtlas
@@ -1202,6 +1206,7 @@ void Director::showStats()
     static unsigned long prevCalls = 0;
     static unsigned long prevVerts = 0;
 
+    ++_frames;
     _accumDt += _deltaTime;
     
     if (_displayStats && _FPSLabel && _drawnBatchesLabel && _drawnVerticesLabel)
@@ -1213,9 +1218,10 @@ void Director::showStats()
         // to make the FPS stable
         if (_accumDt > CC_DIRECTOR_STATS_INTERVAL)
         {
-            sprintf(buffer, "%.1f / %.3f", _frameRate, _secondsPerFrame);
+            sprintf(buffer, "%.1f / %.3f", _frames / _accumDt, _secondsPerFrame);
             _FPSLabel->setString(buffer);
             _accumDt = 0;
+            _frames = 0;
         }
 
         auto currentCalls = (unsigned long)_renderer->getDrawnBatches();
