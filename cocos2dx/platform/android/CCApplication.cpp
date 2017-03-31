@@ -1,5 +1,6 @@
 #include "jni/JniHelper.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
+#include "jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "CCApplication.h"
 #include "CCDirector.h"
 #include "CCEGLView.h"
@@ -38,18 +39,14 @@ int CCApplication::run()
     return -1;
 }
 
+void CCApplication::setAnimationIntervalForReason(double interval, SetIntervalReason reason)
+{
+    EngineDataManager::setAnimationInterval(interval, reason);
+}
+
 void CCApplication::setAnimationInterval(double interval)
 {
-    JniMethodInfo methodInfo;
-    if (! JniHelper::getStaticMethodInfo(methodInfo, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", 
-        "(D)V"))
-    {
-        CCLOG("%s %d: error to get methodInfo", __FILE__, __LINE__);
-    }
-    else
-    {
-        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, interval);
-    }
+    setAnimationIntervalForReason(interval, SET_INTERVAL_REASON_BY_ENGINE);
 }
 
 //////////////////////////////////////////////////////////////////////////

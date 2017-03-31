@@ -330,6 +330,8 @@ public:
     virtual void setPopupNotify(bool bNotify);
     virtual bool isPopupNotify();
 
+    void setBeforeReadFileHook(void (*func)()) { m_beforeReadFileHook = func; }
+
 protected:
     /**
      *  The default constructor.
@@ -430,6 +432,8 @@ protected:
      */
     std::map<std::string, std::string> m_fullPathCache;
     
+    void (*m_beforeReadFileHook)();
+
     /**
      *  The singleton pointer of CCFileUtils.
      */

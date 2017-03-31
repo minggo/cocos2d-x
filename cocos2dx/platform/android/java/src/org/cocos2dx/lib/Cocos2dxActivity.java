@@ -48,6 +48,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 	private Cocos2dxGLSurfaceView mGLSurfaceView;
 	private Cocos2dxHandler mHandler;
 	private static Context sContext = null;
+    // whether register succeed
+    public static boolean sRegistered = false;
 	
 	public static Context getContext() {
 		return sContext;
@@ -66,6 +68,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     	this.init();
 
 		Cocos2dxHelper.init(this, this);
+		sRegistered = Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
 	}
 
 	// ===========================================================
@@ -82,6 +85,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
 		Cocos2dxHelper.onResume();
 		this.mGLSurfaceView.onResume();
+		Cocos2dxEngineDataManager.resume();
 	}
 
 	@Override
@@ -90,6 +94,13 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
 		Cocos2dxHelper.onPause();
 		this.mGLSurfaceView.onPause();
+		Cocos2dxEngineDataManager.pause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Cocos2dxEngineDataManager.destroy();
 	}
 
 	@Override

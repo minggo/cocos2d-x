@@ -404,7 +404,7 @@ void CCParticleSystemQuad::draw()
 
 #endif
 
-    CC_INCREMENT_GL_DRAWS(1);
+    CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, m_uParticleIdx*6);
     CHECK_GL_ERROR_DEBUG();
 }
 

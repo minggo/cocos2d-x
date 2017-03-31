@@ -355,7 +355,7 @@ void CCMotionStreak::draw()
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)m_uNuPoints*2);
 
-    CC_INCREMENT_GL_DRAWS(1);
+    CC_INCREMENT_GL_DRAWN_BATCHES_AND_VERTICES(1, m_uNuPoints*2);
 }
 
 NS_CC_END
