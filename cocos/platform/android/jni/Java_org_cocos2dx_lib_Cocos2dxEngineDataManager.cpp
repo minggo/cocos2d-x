@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
-#include "platform/android/CCApplication-android.h"
+#include "platform/android/CCApplication.h"
 #include "base/CCDirector.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventType.h"
@@ -681,7 +681,7 @@ void EngineDataManager::notifyGameStatusIfCpuOrGpuLevelChanged()
     int totalNodeCount = Node::getAttachedNodeCount();
     int totalParticleCount = getTotalParticleCount();
     int totalActionCount = director->getActionManager()->getNumberOfRunningActions();
-    int totalPlayingAudioCount = experimental::AudioEngine::getPlayingAudioCount();
+    int totalPlayingAudioCount = 0;//experimental::AudioEngine::getPlayingAudioCount();
 
     {
         float cpuLevelNode = toCpuLevelPerFactor(totalNodeCount, cbCpuLevelNode);
@@ -1053,7 +1053,12 @@ void EngineDataManager::setAnimationInterval(float interval, SetIntervalReason r
     updateFinalAnimationInterval();
 
     LOGD("JNI setAnimationInterval: %f", _animationInterval);
-    JniHelper::callStaticVoidMethod(CLASS_NAME_RENDERER, "setAnimationInterval", _animationInterval);
+    JniMethodInfo methodInfo;
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationInterval", "(F)V"))
+    {
+        methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, _animationInterval);
+        methodInfo.env->DeleteLocalRef(methodInfo.classID);
+    }
 
     if (_isSupported)
     {

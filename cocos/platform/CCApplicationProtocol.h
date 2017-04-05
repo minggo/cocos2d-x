@@ -101,7 +101,7 @@ public:
     * @js NA
     * @lua NA
     */
-    virtual void setAnimationInterval(float interval, SetIntervalReason reason) = 0;
+    virtual void setAnimationInterval(float interval, SetIntervalReason reason = SetIntervalReason::BY_ENGINE) = 0;
 
     /**
     @brief Get current language config.

@@ -1322,7 +1322,7 @@ void DisplayLinkDirector::stopAnimation()
     _invalid = true;
 }
 
-void DisplayLinkDirector::setAnimationInterval(float interval)
+void DisplayLinkDirector::setAnimationInterval(double interval)
 {
     setAnimationInterval(interval, SetIntervalReason::BY_GAME);
 }

@@ -66,13 +66,12 @@ int Application::run()
     return -1;
 }
 
-void Application::setAnimationInterval(double interval)
+void Application::setAnimationInterval(float interval, SetIntervalReason reason)
 {
     JniMethodInfo t;
-    if (JniHelper::getStaticMethodInfo(t, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", "(D)V")) {
+    if (JniHelper::getStaticMethodInfo(t, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", "(F)V")) {
 
-        t.env->CallStaticVoidMethod(t.classID, t.methodID, interval);
-
+        t.env->CallStaticVoidMethod(t.classID, t.methodID, interval, static_cast<int>(reason));
         t.env->DeleteLocalRef(t.classID);
     }
 }
