@@ -1054,7 +1054,7 @@ void EngineDataManager::setAnimationInterval(float interval, SetIntervalReason r
 
     LOGD("JNI setAnimationInterval: %f", _animationInterval);
     JniMethodInfo methodInfo;
-    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationInterval", "(F)V"))
+    if (JniHelper::getStaticMethodInfo(methodInfo, CLASS_NAME_RENDERER, "setAnimationInterval", "(FI)V"))
     {
         methodInfo.env->CallStaticVoidMethod(methodInfo.classID, methodInfo.methodID, _animationInterval);
         methodInfo.env->DeleteLocalRef(methodInfo.classID);

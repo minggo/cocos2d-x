@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "base/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
+#include "platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxEngineDataManager.h"
 #include "jni/JniHelper.h"
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 #include "CCApplication.h"
@@ -68,12 +69,7 @@ int Application::run()
 
 void Application::setAnimationInterval(float interval, SetIntervalReason reason)
 {
-    JniMethodInfo t;
-    if (JniHelper::getStaticMethodInfo(t, "org/cocos2dx/lib/Cocos2dxRenderer", "setAnimationInterval", "(F)V")) {
-
-        t.env->CallStaticVoidMethod(t.classID, t.methodID, interval, static_cast<int>(reason));
-        t.env->DeleteLocalRef(t.classID);
-    }
+    EngineDataManager::setAnimationInterval(interval, reason);
 }
 
 //////////////////////////////////////////////////////////////////////////
