@@ -1116,12 +1116,10 @@ void Director::showStats()
 
         if (_accumDt > CC_DIRECTOR_STATS_INTERVAL)
         {
-            _frames = 0;
-            _accumDt = 0;
-
             sprintf(buffer, "%.1f / %.3f", _frames / _accumDt, _secondsPerFrame);
             _FPSLabel->setString(buffer);
             _frames = 0;
+            _accumDt = 0;
         }
 
         auto currentCalls = (unsigned long)_renderer->getDrawnBatches();
