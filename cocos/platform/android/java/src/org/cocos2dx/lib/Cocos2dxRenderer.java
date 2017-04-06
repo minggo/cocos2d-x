@@ -23,92 +23,41 @@ THE SOFTWARE.
  ****************************************************************************/
 package org.cocos2dx.lib;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import android.opengl.GLSurfaceView;
 
-import org.cocos2dx.lib.Cocos2dxHelper;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
-	// ===========================================================
-	// Constants
-	// ===========================================================
+    // ===========================================================
+    // Constants
+    // ===========================================================
 
-	private final static long NANOSECONDSPERSECOND = 1000000000L;
-	private final static long NANOSECONDSPERMICROSECOND = 1000000;
+    private final static long NANOSECONDSPERSECOND = 1000000000L;
+    private final static long NANOSECONDSPERMICROSECOND = 1000000L;
 
     // The final animation interval which is used in 'onDrawFrame'
-	private static long sAnimationInterval = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
+    private static long sAnimationInterval = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
 
-    // The animation interval set by developer
-    private static long sAnimationIntervalSetDeveloper = (long) (1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND);
+    // ===========================================================
+    // Fields
+    // ===========================================================
 
-    // The animation interval set by system.
-    // System could set this variable through EngineDataManager to override the default FPS set by developer.
-    // By using this variable, system will be able to control temperature better
-    // and waste less power while device is in low battery mode, so game could be played longer when battery is nearly dead.
-    // setAnimationInterval will reset sAnimationIntervalSetBySystem to -1 since last change last takes effect.
-    // Currently, only HuaWei Android devices may use this variable.
-    private static long sAnimationIntervalSetBySystem = -1;
+    private long mLastTickInNanoSeconds;
+    private int mScreenWidth;
+    private int mScreenHeight;
+    private boolean mNativeInitCompleted = false;
 
-    // The animation interval when scene is changing.
-    // sAnimationIntervalSetDeveloper & sAnimationIntervalSetBySystem will not take effect
-    // while sAnimationIntervalWhenSceneChange is greater than 0,
-    // but sAnimationIntervalSetDeveloper will be effective while
-    // Its priority is highest while it's valid ( > 0) , and it will be invalid (set to -1) after changing scene finishes.
-    // Currently, only HuaWei Android devices may use this variable.
-    private static long sAnimationIntervalWhenSceneChange = -1;
+    // ===========================================================
+    // Constructors
+    // ===========================================================
 
-	// ===========================================================
-	// Fields
-	// ===========================================================
+    // ===========================================================
+    // Getter & Setter
+    // ===========================================================
 
-	private long mLastTickInNanoSeconds;
-	private int mScreenWidth;
-	private int mScreenHeight;
-
-	// ===========================================================
-	// Constructors
-	// ===========================================================
-
-	// ===========================================================
-	// Getter & Setter
-	// ===========================================================
-
-    private static void updateFinalAnimationInterval() {
-        if (sAnimationIntervalWhenSceneChange > 0) {
-            sAnimationInterval = sAnimationIntervalWhenSceneChange;
-        } else if (sAnimationIntervalSetBySystem > 0) {
-            sAnimationInterval = sAnimationIntervalSetBySystem;
-        } else {
-            sAnimationInterval = sAnimationIntervalSetDeveloper;
-        }
+    public static void setAnimationInterval(float interval) {
+        sAnimationInterval = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
     }
-
-    public static void setAnimationInterval(final double animationInterval) {
-        // Reset sAnimationIntervalSetBySystem to -1 to make developer's FPS configuration take effect.
-        sAnimationIntervalSetBySystem = -1;
-        sAnimationIntervalSetDeveloper = (long) (animationInterval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        updateFinalAnimationInterval();
-    }
-
-    private static void setAnimationIntervalSetBySystem(float interval) {
-        if (interval > 0.0f) {
-            sAnimationIntervalSetBySystem = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        } else {
-            sAnimationIntervalSetBySystem = -1;
-        }
-        updateFinalAnimationInterval();
-    }
-
-    private static void setAnimationIntervalWhenSceneChange(float interval) {
-        if (interval > 0.0f) {
-            sAnimationIntervalWhenSceneChange = (long) (interval * Cocos2dxRenderer.NANOSECONDSPERSECOND);
-        } else {
-            sAnimationIntervalWhenSceneChange = -1;
-        }
-        updateFinalAnimationInterval();
-	}
 
 	public void setScreenWidthAndHeight(final int pSurfaceWidth, final int pSurfaceHeight) {
 		this.mScreenWidth = pSurfaceWidth;
@@ -136,18 +85,18 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * No need to use algorithm in default(60 FPS) situation,
          * since onDrawFrame() was called by system 60 times per second by default.
          */
-		if (sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND) {
-			Cocos2dxRenderer.nativeRender();
-		} else {
-			final long now = System.nanoTime();
-			final long interval = now - this.mLastTickInNanoSeconds;
-
-			if (interval < Cocos2dxRenderer.sAnimationInterval) {
-				try {
-					Thread.sleep((Cocos2dxRenderer.sAnimationInterval - interval) / Cocos2dxRenderer.NANOSECONDSPERMICROSECOND);
-				} catch (final Exception e) {
-				}
-			}
+        if (Cocos2dxRenderer.sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND && Cocos2dxActivity.sRegistered) {
+            Cocos2dxRenderer.nativeRender();
+        } else {
+            final long now = System.nanoTime();
+            final long interval = now - this.mLastTickInNanoSeconds;
+        
+            if (interval < Cocos2dxRenderer.sAnimationInterval) {
+                try {
+                    Thread.sleep((Cocos2dxRenderer.sAnimationInterval - interval) / Cocos2dxRenderer.NANOSECONDSPERMICROSECOND);
+                } catch (final Exception e) {
+                }
+            }
             /*
              * Render time MUST be counted in, or the FPS will slower than appointed.
             */

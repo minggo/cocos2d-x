@@ -23,7 +23,8 @@ USING_NS_CC;
 
 #define RESOURCE_PARENT_NODE_FLAG 14
 
-#define SDK_SHOW_RESET_TO_DEFAULT_BUTTON 0
+#define SDK_SHOW_COCOS_TEST_BUTTON 0
+
 #define SDK_TEST_MENU_FLAG 15
 #define SDK_FPS_MENU_TEST_FLAG 16
 #define SDK_EFFECT_MNUE_TEST_FLAG 17
@@ -137,7 +138,11 @@ bool HelloWorld::init()
     this->addChild(listView);
 
     // second level menu
-    titles = { "选择等级", "切换场景", "帧率选择" };
+    titles = { "选择等级", "切换场景", "帧率选择"
+#if SDK_SHOW_COCOS_TEST_BUTTON
+        , "pause", "resume"
+#endif
+    };
     listView = this->createListView(titles, Vec2(origin.x + visibleSize.width / 6 * 4, origin.y + 40));
     listView->setTag(SECOND_MENU_FLAG);
     listView->setVisible(false);
@@ -177,11 +182,7 @@ bool HelloWorld::init()
     this->addChild(listView);
     
     // sdk fps
-    titles = { "25", "30", "40", "60",
-#if SDK_SHOW_RESET_TO_DEFAULT_BUTTON
-        "默认值"
-#endif
-    };
+    titles = { "25", "30", "40", "60" };
     listView = this->createListView(titles, Vec2(origin.x + 160, origin.y + 40));
     listView->setTag(SDK_FPS_MENU_TEST_FLAG);
     listView->addEventListener((ui::ListView::ccListViewCallback)CC_CALLBACK_2(HelloWorld::SDKFPSSelectedItemEvent, this));
@@ -343,7 +344,18 @@ void HelloWorld::secondMenuSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::
                 this->getChildByTag(FPS_MENU_FLAG)->setVisible(true);
                 static_cast<ui::ListView*>(this->getChildByTag(FPS_MENU_FLAG))->setEnabled(true);
                 break;
-                
+
+            case 3:
+                // Director::pause
+                getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+                Director::getInstance()->pause();
+                break;
+
+            case 4:
+                // Director::resume
+                getChildByTag(SECOND_MENU_FLAG)->setVisible(false);
+                Director::getInstance()->resume();
+                break;
             default:
                 break;
         }
@@ -453,6 +465,7 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
 {
     if (type == ui::ListView::EventType::ON_SELECTED_ITEM_END)
     {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         int fps = 0;
         auto listView = static_cast<ui::ListView*>(sender);
         switch (listView->getCurSelectedIndex()) {
@@ -468,14 +481,12 @@ void HelloWorld::SDKFPSSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::List
             case 3:
                 fps = 60;
                 break;
-            case 4:
-                fps = -1; // Pass -1 to set the default value
             default:
                 break;
         }
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_FPS_RATE, fps, 0);
+        EngineDataManager::nativeOnChangeExpectedFps(nullptr, nullptr, fps);
 #endif
+       
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
         _isSDKTestExpanded = false;
@@ -488,7 +499,30 @@ void HelloWorld::SDKEffectSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::L
     {
         auto listView = static_cast<ui::ListView*>(sender);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_CHANGE_SPECIAL_EFFECTS, listView->getCurSelectedIndex(), 0);
+        int level = 0;
+        switch (listView->getCurSelectedIndex()) {
+            case 0:
+                level = 0;
+                break;
+            case 1:
+                level = 1;
+                break;
+            case 2:
+                level = 2;
+                break;
+            case 3:
+                level = 3;
+                break;
+            case 4:
+                level = 4;
+                break;
+            case 5:
+                level = 5;
+                break;
+            default:
+                break;
+        }
+        EngineDataManager::nativeOnChangeSpecialEffectLevel(nullptr, nullptr, level);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);
@@ -502,7 +536,8 @@ void HelloWorld::SDKAudioSelectedItemEvent(cocos2d::Ref* sender, cocos2d::ui::Li
     {
         auto listView = static_cast<ui::ListView*>(sender);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-        EngineDataManager::notifyGameStatus(EngineDataManager::GameStatus::TEST_MUTE_ENABLED, listView->getCurSelectedIndex(), 0);
+        bool muted = listView->getCurSelectedIndex() == 1;
+        EngineDataManager::nativeOnChangeMuteEnabled(nullptr, nullptr, muted);
 #endif
         listView->setVisible(false);
         getChildByTag(SDK_TEST_SECOND_MENU_FLAG)->setVisible(false);

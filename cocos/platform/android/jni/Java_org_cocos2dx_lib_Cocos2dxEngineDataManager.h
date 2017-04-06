@@ -23,6 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #pragma once
+#include "base/ccTypes.h"
 
 #include <string>
 #include <functional>
@@ -49,24 +50,19 @@ public:
         LAUNCH_END,
         SCENE_CHANGE_BEGIN,
         SCENE_CHANGE_END,
-        IN_SCENE,
-
-        TEST_CHANGE_FPS_RATE,
-        TEST_CHANGE_SPECIAL_EFFECTS,
-        TEST_MUTE_ENABLED,
-        TEST_CHANGE_CONTINOUS_FPS_MISSED_RATE,
-        TEST_DX_FPS_RATE,
+        IN_SCENE
     };
 
     static void notifyGameStatus(GameStatus type, int cpuLevel, int gpuLevel);
+    static void setAnimationInterval(float interval, SetIntervalReason reason);
 
 private:
     static void notifyContinuousFrameLost(int frameLostCycle, int continueFrameLostThreshold, int times);
     static void notifyLowFps(int lowFpsCycle, float lowFpsThreshold, int frames);
+    static void notifyFpsChanged(float oldFps, float newFps);
     static void notifyGameStatusIfCpuOrGpuLevelChanged();
 
     static void calculateFrameLost();
-    static void getCpuAndGpuLevel(int* cpuLevel, int* gpuLevel);
 
     static void onBeforeSetNextScene(EventCustom* event);
     static void onAfterDrawScene(EventCustom* event);

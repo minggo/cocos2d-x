@@ -1068,7 +1068,7 @@ void Director::pause()
     _oldAnimationInterval = _animationInterval;
 
     // when paused, don't consume CPU
-    setAnimationInterval(1 / 4.0);
+    setAnimationInterval(1 / 4.0, SetIntervalReason::BY_DIRECTOR_PAUSE);
     _paused = true;
 }
 
@@ -1079,7 +1079,7 @@ void Director::resume()
         return;
     }
 
-    setAnimationInterval(_oldAnimationInterval);
+    setAnimationInterval(_oldAnimationInterval, SetIntervalReason::BY_ENGINE);
 
     _paused = false;
     _deltaTime = 0;
@@ -1089,12 +1089,15 @@ void Director::resume()
 
 void Director::updateFrameRate()
 {
-    static float prevDeltaTime  = 0.016f; // 60FPS
-    static const float FPS_FILTER = 0.10f;
-    
-    float dt = _deltaTime * FPS_FILTER + (1-FPS_FILTER) * prevDeltaTime;
-    prevDeltaTime = dt;
-    _frameRate = 1/dt;
+//    static const float FPS_FILTER = 0.1f;
+//    static float prevDeltaTime = 0.016f; // 60FPS
+//    
+//    float dt = _deltaTime * FPS_FILTER + (1.0f-FPS_FILTER) * prevDeltaTime;
+//    prevDeltaTime = dt;
+//    _frameRate = 1.0f/dt;
+
+    // Frame rate should be the real value of current frame.
+    _frameRate = 1.0f / _deltaTime;
 }
 
 // display the FPS using a LabelAtlas
@@ -1113,11 +1116,10 @@ void Director::showStats()
 
         if (_accumDt > CC_DIRECTOR_STATS_INTERVAL)
         {
+            sprintf(buffer, "%.1f / %.3f", _frames / _accumDt, _secondsPerFrame);
+            _FPSLabel->setString(buffer);
             _frames = 0;
             _accumDt = 0;
-
-            sprintf(buffer, "%.1f / %.3f", _frameRate, _secondsPerFrame);
-            _FPSLabel->setString(buffer);
         }
 
         auto currentCalls = (unsigned long)_renderer->getDrawnBatches();
@@ -1279,6 +1281,11 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
 // so we now only support DisplayLinkDirector
 void DisplayLinkDirector::startAnimation()
 {
+    startAnimation(SetIntervalReason::BY_ENGINE);
+}
+
+void DisplayLinkDirector::startAnimation(SetIntervalReason reason)
+{
     if (gettimeofday(_lastUpdate, nullptr) != 0)
     {
         CCLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
@@ -1286,7 +1293,7 @@ void DisplayLinkDirector::startAnimation()
 
     _invalid = false;
 
-    Application::getInstance()->setAnimationInterval(_animationInterval);
+    Application::getInstance()->setAnimationInterval(_animationInterval, reason);
 
     // fix issue #3509, skip one fps to avoid incorrect time calculation.
     setNextDeltaTimeZero(true);
@@ -1315,12 +1322,17 @@ void DisplayLinkDirector::stopAnimation()
 
 void DisplayLinkDirector::setAnimationInterval(double interval)
 {
+    setAnimationInterval(interval, SetIntervalReason::BY_GAME);
+}
+
+void DisplayLinkDirector::setAnimationInterval(float interval, SetIntervalReason reason)
+{
     _animationInterval = interval;
     if (! _invalid)
     {
         stopAnimation();
-        startAnimation();
-    }    
+        startAnimation(reason);
+    }
 }
 
 NS_CC_END

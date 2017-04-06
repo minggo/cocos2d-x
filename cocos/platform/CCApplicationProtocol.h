@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "base/CCPlatformMacros.h"
 #include "base/CCScriptSupport.h"
 #include "base/CCAutoreleasePool.h"
+#include "base/ccTypes.h"
 
 NS_CC_BEGIN
 
@@ -100,11 +101,11 @@ public:
     * @js NA
     * @lua NA
     */
-    virtual void setAnimationInterval(double interval) = 0;
+    virtual void setAnimationInterval(float interval, SetIntervalReason reason = SetIntervalReason::BY_ENGINE) = 0;
 
     /**
-    @brief Get current language config
-    @return Current language config
+    @brief Get current language config.
+    @return Current language config.
     * @js NA
     * @lua NA
     */

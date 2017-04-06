@@ -257,6 +257,9 @@ LoadingScene::LoadingScene(Scene* newScene)
         "res/animated-grossini8.plist",
         "res/animated-grossini9.plist"
     };
+
+    // set fps to 30 for loading
+    Director::getInstance()->setAnimationInterval(1 / 30.0f);
 }
 
 void LoadingScene::replaceScene(float dt)
@@ -290,9 +293,12 @@ void LoadingScene::update(float dt)
             for (int i = 0; i < 10 && _index < _resfiles.size(); ++i, ++_index)
                 SpriteFrameCache::getInstance()->addSpriteFramesWithFile(_resfiles[_index].c_str());
         }
-        
         else
+        {
             replaceScene(0);
+            // reset fps to 60 after loading
+            Director::getInstance()->setAnimationInterval(1 / 60.0);
+        }
     }
 }
 

@@ -53,6 +53,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 	private Cocos2dxHandler mHandler;	
 	private static Cocos2dxActivity sContext = null;
 	private Cocos2dxVideoHelper mVideoHelper = null;
+    // whether register succeed
+    public static boolean sRegistered = false;
 	
 	public static Context getContext() {
 		return sContext;
@@ -89,7 +91,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     		mVideoHelper = new Cocos2dxVideoHelper(this, mFrameLayout);
 		}
 
-        Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
+        sRegistered = Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
 	}
 	
 	// ===========================================================
