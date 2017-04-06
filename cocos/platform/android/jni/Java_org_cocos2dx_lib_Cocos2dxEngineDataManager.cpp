@@ -595,11 +595,13 @@ void EngineDataManager::calculateFrameLost()
         {
             _lastFrameLost100msUpdate = now;
             // check lost frame count
-            if (_frameLostCounter > _continuousFrameLostThreshold)
+            if (_frameLostCounter >= _continuousFrameLostThreshold)
             {
-                _frameLostCounter = 0;
                 ++_continuousFrameLostCount;
             }
+            // Reset frame lost counter after 100ms interval 
+            // even it's smaller than _continuousFrameLostThreshold
+            _frameLostCounter = 0;
         }
         
         interval = std::chrono::duration_cast<std::chrono::microseconds>(now - _lastContinuousFrameLostUpdate).count() / 1000000.0f;
@@ -1120,12 +1122,14 @@ void EngineDataManager::nativeOnQueryFps(JNIEnv* env, jobject thiz, jintArray ar
 
     if (arrLenExpectedFps > 0 && arrLenRealFps > 0)
     {
+        Director* director = Director::getInstance();
         jboolean isCopy = JNI_FALSE;
         jint* expectedFps = env->GetIntArrayElements(arrExpectedFps, &isCopy);
-        *expectedFps = (int)std::ceil(1.0f / _animationInterval);
+        float animationInterval = director->getAnimationInterval();
+        *expectedFps = (int)std::ceil(1.0f / animationInterval);
         
         jint* realFps = env->GetIntArrayElements(arrRealFps, &isCopy);
-        *realFps = (int)std::ceil(Director::getInstance()->getFrameRate());
+        *realFps = (int)std::ceil(director->getFrameRate());
 
         // Log before expectedFps & realFps is released.
         LOGD("nativeOnQueryFps, realFps: %d, expected: %d", *realFps, *expectedFps);
