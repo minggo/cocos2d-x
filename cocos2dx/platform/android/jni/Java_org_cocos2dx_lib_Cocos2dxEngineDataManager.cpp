@@ -645,11 +645,13 @@ void EngineDataManager::calculateFrameLost()
         {
             _lastFrameLost100msUpdate = now;
             // check lost frame count
-            if (_frameLostCounter > _continuousFrameLostThreshold)
+            if (_frameLostCounter >= _continuousFrameLostThreshold)
             {
-                _frameLostCounter = 0;
                 ++_continuousFrameLostCount;
             }
+            // Reset frame lost counter after 100ms interval 
+            // even it's smaller than _continuousFrameLostThreshold
+            _frameLostCounter = 0;
         }
         
         interval = getInterval(now, _lastContinuousFrameLostUpdate);
