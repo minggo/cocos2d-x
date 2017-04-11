@@ -435,12 +435,12 @@ public:
 
     /** Gets all ParticleSystem references
      */
-    static std::vector<CCParticleSystem*>& getAllParticleSystems() { return g_allInstances; }
+    static std::vector<CCParticleSystem*>& getAllParticleSystems();
 
 private:
     friend class EngineDataManager;
     /** Internal use only, it's used by EngineDataManager class for Android platform */
-    static void setTotalParticleCountFactor(float factor) { g_totalParticleCountFactor = factor; }
+    static void setTotalParticleCountFactor(float factor);
 
 protected:
     virtual void updateBlendFunc();

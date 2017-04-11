@@ -337,7 +337,7 @@ unsigned int CCActionManager::numberOfRunningActionsInTarget(CCObject *pTarget)
 
 unsigned int CCActionManager::numberOfRunningActions() const
 {
-    ssize_t count = 0;
+    unsigned int count = 0;
     struct _hashElement* element = NULL;
     struct _hashElement* tmp = NULL;
     HASH_ITER(hh, m_pTargets, element, tmp)

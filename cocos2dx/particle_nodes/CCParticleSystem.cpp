@@ -1369,6 +1369,15 @@ void CCParticleSystem::setScaleY(float newScaleY)
     CCNode::setScaleY(newScaleY);
 }
 
+std::vector<CCParticleSystem*>& CCParticleSystem::getAllParticleSystems()
+{
+    return g_allInstances;
+}
+
+void CCParticleSystem::setTotalParticleCountFactor(float factor)
+{
+    g_totalParticleCountFactor = factor;
+}
 
 NS_CC_END
 
