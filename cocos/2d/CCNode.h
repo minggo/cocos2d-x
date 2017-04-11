@@ -130,7 +130,7 @@ public:
     /**
      * Gets count of nodes those are attached to scene graph.
      */
-    static int getAttachedNodeCount() { return __attachedNodeCount; }
+    static int getAttachedNodeCount();
 public:
     
     /**

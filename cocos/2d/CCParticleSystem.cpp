@@ -271,6 +271,11 @@ Vector<ParticleSystem*>& ParticleSystem::getAllParticleSystems()
     return __allInstances;
 }
 
+void ParticleSystem::setTotalParticleCountFactor(float factor)
+{
+    __totalParticleCountFactor = factor;
+}
+
 bool ParticleSystem::init()
 {
     return initWithTotalParticles(150);

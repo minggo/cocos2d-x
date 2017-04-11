@@ -2179,6 +2179,11 @@ void Node::setCameraMask(unsigned short mask, bool applyChildren)
     }
 }
 
+int Node::getAttachedNodeCount()
+{
+    return __attachedNodeCount;
+}
+
 // MARK: Deprecated
 
 __NodeRGBA::__NodeRGBA()

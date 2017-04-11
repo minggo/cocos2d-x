@@ -823,7 +823,7 @@ protected:
 private:
     friend class EngineDataManager;
     /** Internal use only, it's used by EngineDataManager class for Android platform */
-    static void setTotalParticleCountFactor(float factor) { __totalParticleCountFactor = factor; }
+    static void setTotalParticleCountFactor(float factor);
     
 protected:
 
