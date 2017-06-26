@@ -84,16 +84,9 @@ function install_android_environment()
     echo '{"agreement_shown": true}' | sudo tee $HOME/.cocos/local_cfg.json
 }
 
-function install_python_module_for_osx()
-{
-    # python --version
-    # pip --version
-
-    # sudo python -m easy_install pyyaml Cheetah
-
-    # pip install pyyaml
-    # pip install Cheetah
-}
+# function install_python_module_for_osx()
+# {
+# }
 
 # set up environment according os and target
 function install_environement_for_pull_request()
@@ -112,9 +105,9 @@ function install_environement_for_pull_request()
         fi
     fi
 
-    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-        install_python_module_for_osx
-    fi
+    # if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    #     install_python_module_for_osx
+    # fi
 }
 
 # should generate binding codes & cocos_files.json after merging
@@ -123,9 +116,9 @@ function install_environement_for_after_merge()
     install_android_ndk
     download_deps
 
-    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-        install_python_module_for_osx
-    fi
+    # if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    #     install_python_module_for_osx
+    # fi
 }
 
 # build pull request
