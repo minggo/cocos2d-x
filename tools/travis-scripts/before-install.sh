@@ -89,9 +89,8 @@ function install_python_module_for_osx()
     python --version
     pip --version
 
-    sudo easy_install pip
-    sudo python -m pip install ppyaml
-    sudo python -m pip install Cheetah
+    sudo pip install ppyaml
+    sudo pip install Cheetah
 }
 
 # set up environment according os and target
