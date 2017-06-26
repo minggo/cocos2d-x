@@ -97,7 +97,12 @@ function genernate_binding_codes()
     which python
 
     export NDK_ROOT=$HOME/bin/android-ndk
-    export PYTHON_BIN=/usr/bin/python
+
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+        export PYTHON_BIN=/usr/local/bin/python
+    else
+        export PYTHON_BIN=/usr/bin/python
+    fi
 
     # Generate binding glue codes
 
