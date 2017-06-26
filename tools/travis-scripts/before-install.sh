@@ -89,8 +89,10 @@ function install_python_module_for_osx()
     python --version
     pip --version
 
-    pip install pyyaml
-    pip install Cheetah
+    sudo python -m easy_install pyyaml pyyaml Cheetah
+
+    # pip install pyyaml
+    # pip install Cheetah
 }
 
 # set up environment according os and target
