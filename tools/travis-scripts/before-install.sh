@@ -89,7 +89,7 @@ function install_python_module_for_osx()
     python --version
     pip --version
 
-    pip install ppyaml
+    pip install pyyaml
     pip install Cheetah
 }
 
