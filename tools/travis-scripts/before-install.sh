@@ -86,10 +86,10 @@ function install_android_environment()
 
 function install_python_module_for_osx()
 {
-    python --version
-    pip --version
+    # python --version
+    # pip --version
 
-    sudo python -m easy_install pyyaml pyyaml Cheetah
+    # sudo python -m easy_install pyyaml Cheetah
 
     # pip install pyyaml
     # pip install Cheetah

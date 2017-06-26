@@ -24,8 +24,6 @@ matrix:
       language: cpp
       osx_image: xcode8.3
       sudo: required
-      python:
-        - "2.7"
     # # mac cpp-tests
     # - os: osx
     #   env: BUILD_TARGET=mac BUILD_CPP=true

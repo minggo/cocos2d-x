@@ -94,6 +94,7 @@ function genernate_binding_codes()
 {
     # set environment variables needed by binding codes
 
+    which python
 
     export NDK_ROOT=$HOME/bin/android-ndk
     export PYTHON_BIN=/usr/bin/python
