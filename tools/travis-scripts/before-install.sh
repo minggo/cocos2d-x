@@ -87,7 +87,7 @@ function install_android_environment()
 function install_python_module_for_osx()
 {
     sudo easy_install pip
-    sudo pip install PyYAML
+    sudo pip install pyyaml
     sudo pip install Cheetah
 }
 
