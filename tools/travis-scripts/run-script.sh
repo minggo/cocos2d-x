@@ -27,14 +27,14 @@ function build_mac()
     ##xcpretty has a bug, some xcodebuid fails return value would be treated as 0.
     xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "cpp-empty-test Mac" -jobs $NUM_OF_CORES -arch x86_64 build
 
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build | xcpretty
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build | xcpretty
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "cpp-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build
 
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build | xcpretty
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build | xcpretty
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "lua-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 build
 
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk build | xcpretty
-    xctool -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk build
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk build | xcpretty
+    xcodebuild -project $COCOS2DX_ROOT/build/cocos2d_tests.xcodeproj -scheme "js-tests Mac" -jobs $NUM_OF_CORES -arch x86_64 -sdk build
 }
 
 function build_ios()
