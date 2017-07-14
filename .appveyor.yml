@@ -1,0 +1,26 @@
+environtment:
+  - PYTHON: "C:\\Python27"
+  - PYTHON_VERSION: "2.7.8"
+  - PYTHON_ARCH: "32"
+  - COCOS_ROOT: "C:\projects\cocos2d-x"
+
+platform:
+  - x86
+
+configuration:
+  - Release
+
+install:
+  - "%PYTHON%/python.exe %COCOS_ROOT%\download-deps.py"
+
+branches:
+  except:
+  - v1
+  - v2
+  - v4-develop
+  - v3-doc
+  - v3.11_backup
+  - v35-for-tizen
+
+call "%VS120COMNTOOLS%vsvars32.bat"
+msbuild %COCOS_ROOT%\build\cocos2d-win32.sln /t:Build /p:Platform="Win32" /p:Configuration="Release" /m
