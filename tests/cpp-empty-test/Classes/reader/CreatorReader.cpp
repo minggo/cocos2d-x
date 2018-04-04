@@ -131,6 +131,10 @@ CreatorReader::CreatorReader()
 {
     _animationManager = new AnimationManager();
     _collisionManager = new ColliderManager();
+    _animationManager->autorelease();
+    _collisionManager->autorelease();
+    CC_SAFE_RETAIN(_animationManager);
+    CC_SAFE_RETAIN(_collisionManager);
 }
 
 CreatorReader::~CreatorReader()
@@ -635,12 +639,13 @@ void CreatorReader::parseSprite(cocos2d::Sprite* sprite, const buffers::Sprite* 
             break;
     }
 
-    const auto& srcBlend = spriteBuffer->srcBlend();
-    const auto& dstBlend = spriteBuffer->dstBlend();
-    cocos2d::BlendFunc blendFunc;
-    blendFunc.src = srcBlend;
-    blendFunc.dst = dstBlend;
-    sprite->setBlendFunc(blendFunc);
+    // Creator doesn't premultiply alpha, so its blend function can not work in cocos2d-x.
+    // const auto& srcBlend = spriteBuffer->srcBlend();
+    // const auto& dstBlend = spriteBuffer->dstBlend();
+    // cocos2d::BlendFunc blendFunc;
+    // blendFunc.src = srcBlend;
+    // blendFunc.dst = dstBlend;
+    // sprite->setBlendFunc(blendFunc);
 
 #if 0
     // FIXME: do something with these values
