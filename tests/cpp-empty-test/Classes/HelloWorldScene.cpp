@@ -80,12 +80,8 @@ bool HelloWorld::init()
 //    this->addChild(label, 1);
 
     // add "HelloWorld" splash screen"
-//    auto sprite = Sprite::backendCreate("HelloWorld.png");
-    auto sprite = Sprite::create();
-    backend::Texture *texture = _director->getTextureCache()->addBackendImage("HelloWorld.png");
-    Rect textureRect(0, 0, texture->getWidth()/CC_CONTENT_SCALE_FACTOR(), texture->getHeight()/CC_CONTENT_SCALE_FACTOR());
-    sprite->setBackendTexture(texture);
-    sprite->setTextureRect(textureRect);
+    auto polygon = AutoPolygon::generatePolygon("grossini.png");
+    auto sprite = Sprite::create(polygon);
 
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize / 2) + origin);

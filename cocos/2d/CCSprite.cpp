@@ -190,6 +190,18 @@ bool Sprite::initWithTexture(Texture2D *texture)
     return initWithTexture(texture, rect, false);
 }
 
+bool Sprite::initWithBackendTexture(backend::Texture *texture)
+{
+    CCASSERT(texture != nullptr, "Invalid texture for sprite");
+    
+    Rect rect = Rect::ZERO;
+    if (texture) {
+        getTextureContentSize(rect.size, texture);
+    }
+    
+    return initWithBackendTexture(texture, rect, false);
+}
+
 bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect)
 {
     return initWithTexture(texture, rect, false);
@@ -325,8 +337,8 @@ bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
 {
     bool ret = false;
 
-    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
-    if(texture && initWithTexture(texture))
+    backend::Texture *texture = _director->getTextureCache()->addBackendImage(info.getFilename());
+    if(texture && initWithBackendTexture(texture))
     {
         _polyInfo = info;
         _renderMode = RenderMode::POLYGON;
@@ -1967,6 +1979,12 @@ void Sprite::setPolygonInfo(const PolygonInfo& info)
 {
     _polyInfo = info;
     _renderMode = RenderMode::POLYGON;
+}
+
+void Sprite::getTextureContentSize(Size &size, const backend::Texture *texture)
+{
+    size.width = texture->getWidth()/CC_CONTENT_SCALE_FACTOR();
+    size.height = texture->getHeight()/CC_CONTENT_SCALE_FACTOR();
 }
 
 NS_CC_END

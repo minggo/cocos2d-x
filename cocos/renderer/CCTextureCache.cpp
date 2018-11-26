@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include "base/ccUtils.h"
 #include "base/CCNinePatchImageParser.h"
 #include "renderer/backend/Device.h"
-
+#include "renderer/backend/StringUtils.h"
 
 
 using namespace std;
@@ -408,7 +408,8 @@ backend::Texture* TextureCache::addBackendImage(const std::string& path)
             backend::TextureDescriptor textureDescriptor;
             textureDescriptor.width = image->getWidth();
             textureDescriptor.height = image->getHeight();
-            textureDescriptor.textureFormat = backend::TextureFormat::R8G8B8;
+            backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(image->getRenderFormat());
+            textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
             texture = device->newTexture(textureDescriptor);
             texture->updateData(image->getData());
             

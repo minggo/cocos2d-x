@@ -538,6 +538,7 @@ CC_CONSTRUCTOR_ACCESS :
      * @return  True if the sprite is initialized properly, false otherwise.
      */
     virtual bool initWithTexture(Texture2D *texture);
+    virtual bool initWithBackendTexture(backend::Texture *texture);
     
     
     /**
@@ -623,6 +624,7 @@ CC_CONSTRUCTOR_ACCESS :
      */
     virtual bool initWithFile(const std::string& filename, const Rect& rect);
     virtual bool initWithBackendFile(const std::string& filename, const Rect& rect);
+    virtual void getTextureContentSize(Size &size, const backend::Texture *texture);
     
 protected:
 
