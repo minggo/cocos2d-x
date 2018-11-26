@@ -388,8 +388,8 @@ backend::Texture* TextureCache::addBackendImage(const std::string& path)
     {
         return nullptr;
     }
-    auto it = _BackendTextures.find(fullpath);
-    if (it != _BackendTextures.end())
+    auto it = _backendTextures.find(fullpath);
+    if (it != _backendTextures.end())
         texture = it->second;
     
     if (!texture)
@@ -420,7 +420,7 @@ backend::Texture* TextureCache::addBackendImage(const std::string& path)
                 VolatileTextureMgr::addImageTexture(texture, fullpath);
 #endif
                 // texture already retained, no need to re-retain it
-                _BackendTextures.emplace(fullpath, texture);
+                _backendTextures.emplace(fullpath, texture);
                 
                 //                //-- ANDROID ETC1 ALPHA SUPPORTS.
                 //                std::string alphaFullPath = path + s_etc1AlphaFileSuffix;

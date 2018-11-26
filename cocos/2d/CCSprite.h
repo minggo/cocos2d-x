@@ -151,6 +151,7 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* create(const std::string& filename, const Rect& rect);
+    static Sprite* backendCreate(const std::string& filename, const Rect& rect);
 
     /**
      * Creates a sprite with a Texture2D object.
@@ -622,6 +623,7 @@ CC_CONSTRUCTOR_ACCESS :
      * @lua     init
      */
     virtual bool initWithFile(const std::string& filename, const Rect& rect);
+    virtual bool initWithBackendFile(const std::string& filename, const Rect& rect);
     
 protected:
 

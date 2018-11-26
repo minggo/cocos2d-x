@@ -124,6 +124,18 @@ Sprite* Sprite::create(const std::string& filename, const Rect& rect)
     return nullptr;
 }
 
+Sprite* Sprite::backendCreate(const std::string& filename, const Rect& rect)
+{
+    Sprite *sprite = new (std::nothrow) Sprite();
+    if (sprite && sprite->initWithBackendFile(filename, rect))
+    {
+        sprite->autorelease();
+        return sprite;
+    }
+    CC_SAFE_DELETE(sprite);
+    return nullptr;
+}
+
 Sprite* Sprite::createWithSpriteFrame(SpriteFrame *spriteFrame)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
@@ -253,6 +265,29 @@ bool Sprite::initWithFile(const std::string &filename, const Rect& rect)
         return initWithTexture(texture, rect);
     }
 
+    // don't release here.
+    // when load texture failed, it's better to get a "transparent" sprite then a crashed program
+    // this->release();
+    return false;
+}
+
+bool Sprite::initWithBackendFile(const std::string &filename, const Rect& rect)
+{
+    CCASSERT(!filename.empty(), "Invalid filename");
+    if (filename.empty())
+    {
+        return false;
+    }
+    
+    _fileName = filename;
+    _fileType = 0;
+    
+    backend::Texture *texture = _director->getTextureCache()->addBackendImage(filename);
+    if (texture)
+    {
+        return initWithBackendTexture(texture, rect);
+    }
+    
     // don't release here.
     // when load texture failed, it's better to get a "transparent" sprite then a crashed program
     // this->release();

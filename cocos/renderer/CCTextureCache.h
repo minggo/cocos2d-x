@@ -227,7 +227,7 @@ protected:
     int _asyncRefCount;
 
     std::unordered_map<std::string, Texture2D*> _textures;
-    std::unordered_map<std::string, backend::Texture*> _BackendTextures;
+    std::unordered_map<std::string, backend::Texture*> _backendTextures;
 
     static std::string s_etc1AlphaFileSuffix;
 };
