@@ -162,7 +162,7 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* createWithTexture(Texture2D *texture);
-    static Sprite* createWithBackendTexture(backend::Texture *texture);
+    static Sprite* createWithTexture(backend::Texture *texture);
 
     /**
      * Creates a sprite with a texture and a rect.
@@ -176,6 +176,7 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* createWithTexture(Texture2D *texture, const Rect& rect, bool rotated=false);
+    static Sprite* createWithTexture(backend::Texture *texture, const Rect& rect, bool rotated=false);
 
     /**
      * Creates a sprite with an sprite frame.

@@ -81,7 +81,8 @@ bool HelloWorld::init()
 
     // add "HelloWorld" splash screen"
     backend::Texture *texture = _director->getTextureCache()->addBackendImage("grossini.png");
-    auto sprite = Sprite::createWithBackendTexture(texture);
+    Rect rect(0, 0, texture->getWidth()/CC_CONTENT_SCALE_FACTOR(), texture->getHeight()/CC_CONTENT_SCALE_FACTOR());
+    auto sprite = Sprite::createWithTexture(texture, rect);
 
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize / 2) + origin);
