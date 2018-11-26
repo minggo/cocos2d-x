@@ -24,6 +24,7 @@
 
 #include "HelloWorldScene.h"
 #include "AppMacros.h"
+#include "renderer/backend/Texture.h"
 
 USING_NS_CC;
 
@@ -80,8 +81,11 @@ bool HelloWorld::init()
 
     // add "HelloWorld" splash screen"
 //    auto sprite = Sprite::backendCreate("HelloWorld.png");
-    Rect halfRect(0, 0, 512, 512);
-    auto sprite = Sprite::backendCreate("uv_checker_01.jpg", halfRect);
+    auto sprite = Sprite::create();
+    backend::Texture *texture = _director->getTextureCache()->addBackendImage("HelloWorld.png");
+    Rect textureRect(0, 0, texture->getWidth()/CC_CONTENT_SCALE_FACTOR(), texture->getHeight()/CC_CONTENT_SCALE_FACTOR());
+    sprite->setBackendTexture(texture);
+    sprite->setTextureRect(textureRect);
 
     // position the sprite on the center of the screen
     sprite->setPosition(Vec2(visibleSize / 2) + origin);

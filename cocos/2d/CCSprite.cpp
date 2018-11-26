@@ -174,8 +174,7 @@ Sprite* Sprite::create()
 
 bool Sprite::init()
 {
-    initWithTexture(nullptr, Rect::ZERO);
-
+    initWithBackendTexture(nullptr, Rect::ZERO);
     return true;
 }
 
