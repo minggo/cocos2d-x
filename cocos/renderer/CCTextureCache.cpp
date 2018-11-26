@@ -708,6 +708,19 @@ std::string TextureCache::getTextureFilePath(cocos2d::Texture2D* texture) const
     return "";
 }
 
+std::string TextureCache::getTextureFilePath(backend::Texture* texture) const
+{
+    for (auto& item : _backendTextures)
+    {
+        if (item.second == texture)
+        {
+            return item.first;
+            break;
+        }
+    }
+    return "";
+}
+
 void TextureCache::waitForQuit()
 {
     // notify sub thread to quick

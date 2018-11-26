@@ -351,7 +351,7 @@ bool Sprite::initWithSpriteFrame(SpriteFrame *spriteFrame)
         return false;
     }
 
-    bool ret = initWithTexture(spriteFrame->getTexture(), spriteFrame->getRect(), spriteFrame->isRotated());
+    bool ret = initWithBackendTexture(spriteFrame->getBackendTexture(), spriteFrame->getRect(), spriteFrame->isRotated());
     setSpriteFrame(spriteFrame);
 
     return ret;

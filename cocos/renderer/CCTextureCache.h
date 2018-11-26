@@ -191,6 +191,7 @@ public:
      * @return The full path of the file.
      */
     std::string getTextureFilePath(Texture2D* texture) const;
+    std::string getTextureFilePath(backend::Texture* texture) const;
 
     /** Reload texture from a new file.
     * This function is mainly for editor, won't suggest use it in game for performance reason.

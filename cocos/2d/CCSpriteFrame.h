@@ -37,6 +37,9 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 class Texture2D;
+namespace backend {
+    class Texture;
+}
 
 /**
  * @addtogroup _2d
@@ -99,6 +102,7 @@ public:
      * @return An autoreleased SpriteFrame object.
      */
     static SpriteFrame* createWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize);
+    static SpriteFrame* createWithTexture(backend::Texture* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize);
 
     // attributes
     /** Get rect of the sprite frame.
@@ -199,6 +203,7 @@ public:
      * @return The texture of the sprite frame.
      */
     Texture2D* getTexture();
+    backend::Texture* getBackendTexture();
     /** Set texture of the frame, the texture is retained.
      *
      * @param pobTexture The texture of the sprite frame.
@@ -278,6 +283,7 @@ CC_CONSTRUCTOR_ACCESS:
      The originalSize is the size in points of the frame before being trimmed.
      */
     bool initWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize);
+    bool initWithTexture(backend::Texture* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize);
     
     /** Initializes a SpriteFrame with a texture, rect, rotated, offset and originalSize in pixels.
      The originalSize is the size in pixels of the frame before being trimmed.
@@ -297,6 +303,7 @@ protected:
     Vec2 _offsetInPixels;
     Size _originalSizeInPixels;
     Texture2D *_texture;
+    backend::Texture* _backendTexture;
     std::string  _textureFilename;
     PolygonInfo _polygonInfo;
 };
