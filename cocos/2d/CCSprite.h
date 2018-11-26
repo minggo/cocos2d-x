@@ -162,6 +162,7 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* createWithTexture(Texture2D *texture);
+    static Sprite* createWithBackendTexture(backend::Texture *texture);
 
     /**
      * Creates a sprite with a texture and a rect.

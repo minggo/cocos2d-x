@@ -63,6 +63,18 @@ Sprite* Sprite::createWithTexture(Texture2D *texture)
     return nullptr;
 }
 
+Sprite* Sprite::createWithBackendTexture(backend::Texture *texture)
+{
+    Sprite *sprite = new (std::nothrow) Sprite();
+    if (sprite && sprite->initWithBackendTexture(texture))
+    {
+        sprite->autorelease();
+        return sprite;
+    }
+    CC_SAFE_DELETE(sprite);
+    return nullptr;
+}
+
 Sprite* Sprite::createWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
