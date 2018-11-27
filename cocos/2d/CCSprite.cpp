@@ -297,7 +297,7 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
         _quad.tr.colors = Color4B::WHITE;
 
         // update texture (calls updateBlendFunc)
-        setBackendTexture(texture->getTexture());
+        setBackendTexture(texture->getBackendTexture());
         setTextureRect(rect, rotated, rect.size);
 
         // by default use "Self Render".
@@ -1675,7 +1675,7 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     }
     _unflippedOffsetPositionFromCenter = spriteFrame->getOffset();
 
-    backend::Texture *texture = spriteFrame->getTexture()->getTexture();
+    backend::Texture *texture = spriteFrame->getTexture()->getBackendTexture();
     // update texture before updating texture rect
     if (texture != _backendTexture)
     {
@@ -1728,7 +1728,7 @@ bool Sprite::isFrameDisplayed(SpriteFrame *frame) const
     Rect r = frame->getRect();
 
     return (r.equals(_rect) &&
-            frame->getTexture()->getTexture() == _backendTexture &&
+            frame->getTexture()->getBackendTexture() == _backendTexture &&
             frame->getOffset().equals(_unflippedOffsetPositionFromCenter));
 }
 

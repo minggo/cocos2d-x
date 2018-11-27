@@ -486,7 +486,7 @@ GLuint Texture2D::getName() const
     return 0;
 }
 
-backend::Texture* Texture2D::getTexture() const
+backend::Texture* Texture2D::getBackendTexture() const
 {
     return _texture;
 }

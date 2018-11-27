@@ -250,7 +250,7 @@ bool TextureCube::init(const std::string& positive_x, const std::string& negativ
 
 void TextureCube::setTexParameters(const TexParams& texParams)
 {
-    cocos2d::log("Error in %s %s %d, TODO", __FILE__, __FUNCTION__, __LINE__);
+    //TODO coulsonwang
 //    CCASSERT(_name != 0, __FUNCTION__);
 //
 //    glActiveTexture(GL_TEXTURE0);

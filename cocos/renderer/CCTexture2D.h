@@ -52,6 +52,13 @@ namespace backend {
     class Texture;
 }
 
+/**
+ * @addtogroup _2d
+ * @{
+ */
+
+//CONSTANTS:
+
 //CLASS INTERFACES:
 
 /** 
@@ -270,12 +277,35 @@ public:
     bool initWithString(const char *text, const FontDefinition& textDefinition);
 
     /** Sets the min filter, mag filter, wrap s and wrap t texture parameters.
-    If the texture size is NPOT (non power of 2), then in can only use GL_CLAMP_TO_EDGE in GL_TEXTURE_WRAP_{S,T}.
-
-    @warning Calling this method could allocate additional texture memory.
-
-    @since v0.8
-    */
+     If the texture size is NPOT (non power of 2), then in can only use GL_CLAMP_TO_EDGE in GL_TEXTURE_WRAP_{S,T}.
+     
+     @warning Calling this method could allocate additional texture memory.
+     
+     @since v0.8
+     * @code
+     * When this function bound into js or lua,the input parameter will be changed
+     * In js: var setBlendFunc(var arg1, var arg2, var arg3, var arg4)
+     * In lua: local setBlendFunc(local arg1, local arg2, local arg3, local arg4)
+     * @endcode
+     */
+//    TODO coulsonwang
+//    void setTexParameters(const TexParams& texParams);
+    
+    /** Generates mipmap images for the texture.
+     It only works if the texture size is POT (power of 2).
+     @since v0.99.0
+     */
+//    TODO coulsonwang
+//    void generateMipmap();
+    
+    /** Sets antialias texture parameters:
+     - GL_TEXTURE_MIN_FILTER = GL_LINEAR
+     - GL_TEXTURE_MAG_FILTER = GL_LINEAR
+     
+     @warning Calling this method could allocate additional texture memory.
+     
+     @since v0.8
+     */
     void setAntiAliasTexParameters();
 
     /** Sets alias texture parameters:
@@ -323,7 +353,7 @@ public:
     
     /** Gets the texture name. */
     GLuint getName() const;
-    backend::Texture* getTexture() const;
+    backend::Texture* getBackendTexture() const;
     
     /** Gets max S. */
     GLfloat getMaxS() const;
