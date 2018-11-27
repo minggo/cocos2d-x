@@ -296,168 +296,6 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, Textu
     CC_SAFE_DELETE(image);
 }
 
-void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dictionary, backend::Texture* texture, const std::string &plist)
-{
-    /*
-     Supported Zwoptex Formats:
-     
-     ZWTCoordinatesFormatOptionXMLLegacy = 0, // Flash Version
-     ZWTCoordinatesFormatOptionXML1_0 = 1, // Desktop Version 0.0 - 0.4b
-     ZWTCoordinatesFormatOptionXML1_1 = 2, // Desktop Version 1.0.0 - 1.0.1
-     ZWTCoordinatesFormatOptionXML1_2 = 3, // Desktop Version 1.0.2+
-     
-     Version 3 with TexturePacker 4.0 polygon mesh packing
-     */
-    
-    if (dictionary["frames"].getType() != cocos2d::Value::Type::MAP)
-        return;
-    
-    ValueMap& framesDict = dictionary["frames"].asValueMap();
-    int format = 0;
-    
-    Size textureSize;
-    
-    // get the format
-    auto metaItr = dictionary.find("metadata");
-    if (metaItr != dictionary.end())
-    {
-        ValueMap& metadataDict = metaItr->second.asValueMap();
-        format = metadataDict["format"].asInt();
-        
-        if(metadataDict.find("size") != metadataDict.end())
-        {
-            textureSize = SizeFromString(metadataDict["size"].asString());
-        }
-    }
-    
-    // check the format
-    CCASSERT(format >=0 && format <= 3, "format is not supported for SpriteFrameCache addSpriteFramesWithDictionary:textureFilename:");
-    
-    auto textureFileName = Director::getInstance()->getTextureCache()->getTextureFilePath(texture);
-    Image* image = nullptr;
-    NinePatchImageParser parser;
-    for (auto& iter : framesDict)
-    {
-        ValueMap& frameDict = iter.second.asValueMap();
-        std::string spriteFrameName = iter.first;
-        SpriteFrame* spriteFrame = _spriteFramesCache.at(spriteFrameName);
-        if (spriteFrame)
-        {
-            continue;
-        }
-        
-        if(format == 0)
-        {
-            float x = frameDict["x"].asFloat();
-            float y = frameDict["y"].asFloat();
-            float w = frameDict["width"].asFloat();
-            float h = frameDict["height"].asFloat();
-            float ox = frameDict["offsetX"].asFloat();
-            float oy = frameDict["offsetY"].asFloat();
-            int ow = frameDict["originalWidth"].asInt();
-            int oh = frameDict["originalHeight"].asInt();
-            // check ow/oh
-            if(!ow || !oh)
-            {
-                CCLOGWARN("cocos2d: WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as expected. Regenerate the .plist");
-            }
-            // abs ow/oh
-            ow = std::abs(ow);
-            oh = std::abs(oh);
-            // create frame
-            spriteFrame = SpriteFrame::createWithTexture(texture,
-                                                         Rect(x, y, w, h),
-                                                         false,
-                                                         Vec2(ox, oy),
-                                                         Size((float)ow, (float)oh)
-                                                         );
-        }
-        else if(format == 1 || format == 2)
-        {
-            Rect frame = RectFromString(frameDict["frame"].asString());
-            bool rotated = false;
-            
-            // rotation
-            if (format == 2)
-            {
-                rotated = frameDict["rotated"].asBool();
-            }
-            
-            Vec2 offset = PointFromString(frameDict["offset"].asString());
-            Size sourceSize = SizeFromString(frameDict["sourceSize"].asString());
-            
-            // create frame
-            spriteFrame = SpriteFrame::createWithTexture(texture,
-                                                         frame,
-                                                         rotated,
-                                                         offset,
-                                                         sourceSize
-                                                         );
-        }
-        else if (format == 3)
-        {
-            // get values
-            Size spriteSize = SizeFromString(frameDict["spriteSize"].asString());
-            Vec2 spriteOffset = PointFromString(frameDict["spriteOffset"].asString());
-            Size spriteSourceSize = SizeFromString(frameDict["spriteSourceSize"].asString());
-            Rect textureRect = RectFromString(frameDict["textureRect"].asString());
-            bool textureRotated = frameDict["textureRotated"].asBool();
-            
-            // get aliases
-            ValueVector& aliases = frameDict["aliases"].asValueVector();
-            
-            for(const auto &value : aliases) {
-                std::string oneAlias = value.asString();
-                if (_spriteFramesAliases.find(oneAlias) != _spriteFramesAliases.end())
-                {
-                    CCLOGWARN("cocos2d: WARNING: an alias with name %s already exists", oneAlias.c_str());
-                }
-                
-                _spriteFramesAliases[oneAlias] = Value(spriteFrameName);
-            }
-            
-            // create frame
-            spriteFrame = SpriteFrame::createWithTexture(texture,
-                                                         Rect(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
-                                                         textureRotated,
-                                                         spriteOffset,
-                                                         spriteSourceSize);
-            
-            if(frameDict.find("vertices") != frameDict.end())
-            {
-                std::vector<int> vertices;
-                parseIntegerList(frameDict["vertices"].asString(), vertices);
-                std::vector<int> verticesUV;
-                parseIntegerList(frameDict["verticesUV"].asString(), verticesUV);
-                std::vector<int> indices;
-                parseIntegerList(frameDict["triangles"].asString(), indices);
-                
-                PolygonInfo info;
-                initializePolygonInfo(textureSize, spriteSourceSize, vertices, verticesUV, indices, info);
-                spriteFrame->setPolygonInfo(info);
-            }
-            if (frameDict.find("anchor") != frameDict.end())
-            {
-                spriteFrame->setAnchorPoint(PointFromString(frameDict["anchor"].asString()));
-            }
-        }
-        
-//        bool flag = NinePatchImageParser::isNinePatchImage(spriteFrameName);
-//        if(flag)
-//        {
-//            if (image == nullptr) {
-//                image = new (std::nothrow) Image();
-//                image->initWithImageFile(textureFileName);
-//            }
-//            parser.setSpriteFrameInfo(image, spriteFrame->getRectInPixels(), spriteFrame->isRotated());
-//            texture->addSpriteFrameCapInset(spriteFrame, parser.parseCapInset());
-//        }
-        // add sprite frame
-        _spriteFramesCache.insertFrame(plist, spriteFrameName, spriteFrame);
-    }
-    CC_SAFE_DELETE(image);
-}
-
 void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dict, const std::string &texturePath, const std::string &plist)
 {
     std::string pixelFormatName;
@@ -470,7 +308,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dict, const std::
         }
     }
     
-    backend::Texture *texture = nullptr;
+    Texture2D *texture = nullptr;
     static std::unordered_map<std::string, Texture2D::PixelFormat> pixelFormats = {
         {"RGBA8888", Texture2D::PixelFormat::RGBA8888},
         {"RGBA4444", Texture2D::PixelFormat::RGBA4444},
@@ -492,12 +330,12 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dict, const std::
         const Texture2D::PixelFormat pixelFormat = (*pixelFormatIt).second;
         const Texture2D::PixelFormat currentPixelFormat = Texture2D::getDefaultAlphaPixelFormat();
         Texture2D::setDefaultAlphaPixelFormat(pixelFormat);
-        texture = Director::getInstance()->getTextureCache()->addBackendImage(texturePath);
+        texture = Director::getInstance()->getTextureCache()->addImage(texturePath);
         Texture2D::setDefaultAlphaPixelFormat(currentPixelFormat);
     }
     else
     {
-        texture = Director::getInstance()->getTextureCache()->addBackendImage(texturePath);
+        texture = Director::getInstance()->getTextureCache()->addImage(texturePath);
     }
     
     if (texture)

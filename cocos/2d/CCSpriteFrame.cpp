@@ -65,18 +65,6 @@ SpriteFrame* SpriteFrame::createWithTexture(Texture2D* texture, const Rect& rect
     return nullptr;
 }
 
-SpriteFrame* SpriteFrame::createWithTexture(backend::Texture* texture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
-{
-    SpriteFrame *spriteFrame = new (std::nothrow) SpriteFrame();
-    if (spriteFrame && spriteFrame->initWithTexture(texture, rect, rotated, offset, originalSize)) {
-        spriteFrame->autorelease();
-        return spriteFrame;
-    }
-    
-    delete spriteFrame;
-    return nullptr;
-}
-
 SpriteFrame* SpriteFrame::create(const std::string& filename, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
 {
     SpriteFrame *spriteFrame = new (std::nothrow) SpriteFrame();
@@ -125,28 +113,6 @@ bool SpriteFrame::initWithTexture(Texture2D* texture, const Rect& rect, bool rot
     _anchorPoint = Vec2(NAN, NAN);
     _centerRect = Rect(NAN, NAN, NAN, NAN);
 
-    return true;
-}
-
-bool SpriteFrame::initWithTexture(backend::Texture* texture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
-{
-    _backendTexture = texture;
-    
-    if (texture)
-    {
-        texture->retain();
-    }
-    
-    _rectInPixels = rect;
-    _rect = CC_RECT_PIXELS_TO_POINTS(rect);
-    _offsetInPixels = offset;
-    _offset = CC_POINT_PIXELS_TO_POINTS( _offsetInPixels );
-    _originalSizeInPixels = originalSize;
-    _originalSize = CC_SIZE_PIXELS_TO_POINTS( _originalSizeInPixels );
-    _rotated = rotated;
-    _anchorPoint = Vec2(NAN, NAN);
-    _centerRect = Rect(NAN, NAN, NAN, NAN);
-    
     return true;
 }
 
@@ -261,19 +227,6 @@ Texture2D* SpriteFrame::getTexture()
 
     if( !_textureFilename.empty()) {
         return Director::getInstance()->getTextureCache()->addImage(_textureFilename);
-    }
-    // no texture or texture filename
-    return nullptr;
-}
-
-backend::Texture* SpriteFrame::getBackendTexture()
-{
-    if( _backendTexture ) {
-        return _backendTexture;
-    }
-    
-    if( !_textureFilename.empty()) {
-        return Director::getInstance()->getTextureCache()->addBackendImage(_textureFilename);
     }
     // no texture or texture filename
     return nullptr;

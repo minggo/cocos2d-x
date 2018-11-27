@@ -378,82 +378,6 @@ void TextureCache::addImageAsyncCallBack(float /*dt*/)
     }
 }
 
-backend::Texture* TextureCache::addBackendImage(const std::string& path)
-{
-    backend::Texture* texture = nullptr;
-    Image* image = nullptr;
-    
-    std::string fullpath = FileUtils::getInstance()->fullPathForFilename(path);
-    if (fullpath.size() == 0)
-    {
-        return nullptr;
-    }
-    auto it = _backendTextures.find(fullpath);
-    if (it != _backendTextures.end())
-        texture = it->second;
-    
-    if (!texture)
-    {
-        // all images are handled by UIImage except PVR extension that is handled by our own handler
-        do
-        {
-            image = new (std::nothrow) Image();
-            CC_BREAK_IF(nullptr == image);
-            
-            bool bRet = image->initWithImageFile(fullpath);
-            CC_BREAK_IF(!bRet);
-            
-//            texture = new (std::nothrow) Texture2D();
-            auto device = backend::Device::getInstance();
-            backend::TextureDescriptor textureDescriptor;
-            textureDescriptor.width = image->getWidth();
-            textureDescriptor.height = image->getHeight();
-            backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(image->getRenderFormat());
-            textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
-            texture = device->newTexture(textureDescriptor);
-            texture->updateData(image->getData());
-            
-//            if (texture && texture->initWithImage(image))
-            if (texture)
-            {
-#if CC_ENABLE_CACHE_TEXTURE_DATA
-                // cache the texture file name
-                VolatileTextureMgr::addImageTexture(texture, fullpath);
-#endif
-                // texture already retained, no need to re-retain it
-                _backendTextures.emplace(fullpath, texture);
-                
-                //                //-- ANDROID ETC1 ALPHA SUPPORTS.
-                //                std::string alphaFullPath = path + s_etc1AlphaFileSuffix;
-                //                if (image->getFileType() == Image::Format::ETC && !s_etc1AlphaFileSuffix.empty() && FileUtils::getInstance()->isFileExist(alphaFullPath))
-                //                {
-                //                    Image alphaImage;
-                //                    if (alphaImage.initWithImageFile(alphaFullPath))
-                //                    {
-                //                        Texture2D *pAlphaTexture = new(std::nothrow) Texture2D;
-                //                        if(pAlphaTexture != nullptr && pAlphaTexture->initWithImage(&alphaImage)) {
-                //                            texture->setAlphaTexture(pAlphaTexture);
-                //                        }
-                //                        CC_SAFE_RELEASE(pAlphaTexture);
-                //                    }
-                //                }
-                //
-                //                //parse 9-patch info
-                //                this->parseNinePatchImage(image, texture, path);
-            }
-            else
-            {
-                CCLOG("cocos2d: Couldn't create texture for file:%s in TextureCache", path.c_str());
-                CC_SAFE_RELEASE(texture);
-                texture = nullptr;
-            }
-        } while (0);
-    }
-    
-    CC_SAFE_RELEASE(image);
-    
-    return texture;
-}
 Texture2D * TextureCache::addImage(const std::string &path)
 {
     Texture2D * texture = nullptr;
@@ -698,19 +622,6 @@ Texture2D* TextureCache::getTextureForKey(const std::string &textureKeyName) con
 std::string TextureCache::getTextureFilePath(cocos2d::Texture2D* texture) const
 {
     for (auto& item : _textures)
-    {
-        if (item.second == texture)
-        {
-            return item.first;
-            break;
-        }
-    }
-    return "";
-}
-
-std::string TextureCache::getTextureFilePath(backend::Texture* texture) const
-{
-    for (auto& item : _backendTextures)
     {
         if (item.second == texture)
         {

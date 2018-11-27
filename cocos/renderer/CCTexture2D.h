@@ -48,14 +48,9 @@ namespace ui
     class Scale9Sprite;
 }
 
-/**
- * @addtogroup _2d
- * @{
- */
-
-//CONSTANTS:
-
-class GLProgram;
+namespace backend {
+    class Texture;
+}
 
 //CLASS INTERFACES:
 
@@ -190,18 +185,6 @@ public:
      * @lua NA
      */
     virtual ~Texture2D();
-    /**
-     Get texture name, dimensions and coordinates message by a string.
-     * @js NA
-     * @lua NA
-     */
-    virtual std::string getDescription() const;
-
-    /** Release only the gl texture.
-     * @js NA
-     * @lua NA
-     */
-    void releaseGLTexture();
 
     /** Initializes with a texture2d with data.
      
@@ -225,7 +208,7 @@ public:
      @param pixelsHigh The image height.
      */
     bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh);
-
+    
     /** Update with texture data.
      
      @param data Specifies a pointer to the image data in memory.
@@ -234,15 +217,15 @@ public:
      @param width Specifies the width of the texture subimage.
      @param height Specifies the height of the texture subimage.
      */
-    bool updateWithData(const void *data,int offsetX,int offsetY,int width,int height);
+    bool updateWithData(void *data,int offsetX,int offsetY,int width,int height);
     /**
     Drawing extensions to make it easy to draw basic quads using a Texture2D object.
     These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_COORD_ARRAY client states to be enabled.
     */
     /** Draws a texture at a given point. */
-    void drawAtPoint(const Vec2& point);
+//    void drawAtPoint(const Vec2& point);
     /** Draws a texture inside a rect.*/
-    void drawInRect(const Rect& rect);
+//    void drawInRect(const Rect& rect);
 
     /**
     Extensions to make it easy to create a Texture2D object from an image file.
@@ -292,21 +275,6 @@ public:
     @warning Calling this method could allocate additional texture memory.
 
     @since v0.8
-    * @code 
-    * When this function bound into js or lua,the input parameter will be changed
-    * In js: var setBlendFunc(var arg1, var arg2, var arg3, var arg4)
-    * In lua: local setBlendFunc(local arg1, local arg2, local arg3, local arg4)
-    * @endcode
-    */
-    void setTexParameters(const TexParams& texParams);
-
-    /** Sets antialias texture parameters:
-    - GL_TEXTURE_MIN_FILTER = GL_LINEAR
-    - GL_TEXTURE_MAG_FILTER = GL_LINEAR
-
-    @warning Calling this method could allocate additional texture memory.
-
-    @since v0.8
     */
     void setAntiAliasTexParameters();
 
@@ -319,13 +287,6 @@ public:
     @since v0.8
     */
     void setAliasTexParameters();
-
-
-    /** Generates mipmap images for the texture.
-    It only works if the texture size is POT (power of 2).
-    @since v0.99.0
-    */
-    void generateMipmap();
 
     /** Returns the pixel format.
      @since v2.0
@@ -362,6 +323,7 @@ public:
     
     /** Gets the texture name. */
     GLuint getName() const;
+    backend::Texture* getTexture() const;
     
     /** Gets max S. */
     GLfloat getMaxS() const;
@@ -375,15 +337,6 @@ public:
     
     /** Get the texture content size.*/
     Size getContentSize() const;
-    
-    /** Set a shader program to the texture.
-
-     It's used by drawAtPoint and drawInRect
-     */
-    void setGLProgram(GLProgram* program);
-
-    /** Get a shader program from the texture.*/
-    GLProgram* getGLProgram() const;
 
     std::string getPath()const { return _filePath; }
 
@@ -498,7 +451,8 @@ protected:
     int _pixelsHigh;
 
     /** texture name */
-    GLuint _name;
+    backend::Texture* _texture;
+    
 
     /** texture max S */
     GLfloat _maxS;
@@ -514,9 +468,6 @@ protected:
     
     /** whether or not the texture has mip maps*/
     bool _hasMipmaps;
-
-    /** shader program used by drawAtPoint and drawInRect */
-    GLProgram* _shaderProgram;
 
     static const PixelFormatInfoMap _pixelFormatInfoTables;
 

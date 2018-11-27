@@ -63,18 +63,6 @@ Sprite* Sprite::createWithTexture(Texture2D *texture)
     return nullptr;
 }
 
-Sprite* Sprite::createWithTexture(backend::Texture *texture)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if (sprite && sprite->initWithBackendTexture(texture))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
-
 Sprite* Sprite::createWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
@@ -87,34 +75,10 @@ Sprite* Sprite::createWithTexture(Texture2D *texture, const Rect& rect, bool rot
     return nullptr;
 }
 
-Sprite* Sprite::createWithTexture(backend::Texture *texture, const Rect& rect, bool rotated)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if (sprite && sprite->initWithBackendTexture(texture, rect, rotated))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
-
 Sprite* Sprite::create(const std::string& filename)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
     if (sprite && sprite->initWithFile(filename))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
-
-Sprite* Sprite::backendCreate(const std::string& filename)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if (sprite && sprite->initWithBackendFile(filename))
     {
         sprite->autorelease();
         return sprite;
@@ -139,18 +103,6 @@ Sprite* Sprite::create(const std::string& filename, const Rect& rect)
 {
     Sprite *sprite = new (std::nothrow) Sprite();
     if (sprite && sprite->initWithFile(filename, rect))
-    {
-        sprite->autorelease();
-        return sprite;
-    }
-    CC_SAFE_DELETE(sprite);
-    return nullptr;
-}
-
-Sprite* Sprite::backendCreate(const std::string& filename, const Rect& rect)
-{
-    Sprite *sprite = new (std::nothrow) Sprite();
-    if (sprite && sprite->initWithBackendFile(filename, rect))
     {
         sprite->autorelease();
         return sprite;
@@ -198,7 +150,7 @@ Sprite* Sprite::create()
 
 bool Sprite::init()
 {
-    initWithBackendTexture(nullptr, Rect::ZERO);
+    initWithTexture(nullptr, Rect::ZERO);
     return true;
 }
 
@@ -212,18 +164,6 @@ bool Sprite::initWithTexture(Texture2D *texture)
     }
 
     return initWithTexture(texture, rect, false);
-}
-
-bool Sprite::initWithBackendTexture(backend::Texture *texture)
-{
-    CCASSERT(texture != nullptr, "Invalid texture for sprite");
-    
-    Rect rect = Rect::ZERO;
-    if (texture) {
-        getTextureContentSize(rect.size, texture);
-    }
-    
-    return initWithBackendTexture(texture, rect, false);
 }
 
 bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect)
@@ -256,32 +196,6 @@ bool Sprite::initWithFile(const std::string& filename)
     return false;
 }
 
-bool Sprite::initWithBackendFile(const std::string& filename)
-{
-    if (filename.empty())
-    {
-        CCLOG("Call Sprite::initWithFile with blank resource filename.");
-        return false;
-    }
-    
-    _fileName = filename;
-    _fileType = 0;
-    
-//    Texture2D *texture = _director->getTextureCache()->addImage(filename);
-    backend::Texture* texture = _director->getTextureCache()->addBackendImage(filename);
-    if (texture)
-    {
-        Rect rect = Rect::ZERO;
-//        rect.size = texture->getContentSize();
-        Size rectSize;
-        rectSize.width = texture->getWidth() / CC_CONTENT_SCALE_FACTOR();
-        rectSize.height = texture->getHeight() / CC_CONTENT_SCALE_FACTOR();
-        rect.size = rectSize;
-        return initWithBackendTexture(texture, rect);
-    }
-    return false;
-}
-
 bool Sprite::initWithFile(const std::string &filename, const Rect& rect)
 {
     CCASSERT(!filename.empty(), "Invalid filename");
@@ -299,29 +213,6 @@ bool Sprite::initWithFile(const std::string &filename, const Rect& rect)
         return initWithTexture(texture, rect);
     }
 
-    // don't release here.
-    // when load texture failed, it's better to get a "transparent" sprite then a crashed program
-    // this->release();
-    return false;
-}
-
-bool Sprite::initWithBackendFile(const std::string &filename, const Rect& rect)
-{
-    CCASSERT(!filename.empty(), "Invalid filename");
-    if (filename.empty())
-    {
-        return false;
-    }
-    
-    _fileName = filename;
-    _fileType = 0;
-    
-    backend::Texture *texture = _director->getTextureCache()->addBackendImage(filename);
-    if (texture)
-    {
-        return initWithBackendTexture(texture, rect);
-    }
-    
     // don't release here.
     // when load texture failed, it's better to get a "transparent" sprite then a crashed program
     // this->release();
@@ -351,7 +242,7 @@ bool Sprite::initWithSpriteFrame(SpriteFrame *spriteFrame)
         return false;
     }
 
-    bool ret = initWithBackendTexture(spriteFrame->getBackendTexture(), spriteFrame->getRect(), spriteFrame->isRotated());
+    bool ret = initWithTexture(spriteFrame->getTexture(), spriteFrame->getRect(), spriteFrame->isRotated());
     setSpriteFrame(spriteFrame);
 
     return ret;
@@ -361,8 +252,8 @@ bool Sprite::initWithPolygon(const cocos2d::PolygonInfo &info)
 {
     bool ret = false;
 
-    backend::Texture *texture = _director->getTextureCache()->addBackendImage(info.getFilename());
-    if(texture && initWithBackendTexture(texture))
+    Texture2D *texture = _director->getTextureCache()->addImage(info.getFilename());
+    if(texture && initWithTexture(texture))
     {
         _polyInfo = info;
         _renderMode = RenderMode::POLYGON;
@@ -406,7 +297,7 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
         _quad.tr.colors = Color4B::WHITE;
 
         // update texture (calls updateBlendFunc)
-        setTexture(texture);
+        setBackendTexture(texture->getTexture());
         setTextureRect(rect, rotated, rect.size);
 
         // by default use "Self Render".
@@ -418,53 +309,6 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
     _recursiveDirty = true;
     setDirty(true);
 
-    return result;
-}
-
-bool Sprite::initWithBackendTexture(backend::Texture *texture, const Rect& rect, bool rotated)
-{
-    bool result = false;
-    if (Node::init())
-    {
-        _batchNode = nullptr;
-        
-        _recursiveDirty = false;
-        setDirty(false);
-        
-        _opacityModifyRGB = true;
-        
-        _blendFunc = BlendFunc::ALPHA_PREMULTIPLIED;
-        
-        _flippedX = _flippedY = false;
-        
-        // default transform anchor: center
-        setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-        
-        // zwoptex default values
-        _offsetPosition.setZero();
-        
-        // clean the Quad
-        memset(&_quad, 0, sizeof(_quad));
-        
-        // Atlas: Color
-        _quad.bl.colors = Color4B::WHITE;
-        _quad.br.colors = Color4B::WHITE;
-        _quad.tl.colors = Color4B::WHITE;
-        _quad.tr.colors = Color4B::WHITE;
-        
-        // update texture (calls updateBlendFunc)
-        setBackendTexture(texture);
-        setTextureRect(rect, rotated, rect.size);
-        
-        // by default use "Self Render".
-        // if the sprite is added to a batchnode, then it will automatically switch to "batchnode Render"
-        setBatchNode(nullptr);
-        result = true;
-    }
-    
-    _recursiveDirty = true;
-    setDirty(true);
-    
     return result;
 }
 
@@ -525,17 +369,19 @@ static unsigned char cc_2x2_white_image[] = {
 // MARK: texture
 void Sprite::setTexture(const std::string &filename)
 {
-    backend::Texture *texture = Director::getInstance()->getTextureCache()->addBackendImage(filename);
-    setBackendTexture(texture);
+    Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(filename);
+    setTexture(texture);
     _unflippedOffsetPositionFromCenter = Vec2::ZERO;
     Rect rect = Rect::ZERO;
     if (texture)
-        getTextureContentSize(rect.size, texture);
+        rect.size = texture->getContentSize();
     setTextureRect(rect);
 }
 
 void Sprite::setTexture(Texture2D *texture)
 {
+    cocos2d::log("Error in %s %s %d, should not reach here!", __FILE__, __FUNCTION__, __LINE__);
+    
     if(_glProgramState == nullptr)
     {
         setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, texture));
@@ -1829,7 +1675,7 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     }
     _unflippedOffsetPositionFromCenter = spriteFrame->getOffset();
 
-    backend::Texture *texture = spriteFrame->getBackendTexture();
+    backend::Texture *texture = spriteFrame->getTexture()->getTexture();
     // update texture before updating texture rect
     if (texture != _backendTexture)
     {
@@ -1882,7 +1728,7 @@ bool Sprite::isFrameDisplayed(SpriteFrame *frame) const
     Rect r = frame->getRect();
 
     return (r.equals(_rect) &&
-            frame->getBackendTexture() == _backendTexture &&
+            frame->getTexture()->getTexture() == _backendTexture &&
             frame->getOffset().equals(_unflippedOffsetPositionFromCenter));
 }
 
@@ -1892,7 +1738,7 @@ SpriteFrame* Sprite::getSpriteFrame() const
     {
         return this->_spriteFrame;
     }
-    return SpriteFrame::createWithTexture(_backendTexture,
+    return SpriteFrame::createWithTexture(_texture,
                                           CC_RECT_POINTS_TO_PIXELS(_rect),
                                           _rectRotated,
                                           CC_POINT_POINTS_TO_PIXELS(_unflippedOffsetPositionFromCenter),
@@ -2003,12 +1849,6 @@ void Sprite::setPolygonInfo(const PolygonInfo& info)
 {
     _polyInfo = info;
     _renderMode = RenderMode::POLYGON;
-}
-
-void Sprite::getTextureContentSize(Size &size, const backend::Texture *texture)
-{
-    size.width = texture->getWidth()/CC_CONTENT_SCALE_FACTOR();
-    size.height = texture->getHeight()/CC_CONTENT_SCALE_FACTOR();
 }
 
 NS_CC_END

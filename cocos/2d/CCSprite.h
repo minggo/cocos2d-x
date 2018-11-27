@@ -130,7 +130,6 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* create(const std::string& filename);
-    static Sprite* backendCreate(const std::string& filename);
     
     /**
      * Creates a polygon sprite with a polygon info.
@@ -151,7 +150,6 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* create(const std::string& filename, const Rect& rect);
-    static Sprite* backendCreate(const std::string& filename, const Rect& rect);
 
     /**
      * Creates a sprite with a Texture2D object.
@@ -162,7 +160,6 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* createWithTexture(Texture2D *texture);
-    static Sprite* createWithTexture(backend::Texture *texture);
 
     /**
      * Creates a sprite with a texture and a rect.
@@ -176,7 +173,6 @@ public:
      * @return  An autoreleased sprite object.
      */
     static Sprite* createWithTexture(Texture2D *texture, const Rect& rect, bool rotated=false);
-    static Sprite* createWithTexture(backend::Texture *texture, const Rect& rect, bool rotated=false);
 
     /**
      * Creates a sprite with an sprite frame.
@@ -468,12 +464,14 @@ public:
     *In lua: local setBlendFunc(local src, local dst).
     *@endcode
     */
-    void setBlendFunc(const BlendFunc &blendFunc) override { _blendFunc = blendFunc; }
+    void setBlendFunc(const BlendFunc &blendFunc) override {     cocos2d::log("Error in %s %s %d, should not reach here!", __FILE__, __FUNCTION__, __LINE__);
+        _blendFunc = blendFunc; }
     /**
     * @js  NA
     * @lua NA
     */
-    const BlendFunc& getBlendFunc() const override { return _blendFunc; }
+    const BlendFunc& getBlendFunc() const override {     cocos2d::log("Error in %s %s %d, should not reach here!", __FILE__, __FUNCTION__, __LINE__);
+        return _blendFunc; }
     /// @}
 
     /**
@@ -540,7 +538,6 @@ CC_CONSTRUCTOR_ACCESS :
      * @return  True if the sprite is initialized properly, false otherwise.
      */
     virtual bool initWithTexture(Texture2D *texture);
-    virtual bool initWithBackendTexture(backend::Texture *texture);
     
     
     /**
@@ -577,7 +574,6 @@ CC_CONSTRUCTOR_ACCESS :
      * @return  True if the sprite is initialized properly, false otherwise.
      */
     virtual bool initWithTexture(Texture2D *texture, const Rect& rect, bool rotated);
-    virtual bool initWithBackendTexture(backend::Texture *texture, const Rect& rect, bool rotated = false);
 
     /**
      * Initializes a sprite with an SpriteFrame. The texture and rect in SpriteFrame will be applied on this sprite.
@@ -610,7 +606,6 @@ CC_CONSTRUCTOR_ACCESS :
      * @lua     init
      */
     virtual bool initWithFile(const std::string& filename);
-    virtual bool initWithBackendFile(const std::string& filename);
 
     /**
      * Initializes a sprite with an image filename, and a rect.
@@ -625,8 +620,6 @@ CC_CONSTRUCTOR_ACCESS :
      * @lua     init
      */
     virtual bool initWithFile(const std::string& filename, const Rect& rect);
-    virtual bool initWithBackendFile(const std::string& filename, const Rect& rect);
-    virtual void getTextureContentSize(Size &size, const backend::Texture *texture);
     
 protected:
 
