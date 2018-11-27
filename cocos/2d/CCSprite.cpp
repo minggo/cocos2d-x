@@ -525,12 +525,12 @@ static unsigned char cc_2x2_white_image[] = {
 // MARK: texture
 void Sprite::setTexture(const std::string &filename)
 {
-    Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(filename);
-    setTexture(texture);
+    backend::Texture *texture = Director::getInstance()->getTextureCache()->addBackendImage(filename);
+    setBackendTexture(texture);
     _unflippedOffsetPositionFromCenter = Vec2::ZERO;
     Rect rect = Rect::ZERO;
     if (texture)
-        rect.size = texture->getContentSize();
+        getTextureContentSize(rect.size, texture);
     setTextureRect(rect);
 }
 
@@ -1829,11 +1829,11 @@ void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
     }
     _unflippedOffsetPositionFromCenter = spriteFrame->getOffset();
 
-    Texture2D *texture = spriteFrame->getTexture();
+    backend::Texture *texture = spriteFrame->getBackendTexture();
     // update texture before updating texture rect
-    if (texture != _texture)
+    if (texture != _backendTexture)
     {
-        setTexture(texture);
+        setBackendTexture(texture);
     }
 
     // update rect
