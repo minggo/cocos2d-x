@@ -605,7 +605,7 @@ void Sprite::setBackendTexture(backend::Texture *texture)
     
     if (texture == nullptr)
     {
-        cocos2d::log("backend::Texture error....");
+        cocos2d::log("backend::Texture is nullptr in %s %s %d", __FILE__, __FUNCTION__, __LINE__);
 //        // Gets the texture by key firstly.
 //        texture = _director->getTextureCache()->getTextureForKey(CC_2x2_WHITE_IMAGE_KEY);
 //
@@ -1882,7 +1882,7 @@ bool Sprite::isFrameDisplayed(SpriteFrame *frame) const
     Rect r = frame->getRect();
 
     return (r.equals(_rect) &&
-            frame->getTexture()->getName() == _texture->getName() &&
+            frame->getBackendTexture() == _backendTexture &&
             frame->getOffset().equals(_unflippedOffsetPositionFromCenter));
 }
 
@@ -1892,7 +1892,7 @@ SpriteFrame* Sprite::getSpriteFrame() const
     {
         return this->_spriteFrame;
     }
-    return SpriteFrame::createWithTexture(_texture,
+    return SpriteFrame::createWithTexture(_backendTexture,
                                           CC_RECT_POINTS_TO_PIXELS(_rect),
                                           _rectRotated,
                                           CC_POINT_POINTS_TO_PIXELS(_unflippedOffsetPositionFromCenter),
