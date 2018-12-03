@@ -743,6 +743,7 @@ protected:
 
     QuadCommand _quadCommand;
     CustomCommand _customCommand;
+    CustomCommand _customCommandOutLine;
     Mat4  _shadowTransform;
     GLint _uniformEffectColor;
     GLint _uniformEffectType; // 0: None, 1: Outline, 2: Shadow; Only used when outline is enabled.

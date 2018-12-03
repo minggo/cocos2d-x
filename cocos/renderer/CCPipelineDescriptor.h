@@ -36,6 +36,9 @@ NS_CC_BEGIN
 
 struct CC_DLL PipelineDescriptor final
 {
+    PipelineDescriptor() = default;
+    PipelineDescriptor(const PipelineDescriptor& descriptor);
+    PipelineDescriptor& operator=(const PipelineDescriptor& descriptor);
     // These are helper functions to handle reference count.
     void setVertexShader(backend::ShaderModule* shaderModule);
     void setFragmentShader(backend::ShaderModule* shaderModule);

@@ -572,7 +572,11 @@ void Label::updateShaderProgram()
     {
     case cocos2d::LabelEffect::NORMAL:
         if (_useDistanceField)
-            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_NORMAL));
+        {
+//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_NORMAL));
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_distanceNormal_frag);
+        }
         else if (_useA8Shader)
         {
 //            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_NORMAL));
@@ -585,10 +589,14 @@ void Label::updateShaderProgram()
             setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
 
         break;
-    case cocos2d::LabelEffect::OUTLINE: 
-        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_OUTLINE));
-        _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
-        _uniformEffectType = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectType");
+    case cocos2d::LabelEffect::OUTLINE:
+        {
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, labelOutline_frag);
+        }
+//        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_OUTLINE));
+//        _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
+//        _uniformEffectType = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectType");
         break;
     case cocos2d::LabelEffect::GLOW:
         if (_useDistanceField)
@@ -1573,7 +1581,7 @@ void Label::onDraw(const Mat4& transform, bool /*transformUpdated*/)
 ////                _effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
 //        case LabelEffect::NORMAL:
 //            {
-//                
+//
 //            }
 ////            glprogram->setUniformLocationWith4f(_uniformTextColor,
 ////                _textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
@@ -1628,22 +1636,60 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
         {
             for (auto&& batchNode : _batchNodes)
             {
-                backend::BindGroup bindGroup;
                 auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
                 
                 cocos2d::Mat4 matrixProjection = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
                 cocos2d::Mat4 matrixMVP = matrixProjection * transform;
+                
+//                pipelineDescriptor.
                 pipelineDescriptor.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
-                
-                Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
-                pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
-                
+
                 auto textureAtlas = batchNode->getTextureAtlas();
                 pipelineDescriptor.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
                 updateBlendState();
-                _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
-//                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
-                renderer->addCommand(&_customCommand);
+                if(_currentLabelType == LabelType::TTF)
+                {
+                    switch (_currLabelEffect) {
+                        case LabelEffect::OUTLINE:
+                        {
+                            //draw outline
+                            int effectType = 1;
+                            Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
+                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(int));
+                            pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+                            _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
+                            
+                            renderer->addCommand(&_customCommand);
+                            
+                            //draw without outline
+                            {
+                                auto& pipeline = _customCommandOutLine.getPipelineDescriptor();
+                                pipeline = pipelineDescriptor;
+                                effectType = 0;
+                                Vec4 textColor(1.0, 1.0, 0.0, 1.0);
+//                                pipeline.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
+//                                pipeline.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
+                                pipeline.bindGroup.setUniform("u_effectType", &effectType, sizeof(int));
+                                pipeline.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
+                                _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, 100);
+                                
+                                renderer->addCommand(&_customCommandOutLine);
+                            }
+                        }
+                            break;
+                            
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
+                    pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
+                    _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
+        //                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
+                    renderer->addCommand(&_customCommand);
+                }
             }
         }
     }

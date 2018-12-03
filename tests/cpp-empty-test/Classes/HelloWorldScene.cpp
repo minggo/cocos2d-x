@@ -68,28 +68,50 @@ bool HelloWorld::init()
 //
 //    // add a label shows "Hello World"
 //    // create and initialize a label
-//
-//    auto label = Label::createWithTTF("Hello World", "fonts/arial.ttf", TITLE_FONT_SIZE);
-    auto label = Label::createWithSystemFont("Hello World", "Arial", 20);
-//
-//    // position the label on the center of the screen
+
+//    TTFConfig ttfConfig("fonts/arial.ttf", 16, GlyphCollection::DYNAMIC, nullptr, false, 1);
+//    auto label = Label::createWithTTF(ttfConfig, "Should define CC_USE_NAVMESH\n to run this test case");
+    auto label = Label::createWithTTF("Hello World", "fonts/arial.ttf", TITLE_FONT_SIZE);
+//    label->setColor(Color3B(255, 0, 0));
+    label->enableOutline(Color4B(255, 0, 0, 255), 1);
+//auto label = Label::createWithSystemFont("Hello World", "Helvetica", 10);
+    // position the label on the center of the screen
     label->setPosition(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - label->getContentSize().height);
 
-//    // add the label as a child to this layer
+    // add the label as a child to this layer
     this->addChild(label, 1);
 
     // add "HelloWorld" splash screen"
 //    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bugs/circle.plist");
 //    auto sprite = Sprite::createWithSpriteFrameName("circle.png");
-    auto sprite = Sprite::create("HelloWorld.png");
-    
+//    auto sprite = Sprite::create("HelloWorld.png");
+//
+//    // position the sprite on the center of the screen
+//    sprite->setPosition(Vec2(visibleSize / 2) + origin);
+//
+//    // add the sprite as a child to this layer
+//    this->addChild(sprite);
+
+
+//    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bugs/circle.plist");
+//    auto mgr = SpriteBatchNode::create("bugs/circle.png", 2);
+//    this->addChild(mgr);
+//    auto sp1 = Sprite::createWithSpriteFrameName("circle.png");
+//    auto sp2 = Sprite::createWithSpriteFrameName("circle.png");
+//
+//
+//    mgr->addChild(sp1, 1);
+//    mgr->addChild(sp2, 2);
+//
+//    Vec2 size = Vec2(visibleSize / 2);
+//    sp1->setPosition(size - Vec2(100, 0));
+//    sp2->setPosition(size + Vec2(100, 0));
+//    sp2->setColor(Color3B::YELLOW);
+
     // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize / 2) + origin);
-
-    // add the sprite as a child to this layer
-    this->addChild(sprite);
-
+//    mgr->setPosition(Vec2(visibleSize / 2) + origin);
+    
 //    auto drawNode = DrawNode::create();
 //    drawNode->setPosition(Vec2(0, 0));
 //    addChild(drawNode);

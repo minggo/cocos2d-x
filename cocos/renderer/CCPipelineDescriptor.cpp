@@ -45,4 +45,23 @@ void PipelineDescriptor::setFragmentShader(backend::ShaderModule* shaderModule)
     CC_SAFE_RETAIN(fragmentShader);
 }
 
+PipelineDescriptor::PipelineDescriptor(const PipelineDescriptor& descriptor)
+{
+    *this = descriptor;
+}
+
+PipelineDescriptor& PipelineDescriptor::operator=(const PipelineDescriptor& descriptor)
+{
+    if (this != &descriptor) {
+        setVertexShader(descriptor.vertexShader);
+        setFragmentShader(descriptor.fragmentShader);
+        depthStencilDescriptor = descriptor.depthStencilDescriptor;
+        blendDescriptor = descriptor.blendDescriptor;
+        renderPassDescriptor = descriptor.renderPassDescriptor;
+        vertexLayout = descriptor.vertexLayout;
+        bindGroup = descriptor.bindGroup;
+    }
+    return *this;
+}
+
 NS_CC_END
