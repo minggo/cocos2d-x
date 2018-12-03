@@ -784,7 +784,7 @@ void Renderer::drawCustomCommand(RenderCommand *command)
     _indexBuffer->updateData(indices, indexSize);
     
     /************** 2: Draw *************/
-    _commandBuffer->beginRenderPass(_currentRenderPass);
+    _commandBuffer->beginRenderPass(nullptr);
     auto& pipelineDescriptor = cmd->getPipelineDescriptor();
     auto renderPipeline = createRenderPipeline(pipelineDescriptor);
     _commandBuffer->setRenderPipeline(renderPipeline);
