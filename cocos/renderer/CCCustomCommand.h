@@ -74,9 +74,12 @@ public:
     /**Callback function.*/
     std::function<void()> func;
     
-    V3F_C4B_T2F_Quad* getQuad();
+    virtual size_t copyVertexData(void*) const override;
     virtual const unsigned short* getIndices() const override;
-    uint32_t getQuadCount();
+    virtual size_t getIndexCount() const override;
+    virtual size_t getVertexCount() const override { return getQuadCount(); }
+    V3F_C4B_T2F_Quad* getQuad() const;
+    size_t getQuadCount() const;
 
 protected:
     TextureAtlas *_textureAtlas = nullptr;

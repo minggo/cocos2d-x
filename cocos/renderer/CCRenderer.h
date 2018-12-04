@@ -202,7 +202,6 @@ public:
 protected:
     void drawBatchedTriangles();
     void drawBatchedCommand(RenderCommand* command);
-    void drawCustomCommand(RenderCommand* command);
 
     //Draw the previews queued triangles and flush previous context
     void flush();

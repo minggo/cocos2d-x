@@ -63,7 +63,15 @@ void CustomCommand::execute()
     }
 }
 
-V3F_C4B_T2F_Quad* CustomCommand::getQuad()
+size_t CustomCommand::copyVertexData(void* out) const
+{
+    auto dataLength = sizeof(V3F_C4B_T2F_Quad) * getQuadCount();
+    memcpy(out, getQuad(), dataLength);
+    
+    return dataLength;
+}
+
+V3F_C4B_T2F_Quad* CustomCommand::getQuad() const
 {
     return _textureAtlas->getQuads();
 }
@@ -73,9 +81,14 @@ const unsigned short* CustomCommand::getIndices() const
     return _textureAtlas->getIndices();
 }
 
-uint32_t CustomCommand::getQuadCount()
+size_t CustomCommand::getQuadCount() const
 {
-    return static_cast<uint32_t>(_textureAtlas->getTotalQuads());
+    return _textureAtlas->getTotalQuads();
+}
+
+size_t CustomCommand::getIndexCount() const
+{
+    return getQuadCount() * 6;
 }
 
 NS_CC_END
