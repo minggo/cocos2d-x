@@ -1643,7 +1643,8 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                 
 //                pipelineDescriptor.
                 pipelineDescriptor.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
-
+                Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
+                pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
                 auto textureAtlas = batchNode->getTextureAtlas();
                 pipelineDescriptor.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
                 updateBlendState();
@@ -1652,29 +1653,24 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                     switch (_currLabelEffect) {
                         case LabelEffect::OUTLINE:
                         {
-                            //draw outline
+                            
                             Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
-                            Vec4 textColor(1.0, 1.0, 0.0, 1.0);
-                            int effectType[] = {1, 0, 0, 0};
-                            
-                            pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
-                            pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
-                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
-                            _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
-                            
-                            renderer->addCommand(&_customCommand);
+                            int effectType[] = {0, 0, 0, 0};
                             
                             //draw without outline
                             {
                                 auto& pipeline = _customCommandOutLine.getPipelineDescriptor();
                                 pipeline = pipelineDescriptor;
-                                effectType[0] = 0;
-                                
+                                pipeline.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
                                 pipeline.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                                 _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, flags);
-                                
                                 renderer->addCommand(&_customCommandOutLine);
                             }
+                            
+                            //draw outline
+                            effectType[0] = 1;
+                            pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                         }
                             break;
                             
@@ -1682,14 +1678,11 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                             break;
                     }
                 }
-                else
-                {
-                    Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
-                    pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
-                    _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
-        //                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
-                    renderer->addCommand(&_customCommand);
-                }
+                
+                _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
+    //                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
+                renderer->addCommand(&_customCommand);
+                
             }
         }
     }

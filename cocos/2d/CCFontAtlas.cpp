@@ -475,21 +475,22 @@ bool FontAtlas::prepareLetterDefinitions(const std::u32string& utf32Text)
 void FontAtlas::updateTextureContent(Texture2D::PixelFormat format, int startY)
 {
     unsigned char *data = nullptr;
-    int nLen = CacheTextureWidth * (_currentPageOrigY - startY + _currLineHeight);
     if (format == Texture2D::PixelFormat::AI88)
     {
+        int nLen = CacheTextureWidth * (_currentPageOrigY - startY + _currLineHeight);
         data = _currentPageData + CacheTextureWidth * (int)startY * 2;
-        for (auto i = 0; i < nLen; i++) {
+        for (auto i = 0; i < nLen; i++)
+        {
             _currentPageDataRGBA[i*4] = data[i*2];
             _currentPageDataRGBA[i*4+3] = data[i*2+1];
         }
+        _atlasTextures[_currentPage]->updateWithData(_currentPageDataRGBA, 0, startY, CacheTextureWidth, _currentPageOrigY - startY + _currLineHeight);
     }
     else
     {
         data = _currentPageData + CacheTextureWidth * (int)startY;
-        memcpy(_currentPageDataRGBA, data, nLen);
+       _atlasTextures[_currentPage]->updateWithData(data, 0, startY, CacheTextureWidth, _currentPageOrigY - startY + _currLineHeight);
     }
-    _atlasTextures[_currentPage]->updateWithData(_currentPageDataRGBA, 0, startY, CacheTextureWidth, _currentPageOrigY - startY + _currLineHeight);
 }
 
 void FontAtlas::addTexture(Texture2D *texture, int slot)
