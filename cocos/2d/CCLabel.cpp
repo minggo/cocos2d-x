@@ -1653,10 +1653,13 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                         case LabelEffect::OUTLINE:
                         {
                             //draw outline
-                            int effectType = 1;
                             Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
-                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(int));
+                            Vec4 textColor(1.0, 1.0, 0.0, 1.0);
+                            int effectType[] = {1, 0, 0, 0};
+                            
                             pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+                            pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
+                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                             _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
                             
                             renderer->addCommand(&_customCommand);
@@ -1665,13 +1668,10 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                             {
                                 auto& pipeline = _customCommandOutLine.getPipelineDescriptor();
                                 pipeline = pipelineDescriptor;
-                                effectType = 0;
-                                Vec4 textColor(1.0, 1.0, 0.0, 1.0);
-//                                pipeline.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
-//                                pipeline.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
-                                pipeline.bindGroup.setUniform("u_effectType", &effectType, sizeof(int));
-                                pipeline.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
-                                _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, 100);
+                                effectType[0] = 0;
+                                
+                                pipeline.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
+                                _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, flags);
                                 
                                 renderer->addCommand(&_customCommandOutLine);
                             }

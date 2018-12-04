@@ -486,12 +486,13 @@ void Renderer::visitRenderQueue(RenderQueue& queue)
 //        }
 //        glDisable(GL_CULL_FACE);
 //        RenderState::StateBlock::_defaultState->setCullFace(false);
-        
+        _commandBuffer->beginRenderPass(_currentRenderPass);
         for (const auto& zZeroNext : zZeroQueue)
         {
             processRenderCommand(zZeroNext);
         }
         flush();
+        _commandBuffer->endRenderPass();
     }
     
     //
@@ -692,7 +693,7 @@ void Renderer::drawBatchedTriangles()
     _indexBuffer->updateData(_indices, sizeof(_indices[0]) * _filledIndex);
     
     /************** 2: Draw *************/
-    _commandBuffer->beginRenderPass(_currentRenderPass);
+//    _commandBuffer->beginRenderPass(_currentRenderPass);
     
     for (int i = 0; i < batchesTotal; ++i)
     {
@@ -721,7 +722,7 @@ void Renderer::drawBatchedTriangles()
                                      _triBatchesToDraw[i].offset * sizeof(_indices[0]));
     }
     
-    _commandBuffer->endRenderPass();
+//    _commandBuffer->endRenderPass();
     
     /************** 3: Cleanup *************/
     _queuedTriangleCommands.clear();
@@ -744,10 +745,10 @@ void Renderer::drawBatchedCommand(RenderCommand* command)
 //    _vertexBuffer->updateData(quad, quadSize);
 //    _indexBuffer->updateData(indices, indexSize);
     _vertexBuffer->updateData(_verts, _filledVertexBytes);
-    _indexBuffer->updateData(_indices, _filledIndex);
+    _indexBuffer->updateData(_indices, _filledIndex * sizeof(_indices[0]));
     
     /************** 2: Draw *************/
-    _commandBuffer->beginRenderPass(_currentRenderPass);
+//    _commandBuffer->beginRenderPass(_currentRenderPass);
     auto& pipelineDescriptor = command->getPipelineDescriptor();
     auto renderPipeline = createRenderPipeline(pipelineDescriptor);
     _commandBuffer->setRenderPipeline(renderPipeline);
@@ -764,7 +765,7 @@ void Renderer::drawBatchedCommand(RenderCommand* command)
                                  command->getIndexCount() * sizeof(_indices[0]),
                                  0);
     
-    _commandBuffer->endRenderPass();
+//    _commandBuffer->endRenderPass();
     
     cleanVerticesAndIncices();
 }
@@ -784,7 +785,7 @@ void Renderer::drawCustomCommand(RenderCommand *command)
     _indexBuffer->updateData(indices, indexSize);
     
     /************** 2: Draw *************/
-    _commandBuffer->beginRenderPass(nullptr);
+//    _commandBuffer->beginRenderPass(nullptr);
     auto& pipelineDescriptor = cmd->getPipelineDescriptor();
     auto renderPipeline = createRenderPipeline(pipelineDescriptor);
     _commandBuffer->setRenderPipeline(renderPipeline);
@@ -800,7 +801,7 @@ void Renderer::drawCustomCommand(RenderCommand *command)
                                  backend::IndexFormat::U_SHORT, indexCount,
                                  0);
     
-    _commandBuffer->endRenderPass();
+//    _commandBuffer->endRenderPass();
 }
 
 void Renderer::flush()
