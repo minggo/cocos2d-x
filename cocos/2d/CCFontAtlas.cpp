@@ -105,10 +105,9 @@ void FontAtlas::reinit()
         _currentPageDataSize *= 2;
         
         _currentPageDataSizeRGBA = _currentPageDataSize * 2;
+        _currentPageDataRGBA = new (std::nothrow) unsigned char[_currentPageDataSizeRGBA];
+        memset(_currentPageDataRGBA, 0, _currentPageDataSizeRGBA);
     }
-    
-    _currentPageDataRGBA = new (std::nothrow) unsigned char[_currentPageDataSizeRGBA];
-    memset(_currentPageDataRGBA, 0, _currentPageDataSizeRGBA);
     
     _currentPageData = new (std::nothrow) unsigned char[_currentPageDataSize];
     memset(_currentPageData, 0, _currentPageDataSize);
@@ -398,17 +397,7 @@ bool FontAtlas::prepareLetterDefinitions(const std::u32string& utf32Text)
                 _currentPageOrigX = 0;
                 if (_currentPageOrigY + _lineHeight + _letterPadding + _letterEdgeExtend >= CacheTextureHeight)
                 {
-                    unsigned char *data = nullptr;
-                    if (pixelFormat == Texture2D::PixelFormat::AI88)
-                    {
-                        data = _currentPageData + CacheTextureWidth * (int)startY * 2;
-                    }
-                    else
-                    {
-                        data = _currentPageData + CacheTextureWidth * (int)startY;
-                    }
-                    _atlasTextures[_currentPage]->updateWithData(data, 0, startY,
-                        CacheTextureWidth, CacheTextureHeight - startY);
+                    updateTextureContent(pixelFormat, startY);
 
                     startY = 0.0f;
 
@@ -475,7 +464,8 @@ bool FontAtlas::prepareLetterDefinitions(const std::u32string& utf32Text)
 void FontAtlas::updateTextureContent(Texture2D::PixelFormat format, int startY)
 {
     unsigned char *data = nullptr;
-    if (format == Texture2D::PixelFormat::AI88)
+    auto outlineSize = _fontFreeType->getOutlineSize();
+    if (outlineSize > 0 && format == Texture2D::PixelFormat::AI88)
     {
         int nLen = CacheTextureWidth * (_currentPageOrigY - startY + _currLineHeight);
         data = _currentPageData + CacheTextureWidth * (int)startY * 2;
