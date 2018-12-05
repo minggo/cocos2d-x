@@ -1597,6 +1597,91 @@ void Label::onDraw(const Mat4& transform, bool /*transformUpdated*/)
 //    }
 }
 
+void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer, const Mat4 &transform, uint32_t flags)
+{
+    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+    if (_shadowEnabled) {
+        auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
+        pipelineShadow = pipelineDescriptor;
+        const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
+        Mat4 matrixMVP = matrixP * _shadowTransform;
+        pipelineShadow.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
+    }
+    
+    if(_currentLabelType == LabelType::TTF)
+    {
+        switch (_currLabelEffect) {
+            case LabelEffect::OUTLINE:
+            {
+                int effectType[] = {0, 0, 0, 0};
+                Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
+                
+                //draw shadow
+                if(_shadowEnabled)
+                {
+                    effectType[0] = 2;
+                    auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
+                    Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
+                    pipelineShadow.bindGroup.setUniform("u_effectColor", &shadowColor, sizeof(Vec4));
+                    pipelineShadow.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
+                    _customCommandShadow.init(_globalZOrder, textureAtlas, transform, flags);
+                    renderer->addCommand(&_customCommandShadow);
+                }
+                
+                //draw outline
+                {
+                    effectType[0] = 1;
+                    auto& pipelineOutline = _customCommandOutLine.getPipelineDescriptor();
+                    pipelineOutline = pipelineDescriptor;
+                    pipelineOutline.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+                    pipelineOutline.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
+                    _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, flags);
+                    renderer->addCommand(&_customCommandOutLine);
+                }
+              
+                //draw text
+                {
+                    effectType[0] = 0;
+                    pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+                    pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
+                }
+            }
+                break;
+            case LabelEffect::NORMAL:
+            {
+                if (_shadowEnabled) {
+                    auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
+                    Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
+                    pipelineShadow.bindGroup.setUniform("u_textColor", &shadowColor, sizeof(Vec4));
+                    _customCommandShadow.init(_globalZOrder, textureAtlas, transform, flags);
+                    renderer->addCommand(&_customCommandShadow);
+                }
+            }
+                break;
+            case LabelEffect::GLOW:
+                cocos2d::log("TODO in %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        if (_shadowEnabled) {
+            Color3B oldColor = _realColor;
+            GLubyte oldOPacity = _displayedOpacity;
+            _displayedOpacity = _shadowColor4F.a * (oldOPacity / 255.0f) * 255;
+            setColor(Color3B(_shadowColor4F));
+
+            _customCommandShadow.init(_globalZOrder, textureAtlas, transform, flags);
+            renderer->addCommand(&_customCommandShadow);
+            
+            _displayedOpacity = oldOPacity;
+            setColor(oldColor);
+        }
+    }
+}
+
 void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
     if (_batchNodes.empty() || _lengthOfString <= 0)
@@ -1648,36 +1733,7 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                 auto textureAtlas = batchNode->getTextureAtlas();
                 pipelineDescriptor.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
                 updateBlendState();
-                if(_currentLabelType == LabelType::TTF)
-                {
-                    switch (_currLabelEffect) {
-                        case LabelEffect::OUTLINE:
-                        {
-                            
-                            Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
-                            int effectType[] = {0, 0, 0, 0};
-                            
-                            //draw without outline
-                            {
-                                auto& pipeline = _customCommandOutLine.getPipelineDescriptor();
-                                pipeline = pipelineDescriptor;
-                                pipeline.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
-                                pipeline.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
-                                _customCommandOutLine.init(_globalZOrder, textureAtlas, transform, flags);
-                                renderer->addCommand(&_customCommandOutLine);
-                            }
-                            
-                            //draw outline
-                            effectType[0] = 1;
-                            pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
-                            pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
-                        }
-                            break;
-                            
-                        default:
-                            break;
-                    }
-                }
+                updateEffectUniforms(textureAtlas, renderer, transform, flags);
                 
                 _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
     //                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);

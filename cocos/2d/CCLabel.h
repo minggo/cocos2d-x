@@ -690,6 +690,7 @@ protected:
     
     void setVertexLayout(PipelineDescriptor& vertexLayout);
     void updateBlendState();
+    void updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer, const Mat4 &transform, uint32_t flags);
 
     LabelType _currentLabelType;
     bool _contentDirty;
@@ -744,6 +745,7 @@ protected:
     QuadCommand _quadCommand;
     CustomCommand _customCommand;
     CustomCommand _customCommandOutLine;
+    CustomCommand _customCommandShadow;
     Mat4  _shadowTransform;
     GLint _uniformEffectColor;
     GLint _uniformEffectType; // 0: None, 1: Outline, 2: Shadow; Only used when outline is enabled.
