@@ -3020,6 +3020,7 @@
 		ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNodeGrid.h; sourceTree = "<group>"; };
 		EDA3168A21B7ACB700BFD48D /* positionTextureColor_noMVP.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = positionTextureColor_noMVP.vert; sourceTree = "<group>"; };
 		EDA3168B21B7ACB700BFD48D /* positionTextureColor_noMVP.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = positionTextureColor_noMVP.frag; sourceTree = "<group>"; };
+		EDB6DAE821B8CFE6001A761F /* labelDistanceFieldGlow.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = labelDistanceFieldGlow.frag; sourceTree = "<group>"; };
 		EDDDA78321B0E1C2008926F0 /* label_distanceNormal.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = label_distanceNormal.frag; sourceTree = "<group>"; };
 		EDDDA78421B11B0C008926F0 /* label_outline.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = label_outline.frag; sourceTree = "<group>"; };
 		EDF9D8A521AE9677004374AB /* positionTextureColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = positionTextureColor.frag; sourceTree = "<group>"; };
@@ -4028,6 +4029,7 @@
 		460D4CC821A545420075726E /* shaders */ = {
 			isa = PBXGroup;
 			children = (
+				EDB6DAE821B8CFE6001A761F /* labelDistanceFieldGlow.frag */,
 				EDA3168B21B7ACB700BFD48D /* positionTextureColor_noMVP.frag */,
 				EDA3168A21B7ACB700BFD48D /* positionTextureColor_noMVP.vert */,
 				EDDDA78421B11B0C008926F0 /* label_outline.frag */,

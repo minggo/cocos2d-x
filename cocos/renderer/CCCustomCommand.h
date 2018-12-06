@@ -80,9 +80,12 @@ public:
     virtual size_t getVertexCount() const override { return getQuadCount(); }
     V3F_C4B_T2F_Quad* getQuad() const;
     size_t getQuadCount() const;
+    void updateColor(Color4B color4);
 
 protected:
     TextureAtlas *_textureAtlas = nullptr;
+    V3F_C4B_T2F_Quad* _quads;
+    size_t _defaultCapacity;
 
 };
 

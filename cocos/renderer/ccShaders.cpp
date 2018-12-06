@@ -111,5 +111,6 @@ NS_CC_BEGIN
 #include "renderer/shaders/label_outline.frag"
 #include "renderer/shaders/positionTextureColor_noMVP.vert"
 #include "renderer/shaders/positionTextureColor_noMVP.frag"
+#include "renderer/shaders/labelDistanceFieldGlow.frag"
 
 NS_CC_END

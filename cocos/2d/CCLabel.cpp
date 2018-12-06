@@ -568,55 +568,6 @@ void Label::updateShaderProgram()
     backend::ShaderModule* vert = nullptr;
     backend::ShaderModule* frag = nullptr;
 
-    switch (_currLabelEffect)
-    {
-    case cocos2d::LabelEffect::NORMAL:
-        if (_useDistanceField)
-        {
-//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_NORMAL));
-            vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
-            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_distanceNormal_frag);
-        }
-        else if (_useA8Shader)
-        {
-//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_NORMAL));
-            vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
-            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_normal_frag);
-        }
-        else if (_shadowEnabled)
-        {
-//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, _getTexture(this)));
-            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_vert);
-            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_frag);
-        }
-        else
-        {
-//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
-            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_noMVP_vert);
-            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_noMVP_frag);
-        }
-
-        break;
-    case cocos2d::LabelEffect::OUTLINE:
-        {
-            vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
-            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, labelOutline_frag);
-        }
-//        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_OUTLINE));
-//        _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
-//        _uniformEffectType = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectType");
-        break;
-    case cocos2d::LabelEffect::GLOW:
-        if (_useDistanceField)
-        {
-            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_GLOW));
-            _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
-        }
-        break;
-    default:
-        return;
-    }
-    
     //TODO coulsonwang
     if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
     {
@@ -629,6 +580,59 @@ void Label::updateShaderProgram()
         {
             vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_noMVP_vert);
             frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_noMVP_frag);
+        }
+    }
+    else
+    {
+        switch (_currLabelEffect)
+        {
+        case cocos2d::LabelEffect::NORMAL:
+            if (_useDistanceField)
+            {
+    //            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_NORMAL));
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_distanceNormal_frag);
+            }
+            else if (_useA8Shader)
+            {
+    //            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_NORMAL));
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_normal_frag);
+            }
+            else if (_shadowEnabled)
+            {
+    //            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, _getTexture(this)));
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_frag);
+            }
+            else
+            {
+    //            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_noMVP_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_noMVP_frag);
+            }
+
+            break;
+        case cocos2d::LabelEffect::OUTLINE:
+            {
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, labelOutline_frag);
+            }
+    //        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_OUTLINE));
+    //        _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
+    //        _uniformEffectType = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectType");
+            break;
+        case cocos2d::LabelEffect::GLOW:
+            if (_useDistanceField)
+            {
+//                setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_LABEL_DISTANCEFIELD_GLOW));
+//                _uniformEffectColor = glGetUniformLocation(getGLProgram()->getProgram(), "u_effectColor");
+                vert = device->createShaderModule(backend::ShaderStage::VERTEX, label_common_vert);
+                frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, labelDistanceFieldGlow_frag);
+            }
+            break;
+        default:
+            return;
         }
     }
     
@@ -1683,7 +1687,21 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
             }
                 break;
             case LabelEffect::GLOW:
-                cocos2d::log("TODO in %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+            {
+                //draw shadow
+                if(_shadowEnabled)
+                {
+                    auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
+                    Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
+                    pipelineShadow.bindGroup.setUniform("u_textColor", &shadowColor, sizeof(Vec4));
+                    pipelineShadow.bindGroup.setUniform("u_effectColor", &shadowColor, sizeof(Vec4));
+                    _customCommandShadow.init(_globalZOrder, textureAtlas, transform, flags);
+                    renderer->addCommand(&_customCommandShadow);
+                }
+                
+                Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
+                pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
+            }
                 break;
             default:
                 break;
@@ -1698,6 +1716,7 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
             setColor(Color3B(_shadowColor4F));
 
             _customCommandShadow.init(_globalZOrder, textureAtlas, transform, flags);
+            _customCommandShadow.updateColor(Color4B(Color3B(_shadowColor4F), _displayedOpacity));
             renderer->addCommand(&_customCommandShadow);
             
             _displayedOpacity = oldOPacity;
