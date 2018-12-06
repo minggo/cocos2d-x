@@ -584,9 +584,17 @@ void Label::updateShaderProgram()
             frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, label_normal_frag);
         }
         else if (_shadowEnabled)
-            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, _getTexture(this)));
+        {
+//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR, _getTexture(this)));
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_frag);
+        }
         else
-            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+        {
+//            setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_noMVP_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_noMVP_frag);
+        }
 
         break;
     case cocos2d::LabelEffect::OUTLINE:
@@ -607,6 +615,21 @@ void Label::updateShaderProgram()
         break;
     default:
         return;
+    }
+    
+    //TODO coulsonwang
+    if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
+    {
+        if (_shadowEnabled)
+        {
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_frag);
+        }
+        else
+        {
+            vert = device->createShaderModule(backend::ShaderStage::VERTEX, positionTextureColor_noMVP_vert);
+            frag = device->createShaderModule(backend::ShaderStage::FRAGMENT, positionTextureColor_noMVP_frag);
+        }
     }
     
     pipelineDescriptor.setVertexShader(vert);
@@ -1181,7 +1204,8 @@ void Label::enableShadow(const Color4B& shadowColor /* = Color4B::BLACK */,
 
     if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
     {
-        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(_shadowEnabled ? GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR : GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+//        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(_shadowEnabled ? GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR : GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
+        updateShaderProgram();
     }
 }
 
@@ -1680,6 +1704,9 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
             setColor(oldColor);
         }
     }
+
+    _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
+    renderer->addCommand(&_customCommand);
 }
 
 void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
@@ -1704,6 +1731,9 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     if (_insideBounds)
 #endif
     {
+        updateBlendState();
+        auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+        cocos2d::Mat4 matrixProjection = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         if (!_shadowEnabled && (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP))
         {
             for (auto&& it : _letters)
@@ -1713,32 +1743,25 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             // ETC1 ALPHA supports for BMFONT & CHARMAP
             auto textureAtlas = _batchNodes.at(0)->getTextureAtlas();
             auto texture = textureAtlas->getTexture();
-            _quadCommand.init(_globalZOrder, texture, getGLProgramState(), 
-                _blendFunc, textureAtlas->getQuads(), textureAtlas->getTotalQuads(), transform, flags);
+            auto& pipelineQuad = _quadCommand.getPipelineDescriptor();
+            pipelineQuad = pipelineDescriptor;
+            pipelineQuad.bindGroup.setUniform("a_projection", matrixProjection.m, sizeof(matrixProjection.m));
+            pipelineQuad.bindGroup.setTexture("u_texture", 0, texture->getBackendTexture());
+            _quadCommand.init(_globalZOrder, texture, textureAtlas->getQuads(), textureAtlas->getTotalQuads(), transform, flags);
             renderer->addCommand(&_quadCommand);
         }
         else
         {
             for (auto&& batchNode : _batchNodes)
             {
-                auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-                
-                cocos2d::Mat4 matrixProjection = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
                 cocos2d::Mat4 matrixMVP = matrixProjection * transform;
-                
-//                pipelineDescriptor.
                 pipelineDescriptor.bindGroup.setUniform("a_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
                 Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
                 pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
                 auto textureAtlas = batchNode->getTextureAtlas();
                 pipelineDescriptor.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
-                updateBlendState();
+//                updateBlendState();
                 updateEffectUniforms(textureAtlas, renderer, transform, flags);
-                
-                _customCommand.init(_globalZOrder, textureAtlas, transform, flags);
-    //                _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
-                renderer->addCommand(&_customCommand);
-                
             }
         }
     }

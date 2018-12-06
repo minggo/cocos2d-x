@@ -83,6 +83,7 @@ public:
 
 protected:
     TextureAtlas *_textureAtlas = nullptr;
+
 };
 
 NS_CC_END

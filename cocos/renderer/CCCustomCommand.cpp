@@ -42,7 +42,12 @@ void CustomCommand::init(float depth, const cocos2d::Mat4 &modelViewTransform, u
 void CustomCommand::init(float depth, TextureAtlas *textureAtlas, const cocos2d::Mat4 &modelViewTransform, uint32_t flags)
 {
     RenderCommand::init(depth, modelViewTransform, flags);
-    _textureAtlas = textureAtlas;
+//    _textureAtlas = textureAtlas;
+    _textureAtlas = TextureAtlas::createWithTexture(textureAtlas->getTexture(), textureAtlas->getCapacity());
+    _textureAtlas->removeAllQuads();
+    for (int index = 0; index < textureAtlas->getTotalQuads(); index++) {
+        _textureAtlas->updateQuad(&textureAtlas->getQuads()[index], index);
+    }
 }
 
 void CustomCommand::init(float globalOrder)
@@ -52,7 +57,7 @@ void CustomCommand::init(float globalOrder)
 
 CustomCommand::~CustomCommand()
 {
-
+    CC_SAFE_RELEASE(_textureAtlas);
 }
 
 void CustomCommand::execute()

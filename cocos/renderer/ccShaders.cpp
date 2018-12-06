@@ -109,5 +109,7 @@ NS_CC_BEGIN
 #include "renderer/shaders/label_normal.frag"
 #include "renderer/shaders/label_distanceNormal.frag"
 #include "renderer/shaders/label_outline.frag"
+#include "renderer/shaders/positionTextureColor_noMVP.vert"
+#include "renderer/shaders/positionTextureColor_noMVP.frag"
 
 NS_CC_END
