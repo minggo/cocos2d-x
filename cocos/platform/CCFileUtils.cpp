@@ -624,6 +624,7 @@ void FileUtils::purgeCachedEntries()
 {
     DECLARE_GUARD;
     _fullPathCache.clear();
+    _fullPathCacheDir.clear();
 }
 
 std::string FileUtils::getStringFromFile(const std::string& filename) const
@@ -921,6 +922,7 @@ void FileUtils::setSearchResolutionsOrder(const std::vector<std::string>& search
     bool existDefault = false;
 
     _fullPathCache.clear();
+    _fullPathCacheDir.clear();
     _searchResolutionsOrderArray.clear();
     for(const auto& iter : searchResolutionsOrder)
     {
@@ -996,6 +998,7 @@ void FileUtils::setDefaultResourceRootPath(const std::string& path)
     if (_defaultResRootPath != path)
     {
         _fullPathCache.clear();
+        _fullPathCacheDir.clear();
         _defaultResRootPath = path;
         if (!_defaultResRootPath.empty() && _defaultResRootPath[_defaultResRootPath.length()-1] != '/')
         {
@@ -1014,6 +1017,7 @@ void FileUtils::setSearchPaths(const std::vector<std::string>& searchPaths)
     _originalSearchPaths = searchPaths;
 
     _fullPathCache.clear();
+    _fullPathCacheDir.clear();
     _searchPathArray.clear();
 
     for (const auto& path : _originalSearchPaths)
@@ -1070,6 +1074,7 @@ void FileUtils::setFilenameLookupDictionary(const ValueMap& filenameLookupDict)
 {
     DECLARE_GUARD;
     _fullPathCache.clear();
+    _fullPathCacheDir.clear();
     _filenameLookupDict = filenameLookupDict;
 }
 
@@ -1101,7 +1106,6 @@ std::string FileUtils::getFullPathForFilenameWithinDirectory(const std::string& 
         ret += '/';
     }
     ret += filename;
-
     // if the file doesn't exist, return an empty string
     if (!isFileExistInternal(ret)) {
         ret = "";
@@ -1150,8 +1154,8 @@ bool FileUtils::isDirectoryExist(const std::string& dirPath) const
     }
 
     // Already Cached ?
-    auto cacheIter = _fullPathCache.find(dirPath);
-    if( cacheIter != _fullPathCache.end() )
+    auto cacheIter = _fullPathCacheDir.find(dirPath);
+    if( cacheIter != _fullPathCacheDir.end() )
     {
         return isDirectoryExistInternal(cacheIter->second);
     }
@@ -1165,7 +1169,7 @@ bool FileUtils::isDirectoryExist(const std::string& dirPath) const
             fullpath = fullPathForDirectory(searchIt + dirPath + resolutionIt);
             if (isDirectoryExistInternal(fullpath))
             {
-                _fullPathCache.emplace(dirPath, fullpath);
+                _fullPathCacheDir.emplace(dirPath, fullpath);
                 return true;
             }
         }
