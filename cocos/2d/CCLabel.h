@@ -107,6 +107,23 @@ class EventListenerCustom;
 class CC_DLL Label : public Node, public LabelProtocol, public BlendProtocol
 {
 public:
+    class V3F_C4B_T2F_Quad_Command:public CustomCommand
+    {
+    public:
+        V3F_C4B_T2F_Quad_Command();
+        ~V3F_C4B_T2F_Quad_Command();
+        void createVerticesAndIndices(size_t elementCount, size_t elementSize);
+        void updateVertices(void* data, size_t dataSize);
+        void updateIndices(void* data, size_t dataSize);
+        void setVertexAndIndexBuffer(CustomCommand* cmd);
+    private:
+        bool _initialized = false;
+        size_t _vertexBufferSize = 0;
+        size_t _indicesBufferSize = 0;
+//        V3F_C4B_T2F_Quad* _quads = nullptr;
+//        unsigned short* _indices = nullptr;
+    };
+    
     enum class Overflow
     {
         //In NONE mode, the dimensions is (0,0) and the content size will change dynamically to fit the label.
@@ -690,6 +707,7 @@ protected:
     
     void setVertexLayout(PipelineDescriptor& vertexLayout);
     void updateBlendState();
+    void updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer, const Mat4 &transform, uint32_t flags);
 
     LabelType _currentLabelType;
     bool _contentDirty;
@@ -742,7 +760,10 @@ protected:
     Color4F _textColorF;
 
     QuadCommand _quadCommand;
-    CustomCommand _customCommand;
+    V3F_C4B_T2F_Quad_Command _customCommand;
+    V3F_C4B_T2F_Quad_Command _customCommandOutLine;
+    V3F_C4B_T2F_Quad_Command _customCommandShadow;
+    
     Mat4  _shadowTransform;
     GLint _uniformEffectColor;
     GLint _uniformEffectType; // 0: None, 1: Outline, 2: Shadow; Only used when outline is enabled.
