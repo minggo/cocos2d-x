@@ -21,47 +21,41 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "CCPipelineDescriptor.h"
+
+#include "CCShaderCache.h"
+#include "renderer/backend/Device.h"
 
 NS_CC_BEGIN
 
-void PipelineDescriptor::setVertexShader(backend::ShaderModule* shaderModule)
+std::unordered_map<std::size_t, backend::ShaderModule*> ShaderCache::_cachedVertexShaders;
+std::unordered_map<std::size_t, backend::ShaderModule*> ShaderCache::_cachedFragmentShaders;
+
+backend::ShaderModule* ShaderCache::newVertexShaderModule(const std::string& shaderSource)
 {
-    if (vertexShader == shaderModule)
-        return;
+    std::size_t key = std::hash<std::string>{}(shaderSource);
+    auto iter = ShaderCache::_cachedVertexShaders.find(key);
+    if (ShaderCache::_cachedVertexShaders.end() != iter)
+        return iter->second;
     
-    CC_SAFE_RELEASE(vertexShader);
-    vertexShader = shaderModule;
-    CC_SAFE_RETAIN(vertexShader);
-}
-
-void PipelineDescriptor::setFragmentShader(backend::ShaderModule* shaderModule)
-{
-    if (fragmentShader == shaderModule)
-        return;
+    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::VERTEX, shaderSource);
+    CC_SAFE_RETAIN(shader);
+    ShaderCache::_cachedVertexShaders.emplace(key, shader);
     
-    CC_SAFE_RELEASE(fragmentShader);
-    fragmentShader = shaderModule;
-    CC_SAFE_RETAIN(fragmentShader);
+    return shader;
 }
 
-PipelineDescriptor::PipelineDescriptor(const PipelineDescriptor& descriptor)
+backend::ShaderModule* ShaderCache::newFragmentShaderModule(const std::string& shaderSource)
 {
-    *this = descriptor;
-}
-
-PipelineDescriptor& PipelineDescriptor::operator=(const PipelineDescriptor& descriptor)
-{
-    if (this != &descriptor) {
-        setVertexShader(descriptor.vertexShader);
-        setFragmentShader(descriptor.fragmentShader);
-        depthStencilDescriptor = descriptor.depthStencilDescriptor;
-        blendDescriptor = descriptor.blendDescriptor;
-        renderPassDescriptor = descriptor.renderPassDescriptor;
-        vertexLayout = descriptor.vertexLayout;
-        bindGroup = descriptor.bindGroup;
-    }
-    return *this;
+    std::size_t key = std::hash<std::string>{}(shaderSource);
+    auto iter = ShaderCache::_cachedFragmentShaders.find(key);
+    if (ShaderCache::_cachedFragmentShaders.end() != iter)
+        return iter->second;
+    
+    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::FRAGMENT, shaderSource);
+    CC_SAFE_RETAIN(shader);
+    ShaderCache::_cachedFragmentShaders.emplace(key, shader);
+    
+    return shader;
 }
 
 NS_CC_END
