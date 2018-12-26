@@ -154,7 +154,6 @@ void DrawNode::ensureCapacity(int count)
         _buffer = (V2F_C4B_T2F*)realloc(_buffer, _bufferCapacity*sizeof(V2F_C4B_T2F));
         
         _customCommand.createVertexBuffer(sizeof(V2F_C4B_T2F), _bufferCapacity);
-        _customCommand.updateVertexBuffer(_buffer, _bufferCapacity*sizeof(V2F_C4B_T2F));
     }
 }
 
@@ -168,7 +167,6 @@ void DrawNode::ensureCapacityGLPoint(int count)
         _bufferGLPoint = (V2F_C4B_T2F*)realloc(_bufferGLPoint, _bufferCapacityGLPoint*sizeof(V2F_C4B_T2F));
         
         _customCommandGLPoint.createVertexBuffer(sizeof(V2F_C4B_T2F), _bufferCapacityGLPoint);
-        _customCommandGLPoint.updateVertexBuffer(_bufferGLPoint, _bufferCapacityGLPoint*sizeof(V2F_C4B_T2F));
     }
 }
 
@@ -182,7 +180,6 @@ void DrawNode::ensureCapacityGLLine(int count)
         _bufferGLLine = (V2F_C4B_T2F*)realloc(_bufferGLLine, _bufferCapacityGLLine*sizeof(V2F_C4B_T2F));
         
         _customCommandGLLine.createVertexBuffer(sizeof(V2F_C4B_T2F), _bufferCapacityGLLine);
-        _customCommandGLLine.updateVertexBuffer(_bufferGLLine, _bufferCapacityGLLine*sizeof(V2F_C4B_T2F));
     }
 }
 
@@ -798,6 +795,9 @@ void DrawNode::clear()
     _bufferCountGLPoint = 0;
     _dirtyGLPoint = true;
     _lineWidth = _defaultLineWidth;
+    _customCommand.updateVertexBuffer(_buffer, 0);
+    _customCommandGLLine.updateVertexBuffer(_bufferGLLine, 0);
+    _customCommandGLPoint.updateVertexBuffer(_bufferGLPoint, 0);
 }
 
 const BlendFunc& DrawNode::getBlendFunc() const
