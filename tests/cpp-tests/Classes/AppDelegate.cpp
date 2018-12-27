@@ -66,7 +66,13 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::create("Cpp Tests");
+        glview = GLViewImpl::create("Cpp Tests");   
+        
+        if (GLEW_OK != glewInit()) {
+            CCLOGERROR("failed to invoke glewInit()");
+            return false;
+        }
+
         director->setOpenGLView(glview);
     }
 

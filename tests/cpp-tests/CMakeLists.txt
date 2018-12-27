@@ -347,16 +347,16 @@ if(ANDROID OR IOS)
          )
 endif()
 
-if(WIN32 OR MACOSX OR LINUX)
-    list(APPEND GAME_HEADER
-         Classes/WindowTest/WindowTest.h
-         Classes/BugsTest/Bug-14327.h
-         )
-    list(APPEND GAME_SOURCE
-         Classes/WindowTest/WindowTest.cpp
-         Classes/BugsTest/Bug-14327.cpp
-         )
-endif()
+# if(WIN32 OR MACOSX OR LINUX)
+#     list(APPEND GAME_HEADER
+#          Classes/WindowTest/WindowTest.h
+#          Classes/BugsTest/Bug-14327.h
+#          )
+#     list(APPEND GAME_SOURCE
+#          Classes/WindowTest/WindowTest.cpp
+#          Classes/BugsTest/Bug-14327.cpp
+#          )
+# endif()
 
 if(USE_BOX2D)
     list(APPEND GAME_HEADER

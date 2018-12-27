@@ -347,7 +347,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
     glfwSetCharCallback(_mainWindow, GLFWEventHandler::onGLFWCharCallback);
     glfwSetKeyCallback(_mainWindow, GLFWEventHandler::onGLFWKeyCallback);
     glfwSetWindowPosCallback(_mainWindow, GLFWEventHandler::onGLFWWindowPosCallback);
-    glfwSetFramebufferSizeCallback(_mainWindow, GLFWEventHandler::onGLFWframebuffersize);
+    //glfwSetFramebufferSizeCallback(_mainWindow, GLFWEventHandler::onGLFWframebuffersize);
     glfwSetWindowSizeCallback(_mainWindow, GLFWEventHandler::onGLFWWindowSizeFunCallback);
     glfwSetWindowIconifyCallback(_mainWindow, GLFWEventHandler::onGLFWWindowIconifyCallback);
     glfwSetWindowFocusCallback(_mainWindow, GLFWEventHandler::onGLFWWindowFocusCallback);
@@ -369,7 +369,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
         return false;
     }
 
-    initGlew();
+    //initGlew();
 
     // Enable point size by default.
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -864,34 +864,7 @@ void GLViewImpl::onGLFWWindowPosCallback(GLFWwindow* /*window*/, int /*x*/, int 
     Director::getInstance()->setViewport();
 }
 
-void GLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
-{
-    float frameSizeW = _screenSize.width;
-    float frameSizeH = _screenSize.height;
-    float factorX = frameSizeW / w * _retinaFactor * _frameZoomFactor;
-    float factorY = frameSizeH / h * _retinaFactor * _frameZoomFactor;
 
-    if (std::abs(factorX - 0.5f) < FLT_EPSILON && std::abs(factorY - 0.5f) < FLT_EPSILON)
-    {
-        _isInRetinaMonitor = true;
-        if (_isRetinaEnabled)
-        {
-            _retinaFactor = 1;
-        }
-        else
-        {
-            _retinaFactor = 2;
-        }
-
-        glfwSetWindowSize(window, static_cast<int>(frameSizeW * 0.5f * _retinaFactor * _frameZoomFactor) , static_cast<int>(frameSizeH * 0.5f * _retinaFactor * _frameZoomFactor));
-    }
-    else if (std::abs(factorX - 2.0f) < FLT_EPSILON && std::abs(factorY - 2.0f) < FLT_EPSILON)
-    {
-        _isInRetinaMonitor = false;
-        _retinaFactor = 1;
-        glfwSetWindowSize(window, static_cast<int>(frameSizeW * _retinaFactor * _frameZoomFactor), static_cast<int>(frameSizeH * _retinaFactor * _frameZoomFactor));
-    }
-}
 
 void GLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow* /*window*/, int width, int height)
 {
@@ -997,46 +970,6 @@ static bool glew_dynamic_binding()
 }
 #endif
 
-// helper
-bool GLViewImpl::initGlew()
-{
-//#if (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-//    GLenum GlewInitResult = glewInit();
-//    if (GLEW_OK != GlewInitResult)
-//    {
-//        MessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");
-//        return false;
-//    }
-//
-//    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
-//    {
-//        log("Ready for GLSL");
-//    }
-//    else
-//    {
-//        log("Not totally ready :(");
-//    }
-//
-//    if (glewIsSupported("GL_VERSION_2_0"))
-//    {
-//        log("Ready for OpenGL 2.0");
-//    }
-//    else
-//    {
-//        log("OpenGL 2.0 not supported");
-//    }
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-    if(glew_dynamic_binding() == false)
-    {
-        MessageBox("No OpenGL framebuffer support. Please upgrade the driver of your video card.", "OpenGL error");
-        return false;
-    }
-#endif
-
-//#endif // (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
-
-    return true;
-}
 
 NS_CC_END // end of namespace cocos2d;
