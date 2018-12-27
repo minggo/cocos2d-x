@@ -149,6 +149,7 @@ protected:
     void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void onGLFWCharCallback(GLFWwindow* window, unsigned int character);
     void onGLFWWindowPosCallback(GLFWwindow* windows, int x, int y);
+    void onGLFWframebuffersize(GLFWwindow* window, int w, int h);
     void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height);
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
     void onGLFWWindowFocusCallback(GLFWwindow* window, int focused);
@@ -233,6 +234,13 @@ public:
             _view->onGLFWWindowSizeFunCallback(window, width, height);
     }
 
+
+    static void onGLFWframebuffersize(GLFWwindow *window, int width, int height)
+    {
+        if (_view)
+            _view->onGLFWframebuffersize(window, width, height);
+    }
+
     static void setGLViewImpl(GLViewImpl* view)
     {
         _view = view;
@@ -253,6 +261,7 @@ public:
             _view->onGLFWWindowFocusCallback(window, focused);
         }
     }
+
 
 private:
     static GLViewImpl* _view;

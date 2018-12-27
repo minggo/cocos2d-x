@@ -347,8 +347,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
     glfwSetCharCallback(_mainWindow, GLFWEventHandler::onGLFWCharCallback);
     glfwSetKeyCallback(_mainWindow, GLFWEventHandler::onGLFWKeyCallback);
     glfwSetWindowPosCallback(_mainWindow, GLFWEventHandler::onGLFWWindowPosCallback);
-    //TODO new-renderer: method onGLFWframebuffersize removal in header file
-    //glfwSetFramebufferSizeCallback(_mainWindow, GLFWEventHandler::onGLFWframebuffersize);
+    glfwSetFramebufferSizeCallback(_mainWindow, GLFWEventHandler::onGLFWframebuffersize);
     glfwSetWindowSizeCallback(_mainWindow, GLFWEventHandler::onGLFWWindowSizeFunCallback);
     glfwSetWindowIconifyCallback(_mainWindow, GLFWEventHandler::onGLFWWindowIconifyCallback);
     glfwSetWindowFocusCallback(_mainWindow, GLFWEventHandler::onGLFWWindowFocusCallback);
@@ -865,6 +864,34 @@ void GLViewImpl::onGLFWWindowPosCallback(GLFWwindow* /*window*/, int /*x*/, int 
     Director::getInstance()->setViewport();
 }
 
+void GLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
+{
+    float frameSizeW = _screenSize.width;
+    float frameSizeH = _screenSize.height;
+    float factorX = frameSizeW / w * _retinaFactor * _frameZoomFactor;
+    float factorY = frameSizeH / h * _retinaFactor * _frameZoomFactor;
+
+    if (std::abs(factorX - 0.5f) < FLT_EPSILON && std::abs(factorY - 0.5f) < FLT_EPSILON)
+    {
+        _isInRetinaMonitor = true;
+        if (_isRetinaEnabled)
+        {
+            _retinaFactor = 1;
+        }
+        else
+        {
+            _retinaFactor = 2;
+        }
+
+        glfwSetWindowSize(window, static_cast<int>(frameSizeW * 0.5f * _retinaFactor * _frameZoomFactor), static_cast<int>(frameSizeH * 0.5f * _retinaFactor * _frameZoomFactor));
+    }
+    else if (std::abs(factorX - 2.0f) < FLT_EPSILON && std::abs(factorY - 2.0f) < FLT_EPSILON)
+    {
+        _isInRetinaMonitor = false;
+        _retinaFactor = 1;
+        glfwSetWindowSize(window, static_cast<int>(frameSizeW * _retinaFactor * _frameZoomFactor), static_cast<int>(frameSizeH * _retinaFactor * _frameZoomFactor));
+    }
+}
 
 void GLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow* /*window*/, int width, int height)
 {
