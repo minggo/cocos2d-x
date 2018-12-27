@@ -434,6 +434,11 @@ void Sprite::setTexture(Texture2D *texture)
     }
 }
 
+Texture2D* Sprite::getTexture() const
+{
+    return _texture;
+}
+
 void Sprite::setTextureRect(const Rect& rect)
 {
     setTextureRect(rect, false, rect.size);

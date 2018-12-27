@@ -1301,6 +1301,11 @@ void ParticleSystem::setTotalParticles(int var)
     _totalParticles = var;
 }
 
+const BlendFunc& ParticleSystem::getBlendFunc() const
+{
+    return _blendFunc;
+}
+
 void ParticleSystem::setBlendFunc(const BlendFunc &blendFunc)
 {
     if( _blendFunc.src != blendFunc.src || _blendFunc.dst != blendFunc.dst ) {

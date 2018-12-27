@@ -763,7 +763,7 @@ public:
     * @js NA
     * @lua NA
     */
-    virtual const BlendFunc &getBlendFunc() const override { return _blendFunc;}
+    virtual const BlendFunc &getBlendFunc() const override;
 
     const std::string& getResourceFile() const { return _plistFile; }
 

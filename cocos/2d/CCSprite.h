@@ -240,7 +240,7 @@ public:
     virtual void setTexture(Texture2D *texture) override;
 
     /** Returns the Texture2D object used by the sprite. */
-    virtual Texture2D* getTexture() const override { return _texture;}
+    virtual Texture2D* getTexture() const override;
 
     /**
      * Updates the texture rect of the Sprite in points.
