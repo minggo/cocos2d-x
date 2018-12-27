@@ -1,5 +1,5 @@
 #include "TextureGL.h"
-#include "../../../base/ccMacros.h"
+#include "base/ccMacros.h"
 
 CC_BACKEND_BEGIN
 

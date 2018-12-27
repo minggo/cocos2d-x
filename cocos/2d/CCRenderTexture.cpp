@@ -95,6 +95,7 @@ void RenderTexture::listenToForeground(EventCustom* /*event*/)
 {
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     const Size& s = _texture2D->getContentSizeInPixels();
+    //TODO new-renderer: field _depthAndStencilFormat removal
 //    if (_depthAndStencilFormat != 0)
 //    {
 //        setupDepthAndStencil(s.width, s.height);
