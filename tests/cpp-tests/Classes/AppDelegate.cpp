@@ -67,12 +67,6 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto glview = director->getOpenGLView();
     if(!glview) {
         glview = GLViewImpl::create("Cpp Tests");   
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-        if (GLEW_OK != glewInit()) {
-            CCLOGERROR("failed to invoke glewInit()");
-            return false;
-        }
-#endif
         director->setOpenGLView(glview);
     }
 

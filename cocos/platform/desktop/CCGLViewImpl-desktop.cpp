@@ -369,7 +369,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
         return false;
     }
 
-    //initGlew();
+    initGlew();
 
     // Enable point size by default.
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
@@ -865,7 +865,6 @@ void GLViewImpl::onGLFWWindowPosCallback(GLFWwindow* /*window*/, int /*x*/, int 
 }
 
 
-
 void GLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow* /*window*/, int width, int height)
 {
     if (width && height && _resolutionPolicy != ResolutionPolicy::UNKNOWN)
@@ -970,6 +969,47 @@ static bool glew_dynamic_binding()
 }
 #endif
 
+// helper
+bool GLViewImpl::initGlew()
+{
 
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+//#if (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
+    GLenum GlewInitResult = glewInit();
+    if (GLEW_OK != GlewInitResult)
+    {
+        MessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");
+        return false;
+    }
+
+    if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
+    {
+        log("Ready for GLSL");
+    }
+    else
+    {
+        log("Not totally ready :(");
+    }
+
+    if (glewIsSupported("GL_VERSION_2_0"))
+    {
+        log("Ready for OpenGL 2.0");
+    }
+    else
+    {
+        log("OpenGL 2.0 not supported");
+    }
+
+
+    if(glew_dynamic_binding() == false)
+    {
+        MessageBox("No OpenGL framebuffer support. Please upgrade the driver of your video card.", "OpenGL error");
+        return false;
+    }
+#endif
+
+    return true;
+}
 
 NS_CC_END // end of namespace cocos2d;
