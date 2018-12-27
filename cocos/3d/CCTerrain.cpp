@@ -1554,6 +1554,7 @@ void Terrain::QuadTree::resetNeedDraw(bool value)
 
 void Terrain::QuadTree::cullByCamera(const Camera * camera, const Mat4 & worldTransform)
 {
+    //TODO new-renderer: interface  isVisibleInFrustum removal
 //    if(!camera->isVisibleInFrustum(&_worldSpaceAABB))
 //    {
         this->resetNeedDraw(false);

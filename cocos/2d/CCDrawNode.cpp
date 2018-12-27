@@ -109,6 +109,8 @@ DrawNode::DrawNode(GLfloat lineWidth)
 {
     _blendFunc = BlendFunc::ALPHA_PREMULTIPLIED;
 #if CC_ENABLE_CACHE_TEXTURE_DATA
+    //TODO new-renderer: interface setupBuffer removal
+
     // Need to listen the event only when not use batchnode, because it will use VBO
 //    auto listener = EventListenerCustom::create(EVENT_RENDERER_RECREATED, [this](EventCustom* event){
 //        /** listen the event that renderer was recreated on Android/WP8 */

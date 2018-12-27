@@ -236,8 +236,9 @@ void TextureGL::toGLTypes()
 //            _internalFormat = GL_DEPTH_COMPONENT;
 //            _type = GL_UNSIGNED_INT;
         case TextureFormat::D24S8:
-           // _format = GL_DEPTH_STENCIL_OES;
-           // _internalFormat = GL_DEPTH_STENCIL_OES;
+            //TODO new-renderer: OpenGL / OpenGLES difference, enums are not defined
+            //_format = GL_DEPTH_STENCIL_OES;
+            //_internalFormat = GL_DEPTH_STENCIL_OES;
             //_type = GL_UNSIGNED_INT_24_8_OES;
             break;
         default:
