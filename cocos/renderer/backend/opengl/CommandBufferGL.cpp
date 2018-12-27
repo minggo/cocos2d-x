@@ -504,4 +504,24 @@ void CommandBufferGL::setLineWidth(float lineWidth)
         glLineWidth(lineWidth);
 }
 
+bool CommandBufferGL::isScissorEnable()
+{
+    return (GL_FALSE == glIsEnabled(GL_SCISSOR_TEST)) ? false : true;
+}
+
+void CommandBufferGL::getScissorRect(float rect[4])
+{
+    glGetFloatv(GL_SCISSOR_BOX, rect);
+}
+
+void CommandBufferGL::setScissorEnable(bool enabled)
+{
+    (enabled) ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
+}
+
+void CommandBufferGL::setScissorRect(float x, float y, float width, float height)
+{
+    glScissor(x, y, width, height);
+}
+
 CC_BACKEND_END

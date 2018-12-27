@@ -161,6 +161,7 @@ void CommandBufferMTL::beginFrame()
 void CommandBufferMTL::beginRenderPass(const RenderPassDescriptor& descriptor)
 {
     auto mtlDescriptor = toMTLRenderPassDescriptor(descriptor);
+    _renderTargetWidth = mtlDescriptor.colorAttachments[0].texture.width;
     _renderTargetHeight = (unsigned int)mtlDescriptor.colorAttachments[0].texture.height;
     _mtlRenderEncoder = [_mtlCommandBuffer renderCommandEncoderWithDescriptor:mtlDescriptor];
 
@@ -178,7 +179,7 @@ void CommandBufferMTL::setRenderPipeline(RenderPipeline* renderPipeline)
 
 void CommandBufferMTL::setViewport(int x, int y, unsigned int w, unsigned int h)
 {
-    MTLViewport viewport;
+//    MTLViewport viewport;
     viewport.originX = x;
     viewport.originY = (int)(_renderTargetHeight - y - h);
     viewport.width = w;
@@ -363,5 +364,56 @@ uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::vector<
 void CommandBufferMTL::setLineWidth(float lineWidth)
 {
 }
+
+bool CommandBufferMTL::isScissorEnable()
+{
+    return _isScissorEnabled;
+}
+
+void CommandBufferMTL::setScissorEnable(bool enabled)
+{
+    _isScissorEnabled = enabled;
+}
+
+void CommandBufferMTL::getScissorRect(float rect[4])
+{
+    if(_isScissorEnabled)
+    {
+        rect[0] = _mtlScissorRect.x;
+        rect[1] = _mtlScissorRect.y;
+        rect[2] = _mtlScissorRect.width;
+        rect[3] = _mtlScissorRect.height;
+    }
+    else
+    {
+        //defatult
+        rect[0] = viewport.originX;
+        rect[1] = viewport.originY;
+        rect[2] = _renderTargetWidth;
+        rect[3] = _renderTargetHeight;
+        
+    }
+}
+
+void CommandBufferMTL::setScissorRect(float x, float y, float width, float height)
+{
+    if(_isScissorEnabled)
+    {
+        _mtlScissorRect.x = x;
+        _mtlScissorRect.y = _renderTargetHeight - height - y;
+        _mtlScissorRect.width = width;
+        _mtlScissorRect.height = height;
+        
+        [_mtlRenderEncoder setScissorRect:_mtlScissorRect];
+    }
+    else
+    {
+        _mtlScissorRect.x = _defaultScissorX;
+        _mtlScissorRect.y = _defaultScissorY;
+        _mtlScissorRect.width = _renderTargetWidth;
+        _mtlScissorRect.height = _renderTargetHeight;
+    }
+}
+
 
 CC_BACKEND_END

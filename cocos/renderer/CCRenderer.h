@@ -234,6 +234,11 @@ public:
 
     /** returns whether or not a rectangle is visible or not */
     bool checkVisibility(const Mat4& transform, const Size& size);
+    
+    bool isScissorEnable();
+    void enableScissor(bool enabled);
+    void getScissorRect(float rect[4]);
+    void setScissorRect(float x, float y, float width, float height);
 
 protected:
     void drawBatchedTriangles();
@@ -318,6 +323,9 @@ protected:
     Color4F _clearColor = Color4F::BLACK;
     ClearFlag _clearFlag;
     RenderTargetFlag _renderTargetFlag = RenderTargetFlag::COLOR;
+
+    Rect _scissorRect;
+
     
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     EventListenerCustom* _cacheTextureListener = nullptr;

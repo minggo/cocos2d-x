@@ -808,7 +808,7 @@ void Renderer::beginRenderPass(RenderCommand* cmd)
 {
      _commandBuffer->beginRenderPass(_renderPassDescriptor);
      _commandBuffer->setViewport(_viewport.x, _viewport.y, _viewport.w, _viewport.h);
-
+    _commandBuffer->setScissorRect(_scissorRect.origin.x, _scissorRect.origin.y, _scissorRect.size.width, _scissorRect.size.height);
      setRenderPipeline(cmd->getPipelineDescriptor(), _renderPassDescriptor);
 
     _commandBuffer->setStencilReferenceValue(_stencilRef);
@@ -945,6 +945,29 @@ ClearFlag Renderer::getClearFlag() const
 RenderTargetFlag Renderer::getRenderTargetFlag() const
 {
     return _renderTargetFlag;
+}
+
+void Renderer::enableScissor(bool enabled)
+{
+    _commandBuffer->setScissorEnable(enabled);
+}
+
+bool Renderer::isScissorEnable()
+{
+    return _commandBuffer->isScissorEnable();
+}
+
+void Renderer::getScissorRect(float rect[4])
+{
+    _commandBuffer->getScissorRect(rect);
+}
+
+void Renderer::setScissorRect(float x, float y, float width, float height)
+{
+    _scissorRect.origin.x = x;
+    _scissorRect.origin.y = y;
+    _scissorRect.size.width = width;
+    _scissorRect.size.height = height;
 }
 
 NS_CC_END

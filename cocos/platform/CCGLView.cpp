@@ -254,21 +254,25 @@ void GLView::setViewPortInPoints(float x , float y , float w , float h)
 
 void GLView::setScissorInPoints(float x , float y , float w , float h)
 {
-    glScissor((GLint)(x * _scaleX + _viewPortRect.origin.x),
-              (GLint)(y * _scaleY + _viewPortRect.origin.y),
-              (GLsizei)(w * _scaleX),
-              (GLsizei)(h * _scaleY));
+    auto renderer = Director::getInstance()->getRenderer();
+    renderer->setScissorRect((GLint)(x * _scaleX + _viewPortRect.origin.x),
+                             (GLint)(y * _scaleY + _viewPortRect.origin.y),
+                             (GLsizei)(w * _scaleX),
+                             (GLsizei)(h * _scaleY));
 }
 
 bool GLView::isScissorEnabled()
 {
-    return (GL_FALSE == glIsEnabled(GL_SCISSOR_TEST)) ? false : true;
+    auto renderer = Director::getInstance()->getRenderer();
+    return renderer->isScissorEnable();
 }
 
 Rect GLView::getScissorRect() const
 {
     GLfloat params[4];
-    glGetFloatv(GL_SCISSOR_BOX, params);
+    auto renderer = Director::getInstance()->getRenderer();
+    renderer->getScissorRect(params);
+
     float x = (params[0] - _viewPortRect.origin.x) / _scaleX;
     float y = (params[1] - _viewPortRect.origin.y) / _scaleY;
     float w = params[2] / _scaleX;
