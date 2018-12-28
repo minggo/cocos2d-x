@@ -80,8 +80,8 @@ bool ProgressTimer::initWithSprite(Sprite* sp)
     vertexLayout.setAtrribute("a_color", 2, backend::VertexFormat::UBYTE_R8G8B8A8, colorOffset, true);
     vertexLayout.setLayout(totalSize, backend::VertexStepMode::VERTEX);
     
-    _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE_STRIP);
-    _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
+    _customCommand.setDrawType(CustomCommand::DrawType::ELEMENT);
+    _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
     
     return true;
 }
