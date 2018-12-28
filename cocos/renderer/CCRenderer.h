@@ -142,6 +142,12 @@ Whenever possible prefer to use `TrianglesCommand` objects since the renderer wi
 class CC_DLL Renderer
 {
 public:
+    struct ScissorState
+    {
+        ScissorRect rect;
+        bool isEnabled = false;
+    };
+    
     /**The max number of vertices in a vertex buffer object.*/
     static const int VBO_SIZE = 65536;
     /**The max number of indices in a index buffer.*/
@@ -235,9 +241,9 @@ public:
     /** returns whether or not a rectangle is visible or not */
     bool checkVisibility(const Mat4& transform, const Size& size);
     
-    bool isScissorEnable();
+    bool isScissorEnable() const;
     void enableScissor(bool enabled);
-    void getScissorRect(float rect[4]);
+    ScissorRect getScissorRect() const;
     void setScissorRect(float x, float y, float width, float height);
 
 protected:
@@ -324,8 +330,7 @@ protected:
     ClearFlag _clearFlag;
     RenderTargetFlag _renderTargetFlag = RenderTargetFlag::COLOR;
 
-    Rect _scissorRect;
-
+    ScissorState _scissorState;
     
 #if CC_ENABLE_CACHE_TEXTURE_DATA
     EventListenerCustom* _cacheTextureListener = nullptr;

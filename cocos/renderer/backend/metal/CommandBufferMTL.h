@@ -28,10 +28,7 @@ public:
     
     virtual void setLineWidth(float lineWidth) override;
     
-    virtual bool isScissorEnable() override;
-    virtual void setScissorEnable(bool enabled) override;
-    virtual void getScissorRect(float rect[4]) override;
-    virtual void setScissorRect(float x, float y, float width, float height) override;
+    virtual void setScissorRect(bool isEnabled, float x, float y, float width, float height) override;
     
 private:
     void prepareDrawing() const;
@@ -50,13 +47,6 @@ private:
     RenderPipelineMTL* _renderPipelineMTL = nullptr;
     BindGroup* _bindGroup = nullptr;
     unsigned int _renderTargetHeight = 0;
-    unsigned int _renderTargetWidth = 0;
-    float _defaultScissorX = 0;
-    float _defaultScissorY = 0;
-    float _preScissorRect[4] = {0.0, 0.0, 0.0, 0.0};
-    MTLScissorRect _mtlScissorRect;
-    bool _isScissorEnabled = false;
-    MTLViewport viewport;
 };
 
 CC_BACKEND_END

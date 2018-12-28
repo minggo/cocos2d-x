@@ -668,14 +668,13 @@ void GLViewImpl::setScissorInPoints(float x , float y , float w , float h)
 
 Rect GLViewImpl::getScissorRect() const
 {
-    GLfloat params[4];
     auto renderer = Director::getInstance()->getRenderer();
-    renderer->getScissorRect(params);
+    ScissorRect rect = renderer->getScissorRect();
 
-    float x = (params[0] - _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor) / (_scaleX * _retinaFactor * _frameZoomFactor);
-    float y = (params[1] - _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor) / (_scaleY * _retinaFactor  * _frameZoomFactor);
-    float w = params[2] / (_scaleX * _retinaFactor * _frameZoomFactor);
-    float h = params[3] / (_scaleY * _retinaFactor  * _frameZoomFactor);
+    float x = (rect.x - _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor) / (_scaleX * _retinaFactor * _frameZoomFactor);
+    float y = (rect.y - _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor) / (_scaleY * _retinaFactor  * _frameZoomFactor);
+    float w = rect.width / (_scaleX * _retinaFactor * _frameZoomFactor);
+    float h = rect.height / (_scaleY * _retinaFactor  * _frameZoomFactor);
     return Rect(x, y, w, h);
 }
 

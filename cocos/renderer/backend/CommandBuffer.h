@@ -37,10 +37,7 @@ public:
     void setStencilReferenceValue(unsigned int value);
     void setStencilReferenceValue(unsigned int frontRef, unsigned int backRef);
     
-    virtual bool isScissorEnable() = 0;
-    virtual void setScissorEnable(bool enabled) = 0;
-    virtual void getScissorRect(float rect[4]) = 0;
-    virtual void setScissorRect(float x, float y, float width, float height) = 0;
+    virtual void setScissorRect(bool isEnabled, float x, float y, float width, float height) = 0;
     
 protected:
     virtual ~CommandBuffer() = default;

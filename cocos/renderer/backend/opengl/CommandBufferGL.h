@@ -36,10 +36,7 @@ public:
     
     virtual void setLineWidth(float lineWidth) override;
     
-    virtual bool isScissorEnable() override;
-    virtual void setScissorEnable(bool enabled) override;
-    virtual void getScissorRect(float rect[4]) override;
-    virtual void setScissorRect(float x, float y, float width, float height) override;
+    virtual void setScissorRect(bool isEnabled, float x, float y, float width, float height) override;
     
 private:
     struct Viewport

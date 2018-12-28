@@ -269,14 +269,13 @@ bool GLView::isScissorEnabled()
 
 Rect GLView::getScissorRect() const
 {
-    GLfloat params[4];
     auto renderer = Director::getInstance()->getRenderer();
-    renderer->getScissorRect(params);
+    ScissorRect rect = renderer->getScissorRect();
 
-    float x = (params[0] - _viewPortRect.origin.x) / _scaleX;
-    float y = (params[1] - _viewPortRect.origin.y) / _scaleY;
-    float w = params[2] / _scaleX;
-    float h = params[3] / _scaleY;
+    float x = (rect.x - _viewPortRect.origin.x) / _scaleX;
+    float y = (rect.y- _viewPortRect.origin.y) / _scaleY;
+    float w = rect.width/ _scaleX;
+    float h = rect.height / _scaleY;
     return Rect(x, y, w, h);
 }
 
