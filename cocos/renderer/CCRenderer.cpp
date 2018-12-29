@@ -947,12 +947,12 @@ RenderTargetFlag Renderer::getRenderTargetFlag() const
     return _renderTargetFlag;
 }
 
-void Renderer::enableScissor(bool enabled)
+void Renderer::setScissorTest(bool enabled)
 {
     _scissorState.isEnabled = enabled;
 }
 
-bool Renderer::isScissorEnable() const
+bool Renderer::getScissorTest() const
 {
     return _scissorState.isEnabled;
 }

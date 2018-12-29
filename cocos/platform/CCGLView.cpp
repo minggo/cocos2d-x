@@ -264,7 +264,7 @@ void GLView::setScissorInPoints(float x , float y , float w , float h)
 bool GLView::isScissorEnabled()
 {
     auto renderer = Director::getInstance()->getRenderer();
-    return renderer->isScissorEnable();
+    return renderer->getScissorTest();
 }
 
 Rect GLView::getScissorRect() const

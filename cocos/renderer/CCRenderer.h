@@ -241,8 +241,8 @@ public:
     /** returns whether or not a rectangle is visible or not */
     bool checkVisibility(const Mat4& transform, const Size& size);
     
-    bool isScissorEnable() const;
-    void enableScissor(bool enabled);
+    bool getScissorTest() const;
+    void setScissorTest(bool enabled);
     ScissorRect getScissorRect() const;
     void setScissorRect(float x, float y, float width, float height);
 

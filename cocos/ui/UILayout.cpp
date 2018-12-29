@@ -338,7 +338,7 @@ void Layout::onBeforeVisitScissor()
     if (false == _scissorOldState)
     {
         auto renderer = Director::getInstance()->getRenderer();
-        renderer->enableScissor(true);
+        renderer->setScissorTest(true);
     }
 
     // apply scissor box
@@ -371,7 +371,7 @@ void Layout::onAfterVisitScissor()
     {
         // revert scissor test
         auto renderer = Director::getInstance()->getRenderer();
-        renderer->enableScissor(false);
+        renderer->setScissorTest(false);
     }
 }
     
