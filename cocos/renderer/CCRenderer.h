@@ -142,11 +142,6 @@ Whenever possible prefer to use `TrianglesCommand` objects since the renderer wi
 class CC_DLL Renderer
 {
 public:
-    struct ScissorState
-    {
-        ScissorRect rect;
-        bool isEnabled = false;
-    };
     
     /**The max number of vertices in a vertex buffer object.*/
     static const int VBO_SIZE = 65536;
@@ -243,7 +238,7 @@ public:
     
     bool getScissorTest() const;
     void setScissorTest(bool enabled);
-    ScissorRect getScissorRect() const;
+    const ScissorRect& getScissorRect() const;
     void setScissorRect(float x, float y, float width, float height);
 
 protected:
@@ -330,6 +325,11 @@ protected:
     ClearFlag _clearFlag;
     RenderTargetFlag _renderTargetFlag = RenderTargetFlag::COLOR;
 
+    struct ScissorState
+    {
+        ScissorRect rect;
+        bool isEnabled = false;
+    };
     ScissorState _scissorState;
     
 #if CC_ENABLE_CACHE_TEXTURE_DATA

@@ -957,7 +957,7 @@ bool Renderer::getScissorTest() const
     return _scissorState.isEnabled;
 }
 
-ScissorRect Renderer::getScissorRect() const
+const ScissorRect& Renderer::getScissorRect() const
 {
     return _scissorState.rect;
 }
