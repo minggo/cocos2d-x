@@ -1469,7 +1469,7 @@ void TextureBlend::onEnter()
         cloud = Sprite::create("Images/test_blend.png");
         addChild(cloud, i+1, 200+i);
         cloud->setPosition(Vec2(50+25*i, 160));
-        BlendFunc blendFunc2 = { GL_ONE_MINUS_DST_COLOR, GL_ZERO };
+        BlendFunc blendFunc2 = { backend::BlendFactor::ONE_MINUS_DST_COLOR, backend::BlendFactor::ZERO };
         cloud->setBlendFunc(blendFunc2);
 
         // UPPER sprites are using custom blending function
@@ -1477,7 +1477,7 @@ void TextureBlend::onEnter()
         cloud = Sprite::create("Images/test_blend.png");
         addChild(cloud, i+1, 200+i);
         cloud->setPosition(Vec2(50+25*i, 320-80));
-        BlendFunc blendFunc3 = { GL_SRC_ALPHA, GL_ONE };
+        BlendFunc blendFunc3 = { backend::BlendFactor::SRC_ALPHA, backend::BlendFactor::ONE };
         cloud->setBlendFunc(blendFunc3);  // additive blending
     }
 }

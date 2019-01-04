@@ -38,6 +38,7 @@ THE SOFTWARE.
 #include "renderer/CCRenderer.h"
 #include "renderer/CCTextureCache.h"
 #include "renderer/CCRenderState.h"
+#include "renderer/backend/Types.h"
 
 #include "platform/CCImage.h"
 #include "platform/CCFileUtils.h"
@@ -527,9 +528,9 @@ LanguageType getLanguageTypeByISO2(const char* code)
     return ret;
 }
 
-void setBlending(GLenum sfactor, GLenum dfactor)
+void setBlending(backend::BlendFactor sfactor, backend::BlendFactor dfactor)
 {
-    if (sfactor == GL_ONE && dfactor == GL_ZERO)
+    if (sfactor == backend::BlendFactor::ONE && dfactor == backend::BlendFactor::ZERO)
     {
         glDisable(GL_BLEND);
         RenderState::StateBlock::_defaultState->setBlend(false);
@@ -537,7 +538,7 @@ void setBlending(GLenum sfactor, GLenum dfactor)
     else
     {
         glEnable(GL_BLEND);
-        glBlendFunc(sfactor, dfactor);
+        glBlendFunc(toGLBlendFactor(sfactor), toGLBlendFactor(dfactor));
 
         RenderState::StateBlock::_defaultState->setBlend(true);
         RenderState::StateBlock::_defaultState->setBlendSrc((RenderState::Blend)sfactor);
@@ -576,6 +577,74 @@ backend::BlendFactor toBackendBlendFactor(GLenum factor)
             assert(false);
             break;
     }
+    return backend::BlendFactor::ONE;
+}
+
+GLenum toGLBlendOperation(backend::BlendOperation blendOperation)
+{
+    GLenum ret = GL_FUNC_ADD;
+    switch (blendOperation)
+    {
+    case backend::BlendOperation::ADD:
+        ret = GL_FUNC_ADD;
+        break;
+    case backend::BlendOperation::SUBTRACT:
+        ret = GL_FUNC_SUBTRACT;
+        break;
+    case backend::BlendOperation::RESERVE_SUBTRACT:
+        ret = GL_FUNC_REVERSE_SUBTRACT;
+        break;
+    default:
+        break;
+    }
+    return ret;
+}
+
+GLenum toGLBlendFactor(backend::BlendFactor blendFactor)
+{
+    GLenum ret = GL_ONE;
+    switch (blendFactor)
+    {
+    case backend::BlendFactor::ZERO:
+        ret = GL_ZERO;
+        break;
+    case backend::BlendFactor::ONE:
+        ret = GL_ONE;
+        break;
+    case backend::BlendFactor::SRC_COLOR:
+        ret = GL_SRC_COLOR;
+        break;
+    case backend::BlendFactor::ONE_MINUS_SRC_COLOR:
+        ret = GL_ONE_MINUS_SRC_COLOR;
+        break;
+    case backend::BlendFactor::SRC_ALPHA:
+        ret = GL_SRC_ALPHA;
+        break;
+    case backend::BlendFactor::ONE_MINUS_SRC_ALPHA:
+        ret = GL_ONE_MINUS_SRC_ALPHA;
+        break;
+    case backend::BlendFactor::DST_COLOR:
+        ret = GL_DST_COLOR;
+        break;
+    case backend::BlendFactor::ONE_MINUS_DST_COLOR:
+        ret = GL_ONE_MINUS_DST_COLOR;
+        break;
+    case backend::BlendFactor::DST_ALPHA:
+        ret = GL_DST_ALPHA;
+        break;
+    case backend::BlendFactor::ONE_MINUS_DST_ALPHA:
+        ret = GL_ONE_MINUS_DST_ALPHA;
+        break;
+    case backend::BlendFactor::SRC_ALPHA_SATURATE:
+        ret = GL_SRC_ALPHA_SATURATE;
+        break;
+    case backend::BlendFactor::BLEND_CLOLOR:
+        ret = GL_BLEND_COLOR;
+        break;
+    default:
+        break;
+    }
+    return ret;
 }
 
 const Mat4& getAdjustMatrix()

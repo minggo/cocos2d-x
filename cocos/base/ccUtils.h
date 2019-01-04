@@ -190,10 +190,14 @@ namespace utils
     */
     CC_DLL LanguageType getLanguageTypeByISO2(const char* code);
 
-    CC_DLL void setBlending(GLenum sfactor, GLenum dfactor);
+    CC_DLL void setBlending(backend::BlendFactor sfactor, backend::BlendFactor dfactor);
     
     //TODO: minggo: should remove it.
     CC_DLL backend::BlendFactor toBackendBlendFactor(GLenum factor);
+
+    CC_DLL GLenum toGLBlendOperation(backend::BlendOperation blendOperation);
+
+    CC_DLL GLenum toGLBlendFactor(backend::BlendFactor blendFactor);
 
     // Adjust matrix for metal.
     CC_DLL const Mat4& getAdjustMatrix();

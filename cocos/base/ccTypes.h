@@ -404,15 +404,20 @@ struct CC_DLL V3F_T2F_Quad
     V3F_T2F    tr;
 };
 
+
+namespace backend {
+    enum class BlendFactor: uint32_t;
+}
+
 /** @struct BlendFunc
  * Blend Function used for textures.
  */
 struct CC_DLL BlendFunc
 {
     /** source blend function */
-    GLenum src;
+    backend::BlendFactor src;
     /** destination blend function */
-    GLenum dst;
+    backend::BlendFactor dst;
 
     /** Blending disabled. Uses {GL_ONE, GL_ZERO} */
     static const BlendFunc DISABLE;
