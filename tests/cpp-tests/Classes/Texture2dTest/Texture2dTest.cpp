@@ -1458,14 +1458,14 @@ void TextureBlend::onEnter()
     for( int i=0;i < 15;i++ )
     {
         // BOTTOM sprites have alpha pre-multiplied
-        // they use by default GL_ONE, GL_ONE_MINUS_SRC_ALPHA
+        // they use by default BlendFactor::ONE, BlendFactor::ONE_MINUS_SRC_ALPHA
         auto cloud = Sprite::create("Images/test_blend.png");
         addChild(cloud, i+1, 100+i);
         cloud->setPosition(Vec2(50+25*i, 80));
         cloud->setBlendFunc( BlendFunc::ALPHA_PREMULTIPLIED );
 
         // CENTER sprites have also alpha pre-multiplied
-        // they use by default GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
+        // they use by default BlendFactor::SRC_ALPHA, BlendFactor::ONE_MINUS_SRC_ALPHA
         cloud = Sprite::create("Images/test_blend.png");
         addChild(cloud, i+1, 200+i);
         cloud->setPosition(Vec2(50+25*i, 160));
