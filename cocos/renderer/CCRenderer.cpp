@@ -286,8 +286,9 @@ void Renderer::processRenderCommand(RenderCommand* command)
                 CCASSERT(cmd->getIndexCount()>= 0 && cmd->getIndexCount() < INDEX_VBO_SIZE, "VBO for index is not big enough, please break the data down or use customized render command");
                 drawBatchedTriangles();
 
+                _queuedTotalIndexCount = _queuedTotalVertexCount = 0;
 #ifdef CC_USE_METAL
-                _queuedIndexCount = _queuedVertexCount = _queuedTotalIndexCount = _queuedTotalVertexCount = 0;
+                _queuedIndexCount = _queuedVertexCount = 0;
                 _triangleCommandBufferManager.prepareNextBuffer();
                 _vertexBuffer = _triangleCommandBufferManager.getVertexBuffer();
                 _indexBuffer = _triangleCommandBufferManager.getIndexBuffer();
@@ -299,9 +300,10 @@ void Renderer::processRenderCommand(RenderCommand* command)
 #ifdef CC_USE_METAL
             _queuedIndexCount += cmd->getIndexCount();
             _queuedVertexCount += cmd->getVertexCount();
+#endif
             _queuedTotalVertexCount += cmd->getVertexCount();
             _queuedTotalIndexCount += cmd->getIndexCount();
-#endif
+
         }
             break;
         case RenderCommand::Type::MESH_COMMAND:
@@ -435,9 +437,9 @@ void Renderer::endFrame()
     _triangleCommandBufferManager.putbackAllBuffers();
     _vertexBuffer = _triangleCommandBufferManager.getVertexBuffer();
     _indexBuffer = _triangleCommandBufferManager.getIndexBuffer();
+#endif
     _queuedTotalIndexCount = 0;
     _queuedTotalVertexCount = 0;
-#endif
 }
 
 void Renderer::clean()
@@ -697,8 +699,11 @@ void Renderer::drawBatchedTriangles()
     
     /************** 3: Cleanup *************/
     _queuedTriangleCommands.clear();
+
+#ifdef CC_USE_METAL
     _queuedIndexCount = 0;
     _queuedVertexCount = 0;
+#endif
 }
 
 void Renderer::drawCustomCommand(RenderCommand *command)
@@ -1063,26 +1068,26 @@ void Renderer::TriangleCommandBufferManager::createBuffer()
         return;
     }
 #else
-    auto tmpData = malloc(Renderer::VBO_SIZE * sizeof(_verts[0]));
+    auto tmpData = malloc(Renderer::VBO_SIZE * sizeof(V3F_C4B_T2F));
     if (!tmpData)
         return;
 
-    auto vertexBuffer = device->newBuffer(Renderer::VBO_SIZE * sizeof(_verts[0]), backend::BufferType::VERTEX, backend::BufferUsage::DYNAMIC);
+    auto vertexBuffer = device->newBuffer(Renderer::VBO_SIZE * sizeof(V3F_C4B_T2F), backend::BufferType::VERTEX, backend::BufferUsage::DYNAMIC);
     if (!vertexBuffer)
     {
         free(tmpData);
         return;
     }
-    vertexBuffer->updateData(tmpData, Renderer::VBO_SIZE * sizeof(_verts[0]));
+    vertexBuffer->updateData(tmpData, Renderer::VBO_SIZE * sizeof(V3F_C4B_T2F));
 
-    auto indexBuffer = device->newBuffer(Renderer::INDEX_VBO_SIZE * sizeof(_indices[0]), backend::BufferType::INDEX, backend::BufferUsage::DYNAMIC);
+    auto indexBuffer = device->newBuffer(Renderer::INDEX_VBO_SIZE * sizeof(unsigned short), backend::BufferType::INDEX, backend::BufferUsage::DYNAMIC);
     if (! indexBuffer)
     {
         free(tmpData);
         vertexBuffer->release();
         return;
     }
-    indexBuffer->updateData(tmpData, Renderer::INDEX_VBO_SIZE * sizeof(_indices[0]));
+    indexBuffer->updateData(tmpData, Renderer::INDEX_VBO_SIZE * sizeof(unsigned short));
 
     free(tmpData);
 #endif
