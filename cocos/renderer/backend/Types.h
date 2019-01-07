@@ -178,7 +178,7 @@ enum class CullMode: uint32_t
     FRONT = 0x00000002
 };
 
-namespace BlendConst {
+namespace GLBlendConst {
     constexpr int BLEND_ZERO                    = 0;        //GL_ZERO;
     constexpr int BLEND_ONE                     = 1;        //GL_ONE;
     constexpr int BLEND_SRC_COLOR               = 0x0300;   //GL_SRC_COLOR;

@@ -4,7 +4,7 @@
 
 CC_BACKEND_BEGIN
 
-namespace BlendConst {
+namespace GLBlendConst {
     //TODO: should be removed in the future
     static_assert(BLEND_ZERO == GL_ZERO, "BLEND value error: GL_ZERO");
     static_assert(BLEND_ONE == GL_ONE, "BLEND value error: GL_ONE");

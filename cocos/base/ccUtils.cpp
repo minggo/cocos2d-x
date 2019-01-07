@@ -548,7 +548,7 @@ void setBlending(backend::BlendFactor sfactor, backend::BlendFactor dfactor)
     
 backend::BlendFactor toBackendBlendFactor(int factor)
 {
-    using namespace backend::BlendConst;
+    using namespace backend::GLBlendConst;
     switch (factor) {
         case BLEND_ONE:
             return backend::BlendFactor::ONE;
@@ -583,7 +583,7 @@ backend::BlendFactor toBackendBlendFactor(int factor)
 
 int toGLBlendFactor(backend::BlendFactor blendFactor)
 {
-    using namespace backend::BlendConst;
+    using namespace backend::GLBlendConst;
     int ret = BLEND_ONE;
     switch (blendFactor)
     {
