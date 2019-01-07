@@ -141,11 +141,11 @@ namespace cocostudio
                     
                     if (name == "Src")
                     {
-                        blendFunc.src = utils::toBackendBlendFactor(static_cast<GLenum>(atoi(value.c_str())));
+                        blendFunc.src = utils::toBackendBlendFactor(atoi(value.c_str()));
                     }
                     else if (name == "Dst")
                     {
-                        blendFunc.dst = utils::toBackendBlendFactor(static_cast<GLenum>(atoi(value.c_str())));
+                        blendFunc.dst = utils::toBackendBlendFactor(atoi(value.c_str()));
                     }
                     
                     attribute = attribute->Next();
@@ -235,8 +235,8 @@ namespace cocostudio
         if (f_blendFunc)
         {
             cocos2d::BlendFunc blendFunc = cocos2d::BlendFunc::ALPHA_PREMULTIPLIED;
-            blendFunc.src = utils::toBackendBlendFactor(static_cast<GLenum>(f_blendFunc->src()));
-            blendFunc.dst = utils::toBackendBlendFactor(static_cast<GLenum>(f_blendFunc->dst()));
+            blendFunc.src = utils::toBackendBlendFactor(f_blendFunc->src());
+            blendFunc.dst = utils::toBackendBlendFactor(f_blendFunc->dst());
             sprite->setBlendFunc(blendFunc);
         }
         

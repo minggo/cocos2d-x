@@ -83,7 +83,8 @@ void TrianglesCommand::generateMaterialID()
         void* texture;
         void* fs;
         void* vs;
-        BlendFunc blendFunc;
+        backend::BlendFactor src;
+        backend::BlendFactor dst;
     }hashMe;
 
     // NOTE: Initialize hashMe struct to make the value of padding bytes be filled with zero.
@@ -92,7 +93,8 @@ void TrianglesCommand::generateMaterialID()
     memset(&hashMe, 0, sizeof(hashMe));
 
     hashMe.texture = _texture;
-    hashMe.blendFunc = _blendType;
+    hashMe.src = _blendType.src;
+    hashMe.dst = _blendType.dst;
     hashMe.fs = _fs;
     hashMe.vs = _vs;
     _materialID = XXH32((const void*)&hashMe, sizeof(hashMe), 0);

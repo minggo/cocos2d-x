@@ -1608,8 +1608,8 @@ FrameData *DataReaderHelper::decodeFrame(const rapidjson::Value& json, DataInfo 
 
 	frameData->tweenEasing = (TweenType)(DICTOOL->getIntValue_json(json, A_TWEEN_EASING, cocos2d::tweenfunc::Linear));
 	frameData->displayIndex = DICTOOL->getIntValue_json(json, A_DISPLAY_INDEX);
-	frameData->blendFunc.src = utils::toBackendBlendFactor(static_cast<GLenum>(DICTOOL->getIntValue_json(json, A_BLEND_SRC, utils::toGLBlendFactor(BlendFunc::ALPHA_PREMULTIPLIED.src))));
-	frameData->blendFunc.dst = utils::toBackendBlendFactor(static_cast<GLenum>(DICTOOL->getIntValue_json(json, A_BLEND_DST, utils::toGLBlendFactor(BlendFunc::ALPHA_PREMULTIPLIED.dst))));
+	frameData->blendFunc.src = utils::toBackendBlendFactor(DICTOOL->getIntValue_json(json, A_BLEND_SRC, utils::toGLBlendFactor(BlendFunc::ALPHA_PREMULTIPLIED.src)));
+	frameData->blendFunc.dst = utils::toBackendBlendFactor(DICTOOL->getIntValue_json(json, A_BLEND_DST, utils::toGLBlendFactor(BlendFunc::ALPHA_PREMULTIPLIED.dst)));
 	frameData->isTween = DICTOOL->getBooleanValue_json(json, A_TWEEN_FRAME, true);
 
 	const char *event =  DICTOOL->getStringValue_json(json, A_EVENT);
@@ -2315,14 +2315,14 @@ void DataReaderHelper::decodeNode(BaseData *node, const rapidjson::Value& json, 
             {
                 if(str != nullptr)
                 {
-                    frameData->blendFunc.src = utils::toBackendBlendFactor(static_cast<GLenum>(atoi(str)));
+                    frameData->blendFunc.src = utils::toBackendBlendFactor(atoi(str));
                 }
             }
             else if (key.compare(A_BLEND_DST) == 0)
             {
                 if(str != nullptr)
                 {
-                    frameData->blendFunc.dst = utils::toBackendBlendFactor(static_cast<GLenum>(atoi(str)));
+                    frameData->blendFunc.dst = utils::toBackendBlendFactor(atoi(str));
                 }
             }
             else if (key.compare(A_TWEEN_FRAME) == 0)

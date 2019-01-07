@@ -546,32 +546,33 @@ void setBlending(backend::BlendFactor sfactor, backend::BlendFactor dfactor)
     }
 }
     
-backend::BlendFactor toBackendBlendFactor(GLenum factor)
+backend::BlendFactor toBackendBlendFactor(int factor)
 {
+    using namespace backend::BlendConst;
     switch (factor) {
-        case GL_ONE:
+        case BLEND_ONE:
             return backend::BlendFactor::ONE;
-        case GL_ZERO:
+        case BLEND_ZERO:
             return backend::BlendFactor::ZERO;
-        case GL_SRC_COLOR:
+        case BLEND_SRC_COLOR:
             return backend::BlendFactor::SRC_COLOR;
-        case GL_ONE_MINUS_SRC_COLOR:
+        case BLEND_ONE_MINUS_SRC_COLOR:
             return backend::BlendFactor::ONE_MINUS_SRC_COLOR;
-        case GL_SRC_ALPHA:
+        case BLEND_SRC_ALPHA:
             return backend::BlendFactor::SRC_ALPHA;
-        case GL_ONE_MINUS_SRC_ALPHA:
+        case BLEND_ONE_MINUS_SRC_ALPHA:
             return backend::BlendFactor::ONE_MINUS_SRC_ALPHA;
-        case GL_DST_COLOR:
+        case BLEND_DST_COLOR:
             return backend::BlendFactor::DST_COLOR;
-        case GL_ONE_MINUS_DST_COLOR:
+        case BLEND_ONE_MINUS_DST_COLOR:
             return backend::BlendFactor::ONE_MINUS_DST_COLOR;
-        case GL_DST_ALPHA:
+        case BLEND_DST_ALPHA:
             return backend::BlendFactor::DST_ALPHA;
-        case GL_ONE_MINUS_DST_ALPHA:
+        case BLEND_ONE_MINUS_DST_ALPHA:
             return backend::BlendFactor::ONE_MINUS_DST_ALPHA;
-        case GL_SRC_ALPHA_SATURATE:
+        case BLEND_SRC_ALPHA_SATURATE:
             return backend::BlendFactor::SRC_ALPHA_SATURATE;
-        case GL_BLEND_COLOR:
+        case BLEND_BLEND_COLOR:
             return backend::BlendFactor::BLEND_CLOLOR;
         default:
             assert(false);
@@ -580,66 +581,47 @@ backend::BlendFactor toBackendBlendFactor(GLenum factor)
     return backend::BlendFactor::ONE;
 }
 
-GLenum toGLBlendOperation(backend::BlendOperation blendOperation)
+int toGLBlendFactor(backend::BlendFactor blendFactor)
 {
-    GLenum ret = GL_FUNC_ADD;
-    switch (blendOperation)
-    {
-    case backend::BlendOperation::ADD:
-        ret = GL_FUNC_ADD;
-        break;
-    case backend::BlendOperation::SUBTRACT:
-        ret = GL_FUNC_SUBTRACT;
-        break;
-    case backend::BlendOperation::RESERVE_SUBTRACT:
-        ret = GL_FUNC_REVERSE_SUBTRACT;
-        break;
-    default:
-        break;
-    }
-    return ret;
-}
-
-GLenum toGLBlendFactor(backend::BlendFactor blendFactor)
-{
-    GLenum ret = GL_ONE;
+    using namespace backend::BlendConst;
+    int ret = BLEND_ONE;
     switch (blendFactor)
     {
     case backend::BlendFactor::ZERO:
-        ret = GL_ZERO;
+        ret = BLEND_ZERO;
         break;
     case backend::BlendFactor::ONE:
-        ret = GL_ONE;
+        ret = BLEND_ONE;
         break;
     case backend::BlendFactor::SRC_COLOR:
-        ret = GL_SRC_COLOR;
+        ret = BLEND_SRC_COLOR;
         break;
     case backend::BlendFactor::ONE_MINUS_SRC_COLOR:
-        ret = GL_ONE_MINUS_SRC_COLOR;
+        ret = BLEND_ONE_MINUS_SRC_COLOR;
         break;
     case backend::BlendFactor::SRC_ALPHA:
-        ret = GL_SRC_ALPHA;
+        ret = BLEND_SRC_ALPHA;
         break;
     case backend::BlendFactor::ONE_MINUS_SRC_ALPHA:
-        ret = GL_ONE_MINUS_SRC_ALPHA;
+        ret = BLEND_ONE_MINUS_SRC_ALPHA;
         break;
     case backend::BlendFactor::DST_COLOR:
-        ret = GL_DST_COLOR;
+        ret = BLEND_DST_COLOR;
         break;
     case backend::BlendFactor::ONE_MINUS_DST_COLOR:
-        ret = GL_ONE_MINUS_DST_COLOR;
+        ret = BLEND_ONE_MINUS_DST_COLOR;
         break;
     case backend::BlendFactor::DST_ALPHA:
-        ret = GL_DST_ALPHA;
+        ret = BLEND_DST_ALPHA;
         break;
     case backend::BlendFactor::ONE_MINUS_DST_ALPHA:
-        ret = GL_ONE_MINUS_DST_ALPHA;
+        ret = BLEND_ONE_MINUS_DST_ALPHA;
         break;
     case backend::BlendFactor::SRC_ALPHA_SATURATE:
-        ret = GL_SRC_ALPHA_SATURATE;
+        ret = BLEND_SRC_ALPHA_SATURATE;
         break;
     case backend::BlendFactor::BLEND_CLOLOR:
-        ret = GL_BLEND_COLOR;
+        ret = BLEND_BLEND_COLOR;
         break;
     default:
         break;

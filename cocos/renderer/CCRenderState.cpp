@@ -249,7 +249,7 @@ void RenderState::StateBlock::bindNoRestore()
     }
     if ((_bits & RS_BLEND_FUNC) && (_blendSrc != _defaultState->_blendSrc || _blendDst != _defaultState->_blendDst))
     {
-        utils::setBlending(utils::toBackendBlendFactor(static_cast<GLenum>(_blendSrc)), utils::toBackendBlendFactor(static_cast<GLenum>(_blendDst)));
+        utils::setBlending(utils::toBackendBlendFactor(_blendSrc), utils::toBackendBlendFactor(_blendDst));
         _defaultState->_blendSrc = _blendSrc;
         _defaultState->_blendDst = _blendDst;
     }
