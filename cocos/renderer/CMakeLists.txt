@@ -88,7 +88,6 @@ set(COCOS_RENDERER_SRC
     renderer/backend/ShaderModule.cpp
     renderer/backend/StringUtils.cpp
     renderer/backend/Texture.cpp
-    renderer/backend/Types.cpp
     renderer/backend/VertexLayout.cpp
     )
 

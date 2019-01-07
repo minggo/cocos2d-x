@@ -178,21 +178,4 @@ enum class CullMode: uint32_t
     FRONT = 0x00000002
 };
 
-namespace GLBlendConst {
-    constexpr int BLEND_ZERO                    = 0;        //GL_ZERO;
-    constexpr int BLEND_ONE                     = 1;        //GL_ONE;
-    constexpr int BLEND_SRC_COLOR               = 0x0300;   //GL_SRC_COLOR;
-    constexpr int BLEND_ONE_MINUS_SRC_COLOR     = 0x0301;   //GL_ONE_MINUS_SRC_COLOR;
-    constexpr int BLEND_DST_COLOR               = 0x0306;   //GL_DST_COLOR;
-    constexpr int BLEND_ONE_MINUS_DST_COLOR     = 0x0307;   //GL_ONE_MINUS_DST_COLOR;
-    constexpr int BLEND_SRC_ALPHA               = 0x0302;   //GL_SRC_ALPHA;
-    constexpr int BLEND_ONE_MINUS_SRC_ALPHA     = 0x0303;   //GL_ONE_MINUS_SRC_ALPHA;
-    constexpr int BLEND_DST_ALPHA               = 0x0304;   //GL_DST_ALPHA;
-    constexpr int BLEND_ONE_MINUS_DST_ALPHA     = 0x0305;   //GL_ONE_MINUS_DST_ALPHA;
-    constexpr int BLEND_CONSTANT_ALPHA          = 0x8003;   //GL_CONSTANT_ALPHA;
-    constexpr int BLEND_ONE_MINUS_CONSTANT_ALPHA = 0x8004;  //GL_ONE_MINUS_CONSTANT_ALPHA;
-    constexpr int BLEND_SRC_ALPHA_SATURATE      = 0x0308;   //GL_SRC_ALPHA_SATURATE;
-    constexpr int BLEND_BLEND_COLOR             = 0x8005;   //GL_BLEND_COLOR
-}
-
 CC_BACKEND_END

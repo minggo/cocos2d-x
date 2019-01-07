@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include "base/CCAsyncTaskPool.h"
 #include "base/CCEventDispatcher.h"
 #include "base/base64.h"
+#include "base/ccConstants.h"
 #include "renderer/CCCustomCommand.h"
 #include "renderer/CCRenderer.h"
 #include "renderer/CCTextureCache.h"
@@ -548,31 +549,30 @@ void setBlending(backend::BlendFactor sfactor, backend::BlendFactor dfactor)
     
 backend::BlendFactor toBackendBlendFactor(int factor)
 {
-    using namespace backend::GLBlendConst;
     switch (factor) {
-        case BLEND_ONE:
+        case GLBlendConst::ONE:
             return backend::BlendFactor::ONE;
-        case BLEND_ZERO:
+        case GLBlendConst::ZERO:
             return backend::BlendFactor::ZERO;
-        case BLEND_SRC_COLOR:
+        case GLBlendConst::SRC_COLOR:
             return backend::BlendFactor::SRC_COLOR;
-        case BLEND_ONE_MINUS_SRC_COLOR:
+        case GLBlendConst::ONE_MINUS_SRC_COLOR:
             return backend::BlendFactor::ONE_MINUS_SRC_COLOR;
-        case BLEND_SRC_ALPHA:
+        case GLBlendConst::SRC_ALPHA:
             return backend::BlendFactor::SRC_ALPHA;
-        case BLEND_ONE_MINUS_SRC_ALPHA:
+        case GLBlendConst::ONE_MINUS_SRC_ALPHA:
             return backend::BlendFactor::ONE_MINUS_SRC_ALPHA;
-        case BLEND_DST_COLOR:
+        case GLBlendConst::DST_COLOR:
             return backend::BlendFactor::DST_COLOR;
-        case BLEND_ONE_MINUS_DST_COLOR:
+        case GLBlendConst::ONE_MINUS_DST_COLOR:
             return backend::BlendFactor::ONE_MINUS_DST_COLOR;
-        case BLEND_DST_ALPHA:
+        case GLBlendConst::DST_ALPHA:
             return backend::BlendFactor::DST_ALPHA;
-        case BLEND_ONE_MINUS_DST_ALPHA:
+        case GLBlendConst::ONE_MINUS_DST_ALPHA:
             return backend::BlendFactor::ONE_MINUS_DST_ALPHA;
-        case BLEND_SRC_ALPHA_SATURATE:
+        case GLBlendConst::SRC_ALPHA_SATURATE:
             return backend::BlendFactor::SRC_ALPHA_SATURATE;
-        case BLEND_BLEND_COLOR:
+        case GLBlendConst::BLEND_COLOR:
             return backend::BlendFactor::BLEND_CLOLOR;
         default:
             assert(false);
@@ -583,45 +583,44 @@ backend::BlendFactor toBackendBlendFactor(int factor)
 
 int toGLBlendFactor(backend::BlendFactor blendFactor)
 {
-    using namespace backend::GLBlendConst;
-    int ret = BLEND_ONE;
+    int ret = GLBlendConst::ONE;
     switch (blendFactor)
     {
     case backend::BlendFactor::ZERO:
-        ret = BLEND_ZERO;
+        ret = GLBlendConst::ZERO;
         break;
     case backend::BlendFactor::ONE:
-        ret = BLEND_ONE;
+        ret = GLBlendConst::ONE;
         break;
     case backend::BlendFactor::SRC_COLOR:
-        ret = BLEND_SRC_COLOR;
+        ret = GLBlendConst::SRC_COLOR;
         break;
     case backend::BlendFactor::ONE_MINUS_SRC_COLOR:
-        ret = BLEND_ONE_MINUS_SRC_COLOR;
+        ret = GLBlendConst::ONE_MINUS_SRC_COLOR;
         break;
     case backend::BlendFactor::SRC_ALPHA:
-        ret = BLEND_SRC_ALPHA;
+        ret = GLBlendConst::SRC_ALPHA;
         break;
     case backend::BlendFactor::ONE_MINUS_SRC_ALPHA:
-        ret = BLEND_ONE_MINUS_SRC_ALPHA;
+        ret = GLBlendConst::ONE_MINUS_SRC_ALPHA;
         break;
     case backend::BlendFactor::DST_COLOR:
-        ret = BLEND_DST_COLOR;
+        ret = GLBlendConst::DST_COLOR;
         break;
     case backend::BlendFactor::ONE_MINUS_DST_COLOR:
-        ret = BLEND_ONE_MINUS_DST_COLOR;
+        ret = GLBlendConst::ONE_MINUS_DST_COLOR;
         break;
     case backend::BlendFactor::DST_ALPHA:
-        ret = BLEND_DST_ALPHA;
+        ret = GLBlendConst::DST_ALPHA;
         break;
     case backend::BlendFactor::ONE_MINUS_DST_ALPHA:
-        ret = BLEND_ONE_MINUS_DST_ALPHA;
+        ret = GLBlendConst::ONE_MINUS_DST_ALPHA;
         break;
     case backend::BlendFactor::SRC_ALPHA_SATURATE:
-        ret = BLEND_SRC_ALPHA_SATURATE;
+        ret = GLBlendConst::SRC_ALPHA_SATURATE;
         break;
     case backend::BlendFactor::BLEND_CLOLOR:
-        ret = BLEND_BLEND_COLOR;
+        ret = GLBlendConst::BLEND_COLOR;
         break;
     default:
         break;
