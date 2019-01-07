@@ -2090,6 +2090,9 @@
 		ED682BC1213F63CB001BF6CB /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED682BC0213F63CB001BF6CB /* libuv_a.a */; };
 		ED682BC3213F6C7A001BF6CB /* libwebsockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED682BC2213F6C7A001BF6CB /* libwebsockets.a */; };
 		ED682BC5213F6CBF001BF6CB /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED682BC4213F6CBE001BF6CB /* libuv_a.a */; };
+		ED75D41B21E2F4CD0052B87E /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED75D41A21E2F4CD0052B87E /* Types.cpp */; };
+		ED75D41D21E2F4DE0052B87E /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED75D41A21E2F4CD0052B87E /* Types.cpp */; };
+		ED75D41E21E2F4DF0052B87E /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED75D41A21E2F4CD0052B87E /* Types.cpp */; };
 		ED9C6A9418599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9518599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9618599AD8000A5232 /* CCNodeGrid.h in Headers */ = {isa = PBXBuildFile; fileRef = ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */; };
@@ -3340,6 +3343,7 @@
 		ED682BC0213F63CB001BF6CB /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/uv/prebuilt/ios/libuv_a.a; sourceTree = "<group>"; };
 		ED682BC2213F6C7A001BF6CB /* libwebsockets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwebsockets.a; path = ../external/websockets/prebuilt/tvos/libwebsockets.a; sourceTree = "<group>"; };
 		ED682BC4213F6CBE001BF6CB /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/uv/prebuilt/tvos/libuv_a.a; sourceTree = "<group>"; };
+		ED75D41A21E2F4CD0052B87E /* Types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Types.cpp; sourceTree = "<group>"; };
 		ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = CCNodeGrid.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNodeGrid.h; sourceTree = "<group>"; };
 		EDC789E021CA19FA00E1863C /* CCComAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCComAudio.cpp; sourceTree = "<group>"; };
@@ -5388,6 +5392,7 @@
 				ED28C202219E629B0078D854 /* Macros.h */,
 				460D4CF321ABD0C60075726E /* metal */,
 				ED28C1FB219E629B0078D854 /* RenderPassDescriptor.h */,
+				ED75D41A21E2F4CD0052B87E /* Types.cpp */,
 				ED28C1EF219E629B0078D854 /* RenderPipeline.h */,
 				ED28C1F1219E629B0078D854 /* RenderPipelineDescriptor.h */,
 				ED28C1FF219E629B0078D854 /* ShaderModule.cpp */,
@@ -7580,6 +7585,7 @@
 				EDC78C0E21CA19FB00E1863C /* CSLoader.cpp in Sources */,
 				EDC78CBE21CA19FC00E1863C /* WidgetReader.cpp in Sources */,
 				4631CB2721AFD9F90000D408 /* UICheckBox.cpp in Sources */,
+				ED75D41B21E2F4CD0052B87E /* Types.cpp in Sources */,
 				1A5702EA180BCE750088DEC7 /* CCTileMapAtlas.cpp in Sources */,
 				468A14F51EF223B700ECA675 /* idl_parser.cpp in Sources */,
 				50ABBD971925AB4100A911A9 /* CCGLProgramStateCache.cpp in Sources */,
@@ -7741,6 +7747,7 @@
 				507B39D91C31BDD30067B53E /* CCGroupCommand.cpp in Sources */,
 				507B39DC1C31BDD30067B53E /* CCImage.cpp in Sources */,
 				507B39DE1C31BDD30067B53E /* DetourPathCorridor.cpp in Sources */,
+				ED75D41E21E2F4DF0052B87E /* Types.cpp in Sources */,
 				507B39E71C31BDD30067B53E /* CCTrianglesCommand.cpp in Sources */,
 				507B39EB1C31BDD30067B53E /* CCNodeGrid.cpp in Sources */,
 				507B39F01C31BDD30067B53E /* CCVertexIndexData.cpp in Sources */,
@@ -8215,6 +8222,7 @@
 				1A570293180BCCAB0088DEC7 /* CCAnimation.cpp in Sources */,
 				4631CB9421AFD9FA0000D408 /* UIHelper.cpp in Sources */,
 				5053850D1B02819E00793096 /* CCVertexAttribBinding.cpp in Sources */,
+				ED75D41D21E2F4DE0052B87E /* Types.cpp in Sources */,
 				15FB20901AE7C57D00C31518 /* advancing_front.cc in Sources */,
 				1A570297180BCCAB0088DEC7 /* CCAnimationCache.cpp in Sources */,
 				50ABBE321925AB6F00A911A9 /* CCConfiguration.cpp in Sources */,
