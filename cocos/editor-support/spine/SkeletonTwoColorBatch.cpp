@@ -98,7 +98,6 @@ void TwoColorTrianglesCommand::useMaterial() const {
 	}
 	//set blend mode
 	GL::blendFunc(_blendType.src, _blendType.dst);
-    utils::setBlending(_blendType.src, _blendType.dst);
 	
 	_glProgramState->apply(_mv);
 }
