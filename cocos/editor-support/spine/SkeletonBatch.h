@@ -58,6 +58,7 @@ namespace spine {
 		void reset ();
 		
 		cocos2d::TrianglesCommand* nextFreeCommand ();
+        cocos2d::TrianglesCommand* newTrianglesCommand();
 		
 		// pool of commands
 		std::vector<cocos2d::TrianglesCommand*> _commandsPool;

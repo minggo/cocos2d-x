@@ -111,8 +111,9 @@ namespace spine {
 	}
 	
 	void SkeletonRenderer::setupGLProgramState (bool twoColorTintEnabled) {
+
+        _twoColorTintEnabled = twoColorTintEnabled;
 		if (twoColorTintEnabled) {
-			setGLProgramState(SkeletonTwoColorBatch::getInstance()->getTwoColorTintProgramState());
 			return;
 		}
 		
@@ -134,7 +135,7 @@ namespace spine {
 				break;
 			}
 		}
-		setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, texture));
+		//setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, texture));
 	}
 	
 	void SkeletonRenderer::setSkeletonData (SkeletonData *skeletonData, bool ownsSkeletonData) {
@@ -539,7 +540,7 @@ namespace spine {
 					trianglesTwoColor.indices = twoColorBatch->allocateIndices(trianglesTwoColor.indexCount);
 					memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
 					
-					TwoColorTrianglesCommand* batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, attachmentVertices->_texture->getName(), _glProgramState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					TwoColorTrianglesCommand* batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, attachmentVertices->_texture, blendFunc, trianglesTwoColor, transform, transformFlags);
 					
 					float* verts = _clipper->getClippedVertices().buffer();
 					float* uvs = _clipper->getClippedUVs().buffer();
@@ -591,7 +592,7 @@ namespace spine {
 						}
 					}
 				} else {
-					TwoColorTrianglesCommand* batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, attachmentVertices->_texture->getName(), _glProgramState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					TwoColorTrianglesCommand* batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, attachmentVertices->_texture, blendFunc, trianglesTwoColor, transform, transformFlags);
 					
 					if (_effect) {
 						Color light;
@@ -693,7 +694,7 @@ namespace spine {
 		if (_debugSlots) {
 			// Slots.
 			// DrawPrimitives::setDrawColor4B(0, 0, 255, 255);
-			glLineWidth(1);
+            drawNode->setLineWidth(1.0f);
 			Vec2 points[4];
 			V3F_C4B_T2F_Quad quad;
 			for (int i = 0, n = _skeleton->getSlots().size(); i < n; i++) {
@@ -710,7 +711,7 @@ namespace spine {
 		}
 		if (_debugBones) {
 			// Bone lengths.
-			glLineWidth(2);
+            drawNode->setLineWidth(2.0f);
 			for (int i = 0, n = _skeleton->getBones().size(); i < n; i++) {
 				Bone *bone = _skeleton->getBones()[i];
 				float x = bone->getData().getLength() * bone->getA() + bone->getWorldX();
@@ -728,7 +729,7 @@ namespace spine {
 		
 		if (_debugMeshes) {
 			// Meshes.
-			glLineWidth(1);
+            drawNode->setLineWidth(1.0f);
 			for (int i = 0, n = _skeleton->getSlots().size(); i < n; ++i) {
 				Slot* slot = _skeleton->getDrawOrder()[i];
 				if (!slot->getAttachment() || !slot->getAttachment()->getRTTI().isExactly(MeshAttachment::rtti)) continue;
@@ -828,7 +829,7 @@ namespace spine {
 	}
 	
 	bool SkeletonRenderer::isTwoColorTint() {
-		return getGLProgramState() == SkeletonTwoColorBatch::getInstance()->getTwoColorTintProgramState();
+        return _twoColorTintEnabled;
 	}
 	
 	void SkeletonRenderer::setVertexEffect(VertexEffect *effect) {

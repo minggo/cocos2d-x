@@ -143,7 +143,8 @@ namespace spine {
 		bool _ownsAtlas;
 		Atlas* _atlas;
 		AttachmentLoader* _attachmentLoader;
-		cocos2d::CustomCommand _debugCommand;
+		//cocos2d::CustomCommand _debugCommand;
+        bool _twoColorTintEnabled = false;
 		cocos2d::BlendFunc _blendFunc;
 		bool _premultipliedAlpha;
 		Skeleton* _skeleton;

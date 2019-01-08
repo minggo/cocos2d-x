@@ -37,6 +37,9 @@ USING_NS_CC;
 using std::max;
 #define INITIAL_SIZE (10000)
 
+#include "renderer/ccShaders.h"
+#include "renderer/CCShaderCache.h"
+
 namespace spine {
 
 static SkeletonBatch* instance = nullptr;
@@ -55,7 +58,7 @@ void SkeletonBatch::destroyInstance () {
 
 SkeletonBatch::SkeletonBatch () {
 	for (unsigned int i = 0; i < INITIAL_SIZE; i++) {
-		_commandsPool.push_back(new TrianglesCommand());
+		_commandsPool.push_back(newTrianglesCommand());
 	}
 	
 	reset ();
@@ -129,8 +132,12 @@ void SkeletonBatch::deallocateIndices(uint32_t numIndices) {
 	
 cocos2d::TrianglesCommand* SkeletonBatch::addCommand(cocos2d::Renderer* renderer, float globalOrder, cocos2d::Texture2D* texture, cocos2d::GLProgramState* glProgramState, cocos2d::BlendFunc blendType, const cocos2d::TrianglesCommand::Triangles& triangles, const cocos2d::Mat4& mv, uint32_t flags) {
 	TrianglesCommand* command = nextFreeCommand();
-	command->init(globalOrder, texture, blendType, triangles, mv, flags);
-	renderer->addCommand(command);
+    const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
+    auto &pipelineDescriptor = command->getPipelineDescriptor();
+    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+    pipelineDescriptor.bindGroup.setTexture("u_texture", 0, texture->getBackendTexture());
+    command->init(globalOrder, texture, blendType, triangles, mv, flags);
+    renderer->addCommand(command);
 	return command;
 }
 
@@ -144,9 +151,27 @@ cocos2d::TrianglesCommand* SkeletonBatch::nextFreeCommand() {
 	if (_commandsPool.size() <= _nextFreeCommand) {
 		unsigned int newSize = _commandsPool.size() * 2 + 1;
 		for (int i = _commandsPool.size();  i < newSize; i++) {
-			_commandsPool.push_back(new TrianglesCommand());
+			_commandsPool.push_back(newTrianglesCommand());
 		}
 	}
 	return _commandsPool[_nextFreeCommand++];
+}
+
+cocos2d::TrianglesCommand *SkeletonBatch::newTrianglesCommand() {
+    auto* command = new TrianglesCommand();
+    auto& pipelineDescriptor = command->getPipelineDescriptor();
+
+    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
+    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
+
+    auto& vertexlayout = pipelineDescriptor.vertexLayout;
+    const int colorOffset = sizeof(_vertices[0].vertices);
+    const int texcoordOffset = sizeof(_vertices[0].vertices) + sizeof(_vertices[0].colors);
+    vertexlayout.setAtrribute("a_position", 0, backend::VertexFormat::FLOAT_R32G32B32, 0, false);
+    vertexlayout.setAtrribute("a_color", 1, backend::VertexFormat::UBYTE_R8G8B8A8, colorOffset, true);
+    vertexlayout.setAtrribute("a_texCoord", 2, backend::VertexFormat::FLOAT_R32G32, texcoordOffset, false);
+    vertexlayout.setLayout(sizeof(_vertices[0]), backend::VertexStepMode::VERTEX);
+
+    return command;
 }
 }
