@@ -99,13 +99,13 @@ TwoColorTrianglesCommand::TwoColorTrianglesCommand() :_materialID(0), _texture(n
 
 void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *texture, BlendFunc blendType, const TwoColorTriangles& triangles, const Mat4& mv, uint32_t flags) {
 
-    RenderCommand::init(globalOrder, mv, flags);
-
     const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-    Mat4 finalMat = projectionMat * mv;
+    //Mat4 finalMat = projectionMat * mv;
     auto &bindGroup = _pipelineDescriptor.bindGroup;
-    bindGroup.setUniform("CC_PMatrix", finalMat.m, sizeof(finalMat.m));
+    bindGroup.setUniform("CC_PMatrix", projectionMat.m, sizeof(projectionMat.m));
     bindGroup.setTexture("CC_Texture0", 0, texture->getBackendTexture());
+
+    RenderCommand::init(globalOrder, mv, flags);
 
     _triangles = triangles;
     if (_triangles.indexCount % 3 != 0) {
@@ -113,6 +113,7 @@ void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *textu
         _triangles.indexCount = count / 3 * 3;
         CCLOGERROR("Resize indexCount from %d to %d, size must be multiple times of 3", count, _triangles.indexCount);
     }
+
     _mv = mv;
 
     if (_blendType.src != blendType.src || _blendType.dst != blendType.dst ||
