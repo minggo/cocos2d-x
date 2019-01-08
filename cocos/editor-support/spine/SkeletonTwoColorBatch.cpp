@@ -125,9 +125,6 @@ void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *textu
 		
         _vs = _pipelineDescriptor.vertexShader;
         _fs = _pipelineDescriptor.fragmentShader;
-        _texture = texture->getBackendTexture();
-
-        _blendType = blendType;
         //TODO: minggo set it in Node?
         auto& blendDescriptor = _pipelineDescriptor.blendDescriptor;
         blendDescriptor.blendEnabled = true;
@@ -189,10 +186,12 @@ void TwoColorTrianglesCommand::draw(Renderer *r) {
 	SkeletonTwoColorBatch::getInstance()->batch(r, this);
 }
 
-void TwoColorTrianglesCommand::updateVertexAndeIndexBuffer(Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices, int indicesSize)
+void TwoColorTrianglesCommand::updateVertexAndIndexBuffer(Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices, int indicesSize)
 {
-    createVertexBuffer(sizeof(V3F_C4B_C4B_T2F), verticesSize, CustomCommand::BufferUsage::DYNAMIC);
-    createIndexBuffer(CustomCommand::IndexFormat::U_SHORT, indicesSize, CustomCommand::BufferUsage::DYNAMIC);
+    if(verticesSize != _vertexCapacity)
+        createVertexBuffer(sizeof(V3F_C4B_C4B_T2F), verticesSize, CustomCommand::BufferUsage::DYNAMIC);
+    if(indicesSize != _indexCapacity)
+        createIndexBuffer(CustomCommand::IndexFormat::U_SHORT, indicesSize, CustomCommand::BufferUsage::DYNAMIC);
     
     updateVertexBuffer(vertices, sizeof(V3F_C4B_C4B_T2F) * verticesSize);
     updateIndexBuffer(indices, sizeof(uint16_t) * indicesSize);
@@ -294,7 +293,7 @@ void SkeletonTwoColorBatch::deallocateIndices(uint32_t numIndices) {
 TwoColorTrianglesCommand* SkeletonTwoColorBatch::addCommand(cocos2d::Renderer* renderer, float globalOrder, cocos2d::Texture2D* texture, cocos2d::BlendFunc blendType, const TwoColorTriangles& triangles, const cocos2d::Mat4& mv, uint32_t flags) {
 	TwoColorTrianglesCommand* command = nextFreeCommand();
 	command->init(globalOrder, texture, blendType, triangles, mv, flags);
-    command->updateVertexAndeIndexBuffer(renderer, triangles.verts, triangles.vertCount, triangles.indices, triangles.indexCount);
+    command->updateVertexAndIndexBuffer(renderer, triangles.verts, triangles.vertCount, triangles.indices, triangles.indexCount);
 	renderer->addCommand(command);	
 	return command;
 }
@@ -334,7 +333,7 @@ void SkeletonTwoColorBatch::flush (cocos2d::Renderer *renderer, TwoColorTriangle
 	if (!materialCommand)
 		return;
 	
-    materialCommand->updateVertexAndeIndexBuffer(renderer, _vertexBuffer, _numVerticesBuffer, _indexBuffer, _numIndicesBuffer);
+    materialCommand->updateVertexAndIndexBuffer(renderer, _vertexBuffer, _numVerticesBuffer, _indexBuffer, _numIndicesBuffer);
 
     renderer->addCommand(materialCommand);
 

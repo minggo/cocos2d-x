@@ -83,7 +83,7 @@ namespace spine {
 		
 		bool isForceFlush () { return _forceFlush; };
 		
-        void updateVertexAndeIndexBuffer(cocos2d::Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices, int indicesSize);
+        void updateVertexAndIndexBuffer(cocos2d::Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices, int indicesSize);
 
 	protected:
 		void generateMaterialID();
