@@ -75,13 +75,13 @@ const char* TWO_COLOR_TINT_FRAGMENT_SHADER = STRINGIFY(
 \n#ifdef GL_ES\n
 precision lowp float;
 \n#endif\n
-uniform sampler2D CC_Texture0;
+uniform sampler2D u_texture;
 varying vec4 v_light;
 varying vec4 v_dark;
 varying vec2 v_texCoord;
 
 void main() {
-    vec4 texColor = texture2D(CC_Texture0, v_texCoord);
+    vec4 texColor = texture2D(u_texture, v_texCoord);
     float alpha = texColor.a * v_light.a;
     gl_FragColor.a = alpha;
     gl_FragColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;
@@ -103,7 +103,7 @@ void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *textu
     //Mat4 finalMat = projectionMat * mv;
     auto &bindGroup = _pipelineDescriptor.bindGroup;
     bindGroup.setUniform("CC_PMatrix", projectionMat.m, sizeof(projectionMat.m));
-    bindGroup.setTexture("CC_Texture0", 0, texture->getBackendTexture());
+    bindGroup.setTexture("u_texture", 0, texture->getBackendTexture());
 
     RenderCommand::init(globalOrder, mv, flags);
 
@@ -149,8 +149,8 @@ void TwoColorTrianglesCommand::initTrianglesCommand()
     const int a_color2Offset = offsetof(V3F_C4B_C4B_T2F, color2);
     const int texCoordsOffset = offsetof(V3F_C4B_C4B_T2F, texCoords);
     vertexLayout.setAtrribute("a_position", 0, backend::VertexFormat::FLOAT_R32G32B32, 0, false);
-    vertexLayout.setAtrribute("a_color", 1, backend::VertexFormat::UBYTE_R8G8B8A8, a_colorOffset, false);
-    vertexLayout.setAtrribute("a_color2", 2, backend::VertexFormat::UBYTE_R8G8B8A8, a_color2Offset, false);
+    vertexLayout.setAtrribute("a_color", 1, backend::VertexFormat::UBYTE_R8G8B8A8, a_colorOffset, true);
+    vertexLayout.setAtrribute("a_color2", 2, backend::VertexFormat::UBYTE_R8G8B8A8, a_color2Offset, true);
     vertexLayout.setAtrribute("a_texCoords", 3, backend::VertexFormat::FLOAT_R32G32, texCoordsOffset, false);
     vertexLayout.setLayout(sizeof(V3F_C4B_C4B_T2F), backend::VertexStepMode::VERTEX);
 }
