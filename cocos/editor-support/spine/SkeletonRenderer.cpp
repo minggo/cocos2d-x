@@ -36,6 +36,8 @@
 #include <spine/AttachmentVertices.h>
 #include <algorithm>
 
+#include "renderer/backend/Types.h"
+
 #define INITIAL_WORLD_VERTICES_LENGTH 1000
 // Used for transforming attachments for bounding boxes & debug rendering
 static float* worldVertices = nullptr;
@@ -419,20 +421,20 @@ namespace spine {
 			BlendFunc blendFunc;
 			switch (slot->getData().getBlendMode()) {
 				case BlendMode_Additive:
-					blendFunc.src = _premultipliedAlpha ? GL_ONE : GL_SRC_ALPHA;
-					blendFunc.dst = GL_ONE;
+					blendFunc.src = _premultipliedAlpha ? backend::BlendFactor::ONE : backend::BlendFactor::SRC_ALPHA;
+					blendFunc.dst = backend::BlendFactor::ONE;
 					break;
 				case BlendMode_Multiply:
-					blendFunc.src = GL_DST_COLOR;
-					blendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
+					blendFunc.src = backend::BlendFactor::DST_COLOR;
+					blendFunc.dst = backend::BlendFactor::ONE_MINUS_SRC_ALPHA;
 					break;
 				case BlendMode_Screen:
-					blendFunc.src = GL_ONE;
-					blendFunc.dst = GL_ONE_MINUS_SRC_COLOR;
+					blendFunc.src = backend::BlendFactor::ONE;
+					blendFunc.dst = backend::BlendFactor::ONE_MINUS_SRC_COLOR;
 					break;
 				default:
-					blendFunc.src = _premultipliedAlpha ? GL_ONE : GL_SRC_ALPHA;
-					blendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
+					blendFunc.src = _premultipliedAlpha ? backend::BlendFactor::ONE : backend::BlendFactor::SRC_ALPHA;
+					blendFunc.dst = backend::BlendFactor::ONE_MINUS_SRC_ALPHA;
 			}
 			
 			if (!isTwoColorTint) {
