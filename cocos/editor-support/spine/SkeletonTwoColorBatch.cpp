@@ -90,16 +90,16 @@ void TwoColorTrianglesCommand::generateMaterialID() {
 
 void TwoColorTrianglesCommand::useMaterial() const {
 	//Set texture
-	GL::bindTexture2D(_textureID);
+	//GL::bindTexture2D(_textureID);
 	
-	if (_alphaTextureID > 0) {
+	//if (_alphaTextureID > 0) {
 		// ANDROID ETC1 ALPHA supports.
-		GL::bindTexture2DN(1, _alphaTextureID);
-	}
+	//	GL::bindTexture2DN(1, _alphaTextureID);
+	//}
 	//set blend mode
-	GL::blendFunc(_blendType.src, _blendType.dst);
+	//GL::blendFunc(_blendType.src, _blendType.dst);
 	
-	_glProgramState->apply(_mv);
+	//_glProgramState->apply(_mv);
 }
 	
 void TwoColorTrianglesCommand::draw() {
