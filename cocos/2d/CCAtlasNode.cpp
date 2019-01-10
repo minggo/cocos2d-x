@@ -44,6 +44,7 @@ NS_CC_BEGIN
 AtlasNode::AtlasNode()
 {
     auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
+    
     pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
     pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
     
@@ -146,10 +147,10 @@ void AtlasNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
         return;
     
     auto& bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
-    bindGroup.setTexture("u_texture", 0, _textureAtlas->getTexture()->getBackendTexture());
+//    bindGroup.setTexture("u_texture", 0, _textureAtlas->getTexture()->getBackendTexture());
     
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+//    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
     
     _quadCommand.init(_globalZOrder, _textureAtlas->getTexture(), _blendFunc, _textureAtlas->getQuads(), _quadsToDraw, transform, flags);
     renderer->addCommand(&_quadCommand);

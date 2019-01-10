@@ -2,6 +2,8 @@
 
 #include "Macros.h"
 #include "base/CCRef.h"
+#include "Program.h"
+#include "Types.h"
 
 #include <string>
 #include <unordered_map>
@@ -11,51 +13,77 @@ CC_BACKEND_BEGIN
 
 class Texture;
 class Sampler;
+class Program;
 
 class BindGroup : public cocos2d::Ref
 {
 public:
-    struct UniformInfo
+    struct UniformBuffer
     {
-        UniformInfo(const std::string& _name, const void* _data, uint32_t _size);
-        UniformInfo() = default;
-        UniformInfo(const UniformInfo&);
-        ~UniformInfo();
-        UniformInfo& operator =(UniformInfo&& rhs);
-        UniformInfo& operator =(const UniformInfo& rhs);
-        
-        std::string name;
-        uint32_t size = 0;
+        UniformBuffer(UniformInfo _uniformInfo);
+        UniformBuffer() = default;
+        ~UniformBuffer();
+        UniformBuffer& operator =(UniformBuffer&& rhs);
+
+        UniformInfo uniformInfo;
+        bool dirty = false;
         void* data = nullptr;
     };
     
     struct TextureInfo
     {
-        TextureInfo(const std::string& _name, const std::vector<uint32_t>& _indices, const std::vector<Texture*> _textures);
-        TextureInfo() = default;
-        TextureInfo(const TextureInfo&);
         ~TextureInfo();
-        TextureInfo& operator =(TextureInfo&& rhs);
-        TextureInfo& operator =(const TextureInfo& rhs);
         
         void retainTextures();
         void releaseTextures();
-        
-        std::string name;
-        std::vector<uint32_t> indices;
+
+        std::vector<uint32_t> slot;
         std::vector<Texture*> textures;
     };
     
+    ~BindGroup();
+    
+    //TODO coulsonwang
     void setTexture(const std::string& name, uint32_t index, Texture* texture);
-    void setTextureArray(const std::string& name, const std::vector<uint32_t>& indices, const std::vector<Texture*> textures);
     void setUniform(const std::string& name, const void* data, uint32_t size);
+
     
-    inline const std::unordered_map<std::string, UniformInfo>& getUniformInfos() const { return _uniformInfos; }
-    inline const std::unordered_map<std::string, TextureInfo>& getTextureInfos() const { return _textureInfos; }
+    //set program
+    void newProgram(const std::string& vertexShader, const std::string& fragmentShader);
+    Program* getProgram() const { return _program; }
     
+    //set uniforms
+    void setVertexUniform(int location, const void* data, uint32_t size);
+    void setFragmentUniform(int location, const void* data, uint32_t size);
+    
+    int getVertexUniformLocation(const std::string& uniform) const;
+    int getFragmentUniformLocation(const std::string& uniform) const;
+    inline const std::unordered_map<int, UniformBuffer>& getVertexUniformInfos() const { return _vertexUniformInfos; }
+    inline const std::unordered_map<int, UniformBuffer>& getFragmentUniformInfos() const { return _fragmentUniformInfos; }
+    
+    //set textures
+    void setVertexTexture(int location, uint32_t slot, Texture* texture);
+    void setFragmentTexture(int location, uint32_t slot, Texture* texture);
+    void setVertexTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures);
+    void setFragmentTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures);
+    
+    inline const std::unordered_map<int, TextureInfo>& getVertexTextureInfos() const { return _vertexTextureInfos; }
+    inline const std::unordered_map<int, TextureInfo>& getFragmentTextureInfos() const { return _fragmentTextureInfos; }
+
 private:
-    std::unordered_map<std::string, UniformInfo> _uniformInfos;
-    std::unordered_map<std::string, TextureInfo> _textureInfos;
+    void createVertexUniformBuffer();
+    void createFragmentUniformBuffer();
+    
+    void setTexture(int location, uint32_t slot, Texture* texture, std::unordered_map<int, TextureInfo>& textureInfo);
+    void setTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures, std::unordered_map<int, TextureInfo>& textureInfo);
+
+    Program* _program = nullptr;
+    
+    std::unordered_map<int, UniformBuffer> _vertexUniformInfos;
+    std::unordered_map<int, UniformBuffer> _fragmentUniformInfos;
+    
+    std::unordered_map<int, TextureInfo> _vertexTextureInfos;
+    std::unordered_map<int, TextureInfo> _fragmentTextureInfos;
 };
 
 CC_BACKEND_END

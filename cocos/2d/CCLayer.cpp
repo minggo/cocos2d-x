@@ -456,7 +456,7 @@ void LayerColor::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     
     cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+//    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
     
     for(int i = 0; i < 4; ++i)
     {
@@ -754,13 +754,13 @@ void LayerRadialGradient::draw(Renderer *renderer, const Mat4 &transform, uint32
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto& bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
     Mat4 finalMat = projectionMat * transform;
-    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
-
-    bindGroup.setUniform("u_startColor", &_startColorRend, sizeof(_startColorRend));
-    bindGroup.setUniform("u_endColor", &_endColorRend, sizeof(_endColorRend));
-    bindGroup.setUniform("u_center", &_center, sizeof(_center));
-    bindGroup.setUniform("u_radius", &_radius, sizeof(_radius));
-    bindGroup.setUniform("u_expand", &_expand, sizeof(_expand));
+//    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
+//
+//    bindGroup.setUniform("u_startColor", &_startColorRend, sizeof(_startColorRend));
+//    bindGroup.setUniform("u_endColor", &_endColorRend, sizeof(_endColorRend));
+//    bindGroup.setUniform("u_center", &_center, sizeof(_center));
+//    bindGroup.setUniform("u_radius", &_radius, sizeof(_radius));
+//    bindGroup.setUniform("u_expand", &_expand, sizeof(_expand));
 }
 
 void LayerRadialGradient::setContentSize(const Size& size)

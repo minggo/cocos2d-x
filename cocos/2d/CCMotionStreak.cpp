@@ -374,11 +374,11 @@ void MotionStreak::draw(Renderer *renderer, const Mat4 &transform, uint32_t flag
     renderer->addCommand(&_customCommand);
 
     auto& bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
-    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+//    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
 
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
-    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(Mat4));
+//    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(Mat4));
 
     unsigned int offset = 0;
     unsigned int vertexSize = sizeof(Vec2) + sizeof(Vec2) + sizeof(uint8_t) * 4;

@@ -37,11 +37,14 @@ backend::ShaderModule* ShaderCache::newVertexShaderModule(const std::string& sha
     if (ShaderCache::_cachedVertexShaders.end() != iter)
         return iter->second;
     
-    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::VERTEX, shaderSource);
-    CC_SAFE_RETAIN(shader);
-    ShaderCache::_cachedVertexShaders.emplace(key, shader);
+//    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::VERTEX, shaderSource);
+//
+//    CC_SAFE_RETAIN(shader);
+//    ShaderCache::_cachedVertexShaders.emplace(key, shader);
 
-    return shader;
+    printf("----shaderCache-------------");
+    
+    return nullptr;
 }
 
 backend::ShaderModule* ShaderCache::newFragmentShaderModule(const std::string& shaderSource)
@@ -51,11 +54,13 @@ backend::ShaderModule* ShaderCache::newFragmentShaderModule(const std::string& s
     if (ShaderCache::_cachedFragmentShaders.end() != iter)
         return iter->second;
     
-    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::FRAGMENT, shaderSource);
-    CC_SAFE_RETAIN(shader);
-    ShaderCache::_cachedFragmentShaders.emplace(key, shader);
+//    auto shader = backend::Device::getInstance()->createShaderModule(backend::ShaderStage::FRAGMENT, shaderSource);
+//    CC_SAFE_RETAIN(shader);
+//    ShaderCache::_cachedFragmentShaders.emplace(key, shader);
     
-    return shader;
+    printf("----shaderCache-------------");
+    
+    return nullptr;
 }
 
 NS_CC_END

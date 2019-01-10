@@ -1,43 +1,44 @@
 #include "BindGroup.h"
 #include "Texture.h"
+#include "Device.h"
+#include "ProgramCache.h"
 
 CC_BACKEND_BEGIN
 
-BindGroup::UniformInfo::UniformInfo(const std::string& _name, const void* _data, uint32_t _size)
-: name(_name)
-, size(_size)
+//needed removed
+void BindGroup::setTexture(const std::string& name, uint32_t index, Texture* texture)
 {
-    data = malloc(size);
-    if (data)
-        memcpy(data, _data, size);
+    printf("-----------------");
+}
+void BindGroup::setUniform(const std::string& name, const void* data, uint32_t size)
+{
+    printf("-----------------");
 }
 
-BindGroup::UniformInfo::UniformInfo(const UniformInfo& rhs)
-: name(rhs.name)
-, size(rhs.size)
+
+BindGroup::UniformBuffer::UniformBuffer(UniformInfo _uniformInfo)
+: uniformInfo(_uniformInfo)
+, dirty(false)
 {
-    if (rhs.data)
+    if(uniformInfo.bufferSize)
     {
-        data = malloc(size);
+        data = malloc(uniformInfo.bufferSize);
         if (data)
-            memcpy(data, rhs.data, size);
+            memset(data, 0, uniformInfo.bufferSize);
     }
 }
 
-BindGroup::UniformInfo::~UniformInfo()
+BindGroup::UniformBuffer::~UniformBuffer()
 {
     if (data)
         free(data);
 }
 
-BindGroup::UniformInfo& BindGroup::UniformInfo::operator=(UniformInfo&& rhs)
+BindGroup::UniformBuffer& BindGroup::UniformBuffer::operator=(UniformBuffer&& rhs)
 {
     if (this != &rhs)
     {
-        name = rhs.name;
-        size = rhs.size;
-
-        if (data) free(data);
+        uniformInfo = rhs.uniformInfo;
         data = rhs.data;
         rhs.data = nullptr;
     }
@@ -45,69 +46,9 @@ BindGroup::UniformInfo& BindGroup::UniformInfo::operator=(UniformInfo&& rhs)
     return *this;
 }
 
-BindGroup::UniformInfo& BindGroup::UniformInfo::operator=(const UniformInfo& rhs)
-{
-    if (this != &rhs)
-    {
-        name = rhs.name;
-        size = rhs.size;
-
-        if (data) free(data);
-        data = malloc(size);
-        if (data)
-            memcpy(data, rhs.data, size);
-    }
-
-    return *this;
-}
-
-BindGroup::TextureInfo::TextureInfo(const std::string& _name, const std::vector<uint32_t>& _indices, const std::vector<Texture*> _textures)
-: name(_name)
-, indices(_indices)
-, textures(_textures)
-{
-    retainTextures();
-}
-
-BindGroup::TextureInfo::TextureInfo(const TextureInfo& rhs)
-: name(rhs.name)
-, indices(rhs.indices)
-, textures(rhs.textures)
-{
-    retainTextures();
-}
-
 BindGroup::TextureInfo::~TextureInfo()
 {
     releaseTextures();
-}
-
-BindGroup::TextureInfo& BindGroup::TextureInfo::operator=(TextureInfo&& rhs)
-{
-    if (this != &rhs)
-    {
-        name = rhs.name;
-        indices = std::move(rhs.indices);
-        
-        releaseTextures();
-        textures = std::move(rhs.textures);
-    }
-    return *this;
-}
-
-BindGroup::TextureInfo& BindGroup::TextureInfo::operator=(const TextureInfo& rhs)
-{
-    if (this != &rhs)
-    {
-        name = rhs.name;
-        indices = rhs.indices;
-
-        releaseTextures();
-        textures = rhs.textures;
-        retainTextures();
-    }
-
-    return *this;
 }
 
 void BindGroup::TextureInfo::retainTextures()
@@ -122,24 +63,111 @@ void BindGroup::TextureInfo::releaseTextures()
         CC_SAFE_RELEASE(texture);
 }
 
-void BindGroup::setTexture(const std::string &name, uint32_t index, Texture *texture)
+BindGroup::~BindGroup()
 {
-    TextureInfo textureInfo(name, {index}, {texture});
-    _textureInfos[name] = std::move(textureInfo);
+    _vertexUniformInfos.clear();
+    _fragmentUniformInfos.clear();
+    _vertexTextureInfos.clear();
+    _fragmentTextureInfos.clear();
 }
 
-void BindGroup::setTextureArray(const std::string& name, const std::vector<uint32_t>& indices, const std::vector<Texture*> textures)
+void BindGroup::newProgram(const std::string& vertexShader, const std::string& fragmentShader)
 {
-    assert(indices.size() == textures.size());
+    _program = ProgramCache::getInstance()->newProgram(vertexShader, fragmentShader);
+    createVertexUniformBuffer();
+    createFragmentUniformBuffer();
+}
+
+void BindGroup::createVertexUniformBuffer()
+{
+    const auto& vertexUniformInfos = _program->getVertexUniformInfos();
+    for(const auto& uniformInfo : vertexUniformInfos)
+    {
+        if(uniformInfo.second.bufferSize)
+            _vertexUniformInfos[uniformInfo.second.location] = uniformInfo.second;
+    }
+}
+
+void BindGroup::createFragmentUniformBuffer()
+{
+    const auto& fragmentUniformInfos = _program->getFragmentUniformInfos();
+    for(const auto& uniformInfo : fragmentUniformInfos)
+    {
+        if(uniformInfo.second.bufferSize)
+            _fragmentUniformInfos[uniformInfo.second.location] = uniformInfo.second;
+    }
+}
+
+int BindGroup::getVertexUniformLocation(const std::string& uniform) const
+{
+    return _program->getVertexUniformLocation(uniform);
+}
+
+int BindGroup::getFragmentUniformLocation(const std::string& uniform) const
+{
+    return _program->getFragmentUniformLocation(uniform);
+}
+
+void BindGroup::setVertexUniform(int location, const void* data, uint32_t size)
+{
+    if(location < 0)
+        return;
     
-    TextureInfo textureInfo(name, indices, textures);
-    _textureInfos[name] = std::move(textureInfo);
+    assert(size <= _vertexUniformInfos[location].uniformInfo.bufferSize);
+    memcpy(_vertexUniformInfos[location].data, data, size);
+    _vertexUniformInfos[location].dirty = true;
 }
 
-void BindGroup::setUniform(const std::string& name, const void* data, uint32_t size)
+void BindGroup::setFragmentUniform(int location, const void* data, uint32_t size)
 {
-    UniformInfo uniform(name, data, size);
-    _uniformInfos[name] = std::move(uniform);
+    if(location < 0)
+        return;
+    
+    assert(size <= _fragmentUniformInfos[location].uniformInfo.bufferSize);
+    memcpy(_fragmentUniformInfos[location].data, data, size);
+    _fragmentUniformInfos[location].dirty = true;
+}
+
+void BindGroup::setVertexTexture(int location, uint32_t slot, Texture* texture)
+{
+    setTexture(location, slot, texture, _vertexTextureInfos);
+}
+
+void BindGroup::setFragmentTexture(int location, uint32_t slot, Texture* texture)
+{
+    setTexture(location, slot, texture, _fragmentTextureInfos);
+}
+
+void BindGroup::setVertexTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures)
+{
+    setTextureArray(location, slots, textures, _vertexTextureInfos);
+}
+
+void BindGroup::setFragmentTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures)
+{
+    setTextureArray(location, slots, textures, _fragmentTextureInfos);
+}
+
+void BindGroup::setTexture(int location, uint32_t slot, Texture* texture, std::unordered_map<int, TextureInfo>& textureInfo)
+{
+    if(location < 0)
+        return;
+    
+    TextureInfo info;
+    info.slot = {slot};
+    info.textures = {texture};
+    info.retainTextures();
+    textureInfo[location] = info;
+}
+
+void BindGroup::setTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<Texture*> textures, std::unordered_map<int, TextureInfo>& textureInfo)
+{
+    assert(slots.size() == textures.size());
+    TextureInfo info;
+    info.slot = slots;
+    info.textures = textures;
+    info.retainTextures();
+    textureInfo[location] = info;
 }
 
 CC_BACKEND_END

@@ -178,4 +178,13 @@ enum class CullMode: uint32_t
     FRONT = 0x00000002
 };
 
+struct UniformInfo
+{
+    int32_t count = 0;
+    int location = 0;
+    uint32_t type = 0;
+    bool isArray = false;
+    uint32_t bufferSize = 0;
+};
+
 CC_BACKEND_END

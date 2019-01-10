@@ -158,7 +158,7 @@ void TMXLayer::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
     {
         if (e.second->getIndexDrawCount() > 0)
         {
-            e.second->getPipelineDescriptor().bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
+//            e.second->getPipelineDescriptor().bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
             renderer->addCommand(e.second);
         }
     }
@@ -407,11 +407,11 @@ void TMXLayer::updatePrimitives()
             auto& pipelineDescriptor = command->getPipelineDescriptor();
             pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
 
-            pipelineDescriptor.bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+//            pipelineDescriptor.bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
             if (_useAutomaticVertexZ)
             {
                 pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
-                pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &_alphaFuncValue, sizeof(_alphaFuncValue));
+//                pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &_alphaFuncValue, sizeof(_alphaFuncValue));
             }
             else
                 pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);

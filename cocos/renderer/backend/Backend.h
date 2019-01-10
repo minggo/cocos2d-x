@@ -9,7 +9,6 @@
 #include "renderer/backend/CommandBuffer.h"
 #include "renderer/backend/Buffer.h"
 #include "renderer/backend/VertexLayout.h"
-#include "renderer/backend/ShaderModule.h"
 #include "renderer/backend/Texture.h"
 #include "renderer/backend/DepthStencilState.h"
 #include "renderer/backend/BlendState.h"

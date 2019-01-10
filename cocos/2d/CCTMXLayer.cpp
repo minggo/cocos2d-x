@@ -250,7 +250,7 @@ void TMXLayer::parseInternalProperties()
 
             auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
             pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
-            pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &alphaFuncValue, sizeof(alphaFuncValue));
+//            pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &alphaFuncValue, sizeof(alphaFuncValue));
         }
         else
         {

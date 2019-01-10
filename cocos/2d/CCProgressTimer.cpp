@@ -553,8 +553,8 @@ void ProgressTimer::draw(Renderer *renderer, const Mat4 &transform, uint32_t fla
     const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
-    pipelineDescriptor.bindGroup.setTexture("u_texture", 0, _sprite->getTexture()->getBackendTexture());
+//    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
+//    pipelineDescriptor.bindGroup.setTexture("u_texture", 0, _sprite->getTexture()->getBackendTexture());
     
 
     if(_type == Type::BAR)
@@ -571,8 +571,8 @@ void ProgressTimer::draw(Renderer *renderer, const Mat4 &transform, uint32_t fla
 
             _customCommand2.init(_globalZOrder, _sprite->getBlendFunc());
             auto& pipelineDescriptor2 = _customCommand2.getPipelineDescriptor();
-            pipelineDescriptor2.bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
-            pipelineDescriptor2.bindGroup.setTexture("u_texture", 0, _sprite->getTexture()->getBackendTexture());
+//            pipelineDescriptor2.bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
+//            pipelineDescriptor2.bindGroup.setTexture("u_texture", 0, _sprite->getTexture()->getBackendTexture());
             renderer->addCommand(&_customCommand2);
         }
     }

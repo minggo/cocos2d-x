@@ -38,7 +38,7 @@ struct CC_DLL PipelineDescriptor final
 {
     backend::BlendDescriptor blendDescriptor;
     backend::RenderPassDescriptor renderPassDescriptor;
-    backend::BindGroup bindGroup;
+    backend::BindGroup* bindGroup = nullptr;
     backend::VertexLayout vertexLayout;
     backend::ShaderModule* vertexShader = nullptr;
     backend::ShaderModule* fragmentShader = nullptr;

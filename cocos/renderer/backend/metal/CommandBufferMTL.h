@@ -2,6 +2,8 @@
 
 #include "../CommandBuffer.h"
 #include "DeviceMTL.h"
+#include "../BindGroup.h"
+#include <unordered_map>
 
 CC_BACKEND_BEGIN
 
@@ -33,9 +35,9 @@ public:
 private:
     void prepareDrawing() const;
     void setTextures() const;
-    void doSetTextures(const std::vector<std::string>& textures, bool isVertex) const;
+    void doSetTextures(bool isVertex) const;
     void setUniformBuffer() const;
-    unsigned int fillUniformBuffer(uint8_t* buffer, const std::vector<std::string>& uniforms) const;
+    uint32_t fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, BindGroup::UniformBuffer>& unifornInfo) const;
     void afterDraw();
     
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;

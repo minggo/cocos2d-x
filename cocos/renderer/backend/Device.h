@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "DepthStencilState.h"
 #include "BlendState.h"
+#include "ProgramCache.h"
 
 #include "base/CCRef.h"
 
@@ -23,6 +24,7 @@ class RenderPass;
 class Device : public cocos2d::Ref
 {
 public:
+    friend class ProgramCache;
     static Device* getInstance();
     
     virtual ~Device() = default;
@@ -33,8 +35,6 @@ public:
     virtual Buffer* newBuffer(uint32_t size, BufferType type, BufferUsage usage) = 0;
     // Create a texture, not auto released.
     virtual Texture* newTexture(const TextureDescriptor& descriptor) = 0;
-    // Create a auto released shader module.
-    virtual ShaderModule* createShaderModule(ShaderStage stage, const std::string& source) = 0;
     // Create a auto released depth stencil state.
     virtual DepthStencilState* createDepthStencilState(const DepthStencilDescriptor& descriptor) = 0;
     // Create a auto released blend state.
@@ -42,6 +42,9 @@ public:
     // Create a render pipeline, not auto released.
     virtual RenderPipeline* newRenderPipeline(const RenderPipelineDescriptor& descriptor) = 0;
     
+protected:
+    virtual Program* createProgram(const std::string& vertexShader, const std::string& fragmentShader) = 0;
+
 private:
     static Device* _instance;
 };

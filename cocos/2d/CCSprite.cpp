@@ -335,6 +335,7 @@ Sprite::~Sprite()
     CC_SAFE_FREE(_trianglesIndex);
     CC_SAFE_RELEASE(_spriteFrame);
     CC_SAFE_RELEASE(_texture);
+    CC_SAFE_RELEASE(_bindGroup);
 }
 
 /*
@@ -394,8 +395,16 @@ void Sprite::setVertexLayout()
 void Sprite::updateShaders(const char* vert, const char* frag)
 {
     auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
-    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(vert);
-    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(frag);
+    
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
+    pipelineDescriptor.bindGroup->newProgram(vert, frag);
+    _mvpMatrixLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.bindGroup->getFragmentUniformLocation("u_texture");
+    _alphaTextureLocation = pipelineDescriptor.bindGroup->getFragmentUniformLocation("u_texture1");
+//    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(vert);
+//    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(frag);
     setVertexLayout();
 }
 
@@ -433,12 +442,14 @@ void Sprite::setTexture(Texture2D *texture)
         updateBlendFunc();
     }
 
-    auto& bindGroup = _trianglesCommand.getPipelineDescriptor().bindGroup;
-    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+    auto bindGroup = _trianglesCommand.getPipelineDescriptor().bindGroup;
+    bindGroup->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+//    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
     auto alphaTexture = _texture->getAlphaTexture();
     if(alphaTexture && alphaTexture->getBackendTexture())
     {
-        bindGroup.setTexture("u_texture1", 1, alphaTexture->getBackendTexture());
+//        bindGroup.setTexture("u_texture1", 1, alphaTexture->getBackendTexture());
+        bindGroup->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
     }
 }
 
@@ -1107,8 +1118,9 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 #endif
     {
         const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-        auto& bindGroup = _trianglesCommand.getPipelineDescriptor().bindGroup;
-        bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+        auto bindGroup = _trianglesCommand.getPipelineDescriptor().bindGroup;
+        bindGroup->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
+//        bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
         
         _trianglesCommand.init(_globalZOrder,
                                _texture,

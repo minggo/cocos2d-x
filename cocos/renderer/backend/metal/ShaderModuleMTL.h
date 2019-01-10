@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../ShaderModule.h"
+#include "../Types.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -18,8 +20,7 @@ public:
     
     inline id<MTLFunction> getMTLFunction() const { return _mtlFunction; }
     inline const std::shared_ptr<uint8_t>& getUniformBuffer() const { return _uniformBuffer; }
-    inline const std::vector<std::string>& getUniforms() const { return _uniforms; }
-    inline const std::vector<std::string>& getTextures() const { return _textures; }
+    inline const std::unordered_map<std::string, UniformInfo>& getUniforms() const { return _uniformInfos; }
     
 private:
     void parseUniform(id<MTLDevice> mtlDevice, glslopt_shader* shader);
@@ -28,10 +29,7 @@ private:
     id<MTLFunction> _mtlFunction = nil;
     
     std::shared_ptr<uint8_t> _uniformBuffer = nullptr;
-    std::vector<std::string> _uniforms;
-    
-    // Texture index is the same as vector index.
-    std::vector<std::string> _textures;
+    std::unordered_map<std::string, UniformInfo> _uniformInfos;
 };
 
 CC_BACKEND_END

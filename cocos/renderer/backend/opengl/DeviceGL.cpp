@@ -17,6 +17,16 @@ Device* Device::getInstance()
     return _instance;
 }
 
+DeviceGL::DeviceGL()
+{
+    ProgramCache::getInstance();
+}
+
+DeviceGL::~DeviceGL()
+{
+    ProgramCache::destroyInstance();
+}
+
 CommandBuffer* DeviceGL::newCommandBuffer()
 {
     return new (std::nothrow) CommandBufferGL();
@@ -30,15 +40,6 @@ Buffer* DeviceGL::newBuffer(unsigned int size, BufferType type, BufferUsage usag
 Texture* DeviceGL::newTexture(const TextureDescriptor& descriptor)
 {
     return new (std::nothrow) TextureGL(descriptor);
-}
-
-ShaderModule* DeviceGL::createShaderModule(ShaderStage stage, const std::string& source)
-{
-    auto ret = new (std::nothrow) ShaderModuleGL(stage, source);
-    if (ret)
-        ret->autorelease();
-    
-    return ret;
 }
 
 DepthStencilState* DeviceGL::createDepthStencilState(const DepthStencilDescriptor& descriptor)
@@ -62,6 +63,15 @@ BlendState* DeviceGL::createBlendState(const BlendDescriptor& descriptor)
 RenderPipeline* DeviceGL::newRenderPipeline(const RenderPipelineDescriptor& descriptor)
 {
     return new (std::nothrow) RenderPipelineGL(descriptor);
+}
+
+Program* DeviceGL::createProgram(const std::string& vertexShader, const std::string& fragmentShader)
+{
+    auto ret = new (std::nothrow) ProgramGL(vertexShader, fragmentShader);
+    if (ret)
+        ret->autorelease();
+    
+    return ret;
 }
 
 CC_BACKEND_END

@@ -57,14 +57,14 @@ StencilStateManager::StencilStateManager()
     _customCommand.updateIndexBuffer(indices, sizeof(indices));
 
     Color4F color(1, 1, 1, 1);
-    pipelineDescriptor.bindGroup.setUniform("u_color", &color, sizeof(color));
+//    pipelineDescriptor.bindGroup.setUniform("u_color", &color, sizeof(color));
 }
 
 void StencilStateManager::drawFullScreenQuadClearStencil(float globalZOrder)
 {
     _customCommand.init(globalZOrder);
     Director::getInstance()->getRenderer()->addCommand(&_customCommand);
-    _customCommand.getPipelineDescriptor().bindGroup.setUniform("u_MVPMatrix", Mat4::IDENTITY.m, sizeof(Mat4::IDENTITY.m));
+//    _customCommand.getPipelineDescriptor().bindGroup.setUniform("u_MVPMatrix", Mat4::IDENTITY.m, sizeof(Mat4::IDENTITY.m));
 }
 
 

@@ -212,7 +212,7 @@ void CommandBufferMTL::setVertexBuffer(unsigned int index, Buffer* buffer)
 void CommandBufferMTL::setBindGroup(BindGroup* bindGroup)
 {
     CC_SAFE_RETAIN(bindGroup);
-    CC_SAFE_RELEASE(_bindGroup);
+//    CC_SAFE_RELEASE(_bindGroup);
     _bindGroup = bindGroup;
 }
 
@@ -276,6 +276,7 @@ void CommandBufferMTL::afterDraw()
     }
     
     CC_SAFE_RELEASE_NULL(_bindGroup);
+//    CC_SAFE_RELEASE(_bindGroup);
 }
 
 void CommandBufferMTL::prepareDrawing() const
@@ -296,42 +297,40 @@ void CommandBufferMTL::setTextures() const
 {
     if (_bindGroup)
     {
-        doSetTextures(_renderPipelineMTL->getVertexTextures(), true);
-        doSetTextures(_renderPipelineMTL->getFragmentTextures(), false);
+        doSetTextures(true);
+        doSetTextures(false);
     }
 }
 
-void CommandBufferMTL::doSetTextures(const std::vector<std::string>& textureNames, bool isVertex) const
+void CommandBufferMTL::doSetTextures(bool isVertex) const
 {
-    const auto& bindTextureInfos = _bindGroup->getTextureInfos();
-    int i = 0;
-    for (const auto& texture : textureNames)
-    {
-        auto iter = bindTextureInfos.find(texture);
-        if (bindTextureInfos.end() != iter)
+    const auto& bindTextureInfos = (isVertex) ? _bindGroup->getVertexTextureInfos() : _bindGroup->getFragmentTextureInfos();
+   
+    for(const auto& iter : bindTextureInfos)
         {
             //FIXME: should support texture array.
-            const auto& textures = iter->second.textures;
-            const auto& mtlTexture = static_cast<TextureMTL*>(textures[0]);
+        int i = 0;
+        auto location = iter.first;
+        const auto& textures = iter.second.textures;
+        const auto& mtlTexture = static_cast<TextureMTL*>(textures[i]);
             
             if (isVertex)
             {
                 [_mtlRenderEncoder setVertexTexture:mtlTexture->getMTLTexture()
-                                            atIndex:i];
+                                        atIndex:location];
                 [_mtlRenderEncoder setVertexSamplerState:mtlTexture->getMTLSamplerState()
-                                                 atIndex:i];
+                                             atIndex:location];
             }
             else
             {
                 [_mtlRenderEncoder setFragmentTexture:mtlTexture->getMTLTexture()
-                                              atIndex:i];
+                                          atIndex:location];
                 [_mtlRenderEncoder setFragmentSamplerState:mtlTexture->getMTLSamplerState()
-                                                   atIndex:i];
+                                               atIndex:location];
             }
             
             ++i;
         }
-    }
 }
 
 void CommandBufferMTL::setUniformBuffer() const
@@ -340,17 +339,19 @@ void CommandBufferMTL::setUniformBuffer() const
     {
         // Uniform buffer is bound to index 1.
         const auto& vertexUniformBuffer = _renderPipelineMTL->getVertexUniformBuffer();
+        const auto& vertexUniformInfo = _bindGroup->getVertexUniformInfos();
         if (vertexUniformBuffer)
         {
-            uint32_t size = fillUniformBuffer(vertexUniformBuffer.get(), _renderPipelineMTL->getVertexUniforms());
+            uint32_t size = fillUniformBuffer(vertexUniformBuffer.get(), vertexUniformInfo);
             [_mtlRenderEncoder setVertexBytes:vertexUniformBuffer.get()
                                        length:size atIndex:1];
         }
         
         const auto& fragUniformBuffer = _renderPipelineMTL->getFragmentUniformBuffer();
+        const auto& fragUniformInfo = _bindGroup->getFragmentUniformInfos();
         if (fragUniformBuffer)
         {
-            uint32_t size = fillUniformBuffer(fragUniformBuffer.get(), _renderPipelineMTL->getFragmentUniforms());
+            uint32_t size = fillUniformBuffer(fragUniformBuffer.get(), fragUniformInfo);
             [_mtlRenderEncoder setFragmentBytes:fragUniformBuffer.get()
                                          length:size
                                         atIndex:1];
@@ -358,19 +359,14 @@ void CommandBufferMTL::setUniformBuffer() const
     }
 }
 
-uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::vector<std::string>& uniforms) const
+uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, BindGroup::UniformBuffer>& unifornInfo) const
 {
-    const auto& bindUniformInfos = _bindGroup->getUniformInfos();
     uint32_t offset = 0;
-    for (const auto& uniform : uniforms)
+    for(const auto& iter : unifornInfo)
     {
-        auto iter = bindUniformInfos.find(uniform);
-        if (bindUniformInfos.end() != iter)
-        {
-            const auto& bindUniformInfo = iter->second;
-            memcpy(buffer + offset, bindUniformInfo.data, bindUniformInfo.size);
-            offset += bindUniformInfo.size;
-        }
+        const auto& bindUniformInfo = iter.second;
+        memcpy(buffer + iter.first, bindUniformInfo.data, bindUniformInfo.uniformInfo.bufferSize);
+        offset += bindUniformInfo.uniformInfo.bufferSize;
     }
     return offset;
 }

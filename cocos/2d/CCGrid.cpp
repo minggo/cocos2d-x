@@ -368,8 +368,8 @@ void Grid3D::blit()
     Director::getInstance()->getRenderer()->addCommand(&_drawCommand);
     cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto& bindGroup = _drawCommand.getPipelineDescriptor().bindGroup;
-    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
-    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+//    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+//    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
 }
 
 void Grid3D::calculateVertexPoints()
@@ -624,8 +624,8 @@ void TiledGrid3D::blit()
     Director::getInstance()->getRenderer()->addCommand(&_drawCommand);
     cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto& bindGroup = _drawCommand.getPipelineDescriptor().bindGroup;
-    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
-    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+//    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+//    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
 }
 
 void TiledGrid3D::calculateVertexPoints()

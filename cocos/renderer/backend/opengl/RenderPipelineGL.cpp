@@ -1,8 +1,9 @@
 #include "RenderPipelineGL.h"
 #include "ShaderModuleGL.h"
 #include "DepthStencilStateGL.h"
-#include "Program.h"
+#include "ProgramGL.h"
 #include "BlendStateGL.h"
+#include "../BindGroup.h"
 
 #include <assert.h>
 
@@ -10,7 +11,7 @@ CC_BACKEND_BEGIN
 
 RenderPipelineGL::RenderPipelineGL(const RenderPipelineDescriptor& descriptor)
 {
-    _program = new Program(descriptor);
+    _programGL = static_cast<ProgramGL*>(descriptor.bindGroup->getProgram());
     
     const auto& depthStencilState = descriptor.depthStencilState;
     CC_SAFE_RETAIN(depthStencilState);

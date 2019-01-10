@@ -438,10 +438,10 @@ void ParticleSystemQuad::draw(Renderer *renderer, const Mat4 &transform, uint32_
     if(_particleCount > 0)
     {
         auto& bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
-        bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+//        bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
         
         cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-        bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
+//        bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
         
         _quadCommand.init(_globalZOrder, _texture, _blendFunc, _quads, _particleCount, transform, flags);
         renderer->addCommand(&_quadCommand);

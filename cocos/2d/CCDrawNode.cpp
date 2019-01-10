@@ -275,11 +275,11 @@ void DrawNode::updateUniforms(const Mat4 &transform, CustomCommand& cmd)
     auto& pipelineDescriptor = cmd.getPipelineDescriptor();
     const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 matrixMVP = matrixP * transform;
-    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
+//    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
 
     float alpha = _displayedOpacity / 255.0;
     Vec4 alpha4(alpha, 0, 0, 0);
-    pipelineDescriptor.bindGroup.setUniform("u_alpha", &alpha4, sizeof(alpha4));
+//    pipelineDescriptor.bindGroup.setUniform("u_alpha", &alpha4, sizeof(alpha4));
 }
 
 void DrawNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
