@@ -319,6 +319,7 @@ protected:
     void setVertexLayout(CustomCommand& cmd);
     void updateBlendState(CustomCommand& cmd);
     void updateUniforms(const Mat4 &transform, CustomCommand& cmd);
+    void releaseBindGroup(CustomCommand& cmd);
 
     GLuint      _vao = 0;
     GLuint      _vbo = 0;

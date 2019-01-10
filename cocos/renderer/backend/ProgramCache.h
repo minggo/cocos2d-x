@@ -28,7 +28,7 @@ protected:
     ProgramCache() = default;
     virtual ~ProgramCache();
     
-    void init();
+    bool init();
     void addProgram(const std::string& vertexShader, const std::string& fragmentShader);
     
     static std::unordered_map<std::size_t, backend::Program*> _cachedPrograms;

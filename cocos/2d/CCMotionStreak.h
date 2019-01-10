@@ -184,6 +184,10 @@ protected:
     unsigned int _vertexCount = 0;
     
     CustomCommand _customCommand;
+    
+    int _mvpMatrixLocaiton = -1;
+    int _textureLocation = -1;
+    backend::BindGroup* _bindGroup = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(MotionStreak);

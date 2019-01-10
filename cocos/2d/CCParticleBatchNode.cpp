@@ -46,8 +46,12 @@ NS_CC_BEGIN
 ParticleBatchNode::ParticleBatchNode()
 {
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
+    _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+    _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
     
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
@@ -72,6 +76,7 @@ ParticleBatchNode::ParticleBatchNode()
 ParticleBatchNode::~ParticleBatchNode()
 {
     CC_SAFE_RELEASE(_textureAtlas);
+    CC_SAFE_RELEASE(_bindGroup);
 }
 /*
  * creation with Texture2D
@@ -430,9 +435,9 @@ void ParticleBatchNode::draw(Renderer* renderer, const Mat4 & transform, uint32_
     // Texture is set in TextureAtlas.
     const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
-    auto& bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
-//    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(finalMat.m));
-//    bindGroup.setTexture("u_texture", 0, _textureAtlas->getTexture()->getBackendTexture());
+    auto bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
+    bindGroup->setVertexUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(finalMat.m));
+    bindGroup->setFragmentTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
     
     //TODO: minggo: don't set blend factor every frame.
     auto& blendDescriptor = _customCommand.getPipelineDescriptor().blendDescriptor;

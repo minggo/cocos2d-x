@@ -155,6 +155,10 @@ protected:
     Texture2D* _oldColorAttachment = nullptr;
     Texture2D* _oldDepthAttachment = nullptr;
     Texture2D* _oldStencilAttachment = nullptr;
+    
+    int _mvpMatrixLocation = -1;
+    int _textureLocation = -1;
+    backend::BindGroup* _bindGroup = nullptr;
 };
 
 /**

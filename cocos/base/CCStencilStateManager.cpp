@@ -40,9 +40,13 @@ StencilStateManager::StencilStateManager()
     vertexLayout.setLayout(2 * sizeof(float), backend::VertexStepMode::VERTEX);
 
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionUColor_vert);
-    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionUColor_frag);
-
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
+    _bindGroup->newProgram(positionUColor_vert, positionUColor_frag);
+    _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    _colorUniformLocation = _bindGroup->getVertexUniformLocation("u_color");
+    
     Vec2 vertices[4] = {
         Vec2(-1.0f, -1.0f),
         Vec2(1.0f, -1.0f),
@@ -57,14 +61,14 @@ StencilStateManager::StencilStateManager()
     _customCommand.updateIndexBuffer(indices, sizeof(indices));
 
     Color4F color(1, 1, 1, 1);
-//    pipelineDescriptor.bindGroup.setUniform("u_color", &color, sizeof(color));
+    pipelineDescriptor.bindGroup->setVertexUniform(_colorUniformLocation, &color, sizeof(color));
 }
 
 void StencilStateManager::drawFullScreenQuadClearStencil(float globalZOrder)
 {
     _customCommand.init(globalZOrder);
     Director::getInstance()->getRenderer()->addCommand(&_customCommand);
-//    _customCommand.getPipelineDescriptor().bindGroup.setUniform("u_MVPMatrix", Mat4::IDENTITY.m, sizeof(Mat4::IDENTITY.m));
+    _customCommand.getPipelineDescriptor().bindGroup->setVertexUniform(_mvpMatrixLocaiton, Mat4::IDENTITY.m, sizeof(Mat4::IDENTITY.m));
 }
 
 

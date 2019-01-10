@@ -115,8 +115,9 @@ bool SpriteBatchNode::initWithTexture(Texture2D *tex, ssize_t capacity/* = DEFAU
 void SpriteBatchNode::createShaders()
 {
     auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
-    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
+    _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+    _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
     
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
@@ -152,11 +153,16 @@ bool SpriteBatchNode::initWithFile(const std::string& fileImage, ssize_t capacit
 
 SpriteBatchNode::SpriteBatchNode()
 {
+    auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
 }
 
 SpriteBatchNode::~SpriteBatchNode()
 {
     CC_SAFE_RELEASE(_textureAtlas);
+    CC_SAFE_RELEASE(_bindGroup);
 }
 
 // override visit
@@ -408,9 +414,9 @@ void SpriteBatchNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t f
     }
     
     const auto& matrixProjection = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-    auto& bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
-//    bindGroup.setUniform("u_MVPMatrix", matrixProjection.m, sizeof(matrixProjection.m));
-//    bindGroup.setTexture("u_texture", 0, _textureAtlas->getTexture()->getBackendTexture());
+    auto bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
+    bindGroup->setVertexUniform(_mvpMatrixLocaiton, matrixProjection.m, sizeof(matrixProjection.m));
+    bindGroup->setFragmentTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
 
     _quadCommand.init(_globalZOrder, _textureAtlas->getTexture(), _blendFunc, _textureAtlas->getQuads(), _textureAtlas->getTotalQuads(), transform, flags);
     renderer->addCommand(&_quadCommand);

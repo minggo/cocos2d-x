@@ -42,9 +42,13 @@ MotionStreak::MotionStreak()
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE_STRIP);
 
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
-
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
+    _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+    _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
+    
     auto& vertexLayout = pipelineDescriptor.vertexLayout;
     vertexLayout.setAtrribute("a_position", 0, backend::VertexFormat::FLOAT_R32G32, 0, false);
     vertexLayout.setAtrribute("a_texCoord", 1, backend::VertexFormat::FLOAT_R32G32, 2 * sizeof(float), false);
@@ -60,6 +64,7 @@ MotionStreak::~MotionStreak()
     CC_SAFE_FREE(_vertices);
     CC_SAFE_FREE(_colorPointer);
     CC_SAFE_FREE(_texCoords);
+    CC_SAFE_RELEASE(_bindGroup);
 }
 
 MotionStreak* MotionStreak::create(float fade, float minSeg, float stroke, const Color3B& color, const std::string& path)
@@ -373,12 +378,12 @@ void MotionStreak::draw(Renderer *renderer, const Mat4 &transform, uint32_t flag
     _customCommand.setVertexDrawInfo(0, drawCount);
     renderer->addCommand(&_customCommand);
 
-    auto& bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
-//    bindGroup.setTexture("u_texture", 0, _texture->getBackendTexture());
+    auto bindGroup = _customCommand.getPipelineDescriptor().bindGroup;
+    bindGroup->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
 
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
-//    bindGroup.setUniform("u_MVPMatrix", finalMat.m, sizeof(Mat4));
+    bindGroup->setVertexUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(Mat4));
 
     unsigned int offset = 0;
     unsigned int vertexSize = sizeof(Vec2) + sizeof(Vec2) + sizeof(uint8_t) * 4;

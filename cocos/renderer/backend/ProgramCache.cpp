@@ -13,7 +13,7 @@ ProgramCache* ProgramCache::getInstance()
     if(!_sharedProgramCache)
     {
         _sharedProgramCache = new (std::nothrow) ProgramCache();
-        if(!_sharedProgramCache)
+        if(!_sharedProgramCache->init())
         {
             CC_SAFE_RELEASE(_sharedProgramCache);
         }
@@ -35,7 +35,7 @@ ProgramCache::~ProgramCache()
     CCLOGINFO("deallocing ProgramCache: %p", this);
 }
 
-void ProgramCache::init()
+bool ProgramCache::init()
 {
     addProgram(positionTextureColor_vert, positionTextureColor_frag);
     addProgram(positionTextureColor_vert, etc1_frag);
@@ -48,6 +48,10 @@ void ProgramCache::init()
     addProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
     addProgram(positionColor_vert, positionColor_frag);
     addProgram(position_vert, layer_radialGradient_frag);
+    addProgram(positionTexture_vert, positionTexture_frag);
+    addProgram(positionTextureColor_vert, positionTextureColorAlphaTest_frag);
+    addProgram(positionUColor_vert, positionUColor_frag);
+    return true;
 }
 
 void ProgramCache::addProgram(const std::string& vertexShader, const std::string& fragmentShader)
@@ -55,6 +59,7 @@ void ProgramCache::addProgram(const std::string& vertexShader, const std::string
     std::string shaderSource = vertexShader + fragmentShader;
     auto key = std::hash<std::string>{}(shaderSource);
     auto program = backend::Device::getInstance()->createProgram(vertexShader, fragmentShader);
+    CC_SAFE_RETAIN(program);
     ProgramCache::_cachedPrograms.emplace(key, program);
 }
 

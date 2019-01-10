@@ -1547,7 +1547,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
         const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         Mat4 matrixMVP = matrixP * _shadowTransform;
         pipelineShadow.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
-//        pipelineShadow.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
     }
     
     if(_currentLabelType == LabelType::TTF)
@@ -1564,8 +1563,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                     effectType[0] = 2;
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-//                    pipelineShadow.bindGroup.setUniform("u_effectColor", &shadowColor, sizeof(Vec4));
-//                    pipelineShadow.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                     pipelineShadow.bindGroup->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
                     pipelineShadow.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                     _customCommandShadow.init(_globalZOrder);
@@ -1578,8 +1575,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                     updateBuffer(textureAtlas, _customCommandOutLine);
                     auto& pipelineOutline = _customCommandOutLine.getPipelineDescriptor();
                     pipelineOutline = pipelineDescriptor;
-//                    pipelineOutline.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
-//                    pipelineOutline.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                     pipelineOutline.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
                     pipelineOutline.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                     _customCommandOutLine.init(_globalZOrder);
@@ -1589,8 +1584,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 //draw text
                 {
                     effectType[0] = 0;
-//                    pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
-//                    pipelineDescriptor.bindGroup.setUniform("u_effectType", &effectType, sizeof(effectType));
                     pipelineDescriptor.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
                     pipelineDescriptor.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                 }
@@ -1601,7 +1594,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 if (_shadowEnabled) {
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-//                    pipelineShadow.bindGroup.setUniform("u_textColor", &shadowColor, sizeof(Vec4));
                     pipelineShadow.bindGroup->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
                     _customCommandShadow.init(_globalZOrder);
                     renderer->addCommand(&_customCommandShadow);
@@ -1615,8 +1607,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 {
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-//                    pipelineShadow.bindGroup.setUniform("u_textColor", &shadowColor, sizeof(Vec4));
-//                    pipelineShadow.bindGroup.setUniform("u_effectColor", &shadowColor, sizeof(Vec4));
                     pipelineShadow.bindGroup->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
                     pipelineShadow.bindGroup->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
                     _customCommandShadow.init(_globalZOrder);
@@ -1624,7 +1614,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 }
                 
                 Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
-//                pipelineDescriptor.bindGroup.setUniform("u_effectColor", &effectColor, sizeof(Vec4));
                 pipelineDescriptor.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
             }
                 break;
@@ -1691,14 +1680,11 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             auto texture = textureAtlas->getTexture();
             auto& pipelineQuad = _quadCommand.getPipelineDescriptor();
             pipelineQuad = pipelineDescriptor;
-//            pipelineQuad.bindGroup.setUniform("u_MVPMatrix", matrixProjection.m, sizeof(matrixProjection.m));
-//            pipelineQuad.bindGroup.setTexture("u_texture", 0, texture->getBackendTexture());
             pipelineQuad.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixProjection.m, sizeof(matrixProjection.m));
             pipelineQuad.bindGroup->setFragmentTexture(_textColorLocation, 0, texture->getBackendTexture());
             auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();
             if(alphaTexture && alphaTexture->getBackendTexture())
             {
-//                pipelineQuad.bindGroup.setTexture("u_texture1", 1, alphaTexture->getBackendTexture());
                 pipelineQuad.bindGroup->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
             }
             _quadCommand.init(_globalZOrder, texture, _blendFunc, textureAtlas->getQuads(), textureAtlas->getTotalQuads(), transform, flags);
@@ -1713,18 +1699,13 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                     return;
                 
                 cocos2d::Mat4 matrixMVP = matrixProjection * transform;
-//                pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
                 pipelineDescriptor.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
                 Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
-//                pipelineDescriptor.bindGroup.setUniform("u_textColor", &textColor, sizeof(Vec4));
-//
-//                pipelineDescriptor.bindGroup.setTexture("u_texture", 0, textureAtlas->getTexture()->getBackendTexture());
                 pipelineDescriptor.bindGroup->setFragmentUniform(_textColorLocation, &textColor, sizeof(Vec4));
                 pipelineDescriptor.bindGroup->setFragmentTexture(_textureLocation, 0, textureAtlas->getTexture()->getBackendTexture());
                 auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();
                 if(alphaTexture && alphaTexture->getBackendTexture())
                 {
-//                    pipelineDescriptor.bindGroup.setTexture("u_texture1", 1, alphaTexture->getBackendTexture());
                     pipelineDescriptor.bindGroup->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
                 }
                 updateEffectUniforms(textureAtlas, renderer, transform);

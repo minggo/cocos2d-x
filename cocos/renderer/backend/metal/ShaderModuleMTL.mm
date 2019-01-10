@@ -112,6 +112,8 @@ void ShaderModuleMTL::parseUniform(id<MTLDevice> mtlDevice, glslopt_shader* shad
         uniform.location = location;
         uniform.isArray = parArrSize;
         uniform.bufferSize = getTypeSize(parType) * parVecSize * parMatSize * parArrSize;
+        //TODO coulsonwang
+        uniform.bufferSize = uniform.bufferSize < 16 ? 16 : uniform.bufferSize;
         _uniformInfos[parName] = uniform;
     }
 }

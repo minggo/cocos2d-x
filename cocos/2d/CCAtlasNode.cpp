@@ -51,10 +51,7 @@ AtlasNode::AtlasNode()
     pipelineDescriptor.bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
     _mvpMatrixLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
     _textureLocation = pipelineDescriptor.bindGroup->getFragmentUniformLocation("u_texture");
-    
-//    pipelineDescriptor.vertexShader = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//    pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
-    
+  
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
 #define VERTEX_COLOR_SIZE 4
@@ -156,11 +153,9 @@ void AtlasNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     
     auto bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
     bindGroup->setFragmentTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
-//    bindGroup.setTexture("u_texture", 0, _textureAtlas->getTexture()->getBackendTexture());
     
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     bindGroup->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
-//    bindGroup.setUniform("u_MVPMatrix", projectionMat.m, sizeof(projectionMat.m));
     
     _quadCommand.init(_globalZOrder, _textureAtlas->getTexture(), _blendFunc, _textureAtlas->getQuads(), _quadsToDraw, transform, flags);
     renderer->addCommand(&_quadCommand);

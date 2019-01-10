@@ -119,20 +119,20 @@ DrawNode::DrawNode(GLfloat lineWidth)
 
 //    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
-    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    _bindGroup = new (std::nothrow) backend::BindGroup();
-    pipelineDescriptor.bindGroup = _bindGroup;
-    CC_SAFE_RETAIN(_bindGroup);
-    
-    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
-    _bindGroupPoint = new (std::nothrow) backend::BindGroup();
-    pipelineDescriptor.bindGroup = _bindGroupPoint;
-    CC_SAFE_RETAIN(_bindGroupPoint);
-    
-    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
-    _bindGroupLine = new (std::nothrow) backend::BindGroup();
-    pipelineDescriptor.bindGroup = _bindGroupLine;
-    CC_SAFE_RETAIN(_bindGroupLine);
+//    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+//    _bindGroup = new (std::nothrow) backend::BindGroup();
+//    pipelineDescriptor.bindGroup = _bindGroup;
+//    CC_SAFE_RETAIN(_bindGroup);
+//
+//    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
+//    _bindGroupPoint = new (std::nothrow) backend::BindGroup();
+//    pipelineDescriptor.bindGroup = _bindGroupPoint;
+//    CC_SAFE_RETAIN(_bindGroupPoint);
+//
+//    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
+//    _bindGroupLine = new (std::nothrow) backend::BindGroup();
+//    pipelineDescriptor.bindGroup = _bindGroupLine;
+//    CC_SAFE_RETAIN(_bindGroupLine);
 #endif
 }
 
@@ -145,9 +145,9 @@ DrawNode::~DrawNode()
     free(_bufferGLLine);
     _bufferGLLine = nullptr;
     
-    CC_SAFE_RELEASE(_bindGroup);
-    CC_SAFE_RELEASE(_bindGroupPoint);
-    CC_SAFE_RELEASE(_bindGroupLine);
+    releaseBindGroup(_customCommand);
+    releaseBindGroup(_customCommandGLPoint);
+    releaseBindGroup(_customCommandGLLine);
 }
 
 DrawNode* DrawNode::create(GLfloat defaultLineWidth)
@@ -221,31 +221,30 @@ bool DrawNode::init()
     return true;
 }
 
+void DrawNode::releaseBindGroup(CustomCommand &cmd)
+{
+    CC_SAFE_RELEASE(cmd.getPipelineDescriptor().bindGroup);
+}
+
 void DrawNode::updateShader()
 {
-//    auto vert = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
-//    auto frag = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
-//    _customCommand.getPipelineDescriptor().vertexShader = vert;
-//    _customCommand.getPipelineDescriptor().fragmentShader = frag;
-    _bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    releaseBindGroup(_customCommand);
+    _customCommand.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
+    _customCommand.getPipelineDescriptor().bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommand);
     _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
 
-//    auto vertPoint = ShaderCache::newVertexShaderModule(positionColorTextureAsPointsize_vert);
-//    auto fragPoint = ShaderCache::newFragmentShaderModule(positionColor_frag);
-//    _customCommandGLPoint.getPipelineDescriptor().vertexShader = vertPoint;
-//    _customCommandGLPoint.getPipelineDescriptor().fragmentShader = fragPoint;
-    _bindGroupPoint->newProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
+     releaseBindGroup(_customCommandGLPoint);
+    _customCommandGLPoint.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
+    _customCommandGLPoint.getPipelineDescriptor().bindGroup->newProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
     setVertexLayout(_customCommandGLPoint);
     _customCommandGLPoint.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLPoint.setPrimitiveType(CustomCommand::PrimitiveType::POINT);
 
-//    auto vertLine = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
-//    auto fragLine = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
-//    _customCommandGLLine.getPipelineDescriptor().vertexShader = vertLine;
-//    _customCommandGLLine.getPipelineDescriptor().fragmentShader = fragLine;
-    _bindGroupLine->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    releaseBindGroup(_customCommandGLLine);
+    _customCommandGLLine.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
+    _customCommandGLLine.getPipelineDescriptor().bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommandGLLine);
     _customCommandGLLine.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLLine.setPrimitiveType(CustomCommand::PrimitiveType::LINE);
@@ -299,13 +298,11 @@ void DrawNode::updateUniforms(const Mat4 &transform, CustomCommand& cmd)
     Mat4 matrixMVP = matrixP * transform;
     auto mvpLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
     pipelineDescriptor.bindGroup->setVertexUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
-//    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
 
     float alpha = _displayedOpacity / 255.0;
     Vec4 alpha4(alpha, 0, 0, 0);
     auto alphaUniformLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_alpha");
     pipelineDescriptor.bindGroup->setVertexUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
-//    pipelineDescriptor.bindGroup.setUniform("u_alpha", &alpha4, sizeof(alpha4));
 }
 
 void DrawNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)

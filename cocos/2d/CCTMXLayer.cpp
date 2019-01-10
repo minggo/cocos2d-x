@@ -248,9 +248,11 @@ void TMXLayer::parseInternalProperties()
             auto alphaFuncVal = getProperty("cc_alpha_func");
             float alphaFuncValue = alphaFuncVal.asFloat();
 
-            auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
-            pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
-//            pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &alphaFuncValue, sizeof(alphaFuncValue));
+            //TODO coulsonwang
+            cocos2d::log("TODO %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+//            auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
+//            pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
+////            pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &alphaFuncValue, sizeof(alphaFuncValue));
         }
         else
         {
