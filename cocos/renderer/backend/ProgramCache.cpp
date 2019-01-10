@@ -1,6 +1,7 @@
 #include "ProgramCache.h"
 #include "Device.h"
 #include "ShaderModule.h"
+#include "renderer/ccShaders.h"
 
 CC_BACKEND_BEGIN
 
@@ -36,7 +37,25 @@ ProgramCache::~ProgramCache()
 
 void ProgramCache::init()
 {
-    //TODO coulsonwang
+    addProgram(positionTextureColor_vert, positionTextureColor_frag);
+    addProgram(positionTextureColor_vert, etc1_frag);
+    addProgram(positionTextureColor_vert, label_distanceNormal_frag);
+    addProgram(positionTextureColor_vert, label_normal_frag);
+    addProgram(positionTextureColor_vert, labelOutline_frag);
+    addProgram(positionTextureColor_vert, labelDistanceFieldGlow_frag);
+    addProgram(positionTextureColor_vert, labelDistanceFieldGlow_frag);
+    addProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    addProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
+    addProgram(positionColor_vert, positionColor_frag);
+    addProgram(position_vert, layer_radialGradient_frag);
+}
+
+void ProgramCache::addProgram(const std::string& vertexShader, const std::string& fragmentShader)
+{
+    std::string shaderSource = vertexShader + fragmentShader;
+    auto key = std::hash<std::string>{}(shaderSource);
+    auto program = backend::Device::getInstance()->createProgram(vertexShader, fragmentShader);
+    ProgramCache::_cachedPrograms.emplace(key, program);
 }
 
 backend::Program* ProgramCache::newProgram(const std::string& vertexShader, const std::string& fragmentShader)
@@ -46,6 +65,7 @@ backend::Program* ProgramCache::newProgram(const std::string& vertexShader, cons
     const auto& iter = ProgramCache::_cachedPrograms.find(key);
     if (ProgramCache::_cachedPrograms.end() != iter)
     {
+        CC_SAFE_RETAIN(iter->second);
         return iter->second;
     }
     

@@ -118,6 +118,21 @@ DrawNode::DrawNode(GLfloat lineWidth)
 //    });
 
 //    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    
+    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
+    
+    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
+    _bindGroupPoint = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroupPoint;
+    CC_SAFE_RETAIN(_bindGroupPoint);
+    
+    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
+    _bindGroupLine = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroupLine;
+    CC_SAFE_RETAIN(_bindGroupLine);
 #endif
 }
 
@@ -129,6 +144,10 @@ DrawNode::~DrawNode()
     _bufferGLPoint = nullptr;
     free(_bufferGLLine);
     _bufferGLLine = nullptr;
+    
+    CC_SAFE_RELEASE(_bindGroup);
+    CC_SAFE_RELEASE(_bindGroupPoint);
+    CC_SAFE_RELEASE(_bindGroupLine);
 }
 
 DrawNode* DrawNode::create(GLfloat defaultLineWidth)
@@ -204,26 +223,29 @@ bool DrawNode::init()
 
 void DrawNode::updateShader()
 {
-    auto vert = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
-    auto frag = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
-    _customCommand.getPipelineDescriptor().vertexShader = vert;
-    _customCommand.getPipelineDescriptor().fragmentShader = frag;
+//    auto vert = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
+//    auto frag = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
+//    _customCommand.getPipelineDescriptor().vertexShader = vert;
+//    _customCommand.getPipelineDescriptor().fragmentShader = frag;
+    _bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommand);
     _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
 
-    auto vertPoint = ShaderCache::newVertexShaderModule(positionColorTextureAsPointsize_vert);
-    auto fragPoint = ShaderCache::newFragmentShaderModule(positionColor_frag);
-    _customCommandGLPoint.getPipelineDescriptor().vertexShader = vertPoint;
-    _customCommandGLPoint.getPipelineDescriptor().fragmentShader = fragPoint;
+//    auto vertPoint = ShaderCache::newVertexShaderModule(positionColorTextureAsPointsize_vert);
+//    auto fragPoint = ShaderCache::newFragmentShaderModule(positionColor_frag);
+//    _customCommandGLPoint.getPipelineDescriptor().vertexShader = vertPoint;
+//    _customCommandGLPoint.getPipelineDescriptor().fragmentShader = fragPoint;
+    _bindGroupPoint->newProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
     setVertexLayout(_customCommandGLPoint);
     _customCommandGLPoint.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLPoint.setPrimitiveType(CustomCommand::PrimitiveType::POINT);
 
-    auto vertLine = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
-    auto fragLine = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
-    _customCommandGLLine.getPipelineDescriptor().vertexShader = vertLine;
-    _customCommandGLLine.getPipelineDescriptor().fragmentShader = fragLine;
+//    auto vertLine = ShaderCache::newVertexShaderModule(positionColorLengthTexture_vert);
+//    auto fragLine = ShaderCache::newFragmentShaderModule(positionColorLengthTexture_frag);
+//    _customCommandGLLine.getPipelineDescriptor().vertexShader = vertLine;
+//    _customCommandGLLine.getPipelineDescriptor().fragmentShader = fragLine;
+    _bindGroupLine->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommandGLLine);
     _customCommandGLLine.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLLine.setPrimitiveType(CustomCommand::PrimitiveType::LINE);
@@ -275,10 +297,14 @@ void DrawNode::updateUniforms(const Mat4 &transform, CustomCommand& cmd)
     auto& pipelineDescriptor = cmd.getPipelineDescriptor();
     const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 matrixMVP = matrixP * transform;
+    auto mvpLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
+    pipelineDescriptor.bindGroup->setVertexUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
 //    pipelineDescriptor.bindGroup.setUniform("u_MVPMatrix", matrixMVP.m, sizeof(matrixMVP.m));
 
     float alpha = _displayedOpacity / 255.0;
     Vec4 alpha4(alpha, 0, 0, 0);
+    auto alphaUniformLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_alpha");
+    pipelineDescriptor.bindGroup->setVertexUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
 //    pipelineDescriptor.bindGroup.setUniform("u_alpha", &alpha4, sizeof(alpha4));
 }
 

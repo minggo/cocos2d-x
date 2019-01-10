@@ -790,6 +790,14 @@ protected:
     bool _boldEnabled;
     DrawNode* _underlineNode;
     bool _strikethroughEnabled;
+    
+    int _mvpMatrixLocation = -1;
+    int _textureLocation = -1;
+    int _alphaTextureLocation = -1;
+    int _textColorLocation = -1;
+    int _effectColorLocation = -1;
+    int _effectTypeLocation = -1;
+    backend::BindGroup* _bindGroup = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Label);

@@ -320,6 +320,9 @@ protected:
     CustomCommand _customCommand;
 
     V3F_C4F _vertexData[4];
+    
+    int _mvpMatrixLocation = -1;
+    backend::BindGroup* _bindGroup = nullptr;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(LayerColor);
 
@@ -547,6 +550,14 @@ private:
     CustomCommand _customCommand;
     
     BlendFunc _blendFunc = BlendFunc::ALPHA_NON_PREMULTIPLIED;
+    
+    int _mvpMatrixLocation = -1;
+    int _startColorLocation = -1;
+    int _endColorLocation = -1;
+    int _centerLocation = -1;
+    int _radiusLocation = -1;
+    int _expandLocation = -1;
+    backend::BindGroup* _bindGroup = nullptr;
 };
 
 

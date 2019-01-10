@@ -327,6 +327,10 @@ Sprite::Sprite()
     _debugDrawNode = DrawNode::create();
     addChild(_debugDrawNode);
 #endif //CC_SPRITE_DEBUG_DRAW
+    auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
+    _bindGroup = new (std::nothrow) backend::BindGroup();
+    pipelineDescriptor.bindGroup = _bindGroup;
+    CC_SAFE_RETAIN(_bindGroup);
 }
 
 Sprite::~Sprite()
@@ -396,9 +400,6 @@ void Sprite::updateShaders(const char* vert, const char* frag)
 {
     auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
     
-    _bindGroup = new (std::nothrow) backend::BindGroup();
-    pipelineDescriptor.bindGroup = _bindGroup;
-    CC_SAFE_RETAIN(_bindGroup);
     pipelineDescriptor.bindGroup->newProgram(vert, frag);
     _mvpMatrixLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
     _textureLocation = pipelineDescriptor.bindGroup->getFragmentUniformLocation("u_texture");

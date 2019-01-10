@@ -11,6 +11,8 @@ ProgramMTL::ProgramMTL(id<MTLDevice> mtlDevice, const std::string& vertexShader,
     _fragmentShader = new (std::nothrow) ShaderModuleMTL(mtlDevice, backend::ShaderStage::FRAGMENT, fragmentShader);
     if(_fragmentShader)
         _fragmentShader->autorelease();
+    CC_SAFE_RETAIN(_vertexShader);
+    CC_SAFE_RETAIN(_fragmentShader);
 }
 
 ProgramMTL::~ProgramMTL()

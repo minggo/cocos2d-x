@@ -354,6 +354,14 @@ protected:
     GLfloat         _lineWidth = 0.0f;
 
     GLfloat  _defaultLineWidth = 0.0f;
+    
+    backend::BindGroup* _bindGroup = nullptr;
+    backend::BindGroup* _bindGroupPoint = nullptr;
+    backend::BindGroup* _bindGroupLine = nullptr;
+    
+    int _alphaUniformLocation = -1;
+    int _mvpMatrixLocation = -1;
+    
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 };

@@ -118,6 +118,8 @@ ProgramGL::ProgramGL(const std::string& vertexShader, const std::string& fragmen
     _fragmentShaderModule = new (std::nothrow) ShaderModuleGL(backend::ShaderStage::FRAGMENT, fragmentShader);
     if(_fragmentShaderModule)
         _fragmentShaderModule->autorelease();
+    CC_SAFE_RETAIN(_vertexShaderModule);
+    CC_SAFE_RETAIN(_fragmentShaderModule);
     compileProgram();
     computeUniformInfos();
 }

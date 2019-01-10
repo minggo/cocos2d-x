@@ -306,7 +306,7 @@ void Director::drawScene()
     if (_displayStats)
     {
 #if !CC_STRIP_FPS
-//        showStats();
+        showStats();
 #endif
     }
     
