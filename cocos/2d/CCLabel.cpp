@@ -1681,7 +1681,7 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             auto& pipelineQuad = _quadCommand.getPipelineDescriptor();
             pipelineQuad = pipelineDescriptor;
             pipelineQuad.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixProjection.m, sizeof(matrixProjection.m));
-            pipelineQuad.bindGroup->setFragmentTexture(_textColorLocation, 0, texture->getBackendTexture());
+            pipelineQuad.bindGroup->setFragmentTexture(_textureLocation, 0, texture->getBackendTexture());
             auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();
             if(alphaTexture && alphaTexture->getBackendTexture())
             {

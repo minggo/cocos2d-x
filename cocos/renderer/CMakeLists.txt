@@ -34,6 +34,8 @@ set(COCOS_RENDERER_HEADER
     renderer/backend/CommandBuffer.h
     renderer/backend/DepthStencilState.h
     renderer/backend/Device.h
+    renderer/backend/Program.h
+    renderer/backend/ProgramCache.h
     renderer/backend/Macros.h
     renderer/backend/RenderPassDescriptor.h
     renderer/backend/RenderPipeline.h
@@ -81,6 +83,7 @@ set(COCOS_RENDERER_SRC
     renderer/backend/StringUtils.cpp
     renderer/backend/Texture.cpp
     renderer/backend/VertexLayout.cpp
+    renderer/backend/ProgramCache.cpp
     )
 
 if(ANDROID OR WINDOWS) 
@@ -90,7 +93,7 @@ list(APPEND COCOS_RENDERER_HEADER
     renderer/backend/opengl/CommandBufferGL.h
     renderer/backend/opengl/DepthStencilStateGL.h
     renderer/backend/opengl/DeviceGL.h
-    renderer/backend/opengl/Program.h
+    renderer/backend/opengl/ProgramGL.h
     renderer/backend/opengl/RenderPipelineGL.h
     renderer/backend/opengl/ShaderModuleGL.h
     renderer/backend/opengl/TextureGL.h
@@ -102,7 +105,7 @@ list(APPEND COCOS_RENDERER_SRC
     renderer/backend/opengl/CommandBufferGL.cpp
     renderer/backend/opengl/DepthStencilStateGL.cpp
     renderer/backend/opengl/DeviceGL.cpp
-    renderer/backend/opengl/Program.cpp
+    renderer/backend/opengl/ProgramGL.cpp
     renderer/backend/opengl/RenderPipelineGL.cpp
     renderer/backend/opengl/ShaderModuleGL.cpp
     renderer/backend/opengl/TextureGL.cpp

@@ -1,6 +1,5 @@
 #include "ProgramGL.h"
 #include "ShaderModuleGL.h"
-#include "ccMacros.h"
 
 CC_BACKEND_BEGIN
 

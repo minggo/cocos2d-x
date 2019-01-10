@@ -24,7 +24,7 @@ RenderPipelineGL::RenderPipelineGL(const RenderPipelineDescriptor& descriptor)
 
 RenderPipelineGL::~RenderPipelineGL()
 {
-    CC_SAFE_RELEASE(_program);
+    CC_SAFE_RELEASE(_programGL);
     CC_SAFE_RELEASE(_depthStencilState);
     CC_SAFE_RELEASE(_blendState);
 }

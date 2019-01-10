@@ -6,6 +6,7 @@
 #include "TextureGL.h"
 #include "DepthStencilStateGL.h"
 #include "BlendStateGL.h"
+#include "ProgramGL.h"
 
 CC_BACKEND_BEGIN
 
