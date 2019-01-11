@@ -43,11 +43,6 @@ public:
     
     ~BindGroup();
     
-    //TODO coulsonwang
-    void setTexture(const std::string& name, uint32_t index, Texture* texture);
-    void setUniform(const std::string& name, const void* data, uint32_t size);
-
-    
     //set program
     void newProgram(const std::string& vertexShader, const std::string& fragmentShader);
     Program* getProgram() const { return _program; }

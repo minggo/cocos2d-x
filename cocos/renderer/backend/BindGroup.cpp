@@ -5,17 +5,6 @@
 
 CC_BACKEND_BEGIN
 
-//needed removed
-void BindGroup::setTexture(const std::string& name, uint32_t index, Texture* texture)
-{
-    printf("-----------------");
-}
-void BindGroup::setUniform(const std::string& name, const void* data, uint32_t size)
-{
-    printf("-----------------");
-}
-
-
 BindGroup::UniformBuffer::UniformBuffer(UniformInfo _uniformInfo)
 : uniformInfo(_uniformInfo)
 , dirty(false)

@@ -12,7 +12,9 @@ CC_BACKEND_BEGIN
 RenderPipelineGL::RenderPipelineGL(const RenderPipelineDescriptor& descriptor)
 {
     _programGL = static_cast<ProgramGL*>(descriptor.bindGroup->getProgram());
-    
+    _programGL->computeAttributeInfos(descriptor);
+    CC_SAFE_RETAIN(_programGL);
+
     const auto& depthStencilState = descriptor.depthStencilState;
     CC_SAFE_RETAIN(depthStencilState);
     _depthStencilState = static_cast<DepthStencilStateGL*>(depthStencilState);
