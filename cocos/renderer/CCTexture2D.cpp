@@ -1130,8 +1130,8 @@ Texture2D::PixelFormat Texture2D::convertDataToFormat(const unsigned char* data,
         return convertRGB5A1ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::RGB565:
         return convertRGB565ToFormat(data, dataLen, format, outData, outDataLen);
-//  case PixelFormat::RGBA4444:
-//        return convertRGBA4444ToFormat(data, dataLen, format, outData, outDataLen);
+    case PixelFormat::RGBA4444:
+        return convertRGBA4444ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::A8:
         return convertA8ToFormat(data, dataLen, format, outData, outDataLen);
 
