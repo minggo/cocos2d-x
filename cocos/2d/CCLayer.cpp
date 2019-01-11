@@ -282,17 +282,6 @@ std::string Layer::getDescription() const
     return StringUtils::format("<Layer | Tag = %d>", _tag);
 }
 
-__LayerRGBA::__LayerRGBA()
-{
-    CCLOG("LayerRGBA deprecated.");
-}
-
-
-#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-#elif _MSC_VER >= 1400 //vs 2005 or higher
-#pragma warning (pop)
-#endif
 /// LayerColor
 
 LayerColor::LayerColor()
@@ -919,24 +908,6 @@ LayerMultiplex::~LayerMultiplex()
     }
 }
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-LayerMultiplex * LayerMultiplex::createVariadic(Layer * layer, ...)
-{
-    va_list args;
-    va_start(args,layer);
-
-    LayerMultiplex * multiplexLayer = new (std::nothrow) LayerMultiplex();
-    if(multiplexLayer && multiplexLayer->initWithLayers(layer, args))
-    {
-        multiplexLayer->autorelease();
-        va_end(args);
-        return multiplexLayer;
-    }
-    va_end(args);
-    CC_SAFE_DELETE(multiplexLayer);
-    return nullptr;
-}
-#else
 LayerMultiplex * LayerMultiplex::create(Layer * layer, ...)
 {
     va_list args;
@@ -953,7 +924,6 @@ LayerMultiplex * LayerMultiplex::create(Layer * layer, ...)
     CC_SAFE_DELETE(multiplexLayer);
     return nullptr;
 }
-#endif
 
 LayerMultiplex * LayerMultiplex::createWithLayer(Layer* layer)
 {

@@ -132,10 +132,10 @@ list(APPEND GAME_HEADER
      Classes/NewEventDispatcherTest/NewEventDispatcherTest.h
      Classes/ActionsProgressTest/ActionsProgressTest.h
      Classes/RotateWorldTest/RotateWorldTest.h
-     Classes/Camera3DTest/Camera3DTest.h
+     #Classes/Camera3DTest/Camera3DTest.h
      Classes/TextInputTest/TextInputTest.h
      Classes/Texture2dTest/Texture2dTest.h
-     Classes/TerrainTest/TerrainTest.h
+     #Classes/TerrainTest/TerrainTest.h
      Classes/controller.h
      Classes/TransitionsTest/TransitionsTest.h
      Classes/TextureCacheTest/TextureCacheTest.h
@@ -148,8 +148,8 @@ list(APPEND GAME_HEADER
      Classes/ExtensionsTest/NetworkTest/WebSocketDelayTest.h
      Classes/ExtensionsTest/NetworkTest/SocketIOTest.h
      Classes/ExtensionsTest/NetworkTest/HttpClientTest.h
-     Classes/Sprite3DTest/Sprite3DTest.h
-     Classes/Sprite3DTest/DrawNode3D.h
+     #Classes/Sprite3DTest/Sprite3DTest.h
+     #Classes/Sprite3DTest/DrawNode3D.h
      Classes/BaseTest.h
      Classes/SceneTest/SceneTest.h
      Classes/ReleasePoolTest/ReleasePoolTest.h
@@ -184,7 +184,7 @@ list(APPEND GAME_HEADER
      Classes/UITest/CocoStudioGUITest/UIFocusTest/UIFocusTest.h
      Classes/UITest/CocoStudioGUITest/UITextTest/UITextTest.h
      Classes/DrawPrimitivesTest/DrawPrimitivesTest.h
-     Classes/BillBoardTest/BillBoardTest.h
+     #Classes/BillBoardTest/BillBoardTest.h
      Classes/SpriteFrameCacheTest/SpriteFrameCacheTest.h
      Classes/EffectsAdvancedTest/EffectsAdvancedTest.h
      Classes/SchedulerTest/SchedulerTest.h
@@ -192,7 +192,7 @@ list(APPEND GAME_HEADER
      Classes/testResource.h
      Classes/ShaderTest/ShaderTest.vsh.h
      Classes/ShaderTest/shaderTest.psh.h
-     Classes/ShaderTest/ShaderTest.h
+     #Classes/ShaderTest/ShaderTest.h
      Classes/ShaderTest/ShaderTest2.h
      Classes/NewRendererTest/NewRendererTest.h
      Classes/SpritePolygonTest/SpritePolygonTest.h
@@ -219,7 +219,7 @@ list(APPEND GAME_SOURCE
 #     Classes/AllocatorTest/AllocatorTest.cpp
      Classes/AppDelegate.cpp
      Classes/BaseTest.cpp
-     Classes/BillBoardTest/BillBoardTest.cpp
+     #Classes/BillBoardTest/BillBoardTest.cpp
      Classes/BugsTest/Bug-CCDrawNode.cpp
      Classes/BugsTest/Bug-1159.cpp
      Classes/BugsTest/Bug-1174.cpp
@@ -236,7 +236,7 @@ list(APPEND GAME_SOURCE
      Classes/BugsTest/Bug-15776.cpp
      Classes/BugsTest/Bug-Child.cpp
      Classes/BugsTest/BugsTest.cpp
-     Classes/Camera3DTest/Camera3DTest.cpp
+     #Classes/Camera3DTest/Camera3DTest.cpp
      Classes/ClickAndMoveTest/ClickAndMoveTest.cpp
      Classes/ClippingNodeTest/ClippingNodeTest.cpp
      Classes/CocosDenshionTest/CocosDenshionTest.cpp
@@ -282,15 +282,15 @@ list(APPEND GAME_SOURCE
      Classes/RotateWorldTest/RotateWorldTest.cpp
      Classes/SceneTest/SceneTest.cpp
      Classes/SchedulerTest/SchedulerTest.cpp
-     Classes/ShaderTest/ShaderTest.cpp
+     #Classes/ShaderTest/ShaderTest.cpp
      Classes/ShaderTest/ShaderTest2.cpp
      Classes/SpineTest/SpineTest.cpp
 #     Classes/Scene3DTest/Scene3DTest.cpp
-     Classes/Sprite3DTest/DrawNode3D.cpp
-     Classes/Sprite3DTest/Sprite3DTest.cpp
+     #Classes/Sprite3DTest/DrawNode3D.cpp
+     #Classes/Sprite3DTest/Sprite3DTest.cpp
      Classes/SpritePolygonTest/SpritePolygonTest.cpp
      Classes/SpriteTest/SpriteTest.cpp
-     Classes/TerrainTest/TerrainTest.cpp
+ #    Classes/TerrainTest/TerrainTest.cpp
      Classes/TextInputTest/TextInputTest.cpp
      Classes/Texture2dTest/Texture2dTest.cpp
      Classes/TextureCacheTest/TextureCacheTest.cpp
@@ -445,8 +445,8 @@ if(USE_CHIPMUNK)
          Classes/ChipmunkTest/ChipmunkTest.h
          )
     list(APPEND GAME_SOURCE
-         Classes/PhysicsTest/PhysicsTest.cpp
-         Classes/ChipmunkTest/ChipmunkTest.cpp
+    #     Classes/PhysicsTest/PhysicsTest.cpp
+    #     Classes/ChipmunkTest/ChipmunkTest.cpp
          )
 endif()
 

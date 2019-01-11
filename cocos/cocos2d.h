@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 // 0x00 HI ME LO
 // 00   03 08 00
-#define COCOS2D_VERSION 0x00031700
+#define COCOS2D_VERSION 0x00040001
 
 //
 // all cocos2d include files
@@ -186,7 +186,6 @@ THE SOFTWARE.
 #include "platform/CCPlatformConfig.h"
 #include "platform/CCPlatformMacros.h"
 #include "platform/CCSAXParser.h"
-#include "platform/CCThread.h"
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     #include "platform/ios/CCApplication-ios.h"

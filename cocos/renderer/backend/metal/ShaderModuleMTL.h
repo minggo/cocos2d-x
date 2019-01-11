@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 #import <Metal/Metal.h>
 
 struct glslopt_shader;
