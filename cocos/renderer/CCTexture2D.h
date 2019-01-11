@@ -438,6 +438,8 @@ private:
     static PixelFormat convertRGB888ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen);
     static PixelFormat convertRGBA8888ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen);
     static PixelFormat convertRGB5A1ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen);
+    static PixelFormat convertRGB565ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen);
+    static PixelFormat convertA8ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen);
 
     //I8 to XXX
     static void convertI8ToRGB888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
@@ -476,7 +478,9 @@ private:
     
     
     static void convertRGB5A1ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
-    
+    static void convertRGB565ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
+    static void convertA8ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
+
 protected:
     /** pixel format of the texture */
     Texture2D::PixelFormat _pixelFormat;
