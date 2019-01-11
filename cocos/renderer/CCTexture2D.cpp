@@ -470,10 +470,10 @@ void Texture2D::convertRGBA4444ToRGBA8888(const unsigned char* data, ssize_t dat
     for(uint32_t i = 0; i < pixelLen; i++ )
     {
         pixel = inData[i];
-        *outData++ = (pixel & 0xF000) >> 8;
-        *outData++ = (pixel & 0x0F00) >> 4;
-        *outData++ = (pixel & 0x00F0) >> 0;
-        *outData++ = (pixel & 0x000F) << 4;
+        *outData++ = ((pixel & 0xF000) >> 12) * 17;
+        *outData++ = ((pixel & 0x0F00) >> 8 ) * 17;
+        *outData++ = ((pixel & 0x00F0) >> 4 ) * 17;
+        *outData++ = ((pixel & 0x000F) * 17);
     }
     
 }
