@@ -214,7 +214,7 @@ public:
      @param pixelsWide The image width.
      @param pixelsHigh The image height.
      */
-    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh);
+    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, Texture2D::PixelFormat renderFormat, int pixelsWide, int pixelsHigh);
     
     /** Update with texture data.
      

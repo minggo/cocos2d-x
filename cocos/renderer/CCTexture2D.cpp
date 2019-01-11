@@ -603,35 +603,35 @@ bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::Pixel
     MipmapInfo mipmap;
     mipmap.address = (unsigned char*)data;
     mipmap.len = static_cast<int>(dataLen);
-    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelsWide, pixelsHigh);
+    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelFormat, pixelsWide, pixelsHigh);
 }
 
-bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh)
+bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, PixelFormat renderFormat, int pixelsWide, int pixelsHigh)
 {
     //the pixelFormat must be a certain value 
     CCASSERT(pixelFormat != PixelFormat::NONE && pixelFormat != PixelFormat::AUTO, "the \"pixelFormat\" param must be a certain value!");
-    CCASSERT(pixelsWide>0 && pixelsHigh>0, "Invalid size");
+    CCASSERT(pixelsWide > 0 && pixelsHigh > 0, "Invalid size");
 
     if (mipmapsNum <= 0)
     {
         CCLOG("cocos2d: WARNING: mipmap number is less than 1");
         return false;
     }
-    
+
 
     auto formatItr = _pixelFormatInfoTables.find(pixelFormat);
-    if(formatItr == _pixelFormatInfoTables.end())
+    if (formatItr == _pixelFormatInfoTables.end())
     {
-        CCLOG("cocos2d: WARNING: unsupported pixelformat: %lx", (unsigned long)pixelFormat );
+        CCLOG("cocos2d: WARNING: unsupported pixelformat: %lx", (unsigned long)pixelFormat);
         return false;
     }
 
     const PixelFormatInfo& info = formatItr->second;
 
     if (info.compressed && !Configuration::getInstance()->supportsPVRTC()
-                        && !Configuration::getInstance()->supportsETC()
-                        && !Configuration::getInstance()->supportsS3TC()
-                        && !Configuration::getInstance()->supportsATITC())
+        && !Configuration::getInstance()->supportsETC()
+        && !Configuration::getInstance()->supportsS3TC()
+        && !Configuration::getInstance()->supportsATITC())
     {
         CCLOG("cocos2d: WARNING: PVRTC/ETC images are not supported");
         return false;
@@ -647,26 +647,29 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     {
         textureDescriptor.samplerDescriptor.mipmapFilter = backend::SamplerFilter::NEAREST;
     }
-    
+
     unsigned char *data = mipmaps[0].address;
-#ifdef CC_USE_METAL
+
     ssize_t dataLen = mipmaps[0].len;
-    unsigned char *outData = nullptr;
+    unsigned char *outData = data;
     ssize_t outDataLen;
-    if(pixelFormat!=PixelFormat::RGBA8888 && pixelFormat != PixelFormat::A8)
-    {
-        auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, PixelFormat::RGBA8888, &outData, &outDataLen);
-        CCASSERT(convertedFormat == PixelFormat::RGBA8888, "PixelFormat convert to RGBA8888 failure!");
-        pixelFormat = PixelFormat::RGBA8888;
-    }else{
-        outData = data;
-    }
+
+    switch (pixelFormat) {
+    case PixelFormat::A8:
+#ifndef CC_USE_METAL
+    case PixelFormat::RGBA4444:
 #endif
-    
+        break;
+    default:
+        auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
+        CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
+        pixelFormat = renderFormat;
+    }
+
     backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(pixelFormat);
     textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
     _texture = device->newTexture(textureDescriptor);
-#ifdef CC_USE_METAL
+
     _texture->updateData(outData);
     if(outData && outData != data && outDataLen > 0)
     {
@@ -674,9 +677,6 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         outData = nullptr;
         outDataLen = 0;
     }
-#else
-    _texture->updateData(data);
-#endif
     _contentSize = Size((float)pixelsWide, (float)pixelsHigh);
     _pixelsWide = pixelsWide;
     _pixelsHigh = pixelsHigh;
@@ -741,7 +741,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
             CCLOG("cocos2d: WARNING: This image has more than 1 mipmaps and we will not convert the data format");
         }
 
-        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getRenderFormat(), imageWidth, imageHeight);
+        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getRenderFormat(), finalRenderFormat, imageWidth, imageHeight);
         
         // set the premultiplied tag
         _hasPremultipliedAlpha = image->hasPremultipliedAlpha();
@@ -1125,11 +1125,11 @@ Texture2D::PixelFormat Texture2D::convertDataToFormat(const unsigned char* data,
         return convertRGB888ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::RGBA8888:
         return convertRGBA8888ToFormat(data, dataLen, format, outData, outDataLen);
-#ifdef CC_USE_METAL
     case PixelFormat::RGB5A1:
         return convertRGB5A1ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::RGB565:
         return convertRGB565ToFormat(data, dataLen, format, outData, outDataLen);
+#ifdef CC_USE_METAL
     case PixelFormat::RGBA4444:
         return convertRGBA4444ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::A8:
