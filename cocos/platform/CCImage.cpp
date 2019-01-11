@@ -257,10 +257,22 @@ namespace
 
         _pixel3_formathash::value_type(PVR3TexturePixelFormat::ETC1,        Texture2D::PixelFormat::ETC),
     };
-        
+
     static const int PVR3_MAX_TABLE_ELEMENTS = sizeof(v3_pixel_formathash_value) / sizeof(v3_pixel_formathash_value[0]);
         
     static const _pixel3_formathash v3_pixel_formathash(v3_pixel_formathash_value, v3_pixel_formathash_value + PVR3_MAX_TABLE_ELEMENTS);
+        
+#ifdef CC_USE_METAL
+    typedef std::map<Texture2D::PixelFormat, Texture2D::PixelFormat> _render_format_hash_type;
+        
+    static const _render_format_hash_type::value_type render_formathash_values[] =
+    {
+        _render_format_hash_type::value_type(Texture2D::PixelFormat::RGB5A1, Texture2D::PixelFormat::RGBA8888),
+        _render_format_hash_type::value_type(Texture2D::PixelFormat::RGB565, Texture2D::PixelFormat::RGBA8888)
+    };
+    static const size_t RENDERER_FORMATH_HASH_ELEMENTS = sizeof(render_formathash_values) / sizeof(render_formathash_values[0]);
+    static _render_format_hash_type render_formathash(render_formathash_values, render_formathash_values + RENDERER_FORMATH_HASH_ELEMENTS );
+#endif
         
     typedef struct _PVRTexHeader
     {
@@ -616,6 +628,16 @@ bool Image::initWithImageData(const unsigned char * data, ssize_t dataLen)
     } while (0);
     
     return ret;
+}
+
+Texture2D::PixelFormat Image::getPreferRenderFormat() const
+{
+#ifdef CC_USE_METAL
+    auto it = render_formathash.find(_renderFormat);
+    return it == render_formathash.end() ? _renderFormat : Texture2D::PixelFormat::AUTO;
+#else
+    return Texture2D::PixelFormat::AUTO;
+#endif
 }
 
 bool Image::isPng(const unsigned char * data, ssize_t dataLen)
@@ -1323,6 +1345,8 @@ bool Image::initWithPVRv2Data(const unsigned char * data, ssize_t dataLen)
         return false;
     }
     
+    
+    
     auto it = Texture2D::getPixelFormatInfoMap().find(getDevicePixelFormat(v2_pixel_formathash.at(formatFlags)));
 
     if (it == Texture2D::getPixelFormatInfoMap().end())
@@ -1677,7 +1701,7 @@ bool Image::initWithTGAData(tImageTGA* tgaData)
             // unsupported RGB555
             if (tgaData->pixelDepth == 16)
             {
-                _renderFormat = Texture2D::PixelFormat::RGB5A1;
+                _renderFormat = Texture2D::PixelFormat::RGBA8888;
             }
             else if(tgaData->pixelDepth == 24)
             {

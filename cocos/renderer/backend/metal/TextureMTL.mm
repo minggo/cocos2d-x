@@ -69,6 +69,19 @@ namespace
         }
     }
     
+    void convertRGB5A1ToRGBA888(uint8_t *src, uint8_t* dst, uint32_t length)
+    {
+        uint16_t pixel;
+        for(uint32_t i=0; i< length; ++i)
+        {
+            pixel = *(uint16_t*)(src + i * 2);
+            *dst++ = (pixel & (0x001F << 11)) << 3;
+            *dst++ = (pixel & (0x001F << 6)) << 3;
+            *dst++ = (pixel & (0x001F << 1)) << 3;
+            *dst++ = (pixel & 0x0001) * 255;
+        }
+    }
+    
     bool convertData(uint8_t* src, unsigned int length, TextureFormat format, uint8_t** out)
     {
         *out = src;

@@ -431,6 +431,22 @@ void Texture2D::convertRGBA8888ToRGB5A1(const unsigned char* data, ssize_t dataL
             |  (data[i + 3] & 0x0080) >> 7;   //A
     }
 }
+
+void Texture2D::convertRGB5A1ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+{
+    uint16_t *inData = (uint16_t*) data;
+    const uint16_t pixelLen = dataLen / 2;
+    uint16_t pixel;
+    for(uint32_t i = 0; i < pixelLen; i++ )
+    {
+        pixel = inData[i];
+        *outData++ = (pixel & (0x001F << 11)) >> 8;
+        *outData++ = (pixel & (0x001F << 6)) >> 3;
+        *outData++ = (pixel & (0x001F << 1)) << 2;
+        *outData++ = (pixel & 0x0001) * 255;
+    }
+}
+
 // converter function end
 //////////////////////////////////////////////////////////////////////////
 
@@ -646,14 +662,15 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
     unsigned char*   tempData = image->getData();
     Size             imageSize = Size((float)imageWidth, (float)imageHeight);
-    PixelFormat      pixelFormat = ((PixelFormat::NONE == format) || (PixelFormat::AUTO == format)) ? image->getRenderFormat() : format;
-    PixelFormat      renderFormat = image->getRenderFormat();
+    PixelFormat      finalRenderFormat = ((PixelFormat::NONE == format) || (PixelFormat::AUTO == format)) ? image->getRenderFormat() : format;
+    finalRenderFormat = image->getPreferRenderFormat() == PixelFormat::AUTO ? format : image->getPreferRenderFormat();
+    PixelFormat      imagePixelFormat = image->getRenderFormat();
     size_t           tempDataLen = image->getDataLen();
 
 
     if (image->getNumberOfMipmaps() > 1)
     {
-        if (pixelFormat != image->getRenderFormat())
+        if (finalRenderFormat != image->getRenderFormat())
         {
             CCLOG("cocos2d: WARNING: This image has more than 1 mipmaps and we will not convert the data format");
         }
@@ -667,7 +684,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     }
     else if (image->isCompressed())
     {
-        if (pixelFormat != image->getRenderFormat())
+        if (finalRenderFormat != image->getRenderFormat())
         {
             CCLOG("cocos2d: WARNING: This image is compressed and we can't convert it for now");
         }
@@ -684,9 +701,9 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         unsigned char* outTempData = nullptr;
         ssize_t outTempDataLen = 0;
 
-        pixelFormat = convertDataToFormat(tempData, tempDataLen, renderFormat, pixelFormat, &outTempData, &outTempDataLen);
+        finalRenderFormat = convertDataToFormat(tempData, tempDataLen, imagePixelFormat, finalRenderFormat, &outTempData, &outTempDataLen);
 
-        initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize);
+        initWithData(outTempData, outTempDataLen, finalRenderFormat, imageWidth, imageHeight, imageSize);
 
 
         if (outTempData != nullptr && outTempData != tempData)
@@ -914,6 +931,29 @@ Texture2D::PixelFormat Texture2D::convertRGBA8888ToFormat(const unsigned char* d
     return format;
 }
 
+Texture2D::PixelFormat Texture2D::convertRGB5A1ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen)
+{
+    switch (format)
+    {
+        case PixelFormat::RGBA8888:
+            *outDataLen = dataLen/2*4;
+            *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+            convertRGB5A1ToRGBA8888(data, dataLen, *outData);
+            break;
+        default:
+            // unsupported conversion or don't need to convert
+            if (format != PixelFormat::AUTO && format != PixelFormat::RGBA8888)
+            {
+                CCLOG("Can not convert image format PixelFormat::RGB5A1 to format ID:%d, we will use it's origin format PixelFormat::RGB51A", static_cast<int>(format));
+            }
+            *outData = (unsigned char*)data;
+            *outDataLen = dataLen;
+            return PixelFormat::RGBA8888;
+    }
+    
+    return format;
+}
+
 /*
 convert map:
 1.PixelFormat::RGBA8888
@@ -951,6 +991,8 @@ Texture2D::PixelFormat Texture2D::convertDataToFormat(const unsigned char* data,
         return convertRGB888ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::RGBA8888:
         return convertRGBA8888ToFormat(data, dataLen, format, outData, outDataLen);
+    case PixelFormat::RGB5A1:
+        return convertRGB5A1ToFormat(data, dataLen, format, outData, outDataLen);
     default:
         CCLOG("unsupported conversion from format %d to format %d", static_cast<int>(originFormat), static_cast<int>(format));
         *outData = (unsigned char*)data;

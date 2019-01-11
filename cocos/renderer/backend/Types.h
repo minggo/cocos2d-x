@@ -56,7 +56,7 @@ enum class TextureFormat : uint32_t
     // a stencil render target.
     D24S8,
     RGBA4444,
-    SYSTEM_DEFAULT,
+    SYSTEM_DEFAULT
 };
 
 enum class TextureUsage : uint32_t

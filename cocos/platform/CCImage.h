@@ -136,7 +136,8 @@ public:
     unsigned char *   getData()               { return _data; }
     ssize_t           getDataLen()            { return _dataLen; }
     Format            getFileType()           { return _fileType; }
-    Texture2D::PixelFormat getRenderFormat()  { return _renderFormat; }
+    Texture2D::PixelFormat getRenderFormat() const {return _renderFormat; }
+    Texture2D::PixelFormat getPreferRenderFormat() const;
     int               getWidth()              { return _width; }
     int               getHeight()             { return _height; }
     int               getNumberOfMipmaps()    { return _numberOfMipmaps; }
