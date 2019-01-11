@@ -462,6 +462,22 @@ void Texture2D::convertRGB565ToRGBA8888(const unsigned char* data, ssize_t dataL
     }
 }
 
+void Texture2D::convertRGBA4444ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+{
+    uint16_t *inData = (uint16_t*) data;
+    const uint16_t pixelLen = dataLen / 2;
+    uint16_t pixel;
+    for(uint32_t i = 0; i < pixelLen; i++ )
+    {
+        pixel = inData[i];
+        *outData++ = (pixel & 0xF000) >> 8;
+        *outData++ = (pixel & 0x0F00) >> 4;
+        *outData++ = (pixel & 0x00F0) >> 0;
+        *outData++ = (pixel & 0x000F) << 4;
+    }
+    
+}
+
 void Texture2D::convertA8ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
 {
     for(uint32_t i = 0; i < dataLen; i++ )
@@ -472,6 +488,7 @@ void Texture2D::convertA8ToRGBA8888(const unsigned char* data, ssize_t dataLen, 
         *outData++ = data[i];
     }
 }
+
 
 // converter function end
 //////////////////////////////////////////////////////////////////////////
@@ -636,7 +653,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     ssize_t dataLen = mipmaps[0].len;
     unsigned char *outData = nullptr;
     ssize_t outDataLen;
-    if(pixelFormat!=PixelFormat::RGBA8888 && pixelFormat != PixelFormat::A8 && pixelFormat != PixelFormat::RGBA4444)
+    if(pixelFormat!=PixelFormat::RGBA8888 && pixelFormat != PixelFormat::A8)
     {
         auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, PixelFormat::RGBA8888, &outData, &outDataLen);
         CCASSERT(convertedFormat == PixelFormat::RGBA8888, "PixelFormat convert to RGBA8888 failure!");
@@ -1039,7 +1056,7 @@ Texture2D::PixelFormat Texture2D::convertA8ToFormat(const unsigned char* data, s
             // unsupported conversion or don't need to convert
             if (format != PixelFormat::AUTO && format != PixelFormat::RGBA8888)
             {
-                CCLOG("Can not convert image format PixelFormat::RGB5A1 to format ID:%d, we will use it's origin format PixelFormat::RGB51A", static_cast<int>(format));
+                CCLOG("Can not convert image format PixelFormat::A8 to format ID:%d, we will use it's origin format PixelFormat::A8", static_cast<int>(format));
             }
             *outData = (unsigned char*)data;
             *outDataLen = dataLen;
@@ -1049,6 +1066,28 @@ Texture2D::PixelFormat Texture2D::convertA8ToFormat(const unsigned char* data, s
     return format;
 }
 
+Texture2D::PixelFormat Texture2D::convertRGBA4444ToFormat(const unsigned char* data, ssize_t dataLen, PixelFormat format, unsigned char** outData, ssize_t* outDataLen)
+{
+    switch (format)
+    {
+        case PixelFormat::RGBA8888:
+            *outDataLen = dataLen/ 2 * 4;
+            *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+            convertRGBA4444ToRGBA8888(data, dataLen, *outData);
+            break;
+        default:
+            // unsupported conversion or don't need to convert
+            if (format != PixelFormat::AUTO && format != PixelFormat::RGBA8888)
+            {
+                CCLOG("Can not convert image format PixelFormat::RGBA444 to format ID:%d, we will use it's origin format PixelFormat::RGBA4444", static_cast<int>(format));
+            }
+            *outData = (unsigned char*)data;
+            *outDataLen = dataLen;
+            return PixelFormat::RGBA8888;
+    }
+    
+    return format;
+}
 /*
 convert map:
 1.PixelFormat::RGBA8888
@@ -1091,6 +1130,8 @@ Texture2D::PixelFormat Texture2D::convertDataToFormat(const unsigned char* data,
         return convertRGB5A1ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::RGB565:
         return convertRGB565ToFormat(data, dataLen, format, outData, outDataLen);
+//  case PixelFormat::RGBA4444:
+//        return convertRGBA4444ToFormat(data, dataLen, format, outData, outDataLen);
     case PixelFormat::A8:
         return convertA8ToFormat(data, dataLen, format, outData, outDataLen);
 
