@@ -120,7 +120,7 @@ const Texture2D::PixelFormatInfoMap Texture2D::_pixelFormatInfoTables(TexturePix
 
 // If the image has alpha, you can create RGBA8 (32-bit) or RGBA4 (16-bit) or RGB5A1 (16-bit)
 // Default is: RGBA8888 (32-bit textures)
-static Texture2D::PixelFormat g_defaultAlphaPixelFormat = Texture2D::PixelFormat::DEFAULT;
+static Texture2D::PixelFormat g_preferedAlphaPixelFormat = Texture2D::PixelFormat::DEFAULT;
 
 //////////////////////////////////////////////////////////////////////////
 //convertor function
@@ -704,7 +704,7 @@ bool Texture2D::updateWithData(void *data,int offsetX,int offsetY,int width,int 
 // implementation Texture2D (Image)
 bool Texture2D::initWithImage(Image *image)
 {
-    return initWithImage(image, g_defaultAlphaPixelFormat);
+    return initWithImage(image, g_preferedAlphaPixelFormat);
 }
 
 bool Texture2D::initWithImage(Image *image, PixelFormat format)
@@ -1205,7 +1205,7 @@ bool Texture2D::initWithString(const char *text, const FontDefinition& textDefin
     CCASSERT(textDefinition._stroke._strokeEnabled == false, "Currently stroke only supported on iOS and Android!");
 #endif
 
-    PixelFormat      pixelFormat = g_defaultAlphaPixelFormat;
+    PixelFormat      pixelFormat = g_preferedAlphaPixelFormat;
     unsigned char* outTempData = nullptr;
     ssize_t outTempDataLen = 0;
 
@@ -1459,14 +1459,14 @@ const char* Texture2D::getStringForFormat() const
 //
 // implementation Texture2D (PixelFormat)
 
-void Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat format)
+void Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat format)
 {
-    g_defaultAlphaPixelFormat = format;
+    g_preferedAlphaPixelFormat = format;
 }
 
 Texture2D::PixelFormat Texture2D::getDefaultAlphaPixelFormat()
 {
-    return g_defaultAlphaPixelFormat;
+    return g_preferedAlphaPixelFormat;
 }
 
 unsigned int Texture2D::getBitsPerPixelForFormat(Texture2D::PixelFormat format) const

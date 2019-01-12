@@ -63,11 +63,11 @@ SpriteFrameCachePixelFormatTest::SpriteFrameCachePixelFormatTest()
     }
     
     // test loading atlases without PixelFormat specified
-    Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGB5A1);
+    Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGB5A1);
     loadSpriteFrames("Images/sprite_frames_test/test_NoFormat.plist", Texture2D::PixelFormat::RGB5A1);
     
     // restore default alpha pixel format
-    Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGBA8888);
+    Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGBA8888);
 }
 
 void SpriteFrameCachePixelFormatTest::loadSpriteFrames(const std::string &file, cocos2d::Texture2D::PixelFormat expectedFormat)

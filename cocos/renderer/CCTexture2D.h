@@ -175,7 +175,7 @@ public:
 
      @since v0.8
      */
-    static void setDefaultAlphaPixelFormat(Texture2D::PixelFormat format);
+    static void setPreferAlphaPixelFormat(Texture2D::PixelFormat format);
 
     /** Returns the alpha pixel format.
      @since v0.8

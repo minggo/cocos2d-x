@@ -329,9 +329,9 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(ValueMap& dict, const std::
     {
         const Texture2D::PixelFormat pixelFormat = (*pixelFormatIt).second;
         const Texture2D::PixelFormat currentPixelFormat = Texture2D::getDefaultAlphaPixelFormat();
-        Texture2D::setDefaultAlphaPixelFormat(pixelFormat);
+        Texture2D::setPreferAlphaPixelFormat(pixelFormat);
         texture = Director::getInstance()->getTextureCache()->addImage(texturePath);
-        Texture2D::setDefaultAlphaPixelFormat(currentPixelFormat);
+        Texture2D::setPreferAlphaPixelFormat(currentPixelFormat);
     }
     else
     {
