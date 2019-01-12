@@ -180,7 +180,7 @@ public:
     /** Returns the alpha pixel format.
      @since v0.8
      */
-    static Texture2D::PixelFormat getDefaultAlphaPixelFormat();
+    static Texture2D::PixelFormat getPreferedAlphaPixelFormat();
     
 public:
     /**
@@ -240,7 +240,7 @@ public:
     /** 
     Initializes a texture from a UIImage object.
 
-    We will use the format you specified with setDefaultAlphaPixelFormat to convert the image for texture.
+    We will use the format you specified with setPreferAlphaPixelFormat to convert the image for texture.
     NOTE: It will not convert the pvr image file.
     @param image An UIImage object.
     */

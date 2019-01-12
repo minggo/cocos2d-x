@@ -656,6 +656,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 
     switch (pixelFormat) {
     case PixelFormat::A8:
+    case PixelFormat::I8:
 #ifndef CC_USE_METAL
     case PixelFormat::RGBA4444:
 #endif
@@ -729,19 +730,31 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
     unsigned char*   tempData = image->getData();
     Size             imageSize = Size((float)imageWidth, (float)imageHeight);
-    PixelFormat      finalRenderFormat = ((PixelFormat::NONE == format) || (PixelFormat::AUTO == format)) ? image->getRenderFormat() : format;
-    PixelFormat      imagePixelFormat = image->getRenderFormat();
+    PixelFormat      renderFormat = ((PixelFormat::NONE == format) || (PixelFormat::AUTO == format)) ? image->getPixelFormat() : format;
+    PixelFormat      imagePixelFormat = image->getPixelFormat();
     size_t           tempDataLen = image->getDataLen();
 
+    //override renderFormat
+    switch (renderFormat)
+    {
+    case PixelFormat::RGB565:
+    case PixelFormat::RGBA4444:
+    case PixelFormat::RGB5A1:
+    case PixelFormat::I8:
+        renderFormat = PixelFormat::RGBA8888;
+        break;
+    default:
+        break;
+    }
 
     if (image->getNumberOfMipmaps() > 1)
     {
-        if (finalRenderFormat != image->getRenderFormat())
+        if (renderFormat != image->getPixelFormat())
         {
             CCLOG("cocos2d: WARNING: This image has more than 1 mipmaps and we will not convert the data format");
         }
 
-        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getRenderFormat(), finalRenderFormat, imageWidth, imageHeight);
+        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getPixelFormat(), renderFormat, imageWidth, imageHeight);
         
         // set the premultiplied tag
         _hasPremultipliedAlpha = image->hasPremultipliedAlpha();
@@ -750,12 +763,12 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     }
     else if (image->isCompressed())
     {
-        if (finalRenderFormat != image->getRenderFormat())
+        if (renderFormat != image->getPixelFormat())
         {
             CCLOG("cocos2d: WARNING: This image is compressed and we can't convert it for now");
         }
 
-        initWithData(tempData, tempDataLen, image->getRenderFormat(), imageWidth, imageHeight, imageSize);
+        initWithData(tempData, tempDataLen, image->getPixelFormat(), imageWidth, imageHeight, imageSize);
         
         // set the premultiplied tag
         _hasPremultipliedAlpha = image->hasPremultipliedAlpha();
@@ -767,9 +780,9 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         unsigned char* outTempData = nullptr;
         ssize_t outTempDataLen = 0;
 
-        finalRenderFormat = convertDataToFormat(tempData, tempDataLen, imagePixelFormat, finalRenderFormat, &outTempData, &outTempDataLen);
+        renderFormat = convertDataToFormat(tempData, tempDataLen, imagePixelFormat, renderFormat, &outTempData, &outTempDataLen);
 
-        initWithData(outTempData, outTempDataLen, finalRenderFormat, imageWidth, imageHeight, imageSize);
+        initWithData(outTempData, outTempDataLen, renderFormat, imageWidth, imageHeight, imageSize);
 
 
         if (outTempData != nullptr && outTempData != tempData)
@@ -1464,7 +1477,7 @@ void Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat format)
     g_preferedAlphaPixelFormat = format;
 }
 
-Texture2D::PixelFormat Texture2D::getDefaultAlphaPixelFormat()
+Texture2D::PixelFormat Texture2D::getPreferedAlphaPixelFormat()
 {
     return g_preferedAlphaPixelFormat;
 }

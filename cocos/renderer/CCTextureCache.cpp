@@ -92,7 +92,7 @@ public:
     ( const std::string& fn,const std::function<void(Texture2D*)>& f,
       const std::string& key )
       : filename(fn), callback(f),callbackKey( key ),
-        pixelFormat(Texture2D::getDefaultAlphaPixelFormat()),
+        pixelFormat(Texture2D::getPreferedAlphaPixelFormat()),
         loadSuccess(false)
     {}
 
