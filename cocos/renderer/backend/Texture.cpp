@@ -1,5 +1,5 @@
 #include "Texture.h"
-
+#include <cassert>
 CC_BACKEND_BEGIN
 
 namespace

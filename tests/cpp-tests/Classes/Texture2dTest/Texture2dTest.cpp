@@ -307,7 +307,7 @@ void TextureMipMap::onEnter()
     //TODO: minggo
 //    texture0->generateMipmap();
 //    Texture2D::TexParams texParams = { GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
-//    texture0->setTexParameters(texParams);
+//    texture0->setSamplerDescriptor(texParams);
 
     auto texture1 = Director::getInstance()->getTextureCache()->addImage("Images/grossini_dance_atlas_nomipmap.png");
 
@@ -364,7 +364,7 @@ void TexturePVRMipMap::onEnter()
         // support mipmap filtering
         //TODO minggo
 //        Texture2D::TexParams texParams = { GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
-//        imgMipMap->getTexture()->setTexParameters(texParams);
+//        imgMipMap->getTexture()->setSamplerDescriptor(texParams);
     }
 
     auto img = Sprite::create("Images/logo-nomipmap.pvr");
@@ -411,7 +411,7 @@ void TexturePVRMipMap2::onEnter()
     // support mipmap filtering
     //TODO minggo
 //    Texture2D::TexParams texParams = { GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
-//    imgMipMap->getTexture()->setTexParameters(texParams);
+//    imgMipMap->getTexture()->setSamplerDescriptor(texParams);
 
     auto img = Sprite::create("Images/test_image.png");
     img->setPosition(Vec2( s.width/2.0f+100, s.height/2.0f));
