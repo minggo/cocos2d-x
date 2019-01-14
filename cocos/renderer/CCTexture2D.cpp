@@ -290,7 +290,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     case PixelFormat::A8:
         break;
     default:
-        auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
+            auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
         CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
         pixelFormat = renderFormat;
     }
