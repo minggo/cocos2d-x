@@ -175,12 +175,12 @@ public:
 
      @since v0.8
      */
-    static void setPreferAlphaPixelFormat(Texture2D::PixelFormat format);
+    static void setDefaultAlphaPixelFormat(Texture2D::PixelFormat format);
 
     /** Returns the alpha pixel format.
      @since v0.8
      */
-    static Texture2D::PixelFormat getPreferedAlphaPixelFormat();
+    static Texture2D::PixelFormat getDefaultAlphaPixelFormat();
     
 public:
     /**
@@ -349,7 +349,7 @@ public:
     bool hasMipmaps() const;
 
     /** Gets the pixel format of the texture. */
-    Texture2D::PixelFormat getPixelFormat() const;
+    Texture2D::PixelFormat getRenderFormat() const;
     
     /** Gets the width of the texture in pixels. */
     int getPixelsWide() const;

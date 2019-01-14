@@ -217,11 +217,11 @@ void Director::setDefaultValues(void)
     // Default pixel format for PNG images with alpha
     std::string pixel_format = conf->getValue("cocos2d.x.texture.pixel_format_for_png", Value("rgba8888")).asString();
     if (pixel_format == "rgba8888")
-        Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGBA8888);
+        Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGBA8888);
     else if(pixel_format == "rgba4444")
-        Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGBA4444);
+        Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGBA4444);
     else if(pixel_format == "rgba5551")
-        Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGB5A1);
+        Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGB5A1);
 
     // PVR v2 has alpha premultiplied ?
     bool pvr_alpha_premultiplied = conf->getValue("cocos2d.x.texture.pvrv2_has_alpha_premultiplied", Value(false)).asBool();
@@ -1265,8 +1265,8 @@ void Director::createStatsLabel()
         FileUtils::getInstance()->purgeCachedEntries();
     }
 
-    Texture2D::PixelFormat currentFormat = Texture2D::getPreferedAlphaPixelFormat();
-    Texture2D::setPreferAlphaPixelFormat(Texture2D::PixelFormat::RGBA4444);
+    Texture2D::PixelFormat currentFormat = Texture2D::getDefaultAlphaPixelFormat();
+    Texture2D::setDefaultAlphaPixelFormat(Texture2D::PixelFormat::RGBA4444);
     unsigned char *data = nullptr;
     ssize_t dataLength = 0;
     getFPSImageData(&data, &dataLength);
@@ -1312,7 +1312,7 @@ void Director::createStatsLabel()
     _drawnVerticesLabel->setScale(scaleFactor);
 
 
-    Texture2D::setPreferAlphaPixelFormat(currentFormat);
+    Texture2D::setDefaultAlphaPixelFormat(currentFormat);
 
     const int height_spacing = 22 / CC_CONTENT_SCALE_FACTOR();
     _drawnVerticesLabel->setPosition(Vec2(0, height_spacing*2) + CC_DIRECTOR_STATS_POSITION);
