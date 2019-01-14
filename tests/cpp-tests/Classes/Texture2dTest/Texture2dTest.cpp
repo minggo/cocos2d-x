@@ -1600,7 +1600,7 @@ void TextureGlClamp::onEnter()
         backend::SamplerAddressMode::CLAMP_TO_EDGE,
         backend::SamplerAddressMode::CLAMP_TO_EDGE,
     };
-    sprite->getTexture()->updateSamplerDescriptor(descriptor);
+    sprite->getTexture()->setSamplerDescriptor(descriptor);
     auto rotate = RotateBy::create(4, 360);
     sprite->runAction(rotate);
     auto scale = ScaleBy::create(2, 0.04f);
@@ -1642,7 +1642,7 @@ void TextureGlRepeat::onEnter()
         backend::SamplerAddressMode::REPEAT,
         backend::SamplerAddressMode::REPEAT
     };
-    sprite->getTexture()->updateSamplerDescriptor(descriptor);
+    sprite->getTexture()->setSamplerDescriptor(descriptor);
     
     auto rotate = RotateBy::create(4, 360);
     sprite->runAction(rotate);

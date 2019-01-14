@@ -47,7 +47,7 @@ SpriteFrameCachePixelFormatTest::SpriteFrameCachePixelFormatTest()
     addChild(infoLabel);
     
     // load atlas definition with specified PixelFormat and check that it matches to expected format
-    loadSpriteFrames("Images/sprite_frames_test/test_A8.plist", Texture2D::PixelFormat::I8);
+    loadSpriteFrames("Images/sprite_frames_test/test_A8.plist", Texture2D::PixelFormat::A8);
     loadSpriteFrames("Images/sprite_frames_test/test_RGBA8888.plist", Texture2D::PixelFormat::RGBA8888);
     loadSpriteFrames("Images/sprite_frames_test/test_AI88.plist", Texture2D::PixelFormat::AI88);
     loadSpriteFrames("Images/sprite_frames_test/test_RGBA8888.plist", Texture2D::PixelFormat::RGBA8888);
