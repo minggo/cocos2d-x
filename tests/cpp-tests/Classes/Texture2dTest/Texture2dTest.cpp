@@ -262,7 +262,7 @@ void TextureWEBP::onEnter()
     addChild(img);
     log("%s\n", Director::getInstance()->getTextureCache()->getCachedTextureInfo().c_str());
     Texture2D* texture = Director::getInstance()->getTextureCache()->getTextureForKey("Images/test_image.webp");
-    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getRenderFormat()), texture->hasPremultipliedAlpha());
+    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getPixelFormat()), texture->hasPremultipliedAlpha());
 }
 
 std::string TextureWEBP::title() const
@@ -285,7 +285,7 @@ void TextureWEBPNoAlpha::onEnter()
     addChild(img);
     log("%s\n", Director::getInstance()->getTextureCache()->getCachedTextureInfo().c_str());
     Texture2D* texture = Director::getInstance()->getTextureCache()->getTextureForKey("Images/test_image_no_alpha.webp");
-    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getRenderFormat()), texture->hasPremultipliedAlpha());
+    log("pixel format:%d, premultiplied alpha:%d\n", static_cast<int>(texture->getPixelFormat()), texture->hasPremultipliedAlpha());
 }
 
 std::string TextureWEBPNoAlpha::title() const

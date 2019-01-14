@@ -524,7 +524,7 @@ Texture2D::~Texture2D()
 }
 
 
-Texture2D::PixelFormat Texture2D::getRenderFormat() const
+Texture2D::PixelFormat Texture2D::getPixelFormat() const
 {
     return _pixelFormat;
 }

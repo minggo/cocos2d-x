@@ -349,7 +349,7 @@ public:
     bool hasMipmaps() const;
 
     /** Gets the pixel format of the texture. */
-    Texture2D::PixelFormat getRenderFormat() const;
+    Texture2D::PixelFormat getPixelFormat() const;
     
     /** Gets the width of the texture in pixels. */
     int getPixelsWide() const;
