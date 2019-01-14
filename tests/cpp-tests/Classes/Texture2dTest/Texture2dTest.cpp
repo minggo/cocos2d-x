@@ -1593,9 +1593,14 @@ void TextureGlClamp::onEnter()
     auto sprite = Sprite::create("Images/pattern1.png", Rect(0,0,512,256));
     addChild(sprite, -1, kTagSprite1);
     sprite->setPosition(Vec2(size.width/2,size.height/2));
-    Texture2D::TexParams params = {GL_LINEAR,GL_LINEAR,GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE};
-    sprite->getTexture()->setTexParameters(params);
-
+    backend::SamplerDescriptor descriptor = { true,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerAddressMode::CLAMP_TO_EDGE,
+        backend::SamplerAddressMode::CLAMP_TO_EDGE,
+    };
+    sprite->getTexture()->updateSamplerDescriptor(descriptor);
     auto rotate = RotateBy::create(4, 360);
     sprite->runAction(rotate);
     auto scale = ScaleBy::create(2, 0.04f);
@@ -1630,8 +1635,14 @@ void TextureGlRepeat::onEnter()
     auto sprite = Sprite::create("Images/pattern1.png", Rect(0, 0, 4096, 4096));
     addChild(sprite, -1, kTagSprite1);
     sprite->setPosition(Vec2(size.width/2,size.height/2));
-    Texture2D::TexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
-    sprite->getTexture()->setTexParameters(params);
+    backend::SamplerDescriptor descriptor = {true, 
+        backend::SamplerFilter::LINEAR, 
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerAddressMode::REPEAT,
+        backend::SamplerAddressMode::REPEAT
+    };
+    sprite->getTexture()->updateSamplerDescriptor(descriptor);
     
     auto rotate = RotateBy::create(4, 360);
     sprite->runAction(rotate);

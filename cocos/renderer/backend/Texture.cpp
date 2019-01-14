@@ -21,7 +21,20 @@ namespace
             case TextureFormat::A8:
                 ret = 1;
                 break;
+            case TextureFormat::I8:
+                ret = 1;
+                break;
+            case TextureFormat::RGB565:
+                ret = 2;
+                break;
+            case TextureFormat::RGB5A1:
+                ret = 2;
+                break;
+            case TextureFormat::AI88:
+                ret = 2;
+                break;
             default:
+                CC_ASSERT(false, "textureFormat pixel size in bytes not defined!");
                 break;
         }
         return ret;

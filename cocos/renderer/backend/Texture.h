@@ -24,6 +24,8 @@ public:
     virtual void updateData(uint8_t* data) = 0;
     virtual void updateSubData(uint32_t xoffset, uint32_t yoffset, uint32_t width, uint32_t height, uint8_t* data) = 0;
     
+    virtual void updateSamplerDescriptor(const SamplerDescriptor &sampler) = 0;
+
     inline TextureFormat getTextureFormat() const { return _textureFormat; }
     inline TextureUsage getTextureUsage() const { return _textureUsage; }
     inline uint32_t getWidth() const { return _width; }

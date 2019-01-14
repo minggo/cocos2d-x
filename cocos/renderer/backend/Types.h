@@ -101,13 +101,15 @@ enum class SamplerAddressMode: uint32_t
 {
     REPEAT,
     MIRROR_REPEAT,
-    CLAMP_TO_EDGE
+    CLAMP_TO_EDGE,
+    DONT_CARE,
 };
 
 enum class SamplerFilter: uint32_t
 {
     NEAREST,
-    LINEAR
+    LINEAR,
+    DONT_CARE,
 };
 
 enum class StencilOperation: uint32_t

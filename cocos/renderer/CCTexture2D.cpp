@@ -654,7 +654,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     unsigned char *outData = data;
     ssize_t outDataLen;
 
-#ifndef CC_USE_METAL
+#ifdef CC_USE_METAL
     switch (pixelFormat) {
     case PixelFormat::A8:
     case PixelFormat::I8:
@@ -1335,6 +1335,16 @@ bool Texture2D::hasMipmaps() const
 
 void Texture2D::setAliasTexParameters()
 {
+
+    backend::SamplerDescriptor descriptor = { false,
+        backend::SamplerFilter::NEAREST,
+        backend::SamplerFilter::NEAREST,
+        backend::SamplerFilter::NEAREST,
+        backend::SamplerAddressMode::DONT_CARE,
+        backend::SamplerAddressMode::DONT_CARE
+    };
+
+    updateSamplerDescriptor(descriptor);
 //    TODO coulsonwang
 //    if (! _antialiasEnabled)
 //    {
@@ -1369,6 +1379,16 @@ void Texture2D::setAliasTexParameters()
 
 void Texture2D::setAntiAliasTexParameters()
 {
+
+    backend::SamplerDescriptor descriptor = { false,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerFilter::LINEAR,
+        backend::SamplerAddressMode::DONT_CARE,
+        backend::SamplerAddressMode::DONT_CARE
+    };
+
+    updateSamplerDescriptor(descriptor);
 //    TODO coulsonwang
 //    if ( _antialiasEnabled )
 //    {
@@ -1577,9 +1597,14 @@ Texture2D* Texture2D::getAlphaTexture() const
     return _alphaTexture;
 }
 
-//TODO coulsonwang
-void Texture2D::setTexParameters(const TexParams &texParams)
+void Texture2D::setTexParameters(const TexParams &params)
 {
+    //TODO need to be replaced by .. 
+}
+
+void Texture2D::updateSamplerDescriptor(const backend::SamplerDescriptor &texParams)
+{
+    _texture->updateSamplerDescriptor(texParams);
 //    CCASSERT((_pixelsWide == ccNextPOT(_pixelsWide) || texParams.wrapS == GL_CLAMP_TO_EDGE) &&
 //             (_pixelsHigh == ccNextPOT(_pixelsHigh) || texParams.wrapT == GL_CLAMP_TO_EDGE),
 //             "GL_CLAMP_TO_EDGE should be used in NPOT dimensions");

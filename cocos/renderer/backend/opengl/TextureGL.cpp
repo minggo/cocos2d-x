@@ -119,6 +119,41 @@ TextureGL::~TextureGL()
         glDeleteTextures(1, &_texture);
 }
 
+void TextureGL::updateSamplerDescriptor(const SamplerDescriptor &sampler) {
+    bool isPow2 = ISPOW2(_width) && ISPOW2(_height);
+    bool needGenerateMipmap = !_isMipmapEnabled && sampler.mipmapEnabled;
+    _isMipmapEnabled = sampler.mipmapEnabled;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, _texture);
+
+    if (sampler.magFilter != SamplerFilter::DONT_CARE)
+    {
+        _magFilterGL = toGLMagFilter(sampler.magFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _magFilterGL);
+    }
+
+    if (sampler.minFilter != SamplerFilter::DONT_CARE)
+    {
+        _minFilterGL = toGLMinFilter(sampler.minFilter, sampler.mipmapFilter, _isMipmapEnabled, isPow2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _minFilterGL);
+    }
+
+    if (sampler.sAddressMode != SamplerAddressMode::DONT_CARE)
+    {
+        _sAddressModeGL = toGLAddressMode(sampler.sAddressMode, isPow2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _sAddressModeGL);
+    }
+
+    if (sampler.tAddressMode != SamplerAddressMode::DONT_CARE)
+    {
+        _tAddressModeGL = toGLAddressMode(sampler.tAddressMode, isPow2);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _tAddressModeGL);
+    }
+
+    if (needGenerateMipmap) generateMipmpas();
+}
+
 void TextureGL::updateData(uint8_t* data)
 {
     // TODO: support texture cube, and compressed data.

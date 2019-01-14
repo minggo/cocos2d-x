@@ -292,7 +292,10 @@ public:
      * @endcode
      */
 //    TODO coulsonwang
-    void setTexParameters(const TexParams& texParams);
+
+    void setTexParameters(const TexParams &params);
+
+    void updateSamplerDescriptor(const backend::SamplerDescriptor& texParams);
     
     /** Generates mipmap images for the texture.
      It only works if the texture size is POT (power of 2).
