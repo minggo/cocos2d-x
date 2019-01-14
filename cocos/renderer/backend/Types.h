@@ -55,7 +55,11 @@ enum class TextureFormat : uint32_t
     // components: 24 bits, typically used for a depth render target, and 8 bits, typically used for
     // a stencil render target.
     D24S8,
+    I8,
+    AI88,
     RGBA4444,
+    RGB565,
+    RGB5A1,
     SYSTEM_DEFAULT
 };
 

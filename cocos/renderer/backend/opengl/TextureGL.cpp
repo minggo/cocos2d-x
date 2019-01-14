@@ -237,6 +237,26 @@ void TextureGL::toGLTypes()
             _format = GL_ALPHA;
             _type = GL_UNSIGNED_BYTE;
             break;
+        case TextureFormat::I8:
+            _internalFormat = GL_LUMINANCE;
+            _format = GL_LUMINANCE;
+            _type = GL_UNSIGNED_BYTE;
+            break;
+        case TextureFormat::AI88:
+            _internalFormat = GL_LUMINANCE_ALPHA;
+            _format = GL_LUMINANCE_ALPHA;
+            _type = GL_UNSIGNED_BYTE;
+            break;
+        case TextureFormat::RGB565:
+            _internalFormat = GL_RGB;
+            _format = GL_RGB;
+            _type = GL_UNSIGNED_SHORT_5_6_5;
+            break;
+        case TextureFormat::RGB5A1:
+            _internalFormat = GL_RGBA;
+            _format = GL_RGBA;
+            _type = GL_UNSIGNED_SHORT_5_5_5_1;
+            break;
 //        case TextureFormat::D16:
 //            _format = GL_DEPTH_COMPONENT;
 //            _internalFormat = GL_DEPTH_COMPONENT;

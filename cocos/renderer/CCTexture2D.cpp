@@ -654,21 +654,23 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     unsigned char *outData = data;
     ssize_t outDataLen;
 
+#ifndef CC_USE_METAL
     switch (pixelFormat) {
     case PixelFormat::A8:
     case PixelFormat::I8:
-#ifndef CC_USE_METAL
     case PixelFormat::RGBA4444:
-#endif
         break;
     default:
         auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
         CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
         pixelFormat = renderFormat;
     }
+#endif
 
     backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(pixelFormat);
+    CCASSERT(format != backend::StringUtils::PixelFormat::NONE, "PixelFormat should not be NONE");
     textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
+    CCASSERT(textureDescriptor.textureFormat != backend::TextureFormat::NONE, "TextureFormat should not be NONE");
     _texture = device->newTexture(textureDescriptor);
 
     _texture->updateData(outData);
@@ -734,6 +736,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     PixelFormat      imagePixelFormat = image->getPixelFormat();
     size_t           tempDataLen = image->getDataLen();
 
+#ifdef CC_USE_METAL
     //override renderFormat
     switch (renderFormat)
     {
@@ -746,6 +749,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     default:
         break;
     }
+#endif
 
     if (image->getNumberOfMipmaps() > 1)
     {
