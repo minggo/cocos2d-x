@@ -175,6 +175,15 @@ struct SamplerDescriptor
     SamplerFilter mipmapFilter = SamplerFilter::LINEAR;
     SamplerAddressMode sAddressMode = SamplerAddressMode::CLAMP_TO_EDGE;
     SamplerAddressMode tAddressMode = SamplerAddressMode::CLAMP_TO_EDGE;
+    
+    SamplerDescriptor(bool _mipmapEnabled = false,
+                      SamplerFilter _magFilter = SamplerFilter::LINEAR,
+                      SamplerFilter _minFilter = SamplerFilter::LINEAR,
+                      SamplerFilter _mipmapFilter = SamplerFilter::LINEAR,
+                      SamplerAddressMode _sAddressMode = SamplerAddressMode::CLAMP_TO_EDGE,
+                      SamplerAddressMode _tAddressMode = SamplerAddressMode::CLAMP_TO_EDGE
+                      ):mipmapEnabled(_mipmapEnabled), magFilter(_magFilter), minFilter(_minFilter),
+    mipmapFilter(_mipmapFilter), sAddressMode(_sAddressMode), tAddressMode(_tAddressMode) {}
 };
 
 enum class CullMode: uint32_t

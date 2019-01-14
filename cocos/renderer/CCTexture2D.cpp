@@ -657,8 +657,6 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 #ifdef CC_USE_METAL
     switch (pixelFormat) {
     case PixelFormat::A8:
-    case PixelFormat::I8:
-    case PixelFormat::RGBA4444:
         break;
     default:
         auto convertedFormat = convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
@@ -744,6 +742,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     case PixelFormat::RGBA4444:
     case PixelFormat::RGB5A1:
     case PixelFormat::I8:
+    case PixelFormat::AI88:
         renderFormat = PixelFormat::RGBA8888;
         break;
     default:
@@ -835,6 +834,10 @@ Texture2D::PixelFormat Texture2D::convertI8ToFormat(const unsigned char* data, s
         *outDataLen = dataLen*2;
         *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
         convertI8ToRGB5A1(data, dataLen, *outData);
+        break;
+    case PixelFormat::A8:
+        *outData = (unsigned char*)data;
+        *outDataLen = dataLen;
         break;
     default:
         // unsupported conversion or don't need to convert
@@ -1336,13 +1339,13 @@ bool Texture2D::hasMipmaps() const
 void Texture2D::setAliasTexParameters()
 {
 
-    backend::SamplerDescriptor descriptor = { false,
+    backend::SamplerDescriptor descriptor(false,
         backend::SamplerFilter::NEAREST,
         backend::SamplerFilter::NEAREST,
         backend::SamplerFilter::NEAREST,
         backend::SamplerAddressMode::DONT_CARE,
         backend::SamplerAddressMode::DONT_CARE
-    };
+    );
 
     updateSamplerDescriptor(descriptor);
 //    TODO coulsonwang

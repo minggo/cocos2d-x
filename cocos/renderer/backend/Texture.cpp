@@ -34,7 +34,7 @@ namespace
                 ret = 2;
                 break;
             default:
-                CC_ASSERT(false, "textureFormat pixel size in bytes not defined!");
+                assert(false); //"textureFormat pixel size in bytes not defined!";
                 break;
         }
         return ret;

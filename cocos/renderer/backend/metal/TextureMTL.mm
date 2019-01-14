@@ -79,8 +79,9 @@ namespace
 TextureMTL::TextureMTL(id<MTLDevice> mtlDevice, const TextureDescriptor& descriptor)
 : Texture(descriptor)
 {
+    _mtlDevice = mtlDevice;
     createTexture(mtlDevice, descriptor);
-    createSampler(mtlDevice, descriptor);
+    createSampler(mtlDevice, descriptor.samplerDescriptor);
     
     // Metal doesn't support RGB888/RGBA4444, so should convert to RGBA888;
     if (TextureFormat::R8G8B8 == _textureFormat ||
@@ -97,6 +98,12 @@ TextureMTL::~TextureMTL()
     [_mtlTexture release];
     [_mtlSamplerState release];
 }
+
+void TextureMTL::updateSamplerDescriptor(const SamplerDescriptor &sampler)
+{
+    createSampler(_mtlDevice, sampler);
+}
+
 
 void TextureMTL::updateData(uint8_t* data)
 {
@@ -144,16 +151,25 @@ void TextureMTL::createTexture(id<MTLDevice> mtlDevice, const TextureDescriptor&
     _mtlTexture = [mtlDevice newTextureWithDescriptor:textureDescriptor];
 }
 
-void TextureMTL::createSampler(id<MTLDevice> mtlDevice, const TextureDescriptor &descriptor)
+void TextureMTL::createSampler(id<MTLDevice> mtlDevice, const SamplerDescriptor &descriptor)
 {
     MTLSamplerDescriptor *mtlDescriptor = [MTLSamplerDescriptor new];
-    mtlDescriptor.sAddressMode = toMTLSamplerAddressMode(descriptor.samplerDescriptor.sAddressMode);
-    mtlDescriptor.tAddressMode = toMTLSamplerAddressMode(descriptor.samplerDescriptor.tAddressMode);
+    mtlDescriptor.sAddressMode = descriptor.sAddressMode == SamplerAddressMode::DONT_CARE ? _sAddressMode : toMTLSamplerAddressMode(descriptor.sAddressMode);
+    mtlDescriptor.tAddressMode = descriptor.tAddressMode == SamplerAddressMode::DONT_CARE ? _tAddressMode : toMTLSamplerAddressMode(descriptor.tAddressMode);
     
-    mtlDescriptor.minFilter = toMTLSamplerMinMagFilter(descriptor.samplerDescriptor.minFilter);
-    mtlDescriptor.magFilter = toMTLSamplerMinMagFilter(descriptor.samplerDescriptor.magFilter);
+    mtlDescriptor.minFilter = descriptor.minFilter == SamplerFilter::DONT_CARE ? _minFilter : toMTLSamplerMinMagFilter(descriptor.minFilter);
+    mtlDescriptor.magFilter = descriptor.magFilter == SamplerFilter::DONT_CARE ? _magFilter : toMTLSamplerMinMagFilter(descriptor.magFilter);
     if (_isMipmapEnabled)
-        mtlDescriptor.mipFilter = toMTLSamplerMipFilter(descriptor.samplerDescriptor.mipmapFilter);
+        mtlDescriptor.mipFilter = descriptor.mipmapFilter == SamplerFilter::DONT_CARE ? _mipFilter : toMTLSamplerMipFilter(descriptor.mipmapFilter);
+    
+    if(_mtlSamplerState)
+        [_mtlSamplerState release];
+    
+    _sAddressMode = mtlDescriptor.sAddressMode;
+    _tAddressMode = mtlDescriptor.tAddressMode;
+    _minFilter = mtlDescriptor.minFilter;
+    _magFilter = mtlDescriptor.magFilter;
+    _mipFilter = mtlDescriptor.mipFilter;
     
     _mtlSamplerState = [mtlDevice newSamplerStateWithDescriptor:mtlDescriptor];
     
