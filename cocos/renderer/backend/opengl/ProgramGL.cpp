@@ -110,6 +110,7 @@ namespace
 }
 
 ProgramGL::ProgramGL(const std::string& vertexShader, const std::string& fragmentShader)
+: Program(vertexShader, fragmentShader)
 {
     _vertexShaderModule = new (std::nothrow) ShaderModuleGL(backend::ShaderStage::VERTEX, vertexShader);
     if(_vertexShaderModule)
@@ -236,6 +237,8 @@ void ProgramGL::computeUniformInfos()
         uniform.location = glGetUniformLocation(_program, uniformName);
         uniform.bufferSize = getUniformSize(uniform.type);
         _uniformInfos[uniformName] = uniform;
+
+        _maxLocation = _maxLocation < uniform.location ? (uniform.location + 1) : _maxLocation;
     }
     free(uniformName);
     }
@@ -258,6 +261,15 @@ const std::unordered_map<std::string, UniformInfo>& ProgramGL::getVertexUniformI
 const std::unordered_map<std::string, UniformInfo>& ProgramGL::getFragmentUniformInfos() const
 {
     return _uniformInfos;
+}
+
+int ProgramGL::getMaxVertexLocation() const
+{
+
+}
+int ProgramGL::getMaxFragmentLocation() const
+{
+
 }
 
 CC_BACKEND_END

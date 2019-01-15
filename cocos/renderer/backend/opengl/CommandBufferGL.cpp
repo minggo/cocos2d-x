@@ -256,11 +256,10 @@ void CommandBufferGL::setVertexBuffer(unsigned int index, Buffer* buffer)
     _vertexBuffers[index] = static_cast<BufferGL*>(buffer);
 }
 
-void CommandBufferGL::setBindGroup(BindGroup* bindGroup)
+void CommandBufferGL::setProgramState(ProgramState* programState)
 {
-    CC_SAFE_RETAIN(bindGroup);
-    CC_SAFE_RELEASE(_bindGroup);
-    _bindGroup = bindGroup;
+    CC_SAFE_RETAIN(programState);
+    _programState = programState;
 }
 
 void CommandBufferGL::drawArrays(PrimitiveType primitiveType, unsigned int start,  unsigned int count)
@@ -353,35 +352,35 @@ void CommandBufferGL::bindVertexBuffer(ProgramGL *program) const
 
 void CommandBufferGL::setUniforms(ProgramGL* program) const
 {
-    if (_bindGroup)
+    if (_programState)
     {
-        const auto& vsUniformInfos = _bindGroup->getVertexUniformInfos();
+        const auto& vsUniformInfos = _programState->getVertexUniformInfos();
         for(const auto& iter : vsUniformInfos)
         {
-            const auto& uniformInfo = iter.second.uniformInfo;
-            if(!iter.second.dirty)
+            const auto& uniformInfo = iter.uniformInfo;
+            if(!iter.dirty)
                 continue;
             setUniform(uniformInfo.isArray,
                        uniformInfo.location,
                        uniformInfo.count,
                        uniformInfo.type,
-                       iter.second.data);
+                       iter.data);
         }
         
-        const auto& fsUniformInfos = _bindGroup->getFragmentUniformInfos();
+        const auto& fsUniformInfos = _programState->getFragmentUniformInfos();
         for(const auto& iter : fsUniformInfos)
         {
-            const auto& uniformInfo = iter.second.uniformInfo;
-            if(!iter.second.dirty)
+            const auto& uniformInfo = iter.uniformInfo;
+            if(!iter.dirty)
                 continue;
             setUniform(uniformInfo.isArray,
                        uniformInfo.location,
                        uniformInfo.count,
                        uniformInfo.type,
-                       iter.second.data);
+                       iter.data);
         }
         
-        const auto& fsTextureInfo = _bindGroup->getFragmentTextureInfos();
+        const auto& fsTextureInfo = _programState->getFragmentTextureInfos();
         for(const auto& iter : fsTextureInfo)
         {
             const auto& textures = iter.second.textures;
@@ -498,7 +497,7 @@ void CommandBufferGL::cleanResources()
 {
     CC_SAFE_RELEASE_NULL(_indexBuffer);
     CC_SAFE_RELEASE_NULL(_renderPipeline);
-    CC_SAFE_RELEASE_NULL(_bindGroup);
+    CC_SAFE_RELEASE_NULL(_programState);
       
     for (const auto& vertexBuffer : _vertexBuffers)
         CC_SAFE_RELEASE(vertexBuffer);

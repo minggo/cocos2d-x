@@ -42,6 +42,9 @@ public:
     virtual int getVertexUniformLocation(const std::string& uniform) const override;
     virtual int getFragmentUniformLocation(const std::string& uniform) const override;
     
+    virtual int getMaxVertexLocation() const override;
+    virtual int getMaxFragmentLocation() const override;
+
 private:
     void compileProgram();
     bool getAttributeLocation(const std::string& attributeName, uint32_t& location) const;

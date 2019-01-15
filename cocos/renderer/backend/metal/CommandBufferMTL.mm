@@ -302,13 +302,7 @@ void CommandBufferMTL::setTextures() const
 void CommandBufferMTL::doSetTextures(bool isVertex) const
 {
     const auto& bindTextureInfos = (isVertex) ? _programState->getVertexTextureInfos() : _programState->getFragmentTextureInfos();
-    
-    if(!isVertex)
-    {
-        if (bindTextureInfos.size() == 0)
-            assert(true);
-    }
-   
+
     for(const auto& iter : bindTextureInfos)
         {
             //FIXME: should support texture array.
