@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"

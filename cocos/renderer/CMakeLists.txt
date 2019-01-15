@@ -26,6 +26,7 @@ set(COCOS_RENDERER_HEADER
     renderer/CCVertexIndexBuffer.h
     renderer/CCVertexIndexData.h
     renderer/ccShaders.h
+    renderer/CCProgramState.h
 
     renderer/backend/Backend.h
     renderer/backend/BindGroup.h
@@ -73,6 +74,8 @@ set(COCOS_RENDERER_SRC
     renderer/CCVertexIndexBuffer.cpp
     renderer/CCVertexIndexData.cpp
     renderer/ccShaders.cpp
+    renderer/CCPipelineDescriptor.cpp
+    renderer/CCProgramState.cpp
 
     renderer/backend/BindGroup.cpp
     renderer/backend/BlendState.cpp
@@ -84,6 +87,7 @@ set(COCOS_RENDERER_SRC
     renderer/backend/Texture.cpp
     renderer/backend/VertexLayout.cpp
     renderer/backend/ProgramCache.cpp
+    renderer/backend/Program.cpp
     )
 
 if(ANDROID OR WINDOWS) 

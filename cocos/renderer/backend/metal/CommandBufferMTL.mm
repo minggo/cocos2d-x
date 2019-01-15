@@ -4,7 +4,6 @@
 #include "RenderPipelineMTL.h"
 #include "TextureMTL.h"
 #include "Utils.h"
-#include "../BindGroup.h"
 #include "../Macros.h"
 #include "BufferManager.h"
 
@@ -209,13 +208,6 @@ void CommandBufferMTL::setVertexBuffer(unsigned int index, Buffer* buffer)
                                atIndex:0];
 }
 
-void CommandBufferMTL::setBindGroup(BindGroup* bindGroup)
-{
-    CC_SAFE_RETAIN(bindGroup);
-//    CC_SAFE_RELEASE(_bindGroup);
-    _bindGroup = bindGroup;
-}
-
 void CommandBufferMTL::setProgramState(ProgramState* programState)
 {
     CC_SAFE_RETAIN(programState);
@@ -281,8 +273,6 @@ void CommandBufferMTL::afterDraw()
         _mtlIndexBuffer = nullptr;
     }
     
-//    CC_SAFE_RELEASE_NULL(_bindGroup);
-//    CC_SAFE_RELEASE(_bindGroup);
     CC_SAFE_RELEASE_NULL(_programState);
 }
 

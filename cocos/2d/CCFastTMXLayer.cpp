@@ -41,12 +41,12 @@ THE SOFTWARE.
 #include "2d/CCCamera.h"
 #include "renderer/CCTextureCache.h"
 #include "renderer/CCRenderer.h"
-#include "renderer/CCShaderCache.h"
 #include "renderer/ccShaders.h"
 #include "renderer/backend/Device.h"
 #include "renderer/backend/Buffer.h"
 #include "base/CCDirector.h"
 #include "base/ccUTF8.h"
+#include "renderer/CCProgramState.h"
 
 NS_CC_BEGIN
 namespace experimental {
@@ -109,7 +109,6 @@ bool TMXLayer::initWithTilesetInfo(TMXTilesetInfo *tilesetInfo, TMXLayerInfo *la
 
 TMXLayer::TMXLayer()
 {
-    _bindGroup = new (std::nothrow) backend::BindGroup();
 }
 
 TMXLayer::~TMXLayer()
@@ -123,8 +122,6 @@ TMXLayer::~TMXLayer()
     //TODO coulsonwang
     for (auto& e : _customCommands)
         delete e.second;
-
-    CC_SAFE_RELEASE(_bindGroup);
 }
 
 void TMXLayer::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
@@ -162,8 +159,8 @@ void TMXLayer::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
     {
         if (e.second->getIndexDrawCount() > 0)
         {
-            auto mvpmatrixLocation = e.second->getPipelineDescriptor().bindGroup->getVertexUniformLocation("u_MVPMatrix");
-            e.second->getPipelineDescriptor().bindGroup->setVertexUniform(mvpmatrixLocation, finalMat.m, sizeof(finalMat.m));
+            auto mvpmatrixLocation = e.second->getPipelineDescriptor().programState->getVertexUniformLocation("u_MVPMatrix");
+            e.second->getPipelineDescriptor().programState->setVertexUniform(mvpmatrixLocation, finalMat.m, sizeof(finalMat.m));
             renderer->addCommand(e.second);
         }
     }
@@ -413,23 +410,22 @@ void TMXLayer::updatePrimitives()
 
             if (_useAutomaticVertexZ)
             {
-                pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
-                _bindGroup->newProgram(positionTextureColor_vert, positionTextureColorAlphaTest_frag);
-                _alphaValueLocation = _bindGroup->getFragmentUniformLocation("u_alpha_value");
-                _bindGroup->setFragmentUniform(_alphaValueLocation, &_alphaFuncValue, sizeof(_alphaFuncValue));
+                pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColorAlphaTest_frag);
+                _alphaValueLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_alpha_value");
+                pipelineDescriptor.programState->setFragmentUniform(_alphaValueLocation, &_alphaFuncValue, sizeof(_alphaFuncValue));
             }
             else
             {
-                _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+                pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
             }
-            _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
-            _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
-            _bindGroup->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
-            pipelineDescriptor.bindGroup = _bindGroup;
-            CC_SAFE_RETAIN(_bindGroup);
+            _mvpMatrixLocaiton = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
+            _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+            pipelineDescriptor.programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
             command->init(_globalZOrder, blendfunc);
 
             _customCommands[iter.first] = command;
+            
+            pipelineDescriptor.name = "TMXLayer::updatePrimitives";
         }
         else
         {

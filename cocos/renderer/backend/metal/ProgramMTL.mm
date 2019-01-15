@@ -4,6 +4,7 @@
 CC_BACKEND_BEGIN
 
 ProgramMTL::ProgramMTL(id<MTLDevice> mtlDevice, const std::string& vertexShader, const std::string& fragmentShader)
+: Program(vertexShader, fragmentShader)
 {
     _vertexShader = new (std::nothrow) ShaderModuleMTL(mtlDevice, backend::ShaderStage::VERTEX, vertexShader);
     if(_vertexShader)

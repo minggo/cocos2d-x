@@ -42,20 +42,17 @@ THE SOFTWARE.
 #include "base/CCEventListenerCustom.h"
 #include "base/CCEventDispatcher.h"
 #include "base/ccUTF8.h"
-#include "renderer/CCShaderCache.h"
 #include "renderer/ccShaders.h"
+#include "renderer/CCProgramState.h"
 
 NS_CC_BEGIN
 
 ParticleSystemQuad::ParticleSystemQuad()
 {
     auto& pipelieDescriptor = _quadCommand.getPipelineDescriptor();
-    _bindGroup = new (std::nothrow) backend::BindGroup();
-    pipelieDescriptor.bindGroup = _bindGroup;
-    CC_SAFE_RETAIN(_bindGroup);
-    _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
-    _mvpMatrixLocaiton = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
+    pipelieDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    _mvpMatrixLocaiton = pipelieDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelieDescriptor.programState->getFragmentUniformLocation("u_texture");
     
     //set vertexLayout according to V3F_C4B_T2F structure
 #define VERTEX_POSITION_SIZE 3
@@ -78,7 +75,6 @@ ParticleSystemQuad::~ParticleSystemQuad()
         CC_SAFE_FREE(_quads);
         CC_SAFE_FREE(_indices);
     }
-    CC_SAFE_RELEASE(_bindGroup);
 }
 
 // implementation ParticleSystemQuad
@@ -442,11 +438,11 @@ void ParticleSystemQuad::draw(Renderer *renderer, const Mat4 &transform, uint32_
     //quad command
     if(_particleCount > 0)
     {
-        auto bindGroup = _quadCommand.getPipelineDescriptor().bindGroup;
-        bindGroup->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+        auto programState = _quadCommand.getPipelineDescriptor().programState;
+        programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
         
         cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-        bindGroup->setVertexUniform(_mvpMatrixLocaiton, projectionMat.m, sizeof(projectionMat.m));
+        programState->setVertexUniform(_mvpMatrixLocaiton, projectionMat.m, sizeof(projectionMat.m));
         
         _quadCommand.init(_globalZOrder, _texture, _blendFunc, _quads, _particleCount, transform, flags);
         renderer->addCommand(&_quadCommand);

@@ -83,7 +83,6 @@ private:
     
     int _mvpMatrixLocaiton = -1;
     int _colorUniformLocation = -1;
-    backend::BindGroup* _bindGroup = nullptr;
 };
 
 NS_CC_END

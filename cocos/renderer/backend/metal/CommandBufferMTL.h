@@ -2,7 +2,6 @@
 
 #include "../CommandBuffer.h"
 #include "DeviceMTL.h"
-#include "../BindGroup.h"
 
 #include <unordered_map>
 
@@ -22,7 +21,6 @@ public:
     virtual void setViewport(int x, int y, unsigned int w, unsigned int h) override;
     virtual void setCullMode(CullMode mode) override;
     virtual void setVertexBuffer(unsigned int index, Buffer* buffer) override;
-    virtual void setBindGroup(BindGroup* bindGroup) override;
     virtual void setProgramState(ProgramState* programState) override;
     virtual void setIndexBuffer(Buffer* buffer) override;
     virtual void drawArrays(PrimitiveType primitiveType, unsigned int start,  unsigned int count) override;
@@ -49,7 +47,6 @@ private:
     
     DeviceMTL* _deviceMTL = nullptr;
     RenderPipelineMTL* _renderPipelineMTL = nullptr;
-    BindGroup* _bindGroup = nullptr;
     ProgramState* _programState = nullptr;
     unsigned int _renderTargetHeight = 0;
     

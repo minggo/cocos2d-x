@@ -18,6 +18,15 @@ public:
     
     virtual int getVertexUniformLocation(const std::string& uniform) const = 0;
     virtual int getFragmentUniformLocation(const std::string& uniform) const = 0;
+    
+    const std::string& getVertexShader() const { return _vertexShader; }
+    const std::string& getFragmentShader() const { return _fragmentShader; }
+    
+protected:
+    Program(const std::string& vs, const std::string& fs);
+    
+    std::string _vertexShader;
+    std::string _fragmentShader;
 };
 
 CC_BACKEND_END

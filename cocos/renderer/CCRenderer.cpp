@@ -640,7 +640,6 @@ void Renderer::drawBatchedTriangles()
         _commandBuffer->setVertexBuffer(0, _vertexBuffer);
         _commandBuffer->setIndexBuffer(_indexBuffer);
         auto& pipelineDescriptor = _triBatchesToDraw[i].cmd->getPipelineDescriptor();
-//        _commandBuffer->setBindGroup(pipelineDescriptor.bindGroup);
         _commandBuffer->setProgramState(pipelineDescriptor.programState);
         _commandBuffer->drawElements(backend::PrimitiveType::TRIANGLE,
                                      backend::IndexFormat::U_SHORT,
@@ -667,7 +666,6 @@ void Renderer::drawCustomCommand(RenderCommand *command)
     
     beginRenderPass(command);
     _commandBuffer->setVertexBuffer(0, cmd->getVertexBuffer());
-//    _commandBuffer->setBindGroup( (cmd->getPipelineDescriptor().bindGroup) );
     _commandBuffer->setProgramState(cmd->getPipelineDescriptor().programState);
     
     auto drawType = cmd->getDrawType();
@@ -756,9 +754,6 @@ void Renderer::setRenderPipeline(const PipelineDescriptor& pipelineDescriptor, c
 {
     backend::RenderPipelineDescriptor renderPipelineDescriptor;
     renderPipelineDescriptor.programState = pipelineDescriptor.programState;
-//    CC_SAFE_RETAIN(renderPipelineDescriptor.bindGroup);
-//    renderPipelineDescriptor.vertexShaderModule = pipelineDescriptor.vertexShader;
-//    renderPipelineDescriptor.fragmentShaderModule = pipelineDescriptor.fragmentShader;
     renderPipelineDescriptor.vertexLayouts.push_back(pipelineDescriptor.vertexLayout);
     
     auto device = backend::Device::getInstance();

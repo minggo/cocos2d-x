@@ -158,7 +158,6 @@ protected:
     
     int _mvpMatrixLocation = -1;
     int _textureLocation = -1;
-    backend::BindGroup* _bindGroup = nullptr;
 };
 
 /**

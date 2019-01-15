@@ -355,10 +355,6 @@ protected:
 
     GLfloat  _defaultLineWidth = 0.0f;
     
-    backend::BindGroup* _bindGroup = nullptr;
-    backend::BindGroup* _bindGroupPoint = nullptr;
-    backend::BindGroup* _bindGroupLine = nullptr;
-    
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(DrawNode);
 };

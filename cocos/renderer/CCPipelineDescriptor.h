@@ -27,8 +27,6 @@
 #include "renderer/backend/DepthStencilState.h"
 #include "renderer/backend/BlendState.h"
 #include "renderer/backend/Texture.h"
-#include "renderer/backend/BindGroup.h"
-#include "renderer/backend/ShaderModule.h"
 #include "renderer/backend/VertexLayout.h"
 #include "renderer/backend/RenderPassDescriptor.h"
 #include "CCProgramState.h"
@@ -45,10 +43,7 @@ struct CC_DLL PipelineDescriptor final
     ProgramState* programState = nullptr;
     backend::BlendDescriptor blendDescriptor;
     backend::RenderPassDescriptor renderPassDescriptor;
-    backend::BindGroup* bindGroup = nullptr;
     backend::VertexLayout vertexLayout;
-    backend::ShaderModule* vertexShader = nullptr;
-    backend::ShaderModule* fragmentShader = nullptr;
     
     //for debug
     std::string name;

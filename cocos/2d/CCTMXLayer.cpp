@@ -33,7 +33,8 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 #include "renderer/CCTextureCache.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCShaderCache.h"
+#include "renderer/backend/Program.h"
+#include "renderer/CCProgramState.h"
 
 NS_CC_BEGIN
 
@@ -248,11 +249,14 @@ void TMXLayer::parseInternalProperties()
             auto alphaFuncVal = getProperty("cc_alpha_func");
             float alphaFuncValue = alphaFuncVal.asFloat();
 
-            //TODO coulsonwang
-            cocos2d::log("TODO %s %s %d", __FILE__, __FUNCTION__, __LINE__);
-//            auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
-//            pipelineDescriptor.fragmentShader = ShaderCache::newFragmentShaderModule(positionTextureColorAlphaTest_frag);
-////            pipelineDescriptor.bindGroup.setUniform("u_alpha_value", &alphaFuncValue, sizeof(alphaFuncValue));
+            cocos2d::log("TODO in %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+            auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
+            auto& vertexShader = pipelineDescriptor.programState->getProgram()->getVertexShader();
+            pipelineDescriptor.createProgramState(vertexShader, positionTextureColorAlphaTest_frag);
+            auto alphaValueLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_alpha_value");
+            pipelineDescriptor.programState->setFragmentUniform(alphaValueLocation, &alphaFuncValue, sizeof(alphaFuncValue));
+            
+            pipelineDescriptor.name = "TMXLayer::parseInternalProperties";
         }
         else
         {

@@ -268,7 +268,6 @@ protected:
     
     int _mvpMatrixLocaiton = -1;
     int _textureLocation = -1;
-    backend::BindGroup* _bindGroup = nullptr;
 
     // all descendants: children, grand children, etc...
     // There is not need to retain/release these objects, since they are already retained by _children

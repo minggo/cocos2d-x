@@ -33,8 +33,8 @@ THE SOFTWARE.
 #include "2d/CCSprite.h"
 #include "renderer/CCRenderer.h"
 #include "base/ccUtils.h"
-#include "renderer/CCShaderCache.h"
 #include "renderer/ccShaders.h"
+#include "renderer/CCProgramState.h"
 
 NS_CC_BEGIN
 
@@ -48,10 +48,7 @@ namespace
     {
         //TODO coulsonwang
         auto& pipelieDescriptor = command.getPipelineDescriptor();
-        auto bindGroup = new (std::nothrow) backend::BindGroup;
-        pipelieDescriptor.bindGroup = bindGroup;
-        
-        pipelieDescriptor.bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+        pipelieDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
         
         //set vertexLayout according to V2F_C4B_T2F structure
     #define VERTEX_POSITION_SIZE 2
@@ -109,8 +106,6 @@ bool ProgressTimer::initWithSprite(Sprite* sp)
 ProgressTimer::~ProgressTimer(void)
 {
     CC_SAFE_RELEASE(_sprite);
-    CC_SAFE_RELEASE(_customCommand.getPipelineDescriptor().bindGroup);
-    CC_SAFE_RELEASE(_customCommand2.getPipelineDescriptor().bindGroup);
 }
 
 void ProgressTimer::setPercentage(float percentage)
@@ -558,10 +553,10 @@ void ProgressTimer::draw(Renderer *renderer, const Mat4 &transform, uint32_t fla
     const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    auto mvpMatrixLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
-    auto textureLocation = pipelineDescriptor.bindGroup->getFragmentUniformLocation("u_texture");
-    pipelineDescriptor.bindGroup->setVertexUniform(mvpMatrixLocation, finalMat.m, sizeof(finalMat.m));
-    pipelineDescriptor.bindGroup->setFragmentTexture(textureLocation, 0, _sprite->getTexture()->getBackendTexture());
+    auto mvpMatrixLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
+    auto textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    pipelineDescriptor.programState->setVertexUniform(mvpMatrixLocation, finalMat.m, sizeof(finalMat.m));
+    pipelineDescriptor.programState->setFragmentTexture(textureLocation, 0, _sprite->getTexture()->getBackendTexture());
 
     if(_type == Type::BAR)
     {
@@ -577,10 +572,10 @@ void ProgressTimer::draw(Renderer *renderer, const Mat4 &transform, uint32_t fla
 
             _customCommand2.init(_globalZOrder, _sprite->getBlendFunc());
             auto& pipelineDescriptor2 = _customCommand2.getPipelineDescriptor();
-            auto mvpMatrixLocation = pipelineDescriptor2.bindGroup->getVertexUniformLocation("u_MVPMatrix");
-            auto textureLocaiton = pipelineDescriptor2.bindGroup->getFragmentUniformLocation("u_texture");
-            pipelineDescriptor2.bindGroup->setVertexUniform(mvpMatrixLocation, finalMat.m, sizeof(finalMat.m));
-            pipelineDescriptor2.bindGroup->setFragmentTexture(textureLocaiton, 0, _sprite->getTexture()->getBackendTexture());
+            auto mvpMatrixLocation = pipelineDescriptor2.programState->getVertexUniformLocation("u_MVPMatrix");
+            auto textureLocaiton = pipelineDescriptor2.programState->getFragmentUniformLocation("u_texture");
+            pipelineDescriptor2.programState->setVertexUniform(mvpMatrixLocation, finalMat.m, sizeof(finalMat.m));
+            pipelineDescriptor2.programState->setFragmentTexture(textureLocaiton, 0, _sprite->getTexture()->getBackendTexture());
             renderer->addCommand(&_customCommand2);
         }
     }

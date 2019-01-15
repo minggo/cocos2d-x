@@ -2043,6 +2043,8 @@
 		ED93A75421ED7C1400170050 /* CCProgramState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93A75221ED7C1400170050 /* CCProgramState.cpp */; };
 		ED93A75621ED860200170050 /* CCPipelineDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93A75521ED860200170050 /* CCPipelineDescriptor.cpp */; };
 		ED93A75721ED860200170050 /* CCPipelineDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93A75521ED860200170050 /* CCPipelineDescriptor.cpp */; };
+		ED93A75921EDBCBA00170050 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93A75821EDBCBA00170050 /* Program.cpp */; };
+		ED93A75A21EDBCBA00170050 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED93A75821EDBCBA00170050 /* Program.cpp */; };
 		ED9C6A9418599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9518599AD8000A5232 /* CCNodeGrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */; };
 		ED9C6A9618599AD8000A5232 /* CCNodeGrid.h in Headers */ = {isa = PBXBuildFile; fileRef = ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */; };
@@ -3269,6 +3271,7 @@
 		ED93A74F21ED7BCA00170050 /* CCProgramState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCProgramState.h; sourceTree = "<group>"; };
 		ED93A75221ED7C1400170050 /* CCProgramState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CCProgramState.cpp; sourceTree = "<group>"; };
 		ED93A75521ED860200170050 /* CCPipelineDescriptor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CCPipelineDescriptor.cpp; sourceTree = "<group>"; };
+		ED93A75821EDBCBA00170050 /* Program.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Program.cpp; sourceTree = "<group>"; };
 		ED9C6A9218599AD8000A5232 /* CCNodeGrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = CCNodeGrid.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		ED9C6A9318599AD8000A5232 /* CCNodeGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCNodeGrid.h; sourceTree = "<group>"; };
 		EDC789E021CA19FA00E1863C /* CCComAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCComAudio.cpp; sourceTree = "<group>"; };
@@ -5267,6 +5270,7 @@
 			isa = PBXGroup;
 			children = (
 				ED150A9621E6320100EFE7F7 /* Program.h */,
+				ED93A75821EDBCBA00170050 /* Program.cpp */,
 				ED150A9021E631D900EFE7F7 /* ProgramCache.cpp */,
 				ED150A9121E631D900EFE7F7 /* ProgramCache.h */,
 				46E21B4521B900C900430A43 /* StringUtils.cpp */,
@@ -7535,6 +7539,7 @@
 				4631CBC121AFD9FA0000D408 /* UILayoutComponent.cpp in Sources */,
 				50ABBE511925AB6F00A911A9 /* CCEventDispatcher.cpp in Sources */,
 				460D4D0E21ABD0C60075726E /* DepthStencilStateMTL.mm in Sources */,
+				ED93A75921EDBCBA00170050 /* Program.cpp in Sources */,
 				460D4D1521ABD0C60075726E /* TextureMTL.mm in Sources */,
 				468A14E91EF223B700ECA675 /* idl_gen_fbs.cpp in Sources */,
 				4631CB7521AFD9F90000D408 /* CCUIMultilineTextField.m in Sources */,
@@ -8079,6 +8084,7 @@
 				50ABBD3D1925AB0000A911A9 /* CCGeometry.cpp in Sources */,
 				460D4CD621A5666E0075726E /* CCRenderer.cpp in Sources */,
 				EDC78C9521CA19FC00E1863C /* SpriteReader.cpp in Sources */,
+				ED93A75A21EDBCBA00170050 /* Program.cpp in Sources */,
 				50ABBECC1925AB6F00A911A9 /* s3tc.cpp in Sources */,
 				1A5702F7180BCE750088DEC7 /* CCTMXTiledMap.cpp in Sources */,
 				EDC78C8921CA19FC00E1863C /* GameMapReader.cpp in Sources */,
