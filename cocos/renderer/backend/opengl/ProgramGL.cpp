@@ -238,7 +238,7 @@ void ProgramGL::computeUniformInfos()
         uniform.bufferSize = getUniformSize(uniform.type);
         _uniformInfos[uniformName] = uniform;
 
-        _maxLocation = _maxLocation < uniform.location ? (uniform.location + 1) : _maxLocation;
+        _maxLocation = _maxLocation <= uniform.location ? (uniform.location + 1) : _maxLocation;
     }
     free(uniformName);
     }
