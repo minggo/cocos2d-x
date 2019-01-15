@@ -217,13 +217,27 @@ TextureFormat StringUtils::PixelFormat2TextureFormat(const PixelFormat& pixleFor
         case PixelFormat::RGB5A1:
             return TextureFormat::RGB5A1;
         case PixelFormat::ETC:
-            return TextureFormat::ETC;
+            return TextureFormat::ETC1;
         case PixelFormat::ATC_RGB:
             return TextureFormat::ATC_RGB;
         case PixelFormat::ATC_EXPLICIT_ALPHA:
             return TextureFormat::ATC_EXPLICIT_ALPHA;
         case PixelFormat::ATC_INTERPOLATED_ALPHA:
             return TextureFormat::ATC_INTERPOLATED_ALPHA;
+        case PixelFormat::PVRTC2:
+            return TextureFormat::PVRTC2;
+        case PixelFormat::PVRTC2A:
+            return TextureFormat::PVRTC2A;
+        case PixelFormat::PVRTC4:
+            return TextureFormat::PVRTC4;
+        case PixelFormat::PVRTC4A:
+            return TextureFormat::PVRTC4A;
+        case PixelFormat::S3TC_DXT1:
+            return TextureFormat::S3TC_DXT1;
+        case PixelFormat::S3TC_DXT3:
+            return TextureFormat::S3TC_DXT3;
+        case PixelFormat::S3TC_DXT5:
+            return TextureFormat::S3TC_DXT5;
         default:
             return TextureFormat::NONE;
             break;

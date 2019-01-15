@@ -35,7 +35,7 @@ namespace
             case TextureFormat::AI88:
                 ret = byte(2);
                 break;
-            case TextureFormat::ETC:
+            case TextureFormat::ETC1:
                 ret = bit(4);
                 break;
             case TextureFormat::ATC_RGB:
@@ -45,6 +45,27 @@ namespace
                 ret = byte(1);
                 break;
             case TextureFormat::ATC_INTERPOLATED_ALPHA:
+                ret = byte(1);
+                break;
+            case TextureFormat::PVRTC2:
+                ret = bit(2);
+                break;
+            case TextureFormat::PVRTC2A:
+                ret = bit(2);
+                break;
+            case TextureFormat::PVRTC4:
+                ret = bit(4);
+                break;
+            case TextureFormat::PVRTC4A:
+                ret = bit(4);
+                break;
+            case TextureFormat::S3TC_DXT1:
+                ret = bit(4);
+                break;
+            case TextureFormat::S3TC_DXT3:
+                ret = byte(1);
+                break;
+            case TextureFormat::S3TC_DXT5:
                 ret = byte(1);
                 break;
             default:

@@ -292,7 +292,7 @@ void TextureGL::toGLTypes()
             _format = GL_RGBA;
             _type = GL_UNSIGNED_SHORT_5_5_5_1;
             break;
-        case TextureFormat::ETC:
+        case TextureFormat::ETC1:
             _internalFormat = GL_ETC1_RGB8_OES;
             _format = 0xFFFFFFFF;
             _type = 0xFFFFFFFF;
@@ -311,6 +311,48 @@ void TextureGL::toGLTypes()
             _isCompressed = true;
         case TextureFormat::ATC_INTERPOLATED_ALPHA:
             _internalFormat = GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::PVRTC2:
+            _internalFormat = GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::PVRTC2A:
+            _internalFormat = GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::PVRTC4:
+            _internalFormat = GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::PVRTC4A:
+            _internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::S3TC_DXT1:
+            _internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::S3TC_DXT3:
+            _internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::S3TC_DXT5:
+            _internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
             _format = 0xFFFFFFFF;
             _type = 0xFFFFFFFF;
             _isCompressed = true;
