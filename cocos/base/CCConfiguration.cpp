@@ -114,6 +114,9 @@ std::string Configuration::getInfo() const
 #ifdef CC_USE_METAL
 void Configuration::gatherGPUInfo()
 {
+    //support PVRTC/EAC/ETC2/ASTC/BC/YUV
+    //_supportsPVRTC = true;
+    _supportsETC1 = false; //support etc2;
 }
 #else
 void Configuration::gatherGPUInfo()

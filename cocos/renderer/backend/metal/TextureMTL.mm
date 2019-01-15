@@ -84,13 +84,12 @@ TextureMTL::TextureMTL(id<MTLDevice> mtlDevice, const TextureDescriptor& descrip
     createSampler(mtlDevice, descriptor.samplerDescriptor);
     
     // Metal doesn't support RGB888/RGBA4444, so should convert to RGBA888;
-    if (TextureFormat::R8G8B8 == _textureFormat ||
-        TextureFormat::RGBA4444 == _textureFormat)
+    if (TextureFormat::R8G8B8 == _textureFormat)
     {
-        _bytesPerElement = 4;
+        _bitsPerElement = 4 * 8;
     }
     
-    _bytesPerRow = _bytesPerElement * descriptor.width;
+    _bytesPerRow = getBytesPerElement() * descriptor.width;
 }
 
 TextureMTL::~TextureMTL()

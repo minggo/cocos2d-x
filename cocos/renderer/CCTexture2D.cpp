@@ -369,9 +369,21 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     //override renderFormat
     switch (renderFormat)
     {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     case PixelFormat::RGB565:
+        renderFormat = PixelFormat::MTL_B5G6R5;
+        break;
     case PixelFormat::RGBA4444:
+        renderFormat = PixelFormat::MTL_ABGR4;
+        break;
     case PixelFormat::RGB5A1:
+        renderFormat = PixelFormat::MTL_BGR5A1;
+        break;
+#else
+    case PixelFormat::RGB565:
+    case PixelFormat::RGB5A1:
+    case PixelFormat::RGBA4444:
+#endif
     case PixelFormat::I8:
     case PixelFormat::AI88:
         renderFormat = PixelFormat::RGBA8888;
