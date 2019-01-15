@@ -52,4 +52,14 @@ const std::unordered_map<std::string, UniformInfo>& ProgramMTL::getFragmentUnifo
     return _fragmentShader->getUniforms();
 }
 
+int ProgramMTL::getMaxVertexLocation() const
+{
+    return _vertexShader->getMaxLocation();
+}
+
+int ProgramMTL::getMaxFragmentLocation() const
+{
+    return _fragmentShader->getMaxLocation();
+}
+
 CC_BACKEND_END

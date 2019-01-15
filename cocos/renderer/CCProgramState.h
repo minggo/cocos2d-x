@@ -19,6 +19,7 @@ struct UniformBuffer
 {
     UniformBuffer(backend::UniformInfo _uniformInfo);
     UniformBuffer() = default;
+    UniformBuffer(const UniformBuffer& _uniformBuffer) = default;
     ~UniformBuffer();
     UniformBuffer& operator =(UniformBuffer&& rhs);
     
@@ -57,8 +58,8 @@ public:
     void setVertexUniform(int location, const void* data, uint32_t size);
     void setFragmentUniform(int location, const void* data, uint32_t size);
     
-    inline const std::unordered_map<int, UniformBuffer>& getVertexUniformInfos() const { return _vertexUniformInfos; }
-    inline const std::unordered_map<int, UniformBuffer>& getFragmentUniformInfos() const { return _fragmentUniformInfos; }
+    inline const std::vector<UniformBuffer>& getVertexUniformInfos() const { return _vertexUniformInfos; }
+    inline const std::vector<UniformBuffer>& getFragmentUniformInfos() const { return _fragmentUniformInfos; }
     
     //set textures
     void setVertexTexture(int location, uint32_t slot, backend::Texture* texture);
@@ -76,8 +77,8 @@ protected:
     void setTextureArray(int location, const std::vector<uint32_t>& slots, const std::vector<backend::Texture*> textures, std::unordered_map<int, TextureInfo>& textureInfo);
     
     backend::Program* _program = nullptr;
-    std::unordered_map<int, UniformBuffer> _vertexUniformInfos;
-    std::unordered_map<int, UniformBuffer> _fragmentUniformInfos;
+    std::vector<UniformBuffer> _vertexUniformInfos;
+    std::vector<UniformBuffer> _fragmentUniformInfos;
     
     std::unordered_map<int, TextureInfo> _vertexTextureInfos;
     std::unordered_map<int, TextureInfo> _fragmentTextureInfos;

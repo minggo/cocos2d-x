@@ -302,6 +302,12 @@ void CommandBufferMTL::setTextures() const
 void CommandBufferMTL::doSetTextures(bool isVertex) const
 {
     const auto& bindTextureInfos = (isVertex) ? _programState->getVertexTextureInfos() : _programState->getFragmentTextureInfos();
+    
+    if(!isVertex)
+    {
+        if (bindTextureInfos.size() == 0)
+            assert(true);
+    }
    
     for(const auto& iter : bindTextureInfos)
         {
@@ -356,14 +362,14 @@ void CommandBufferMTL::setUniformBuffer() const
     }
 }
 
-uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, UniformBuffer>& unifornInfo) const
+uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::vector<UniformBuffer>& unifornInfo) const
 {
     uint32_t offset = 0;
     for(const auto& iter : unifornInfo)
     {
-        const auto& bindUniformInfo = iter.second;
-        memcpy(buffer + iter.first, bindUniformInfo.data, bindUniformInfo.uniformInfo.bufferSize);
-        offset += bindUniformInfo.uniformInfo.bufferSize;
+        const auto& bindUniformInfo = iter.uniformInfo;
+        memcpy(buffer + bindUniformInfo.location, iter.data, bindUniformInfo.bufferSize);
+        offset += bindUniformInfo.bufferSize;
     }
     return offset;
 }

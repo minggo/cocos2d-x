@@ -32,7 +32,7 @@ UniformBuffer& UniformBuffer::operator=(UniformBuffer&& rhs)
         data = rhs.data;
         rhs.data = nullptr;
     }
-    
+
     return *this;
 }
 
@@ -82,8 +82,20 @@ ProgramState::ProgramState(const std::string& vertexShader, const std::string& f
     _program = backend::ProgramCache::getInstance()->newProgram(vertexShader, fragmentShader);
     CC_SAFE_RETAIN(_program);
     
-    createVertexUniformBuffer();
-    createFragmentUniformBuffer();
+    auto maxVertexLocaiton = _program->getMaxVertexLocation();
+    auto maxFragmentLocaiton = _program->getMaxFragmentLocation();
+    
+    if(maxVertexLocaiton > 0)
+    {
+        _vertexUniformInfos.resize(maxVertexLocaiton);
+        createVertexUniformBuffer();
+    }
+    
+    if(maxFragmentLocaiton > 0)
+    {
+        _fragmentUniformInfos.resize(maxFragmentLocaiton);
+        createFragmentUniformBuffer();
+    }
 }
 
 ProgramState::~ProgramState()
@@ -102,7 +114,7 @@ void ProgramState::createVertexUniformBuffer()
     for(const auto& uniformInfo : vertexUniformInfos)
     {
         if(uniformInfo.second.bufferSize)
-            _vertexUniformInfos[uniformInfo.second.location] = uniformInfo.second;
+            _vertexUniformInfos.at(uniformInfo.second.location) = uniformInfo.second;
     }
 }
 
@@ -112,7 +124,7 @@ void ProgramState::createFragmentUniformBuffer()
     for(const auto& uniformInfo : fragmentUniformInfos)
     {
         if(uniformInfo.second.bufferSize)
-            _fragmentUniformInfos[uniformInfo.second.location] = uniformInfo.second;
+            _fragmentUniformInfos.at(uniformInfo.second.location) = uniformInfo.second;
     }
 }
 
@@ -131,9 +143,9 @@ void ProgramState::setVertexUniform(int location, const void* data, uint32_t siz
     if(location < 0)
         return;
     
-    assert(size <= _vertexUniformInfos[location].uniformInfo.bufferSize);
-    memcpy(_vertexUniformInfos[location].data, data, size);
-    _vertexUniformInfos[location].dirty = true;
+    assert(size <= _vertexUniformInfos.at(location).uniformInfo.bufferSize);
+    memcpy(_vertexUniformInfos.at(location).data, data, size);
+    _vertexUniformInfos.at(location).dirty = true;
 }
 
 void ProgramState::setFragmentUniform(int location, const void* data, uint32_t size)
@@ -141,9 +153,9 @@ void ProgramState::setFragmentUniform(int location, const void* data, uint32_t s
     if(location < 0)
         return;
     
-    assert(size <= _fragmentUniformInfos[location].uniformInfo.bufferSize);
-    memcpy(_fragmentUniformInfos[location].data, data, size);
-    _fragmentUniformInfos[location].dirty = true;
+    assert(size <= _fragmentUniformInfos.at(location).uniformInfo.bufferSize);
+    memcpy(_fragmentUniformInfos.at(location).data, data, size);
+    _fragmentUniformInfos.at(location).dirty = true;
 }
 
 void ProgramState::setVertexTexture(int location, uint32_t slot, backend::Texture* texture)
@@ -153,6 +165,8 @@ void ProgramState::setVertexTexture(int location, uint32_t slot, backend::Textur
 
 void ProgramState::setFragmentTexture(int location, uint32_t slot, backend::Texture* texture)
 {
+    if(location < 0)
+        printf("texture location = %d", location);
     setTexture(location, slot, texture, _fragmentTextureInfos);
 }
 

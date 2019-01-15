@@ -37,7 +37,7 @@ private:
     void setTextures() const;
     void doSetTextures(bool isVertex) const;
     void setUniformBuffer() const;
-    uint32_t fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, UniformBuffer>& unifornInfo) const;
+    uint32_t fillUniformBuffer(uint8_t* buffer, const std::vector<UniformBuffer>& unifornInfo) const;
     void afterDraw();
     
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;

@@ -22,6 +22,7 @@ public:
     inline id<MTLFunction> getMTLFunction() const { return _mtlFunction; }
     inline const std::shared_ptr<uint8_t>& getUniformBuffer() const { return _uniformBuffer; }
     inline const std::unordered_map<std::string, UniformInfo>& getUniforms() const { return _uniformInfos; }
+    inline const int getMaxLocation() const { return _maxLocation; }
     
 private:
     void parseUniform(id<MTLDevice> mtlDevice, glslopt_shader* shader);
@@ -31,6 +32,8 @@ private:
     
     std::shared_ptr<uint8_t> _uniformBuffer = nullptr;
     std::unordered_map<std::string, UniformInfo> _uniformInfos;
+    
+    int _maxLocation = -1;
 };
 
 CC_BACKEND_END

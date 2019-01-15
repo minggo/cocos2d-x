@@ -115,6 +115,8 @@ void ShaderModuleMTL::parseUniform(id<MTLDevice> mtlDevice, glslopt_shader* shad
         //TODO coulsonwang
         uniform.bufferSize = uniform.bufferSize < 16 ? 16 : uniform.bufferSize;
         _uniformInfos[parName] = uniform;
+        
+        _maxLocation = _maxLocation < location ? (location + 1) : _maxLocation;
     }
 }
 
