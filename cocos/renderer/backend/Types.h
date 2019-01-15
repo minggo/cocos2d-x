@@ -60,6 +60,11 @@ enum class TextureFormat : uint32_t
     RGBA4444,
     RGB565,
     RGB5A1,
+    // compressed format
+    ETC,
+    ATC_RGB,
+    ATC_EXPLICIT_ALPHA,
+    ATC_INTERPOLATED_ALPHA,
     SYSTEM_DEFAULT
 };
 

@@ -2,6 +2,7 @@
 
 #include "Types.h"
 #include "base/CCRef.h"
+#include <cassert>
 
 CC_BACKEND_BEGIN
 
@@ -30,7 +31,11 @@ public:
     inline TextureUsage getTextureUsage() const { return _textureUsage; }
     inline uint32_t getWidth() const { return _width; }
     inline uint32_t getHeight() const { return _height; }
-    
+    inline uint8_t getBytesPerElement() 
+    {
+        assert(_bitsPerElement >= 8);
+        return _bitsPerElement / 8;
+    }
 protected:
     Texture(const TextureDescriptor& descriptor);
     virtual ~Texture();
@@ -38,7 +43,7 @@ protected:
     uint32_t _width = 0;
     uint32_t _height = 0;
     // The bytes of all components.
-    uint8_t _bytesPerElement = 0;
+    uint8_t _bitsPerElement = 0;
     TextureType _textureType = TextureType::TEXTURE_2D;
     TextureFormat _textureFormat = TextureFormat::R8G8B8;
     TextureUsage _textureUsage = TextureUsage::READ;

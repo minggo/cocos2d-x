@@ -111,6 +111,11 @@ std::string Configuration::getInfo() const
     return forDump.getDescription();
 }
 
+#ifdef CC_USE_METAL
+void Configuration::gatherGPUInfo()
+{
+}
+#else
 void Configuration::gatherGPUInfo()
 {
 	_valueDict["gl.vendor"] = Value((const char*)glGetString(GL_VENDOR));
@@ -171,6 +176,8 @@ void Configuration::gatherGPUInfo()
 
     CHECK_GL_ERROR_DEBUG();
 }
+
+#endif
 
 Configuration* Configuration::getInstance()
 {

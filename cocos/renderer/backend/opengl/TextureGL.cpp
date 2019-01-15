@@ -108,7 +108,7 @@ TextureGL::TextureGL(const TextureDescriptor& descriptor) : Texture(descriptor)
    
     // Update data here because `updateData()` may not be invoked later.
     // For example, a texture used as depth buffer will not invoke updateData().
-    uint8_t* data = (uint8_t*)malloc(_width * _height * _bytesPerElement);
+    uint8_t* data = (uint8_t*)malloc(_width * _height * _bitsPerElement / 8);
     updateData(data);
     free(data);
 }
@@ -161,7 +161,7 @@ void TextureGL::updateData(uint8_t* data)
     //Set the row align only when mipmapsNum == 1 and the data is uncompressed
     if(!_isMipmapEnabled && !_isCompressed)
     {
-        unsigned int bytesPerRow = _width * _bytesPerElement;
+        unsigned int bytesPerRow = _width * _bitsPerElement / 8;
         
         if(bytesPerRow % 8 == 0)
         {
@@ -192,13 +192,13 @@ void TextureGL::updateData(uint8_t* data)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _sAddressModeGL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _tAddressModeGL);
 
-//  TODO coulsonwang
-//    if(_isCompressed)
-//    {
-//        auto datalen = _width * _height * _bytesPerElement;
-//        glCompressedTexImage2D(GL_TEXTURE_2D, 0, _internalFormat, (GLsizei)_width, (GLsizei)_height, 0, datalen, data);
-//    }
-//    else
+
+    if(_isCompressed)
+    {
+        auto datalen = _width * _height * _bitsPerElement / 8;
+        glCompressedTexImage2D(GL_TEXTURE_2D, 0, _internalFormat, (GLsizei)_width, (GLsizei)_height, 0, datalen, data);
+    }
+    else
     {
         glTexImage2D(GL_TEXTURE_2D,
                      0,
@@ -291,6 +291,29 @@ void TextureGL::toGLTypes()
             _internalFormat = GL_RGBA;
             _format = GL_RGBA;
             _type = GL_UNSIGNED_SHORT_5_5_5_1;
+            break;
+        case TextureFormat::ETC:
+            _internalFormat = GL_ETC1_RGB8_OES;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat ::ATC_RGB:
+            _internalFormat = GL_ATC_RGB_AMD;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+            break;
+        case TextureFormat::ATC_EXPLICIT_ALPHA:
+            _internalFormat = GL_ATC_RGBA_EXPLICIT_ALPHA_AMD;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
+        case TextureFormat::ATC_INTERPOLATED_ALPHA:
+            _internalFormat = GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD;
+            _format = 0xFFFFFFFF;
+            _type = 0xFFFFFFFF;
+            _isCompressed = true;
             break;
 //        case TextureFormat::D16:
 //            _format = GL_DEPTH_COMPONENT;

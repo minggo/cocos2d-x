@@ -35,6 +35,8 @@ private:
     GLint _internalFormat = GL_RGBA;
     GLenum _format = GL_RGBA;
     GLenum _type = GL_UNSIGNED_BYTE;
+
+    bool _isCompressed = false;
 };
 
 CC_BACKEND_END
