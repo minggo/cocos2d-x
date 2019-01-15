@@ -31,17 +31,27 @@
 #include "renderer/backend/ShaderModule.h"
 #include "renderer/backend/VertexLayout.h"
 #include "renderer/backend/RenderPassDescriptor.h"
+#include "CCProgramState.h"
+
+#include <string>
 
 NS_CC_BEGIN
 
 struct CC_DLL PipelineDescriptor final
 {
+    ~PipelineDescriptor();
+    void createProgramState(const std::string& vertexShader, const std::string& fragmentShader);
+    
+    ProgramState* programState = nullptr;
     backend::BlendDescriptor blendDescriptor;
     backend::RenderPassDescriptor renderPassDescriptor;
     backend::BindGroup* bindGroup = nullptr;
     backend::VertexLayout vertexLayout;
     backend::ShaderModule* vertexShader = nullptr;
     backend::ShaderModule* fragmentShader = nullptr;
+    
+    //for debug
+    std::string name;
 };
 
 NS_CC_END

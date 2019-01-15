@@ -45,8 +45,7 @@
 #include "base/ccUtils.h"
 #include "2d/CCFontFNT.h"
 #include "renderer/ccShaders.h"
-#include "renderer/backend/ShaderModule.h"
-#include "renderer/CCShaderCache.h"
+#include "renderer/CCProgramState.h"
 
 NS_CC_BEGIN
 /**
@@ -425,11 +424,6 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
         }
     });
     _eventDispatcher->addEventListenerWithFixedPriority(_resetTextureListener, 2);
-    
-    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    _bindGroup = new (std::nothrow) backend::BindGroup();
-    pipelineDescriptor.bindGroup = _bindGroup;
-    CC_SAFE_RETAIN(_bindGroup);
 }
 
 Label::~Label()
@@ -448,7 +442,6 @@ Label::~Label()
 
     CC_SAFE_RELEASE_NULL(_textSprite);
     CC_SAFE_RELEASE_NULL(_shadowNode);
-    CC_SAFE_RELEASE(_bindGroup);
 }
 
 void Label::reset()
@@ -571,25 +564,21 @@ void Label::setVertexLayout(PipelineDescriptor& pipelineDescriptor)
 
 void Label::updateShaderProgram()
 {
-    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+    const char* vert = nullptr;
+    const char* frag = nullptr;
     
-//    backend::ShaderModule* vert = nullptr;
-//    backend::ShaderModule* frag = nullptr;
-
     if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
     {
         auto texture = _getTexture(this);
         if(texture && texture->getAlphaTextureName())
         {
-//            vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//            frag = ShaderCache::newFragmentShaderModule(etc1_frag);
-            _bindGroup->newProgram(positionTextureColor_vert, etc1_frag);
+            vert = positionTextureColor_vert;
+            frag = etc1_frag;
         }
         else
         {
-//            vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//            frag = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
-            _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+            vert = positionTextureColor_vert;
+            frag = positionTextureColor_frag;
         }
     }
     else
@@ -599,61 +588,54 @@ void Label::updateShaderProgram()
             case cocos2d::LabelEffect::NORMAL:
                 if (_useDistanceField)
                 {
-//                    vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                    frag = ShaderCache::newFragmentShaderModule(label_distanceNormal_frag);
-                    _bindGroup->newProgram(positionTextureColor_vert, label_distanceNormal_frag);
+                    vert = positionTextureColor_vert;
+                    frag = label_distanceNormal_frag;
                 }
                 else if (_useA8Shader)
                 {
-//                    vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                    frag = ShaderCache::newFragmentShaderModule(label_normal_frag);
-                    _bindGroup->newProgram(positionTextureColor_vert, label_normal_frag);
+                    vert = positionTextureColor_vert;
+                    frag = label_normal_frag;
                 }
                 else
                 {
                     auto texture = _getTexture(this);
                     if(texture && texture->getAlphaTextureName())
                     {
-//                        vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                        frag = ShaderCache::newFragmentShaderModule(etc1_frag);
-                        _bindGroup->newProgram(positionTextureColor_vert, etc1_frag);
+                        vert = positionTextureColor_vert;
+                        frag = etc1_frag;
                     }
                     else
                     {
-//                        vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                        frag = ShaderCache::newFragmentShaderModule(positionTextureColor_frag);
-                        _bindGroup->newProgram(positionTextureColor_vert, positionTextureColor_frag);
+                        vert = positionTextureColor_vert;
+                        frag = positionTextureColor_frag;
                     }
                 }
                 break;
             case cocos2d::LabelEffect::OUTLINE:
                 {
-//                    vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                    frag = ShaderCache::newFragmentShaderModule(labelOutline_frag);
-                    _bindGroup->newProgram(positionTextureColor_vert, labelOutline_frag);
+                    vert = positionTextureColor_vert;
+                    frag = labelOutline_frag;
                 }
                 break;
             case cocos2d::LabelEffect::GLOW:
                 if (_useDistanceField)
                 {
-//                        vert = ShaderCache::newVertexShaderModule(positionTextureColor_vert);
-//                        frag = ShaderCache::newFragmentShaderModule(labelDistanceFieldGlow_frag);
-                    _bindGroup->newProgram(positionTextureColor_vert, labelDistanceFieldGlow_frag);
+                        vert = positionTextureColor_vert;
+                        frag = labelDistanceFieldGlow_frag;
                 }
                 break;
             default:
                 return;
         }
     }
-    
-    _mvpMatrixLocation = _bindGroup->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = _bindGroup->getFragmentUniformLocation("u_texture");
-    _alphaTextureLocation = _bindGroup->getFragmentUniformLocation("u_texture1");
-    _textColorLocation = _bindGroup->getFragmentUniformLocation("u_textColor");
-    _effectColorLocation = _bindGroup->getFragmentUniformLocation("u_effectColor");
-    _effectTypeLocation = _bindGroup->getFragmentUniformLocation("u_effectType");
-//    pipelineDescriptor.vertexShader = vert;
-//    pipelineDescriptor.fragmentShader = frag;
+    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
+    pipelineDescriptor.createProgramState(vert, frag);
+    _mvpMatrixLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    _alphaTextureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture1");
+    _textColorLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_textColor");
+    _effectColorLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_effectColor");
+    _effectTypeLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_effectType");
     setVertexLayout(pipelineDescriptor);
 }
 
@@ -1544,9 +1526,11 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
         updateBuffer(textureAtlas, _customCommandShadow);
         auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
         pipelineShadow = pipelineDescriptor;
+        pipelineShadow.programState = pipelineDescriptor.programState;
+        CC_SAFE_RETAIN(pipelineShadow.programState);
         const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         Mat4 matrixMVP = matrixP * _shadowTransform;
-        pipelineShadow.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
+        pipelineShadow.programState->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
     }
     
     if(_currentLabelType == LabelType::TTF)
@@ -1563,8 +1547,8 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                     effectType[0] = 2;
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-                    pipelineShadow.bindGroup->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
-                    pipelineShadow.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
+                    pipelineShadow.programState->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
+                    pipelineShadow.programState->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                     _customCommandShadow.init(_globalZOrder);
                     renderer->addCommand(&_customCommandShadow);
                 }
@@ -1575,8 +1559,10 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                     updateBuffer(textureAtlas, _customCommandOutLine);
                     auto& pipelineOutline = _customCommandOutLine.getPipelineDescriptor();
                     pipelineOutline = pipelineDescriptor;
-                    pipelineOutline.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
-                    pipelineOutline.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
+                    pipelineOutline.programState = pipelineDescriptor.programState;
+                    CC_SAFE_RETAIN(pipelineOutline.programState);
+                    pipelineOutline.programState->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
+                    pipelineOutline.programState->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                     _customCommandOutLine.init(_globalZOrder);
                     renderer->addCommand(&_customCommandOutLine);
                 }
@@ -1584,8 +1570,8 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 //draw text
                 {
                     effectType[0] = 0;
-                    pipelineDescriptor.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
-                    pipelineDescriptor.bindGroup->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
+                    pipelineDescriptor.programState->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
+                    pipelineDescriptor.programState->setFragmentUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                 }
             }
                 break;
@@ -1594,7 +1580,7 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 if (_shadowEnabled) {
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-                    pipelineShadow.bindGroup->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
+                    pipelineShadow.programState->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
                     _customCommandShadow.init(_globalZOrder);
                     renderer->addCommand(&_customCommandShadow);
                 }
@@ -1607,14 +1593,14 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                 {
                     auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
                     Vec4 shadowColor = Vec4(_shadowColor4F.r, _shadowColor4F.g, _shadowColor4F.b, _shadowColor4F.a);
-                    pipelineShadow.bindGroup->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
-                    pipelineShadow.bindGroup->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
+                    pipelineShadow.programState->setFragmentUniform(_textColorLocation, &shadowColor, sizeof(Vec4));
+                    pipelineShadow.programState->setFragmentUniform(_effectColorLocation, &shadowColor, sizeof(Vec4));
                     _customCommandShadow.init(_globalZOrder);
                     renderer->addCommand(&_customCommandShadow);
                 }
                 
                 Vec4 effectColor(_effectColorF.r, _effectColorF.g, _effectColorF.b, _effectColorF.a);
-                pipelineDescriptor.bindGroup->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
+                pipelineDescriptor.programState->setFragmentUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
             }
                 break;
             default:
@@ -1680,12 +1666,14 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             auto texture = textureAtlas->getTexture();
             auto& pipelineQuad = _quadCommand.getPipelineDescriptor();
             pipelineQuad = pipelineDescriptor;
-            pipelineQuad.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixProjection.m, sizeof(matrixProjection.m));
-            pipelineQuad.bindGroup->setFragmentTexture(_textureLocation, 0, texture->getBackendTexture());
+            pipelineQuad.programState = pipelineDescriptor.programState;
+            CC_SAFE_RETAIN(pipelineQuad.programState);
+            pipelineQuad.programState->setVertexUniform(_mvpMatrixLocation, matrixProjection.m, sizeof(matrixProjection.m));
+            pipelineQuad.programState->setFragmentTexture(_textureLocation, 0, texture->getBackendTexture());
             auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();
             if(alphaTexture && alphaTexture->getBackendTexture())
             {
-                pipelineQuad.bindGroup->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
+                pipelineQuad.programState->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
             }
             _quadCommand.init(_globalZOrder, texture, _blendFunc, textureAtlas->getQuads(), textureAtlas->getTotalQuads(), transform, flags);
             renderer->addCommand(&_quadCommand);
@@ -1699,14 +1687,14 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                     return;
                 
                 cocos2d::Mat4 matrixMVP = matrixProjection * transform;
-                pipelineDescriptor.bindGroup->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
+                pipelineDescriptor.programState->setVertexUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
                 Vec4 textColor(_textColorF.r, _textColorF.g, _textColorF.b, _textColorF.a);
-                pipelineDescriptor.bindGroup->setFragmentUniform(_textColorLocation, &textColor, sizeof(Vec4));
-                pipelineDescriptor.bindGroup->setFragmentTexture(_textureLocation, 0, textureAtlas->getTexture()->getBackendTexture());
+                pipelineDescriptor.programState->setFragmentUniform(_textColorLocation, &textColor, sizeof(Vec4));
+                pipelineDescriptor.programState->setFragmentTexture(_textureLocation, 0, textureAtlas->getTexture()->getBackendTexture());
                 auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();
                 if(alphaTexture && alphaTexture->getBackendTexture())
                 {
-                    pipelineDescriptor.bindGroup->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
+                    pipelineDescriptor.programState->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
                 }
                 updateEffectUniforms(textureAtlas, renderer, transform);
             }

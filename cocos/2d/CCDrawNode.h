@@ -319,8 +319,7 @@ protected:
     void setVertexLayout(CustomCommand& cmd);
     void updateBlendState(CustomCommand& cmd);
     void updateUniforms(const Mat4 &transform, CustomCommand& cmd);
-    void releaseBindGroup(CustomCommand& cmd);
-
+ 
     GLuint      _vao = 0;
     GLuint      _vbo = 0;
     GLuint      _vaoGLPoint = 0;
@@ -359,9 +358,6 @@ protected:
     backend::BindGroup* _bindGroup = nullptr;
     backend::BindGroup* _bindGroupPoint = nullptr;
     backend::BindGroup* _bindGroupLine = nullptr;
-    
-    int _alphaUniformLocation = -1;
-    int _mvpMatrixLocation = -1;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(DrawNode);

@@ -797,7 +797,6 @@ protected:
     int _textColorLocation = -1;
     int _effectColorLocation = -1;
     int _effectTypeLocation = -1;
-    backend::BindGroup* _bindGroup = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Label);

@@ -216,6 +216,12 @@ void CommandBufferMTL::setBindGroup(BindGroup* bindGroup)
     _bindGroup = bindGroup;
 }
 
+void CommandBufferMTL::setProgramState(ProgramState* programState)
+{
+    CC_SAFE_RETAIN(programState);
+    _programState = programState;
+}
+
 void CommandBufferMTL::setIndexBuffer(Buffer* buffer)
 {
     assert(buffer != nullptr);
@@ -275,8 +281,9 @@ void CommandBufferMTL::afterDraw()
         _mtlIndexBuffer = nullptr;
     }
     
-    CC_SAFE_RELEASE_NULL(_bindGroup);
+//    CC_SAFE_RELEASE_NULL(_bindGroup);
 //    CC_SAFE_RELEASE(_bindGroup);
+    CC_SAFE_RELEASE_NULL(_programState);
 }
 
 void CommandBufferMTL::prepareDrawing() const
@@ -295,7 +302,7 @@ void CommandBufferMTL::prepareDrawing() const
 
 void CommandBufferMTL::setTextures() const
 {
-    if (_bindGroup)
+    if (_programState)
     {
         doSetTextures(true);
         doSetTextures(false);
@@ -304,7 +311,7 @@ void CommandBufferMTL::setTextures() const
 
 void CommandBufferMTL::doSetTextures(bool isVertex) const
 {
-    const auto& bindTextureInfos = (isVertex) ? _bindGroup->getVertexTextureInfos() : _bindGroup->getFragmentTextureInfos();
+    const auto& bindTextureInfos = (isVertex) ? _programState->getVertexTextureInfos() : _programState->getFragmentTextureInfos();
    
     for(const auto& iter : bindTextureInfos)
         {
@@ -335,11 +342,11 @@ void CommandBufferMTL::doSetTextures(bool isVertex) const
 
 void CommandBufferMTL::setUniformBuffer() const
 {
-    if (_bindGroup)
+    if (_programState)
     {
         // Uniform buffer is bound to index 1.
         const auto& vertexUniformBuffer = _renderPipelineMTL->getVertexUniformBuffer();
-        const auto& vertexUniformInfo = _bindGroup->getVertexUniformInfos();
+        const auto& vertexUniformInfo = _programState->getVertexUniformInfos();
         if (vertexUniformBuffer)
         {
             uint32_t size = fillUniformBuffer(vertexUniformBuffer.get(), vertexUniformInfo);
@@ -348,7 +355,7 @@ void CommandBufferMTL::setUniformBuffer() const
         }
         
         const auto& fragUniformBuffer = _renderPipelineMTL->getFragmentUniformBuffer();
-        const auto& fragUniformInfo = _bindGroup->getFragmentUniformInfos();
+        const auto& fragUniformInfo = _programState->getFragmentUniformInfos();
         if (fragUniformBuffer)
         {
             uint32_t size = fillUniformBuffer(fragUniformBuffer.get(), fragUniformInfo);
@@ -359,7 +366,7 @@ void CommandBufferMTL::setUniformBuffer() const
     }
 }
 
-uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, BindGroup::UniformBuffer>& unifornInfo) const
+uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::unordered_map<int, UniformBuffer>& unifornInfo) const
 {
     uint32_t offset = 0;
     for(const auto& iter : unifornInfo)

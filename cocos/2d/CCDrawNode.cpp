@@ -36,7 +36,7 @@
 #include "base/ccUtils.h"
 #include "renderer/CCGLProgram.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCShaderCache.h"
+#include "renderer/CCprogramState.h"
 
 NS_CC_BEGIN
 
@@ -118,21 +118,6 @@ DrawNode::DrawNode(GLfloat lineWidth)
 //    });
 
 //    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-    
-//    auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-//    _bindGroup = new (std::nothrow) backend::BindGroup();
-//    pipelineDescriptor.bindGroup = _bindGroup;
-//    CC_SAFE_RETAIN(_bindGroup);
-//
-//    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
-//    _bindGroupPoint = new (std::nothrow) backend::BindGroup();
-//    pipelineDescriptor.bindGroup = _bindGroupPoint;
-//    CC_SAFE_RETAIN(_bindGroupPoint);
-//
-//    pipelineDescriptor = _customCommandGLPoint.getPipelineDescriptor();
-//    _bindGroupLine = new (std::nothrow) backend::BindGroup();
-//    pipelineDescriptor.bindGroup = _bindGroupLine;
-//    CC_SAFE_RETAIN(_bindGroupLine);
 #endif
 }
 
@@ -144,10 +129,6 @@ DrawNode::~DrawNode()
     _bufferGLPoint = nullptr;
     free(_bufferGLLine);
     _bufferGLLine = nullptr;
-    
-    releaseBindGroup(_customCommand);
-    releaseBindGroup(_customCommandGLPoint);
-    releaseBindGroup(_customCommandGLLine);
 }
 
 DrawNode* DrawNode::create(GLfloat defaultLineWidth)
@@ -221,30 +202,19 @@ bool DrawNode::init()
     return true;
 }
 
-void DrawNode::releaseBindGroup(CustomCommand &cmd)
-{
-    CC_SAFE_RELEASE(cmd.getPipelineDescriptor().bindGroup);
-}
-
 void DrawNode::updateShader()
 {
-    releaseBindGroup(_customCommand);
-    _customCommand.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
-    _customCommand.getPipelineDescriptor().bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _customCommand.getPipelineDescriptor().createProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommand);
     _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
 
-     releaseBindGroup(_customCommandGLPoint);
-    _customCommandGLPoint.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
-    _customCommandGLPoint.getPipelineDescriptor().bindGroup->newProgram(positionColorTextureAsPointsize_vert, positionColor_frag);
+    _customCommandGLPoint.getPipelineDescriptor().createProgramState(positionColorTextureAsPointsize_vert, positionColor_frag);
     setVertexLayout(_customCommandGLPoint);
     _customCommandGLPoint.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLPoint.setPrimitiveType(CustomCommand::PrimitiveType::POINT);
 
-    releaseBindGroup(_customCommandGLLine);
-    _customCommandGLLine.getPipelineDescriptor().bindGroup = new (std::nothrow) backend::BindGroup;
-    _customCommandGLLine.getPipelineDescriptor().bindGroup->newProgram(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _customCommandGLLine.getPipelineDescriptor().createProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     setVertexLayout(_customCommandGLLine);
     _customCommandGLLine.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLLine.setPrimitiveType(CustomCommand::PrimitiveType::LINE);
@@ -296,13 +266,13 @@ void DrawNode::updateUniforms(const Mat4 &transform, CustomCommand& cmd)
     auto& pipelineDescriptor = cmd.getPipelineDescriptor();
     const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 matrixMVP = matrixP * transform;
-    auto mvpLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_MVPMatrix");
-    pipelineDescriptor.bindGroup->setVertexUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
+    auto mvpLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
+    pipelineDescriptor.programState->setVertexUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
 
     float alpha = _displayedOpacity / 255.0;
     Vec4 alpha4(alpha, 0, 0, 0);
-    auto alphaUniformLocation = pipelineDescriptor.bindGroup->getVertexUniformLocation("u_alpha");
-    pipelineDescriptor.bindGroup->setVertexUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
+    auto alphaUniformLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_alpha");
+    pipelineDescriptor.programState->setVertexUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
 }
 
 void DrawNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)

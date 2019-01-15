@@ -658,8 +658,6 @@ protected:
     int _textureLocation = -1;
     int _alphaTextureLocation = -1;
     
-    backend::BindGroup* _bindGroup = nullptr;
-    
 #if CC_SPRITE_DEBUG_DRAW
     DrawNode *_debugDrawNode;
 #endif //CC_SPRITE_DEBUG_DRAW

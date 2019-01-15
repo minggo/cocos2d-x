@@ -4,6 +4,7 @@
 #include "Types.h"
 #include "VertexLayout.h"
 #include "BindGroup.h"
+#include "renderer/CCProgramState.h"
 
 #include <vector>
 
@@ -15,6 +16,7 @@ class BlendState;
 
 struct RenderPipelineDescriptor
 {
+    ProgramState* programState = nullptr;
     BindGroup* bindGroup = nullptr;
     DepthStencilState* depthStencilState = nullptr;
     BlendState* blendState = nullptr;
