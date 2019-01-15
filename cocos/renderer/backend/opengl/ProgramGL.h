@@ -57,6 +57,7 @@ private:
     std::vector<VertexAttributeArray> _attributeInfos;
     std::unordered_map<std::string, UniformInfo> _uniformInfos;
     
+    int _maxLocation = -1;
 };
 
 CC_BACKEND_END

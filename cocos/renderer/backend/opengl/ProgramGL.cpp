@@ -265,11 +265,11 @@ const std::unordered_map<std::string, UniformInfo>& ProgramGL::getFragmentUnifor
 
 int ProgramGL::getMaxVertexLocation() const
 {
-
+    return _maxLocation;
 }
 int ProgramGL::getMaxFragmentLocation() const
 {
-
+    return _maxLocation;
 }
 
 CC_BACKEND_END
