@@ -56,14 +56,7 @@ endif()
 set(GAME_HEADER ${RUNTIME_SRC_ROOT}/Classes/AppDelegate.h)
 set(GAME_SOURCE ${RUNTIME_SRC_ROOT}/Classes/AppDelegate.cpp)
 # sources need to compile info, include dirs and source files
-include_directories(
-        ${RUNTIME_SRC_ROOT}/Classes
-        ${COCOS2DX_ROOT_PATH}/cocos/scripting/lua-bindings/auto
-        ${COCOS2DX_ROOT_PATH}/cocos/scripting/lua-bindings/manual
-        ${COCOS2DX_ROOT_PATH}/external/lua/luajit/include
-        ${COCOS2DX_ROOT_PATH}/external/lua/tolua
-        ${COCOS2DX_ROOT_PATH}/tools/simulator/libsimulator/lib
-)
+
 if(ANDROID)
     # change APP_NAME to the share library name for Android, it's value depend on AndroidManifest.xml
     set(APP_NAME cocos2dlua)
