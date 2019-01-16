@@ -34,10 +34,6 @@ set(COCOS2D_X_VERSION 3.18)
 
 set(COCOS_CORE_LIB cocos2d)
 
-if(WINDOWS)
-    add_definitions(-DUNICODE -D_UNICODE)
-endif()
-
 include(2d/CMakeLists.txt)
 #include(3d/CMakeLists.txt)
 include(platform/CMakeLists.txt)
@@ -110,8 +106,12 @@ add_library(cocos2d ${COCOS_SRC})
 add_subdirectory(${COCOS2DX_ROOT_PATH}/external ${ENGINE_BINARY_PATH}/external)
 target_link_libraries(cocos2d external)
 
+# add base macro define and compile options
+use_cocos2dx_compile_define(cocos2d)
+use_cocos2dx_compile_options(cocos2d)
+
 # use all platform related system libs
-target_use_cocos2dx_depend(cocos2d)
+use_cocos2dx_libs_depend(cocos2d)
 
 target_include_directories(cocos2d
     PUBLIC ${COCOS2DX_ROOT_PATH}
