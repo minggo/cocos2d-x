@@ -632,7 +632,7 @@ void Label::updateShaderProgram()
     }
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
     CC_SAFE_RELEASE(_programState);
-    _programState = new (std::nothrow) ProgramState(vert, frag);
+    _programState = new (std::nothrow) backend::ProgramState(vert, frag);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
@@ -1207,7 +1207,6 @@ void Label::enableShadow(const Color4B& shadowColor /* = Color4B::BLACK */,
 
     if (_currentLabelType == LabelType::BMFONT || _currentLabelType == LabelType::CHARMAP)
     {
-//        setGLProgramState(GLProgramState::getOrCreateWithGLProgramName(_shadowEnabled ? GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR : GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, _getTexture(this)));
         updateShaderProgram();
     }
 }

@@ -268,7 +268,7 @@ protected:
     
     backend::UniformLocation _mvpMatrixLocaiton;
     backend::UniformLocation _textureLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 
     // all descendants: children, grand children, etc...
     // There is not need to retain/release these objects, since they are already retained by _children

@@ -109,7 +109,7 @@ bool GridBase::initWithSize(const Size& gridSize, Texture2D *texture, bool flipp
 
     auto& pipelineDescriptor = _drawCommand.getPipelineDescriptor();
     CC_SAFE_RELEASE(_programState);
-    _programState = new (std::nothrow) ProgramState(positionTexture_vert, positionTexture_frag);
+    _programState = new (std::nothrow) backend::ProgramState(positionTexture_vert, positionTexture_frag);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");

@@ -293,7 +293,7 @@ LayerColor::LayerColor()
     vertexLayout.setLayout(sizeof(_vertexData[0]), backend::VertexStepMode::VERTEX);
     
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    _programState = new (std::nothrow) ProgramState(positionColor_vert, positionColor_frag);
+    _programState = new (std::nothrow) backend::ProgramState(positionColor_vert, positionColor_frag);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     
@@ -695,7 +695,7 @@ LayerRadialGradient* LayerRadialGradient::create()
 LayerRadialGradient::LayerRadialGradient()
 {
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    _programState = new (std::nothrow) ProgramState(position_vert, layer_radialGradient_frag);
+    _programState = new (std::nothrow) backend::ProgramState(position_vert, layer_radialGradient_frag);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _startColorLocation = pipelineDescriptor.programState->getUniformLocation("u_startColor");

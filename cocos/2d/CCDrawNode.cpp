@@ -209,21 +209,21 @@ bool DrawNode::init()
 void DrawNode::updateShader()
 {
     CC_SAFE_RELEASE(_programState);
-    _programState = new (std::nothrow) ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _programState = new (std::nothrow) backend::ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     _customCommand.getPipelineDescriptor().programState = _programState;
     setVertexLayout(_customCommand);
     _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
 
     CC_SAFE_RELEASE(_programStatePoint);
-    _programStatePoint = new (std::nothrow) ProgramState(positionColorTextureAsPointsize_vert, positionColor_frag);
+    _programStatePoint = new (std::nothrow) backend::ProgramState(positionColorTextureAsPointsize_vert, positionColor_frag);
     _customCommandGLPoint.getPipelineDescriptor().programState = _programStatePoint;
     setVertexLayout(_customCommandGLPoint);
     _customCommandGLPoint.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLPoint.setPrimitiveType(CustomCommand::PrimitiveType::POINT);
 
     CC_SAFE_RELEASE(_programStateLine);
-    _programStateLine = new (std::nothrow) ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _programStateLine = new (std::nothrow) backend::ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
     _customCommandGLLine.getPipelineDescriptor().programState = _programStateLine;
     setVertexLayout(_customCommandGLLine);
     _customCommandGLLine.setDrawType(CustomCommand::DrawType::ARRAY);

@@ -354,7 +354,7 @@ protected:
     backend::UniformLocation _mvpMatrixLocaiton;
     backend::UniformLocation _textureLocation;
     backend::UniformLocation _alphaValueLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 };
 
 // end of tilemap_parallax_nodes group

@@ -143,7 +143,7 @@ protected:
     QuadCommand _quadCommand;
     backend::UniformLocation _textureLocation;
     backend::UniformLocation _mvpMatrixLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(AtlasNode);

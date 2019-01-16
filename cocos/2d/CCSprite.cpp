@@ -396,7 +396,7 @@ void Sprite::updateShaders(const char* vert, const char* frag, bool dirty)
 {
     auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
     CC_SAFE_RELEASE(_programState);
-    _programState = new (std::nothrow) ProgramState(vert, frag);
+    _programState = new (std::nothrow) backend::ProgramState(vert, frag);
     pipelineDescriptor.programState = _programState;
     
     _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");

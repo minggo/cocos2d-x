@@ -50,7 +50,7 @@ NS_CC_BEGIN
 ParticleSystemQuad::ParticleSystemQuad()
 {
     auto& pipelieDescriptor = _quadCommand.getPipelineDescriptor();
-    _programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    _programState = new (std::nothrow) backend::ProgramState(positionTextureColor_vert, positionTextureColor_frag);
     pipelieDescriptor.programState = _programState;
     _mvpMatrixLocaiton = pipelieDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _textureLocation = pipelieDescriptor.programState->getUniformLocation("u_texture");

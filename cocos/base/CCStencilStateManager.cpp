@@ -40,7 +40,7 @@ StencilStateManager::StencilStateManager()
     vertexLayout.setLayout(2 * sizeof(float), backend::VertexStepMode::VERTEX);
 
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    _programState = new (std::nothrow) ProgramState(positionUColor_vert, positionUColor_frag);
+    _programState = new (std::nothrow) backend::ProgramState(positionUColor_vert, positionUColor_frag);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocaiton = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _colorUniformLocation = pipelineDescriptor.programState->getUniformLocation("u_color");

@@ -254,7 +254,7 @@ void TMXLayer::parseInternalProperties()
             auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
             auto& vertexShader = pipelineDescriptor.programState->getProgram()->getVertexShader();
             CC_SAFE_RELEASE(_programState);
-            _programState = new (std::nothrow) ProgramState(vertexShader, positionTextureColorAlphaTest_frag);
+            _programState = new (std::nothrow) backend::ProgramState(vertexShader, positionTextureColorAlphaTest_frag);
             pipelineDescriptor.programState = _programState;
             auto alphaValueLocation = pipelineDescriptor.programState->getUniformLocation("u_alpha_value");
             pipelineDescriptor.programState->setUniform(alphaValueLocation, &alphaFuncValue, sizeof(alphaFuncValue));

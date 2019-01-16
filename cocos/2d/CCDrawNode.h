@@ -343,9 +343,9 @@ protected:
 
     BlendFunc   _blendFunc;
     
-    ProgramState* _programState = nullptr;
-    ProgramState* _programStatePoint = nullptr;
-    ProgramState* _programStateLine = nullptr;
+    backend::ProgramState* _programState = nullptr;
+    backend::ProgramState* _programStatePoint = nullptr;
+    backend::ProgramState* _programStateLine = nullptr;
     
     CustomCommand _customCommand;
     CustomCommand _customCommandGLPoint;

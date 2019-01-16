@@ -23,27 +23,47 @@
  ****************************************************************************/
 #pragma once
 
+#include "Macros.h"
+#include "base/CCRef.h"
 #include "platform/CCPlatformMacros.h"
-#include "renderer/backend/DepthStencilState.h"
-#include "renderer/backend/BlendState.h"
-#include "renderer/backend/Texture.h"
-#include "renderer/backend/VertexLayout.h"
-#include "renderer/backend/RenderPassDescriptor.h"
-#include "renderer/backend/ProgramState.h"
+#include "renderer/backend/ShaderModule.h"
 
 #include <string>
+#include <unordered_map>
 
-NS_CC_BEGIN
+CC_BACKEND_BEGIN
 
-struct CC_DLL PipelineDescriptor final
+class ShaderCache : public Ref
 {
-    backend::ProgramState* programState = nullptr;
-    backend::BlendDescriptor blendDescriptor;
-    backend::RenderPassDescriptor renderPassDescriptor;
-    backend::VertexLayout vertexLayout;
+public:
+    /** returns the shared instance */
+    static ShaderCache* getInstance();
     
-    //for debug
-    std::string name;
+    /** purges the cache. It releases the retained instance. */
+    static void destroyInstance();
+    
+    /** Create a vertex shader module.
+        @param key A key to identify a shader module. If it is created before, then just return the cached shader module.
+        @param shaderSource The source code of the shader.
+     */
+    static backend::ShaderModule* newVertexShaderModule(const std::string& shaderSource);
+    
+    /** Create a fragment shader module.
+     @param key A key to identify a shader module. If it is created before, then just return the cached shader module.
+     @param shaderSource The source code of the shader.
+     */
+    static backend::ShaderModule* newFragmentShaderModule(const std::string& shaderSource);
+    
+    void removeUnusedShader();
+    
+protected:
+    virtual ~ShaderCache();
+    
+    bool init();
+    static backend::ShaderModule* newShaderModule(backend::ShaderStage stage, const std::string& shaderSource);
+    
+    static std::unordered_map<std::size_t, backend::ShaderModule*> _cachedShaders;
+    static ShaderCache* _sharedShaderCache;
 };
 
-NS_CC_END
+CC_BACKEND_END

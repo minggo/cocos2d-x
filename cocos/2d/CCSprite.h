@@ -660,7 +660,7 @@ protected:
     backend::UniformLocation _textureLocation;
     backend::UniformLocation _alphaTextureLocation;
     
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
     
 #if CC_SPRITE_DEBUG_DRAW
     DrawNode *_debugDrawNode;

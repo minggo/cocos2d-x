@@ -187,7 +187,7 @@ protected:
     
     backend::UniformLocation _mvpMatrixLocaiton;
     backend::UniformLocation _textureLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(MotionStreak);

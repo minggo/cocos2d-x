@@ -159,7 +159,7 @@ protected:
     backend::UniformLocation _mvpMatrixLocation;
     backend::UniformLocation _textureLocation;
     
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 };
 
 /**

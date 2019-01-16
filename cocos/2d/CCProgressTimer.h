@@ -191,8 +191,8 @@ protected:
     CustomCommand _customCommand;
     CustomCommand _customCommand2;
     
-    ProgramState* _programState = nullptr;
-    ProgramState* _programState2 = nullptr;
+    backend::ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState2 = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(ProgressTimer);

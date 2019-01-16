@@ -180,7 +180,7 @@ private:
     
     backend::UniformLocation _mvpMatrixLocaiton;
     backend::UniformLocation _textureLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 };
 
 // end of _2d group

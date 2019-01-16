@@ -44,11 +44,11 @@ const char kProgressTextureCoords = 0x4b;
 
 namespace
 {
-    void initPipelineDescriptor(cocos2d::CustomCommand& command, bool ridal, ProgramState* programState)
+    void initPipelineDescriptor(cocos2d::CustomCommand& command, bool ridal, backend::ProgramState* programState)
     {
         //TODO coulsonwang
         auto& pipelieDescriptor = command.getPipelineDescriptor();
-        programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+        programState = new (std::nothrow) backend::ProgramState(positionTextureColor_vert, positionTextureColor_frag);
         pipelieDescriptor.programState = programState;
         
         //set vertexLayout according to V2F_C4B_T2F structure

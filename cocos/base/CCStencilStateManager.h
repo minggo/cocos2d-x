@@ -84,7 +84,7 @@ private:
     
     backend::UniformLocation _mvpMatrixLocaiton;
     backend::UniformLocation _colorUniformLocation;
-    ProgramState* _programState = nullptr;
+    backend::ProgramState* _programState = nullptr;
 };
 
 NS_CC_END
