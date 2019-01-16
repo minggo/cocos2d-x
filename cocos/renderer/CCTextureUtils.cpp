@@ -104,6 +104,45 @@ namespace backend { namespace PixelFormatUtils {
         }
     }
     
+    // IIIIIIIIAAAAAAAA -> RRRRGGGGBBBBAAAA
+    void convertAI88ToBGR565(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t* out16 = (uint16_t*)outData;
+        for (ssize_t i = 0, l = dataLen - 1; i < l; i += 2)
+        {
+            *out16++ = (data[i] & 0x00F8) << 8    //B
+            | (data[i] & 0x00FC) << 3             //G
+            | (data[i] & 0x00F8) >> 3;
+        }
+    }
+    
+    // IIIIIIIIAAAAAAAA -> RRRRGGGGBBBBAAAA
+    void convertAI88ToBGR5A1(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t* out16 = (uint16_t*)outData;
+        for (ssize_t i = 0, l = dataLen - 1; i < l; i += 2)
+        {
+            *out16++ = (data[i] & 0x00F8) << 8    //R
+            | (data[i] & 0x00F8) << 3             //G
+            | (data[i] & 0x00F8) >> 2                 //B
+            | (data[i + 1] & 0x0080) >> 7;          //A
+        }
+    }
+    
+    // IIIIIIIIAAAAAAAA -> RRRRGGGGBBBBAAAA
+    void convertAI88ToABGR4(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t* out16 = (uint16_t*)outData;
+        for (ssize_t i = 0, l = dataLen - 1; i < l; i += 2)
+        {
+            *out16++ = (data[i] & 0x00F0) << 4    //R
+            | (data[i] & 0x00F0)              //G
+            | (data[i] & 0x00F0) >> 4                 //B
+            | (data[i + 1] & 0x0080) << 8;          //A
+        }
+    }
+    
+    
     // IIIIIIII -> RRRRRGGGGGBBBBBA
     void convertI8ToRGB5A1(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
     {
@@ -114,6 +153,42 @@ namespace backend { namespace PixelFormatUtils {
             | (data[i] & 0x00F8) << 3         //G
             | (data[i] & 0x00F8) >> 2         //B
             | 0x0001;                         //A
+        }
+    }
+    
+    void convertI8ToBGR5A1(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t *out16 = (uint16_t*)outData;
+        for (int i = 0; i < dataLen; ++i)
+        {
+            *out16++ = (data[i] & 0xF8) << 8    //R
+            | (data[i] & 0xF8) << 3         //G
+            | (data[i] & 0xF8) >> 2         //B
+            | 0x0001;                         //A
+        }
+    }
+    
+    void convertI8ToBGR565(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t *out16 = (uint16_t*)outData;
+        for (int i = 0; i < dataLen; ++i)
+        {
+            *out16++ = (data[i] & 0xF8) << 8    //R
+            | (data[i] & 0xFC) << 3         //G
+            | (data[i] & 0xF8) >> 3         //B
+            ;
+        }
+    }
+    
+    void convertI8ToABGR4(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
+    {
+        uint16_t *out16 = (uint16_t*)outData;
+        for (int i = 0; i < dataLen; ++i)
+        {
+            *out16++ = (data[i] & 0xF0) << 4    //R
+            | (data[i] & 0xF0)                  //G
+            | (data[i] & 0xF0) >> 4             //B
+            | 0xF000;
         }
     }
     
@@ -308,9 +383,33 @@ namespace backend { namespace PixelFormatUtils {
         uint16_t *outData = (uint16_t*) out;
         for(int i = 0;i < dataLen ; i += 3)
         {
-            *outData++ = ((data[i + 2] >> 3) << 11) |
-            ((data[i+1] >> 2) << 5) |
-            (data[i] >> 3);
+            *outData++ = ((data[i] & 0xF8) << 8)|
+            ((data[i + 1] &0xFC) << 3) |
+            ((data[i + 2] & 0xF8)>> 3);
+        }
+    }
+    
+    
+    void convertRGB888ToBGR5A1(const unsigned char *data, ssize_t dataLen, unsigned char *out)
+    {
+        uint16_t *outData = (uint16_t*) out;
+        for(int i = 0;i < dataLen ; i += 3)
+        {
+            *outData++ = ((data[i] & 0xF8) << 8) |
+            ((data[i + 1] & 0xF8) << 3) |
+            ((data[i + 2] &0xF8) >> 2) | 0x01;
+        }
+    }
+    
+    void convertRGB888ToABGR4(const unsigned char *data, ssize_t dataLen, unsigned char *out)
+    {
+        uint16_t *outData = (uint16_t*) out;
+        for(int i = 0;i < dataLen ; i += 3)
+        {
+            *outData++ = ((data[i] & 0xF0) << 4) | //b
+            (data[i + 1] & 0xF0) |                       //g
+            ((data[i + 2] & 0xF0) >> 4) |                 //r
+            0xF000;                                   //a
         }
     }
     
@@ -331,26 +430,42 @@ namespace backend { namespace PixelFormatUtils {
     {
         uint16_t *outData = (uint16_t*)out;
         const ssize_t pixelCnt = dataLen / 4;
-        for(int i=0;i<dataLen;i += 4)
+        for(int i=0;i < pixelCnt; i++ )
         {
-            *outData++ = ((data[i + 2] >> 3) << 11) |
-            ((data[i + 1] >> 2) << 5) |
-            ((data[i] >> 3));
+            outData[i] = ((data[i*4 + 2] & 0xF8) << 8) | //b
+            ((data[i * 4 + 1] & 0xFC ) << 3) |           //g
+            (((data[i * 4 + 0] & 0xF8) >> 3));             //r
         }
     }
     
     void convertRGBA8888ToABGR4(const unsigned char *data, ssize_t dataLen, unsigned char *out)
     {
         uint16_t *outData = (uint16_t*)out;
-        const ssize_t pixelCnt = dataLen / 4;
-        for(int i=0;i<pixelCnt;i += 4)
+        for(int i=0;i < dataLen; i+=4 )
         {
-            outData[i] = (data[i*4 + 3] >> 4) |
-            (data[i*4 + 2] >> 4) |
-            (data[i*4 + 1] >> 4) |
-            (data[i*4 + 0] >> 4);
+            *outData++ = ((data[i] & 0xF0) << 8) |
+            ((data[i + 1] & 0xF0) << 4) |
+            ((data[i + 2] & 0xF0)) |
+            ((data[i + 3] & 0xF0) >> 4);
         }
     }
+    
+    void convertRGBA8888ToBGR5A1(const unsigned char *data, ssize_t dataLen, unsigned char *out)
+    {
+        uint16_t *outData = (uint16_t*)out;
+        uint32_t *inData = (uint32_t*)data;
+        const ssize_t pixelCnt = dataLen / 4;
+        uint32_t pixel;
+        for(int i=0;i < pixelCnt; i++ )
+        {
+            pixel = inData[i];
+            outData[i] = ((data[i * 4 + 2] >> 3) << 11) | //b
+            ((data[i*4 + 1] >> 3) << 6) |                 //g
+            ((data[i*4 + 0] >> 3) << 1) |                 //r
+            ((data[i*4 + 3] >> 7));                       //a
+        }
+    }
+    
     
     void convertRGB5A1ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
     {
@@ -443,12 +558,12 @@ namespace backend { namespace PixelFormatUtils {
         for (uint32_t i = 0; i < pixelLen; i++)
         {
             pixel = inData[i];
-            newPixel = 0;
-            newPixel |= ((pixel & 0xF000) >> 12);
-            newPixel |= ((pixel & 0x0F00) >> 4);
-            newPixel |= ((pixel & 0x00F0) << 4) ;
-            newPixel |= ((pixel & 0x000F) << 12 );
-            outData[i] = newPixel;
+            //newPixel = 0;
+            //newPixel |= ((pixel & 0xF000) >> 12);
+            //newPixel |= ((pixel & 0x0F00) >> 4);
+            //newPixel |= ((pixel & 0x00F0) << 4) ;
+            //newPixel |= ((pixel & 0x000F) << 12 );
+            outData[i] = pixel;
         }
     }
     
@@ -507,6 +622,21 @@ namespace backend { namespace PixelFormatUtils {
                 *outData = (unsigned char*)data;
                 *outDataLen = dataLen;
                 break;
+            case PixelFormat::MTL_BGR5A1:
+                *outDataLen = dataLen * 2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertI8ToBGR5A1(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_ABGR4:
+                *outDataLen = dataLen * 2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertI8ToABGR4(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_B5G6R5:
+                *outDataLen = dataLen * 2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertI8ToBGR565(data, dataLen, *outData);
+                break;
             default:
                 // unsupported conversion or don't need to convert
                 if (format != PixelFormat::AUTO && format != PixelFormat::I8)
@@ -560,6 +690,21 @@ namespace backend { namespace PixelFormatUtils {
                 *outDataLen = dataLen;
                 *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertAI88ToRGB5A1(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_ABGR4:
+                *outDataLen = dataLen;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertAI88ToABGR4(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_B5G6R5:
+                *outDataLen = dataLen;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertAI88ToBGR565(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_BGR5A1:
+                *outDataLen = dataLen;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertAI88ToBGR5A1(data, dataLen, *outData);
                 break;
             default:
                 // unsupported conversion or don't need to convert
@@ -620,6 +765,17 @@ namespace backend { namespace PixelFormatUtils {
                 *outDataLen = dataLen/3*2;
                 *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertRGB888ToB5G6R5(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_BGR5A1:
+                *outDataLen = dataLen/3*2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertRGB888ToBGR5A1(data, dataLen, *outData);
+                break;
+            case PixelFormat::MTL_ABGR4:
+                *outDataLen = dataLen/3*2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertRGB888ToABGR4(data, dataLen, *outData);
+                break;
             default:
                 // unsupported conversion or don't need to convert
                 if (format != PixelFormat::AUTO && format != PixelFormat::RGB888)
@@ -683,6 +839,11 @@ namespace backend { namespace PixelFormatUtils {
                 *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertRGBA8888ToABGR4(data, dataLen, *outData);
                 break;
+            case PixelFormat::MTL_BGR5A1:
+                *outDataLen = dataLen/2;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
+                convertRGBA8888ToBGR5A1(data, dataLen, *outData);
+                break;
             default:
                 // unsupported conversion or don't need to convert
                 if (format != PixelFormat::AUTO && format != PixelFormat::RGBA8888)
@@ -709,7 +870,7 @@ namespace backend { namespace PixelFormatUtils {
                 break;
             case PixelFormat::MTL_BGR5A1:
                 *outDataLen = dataLen;
-                *outData =(unsigned char *)data;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertRGB5A1ToBGR5A1(data, dataLen, *outData);
                 break;
             default:
@@ -737,7 +898,7 @@ namespace backend { namespace PixelFormatUtils {
                 break;
             case PixelFormat::MTL_B5G6R5:
                 *outDataLen = dataLen;
-                *outData = (unsigned char *)data;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertRGB565ToB5G6R5(data, dataLen, *outData);
                 break;
             default:
@@ -788,7 +949,7 @@ namespace backend { namespace PixelFormatUtils {
                 break;
             case PixelFormat::MTL_ABGR4:
                 *outDataLen = dataLen;
-                *outData = (unsigned char *)data;
+                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
                 convertRGBA4444ToABGR4444(data, dataLen, *outData);
                 break;
             default:

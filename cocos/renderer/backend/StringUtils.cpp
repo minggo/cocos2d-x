@@ -238,6 +238,12 @@ TextureFormat StringUtils::PixelFormat2TextureFormat(const PixelFormat& pixleFor
             return TextureFormat::S3TC_DXT3;
         case PixelFormat::S3TC_DXT5:
             return TextureFormat::S3TC_DXT5;
+        case PixelFormat::MTL_ABGR4:
+            return TextureFormat::MTL_ABGR4;
+        case PixelFormat::MTL_BGR5A1:
+            return TextureFormat::MTL_BGR5A1;
+        case PixelFormat::MTL_B5G6R5:
+            return TextureFormat::MTL_B5G6R5;
         default:
             return TextureFormat::NONE;
             break;

@@ -41,7 +41,7 @@ MTLPixelFormat Utils::toMTLPixelFormat(TextureFormat textureFormat)
             return MTLPixelFormatABGR4Unorm;
         case TextureFormat::MTL_BGR5A1:
             return MTLPixelFormatBGR5A1Unorm;
-        case TextureFormat::MTL_B5G6R6:
+        case TextureFormat::MTL_B5G6R5:
             return MTLPixelFormatB5G6R5Unorm;
 #else
         case TextureFormat::RGBA4444:
@@ -53,6 +53,8 @@ MTLPixelFormat Utils::toMTLPixelFormat(TextureFormat textureFormat)
             return MTLPixelFormatRGBA8Unorm;
         case TextureFormat::A8:
             return MTLPixelFormatA8Unorm;
+        case TextureFormat::I8:
+            return MTLPixelFormatR8Unorm;
             // Not all devices supports MTLPixelFormatDepth24Unorm_Stencil8, so change to MTLPixelFormatDepth32Float_Stencil8.
         case TextureFormat::D24S8:
             return MTLPixelFormatDepth32Float_Stencil8;

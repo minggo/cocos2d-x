@@ -110,6 +110,14 @@ namespace {
         PixelFormatInfoMapValue(Texture2D::PixelFormat::ATC_INTERPOLATED_ALPHA, Texture2D::PixelFormatInfo(GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD,
             0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
 #endif
+        //metal formats
+#ifdef CC_USE_METAL
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        PixelFormatInfoMapValue(Texture2D::PixelFormat::MTL_ABGR4, Texture2D::PixelFormatInfo(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 16, false, true)),
+        PixelFormatInfoMapValue(Texture2D::PixelFormat::MTL_B5G6R5, Texture2D::PixelFormatInfo(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 16, false, false)),
+        PixelFormatInfoMapValue(Texture2D::PixelFormat::MTL_BGR5A1, Texture2D::PixelFormatInfo(0xFFFFFFFF,0xFFFFFFFF, 0xFFFFFFFF, 16, false, true)),
+#endif
+#endif
     };
 }
 
@@ -254,6 +262,9 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     if (formatItr == _pixelFormatInfoTables.end())
     {
         CCLOG("cocos2d: WARNING: unsupported pixelformat: %lx", (unsigned long)pixelFormat);
+#ifdef CC_USE_METAL
+        CCASSERT(false, "pixeformat not found in _pixelFormatInfoTables, register required!");
+#endif
         return false;
     }
 
@@ -290,7 +301,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     case PixelFormat::A8:
         break;
     default:
-            auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
+        auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
         CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
         pixelFormat = renderFormat;
     }
@@ -384,7 +395,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     case PixelFormat::RGB5A1:
     case PixelFormat::RGBA4444:
 #endif
-    case PixelFormat::I8:
+    //case PixelFormat::I8:
     case PixelFormat::AI88:
         renderFormat = PixelFormat::RGBA8888;
         break;
@@ -426,8 +437,11 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         unsigned char* outTempData = nullptr;
         ssize_t outTempDataLen = 0;
 
-        renderFormat = backend::PixelFormatUtils::convertDataToFormat(tempData, tempDataLen, imagePixelFormat, renderFormat, &outTempData, &outTempDataLen);
-
+        auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(tempData, tempDataLen, imagePixelFormat, renderFormat, &outTempData, &outTempDataLen);
+#ifdef CC_USE_METAL
+        CCASSERT(convertedFormat == renderFormat, "FORMAT convert failed!");
+#endif
+        renderFormat = convertedFormat;
         initWithData(outTempData, outTempDataLen, renderFormat, imageWidth, imageHeight, imageSize);
 
 

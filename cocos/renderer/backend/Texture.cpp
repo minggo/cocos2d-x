@@ -8,71 +8,57 @@ namespace
 {
     uint8_t computeBitsPerElement(TextureFormat textureFormat)
     {
-        uint8_t ret = 0;
         switch (textureFormat)
         {
             case TextureFormat::R8G8B8A8:
-                ret = byte(4);
-                break;
+                return byte(4);
             case TextureFormat::R8G8B8:
-                ret = byte(3);
-                break;
+                return byte(3);
             case TextureFormat::RGBA4444:
-                ret = byte(2);
-                break;
+                return byte(2);
             case TextureFormat::A8:
-                ret = byte(1);
-                break;
+                return byte(1);
             case TextureFormat::I8:
-                ret = byte(1);
-                break;
+                return byte(1);
             case TextureFormat::RGB565:
-                ret = byte(2);
-                break;
+                return byte(2);
             case TextureFormat::RGB5A1:
-                ret = byte(2);
-                break;
+                return byte(2);
             case TextureFormat::AI88:
-                ret = byte(2);
-                break;
+                return byte(2);
             case TextureFormat::ETC1:
-                ret = bit(4);
-                break;
+                return bit(4);
             case TextureFormat::ATC_RGB:
-                ret = bit(4);
-                break;
+                return bit(4);
             case TextureFormat::ATC_EXPLICIT_ALPHA:
-                ret = byte(1);
-                break;
+                return byte(1);
             case TextureFormat::ATC_INTERPOLATED_ALPHA:
-                ret = byte(1);
-                break;
+                return byte(1);
             case TextureFormat::PVRTC2:
-                ret = bit(2);
-                break;
+                return bit(2);
             case TextureFormat::PVRTC2A:
-                ret = bit(2);
-                break;
+                return bit(2);
             case TextureFormat::PVRTC4:
-                ret = bit(4);
-                break;
+                return bit(4);
             case TextureFormat::PVRTC4A:
-                ret = bit(4);
-                break;
+                return bit(4);
             case TextureFormat::S3TC_DXT1:
-                ret = bit(4);
-                break;
+                return bit(4);
             case TextureFormat::S3TC_DXT3:
-                ret = byte(1);
-                break;
+                return byte(1);
             case TextureFormat::S3TC_DXT5:
-                ret = byte(1);
-                break;
+                return byte(1);
+            case TextureFormat::MTL_BGR5A1:
+                return byte(2);
+            case TextureFormat::MTL_B5G6R5:
+                return byte(2);
+            case TextureFormat::MTL_ABGR4:
+                return byte(2);
             default:
                 assert(false); //"textureFormat pixel size in bytes not defined!";
                 break;
         }
-        return ret;
+        return 0;
     }
 }
 

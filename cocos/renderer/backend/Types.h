@@ -61,7 +61,7 @@ enum class TextureFormat : uint32_t
     RGB565,
     RGB5A1,
     //metal 16 bits pixel formats
-    MTL_B5G6R6,
+    MTL_B5G6R5,
     //MTL_A1BGR5,
     MTL_BGR5A1,
     MTL_ABGR4,
