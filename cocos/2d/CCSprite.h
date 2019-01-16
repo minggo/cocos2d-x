@@ -656,9 +656,11 @@ protected:
     SpriteFrame*     _spriteFrame;
     TrianglesCommand _trianglesCommand;     ///
     
-    int _mvpMatrixLocation = -1;
-    int _textureLocation = -1;
-    int _alphaTextureLocation = -1;
+    backend::UniformLocation _mvpMatrixLocation;
+    backend::UniformLocation _textureLocation;
+    backend::UniformLocation _alphaTextureLocation;
+    
+    ProgramState* _programState = nullptr;
     
 #if CC_SPRITE_DEBUG_DRAW
     DrawNode *_debugDrawNode;

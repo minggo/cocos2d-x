@@ -6,12 +6,9 @@ CC_BACKEND_BEGIN
 ProgramMTL::ProgramMTL(id<MTLDevice> mtlDevice, const std::string& vertexShader, const std::string& fragmentShader)
 : Program(vertexShader, fragmentShader)
 {
-    _vertexShader = new (std::nothrow) ShaderModuleMTL(mtlDevice, backend::ShaderStage::VERTEX, vertexShader);
-    if(_vertexShader)
-        _vertexShader->autorelease();
-    _fragmentShader = new (std::nothrow) ShaderModuleMTL(mtlDevice, backend::ShaderStage::FRAGMENT, fragmentShader);
-    if(_fragmentShader)
-        _fragmentShader->autorelease();
+    _vertexShader = static_cast<ShaderModuleMTL*>(ShaderCache::newVertexShaderModule(vertexShader));
+    _fragmentShader = static_cast<ShaderModuleMTL*>(ShaderCache::newFragmentShaderModule(fragmentShader));
+    
     CC_SAFE_RETAIN(_vertexShader);
     CC_SAFE_RETAIN(_fragmentShader);
 }
@@ -22,24 +19,28 @@ ProgramMTL::~ProgramMTL()
     CC_SAFE_RELEASE(_fragmentShader);
 }
 
-int ProgramMTL::getVertexUniformLocation(const std::string& uniform) const
+UniformLocation ProgramMTL::getUniformLocation(const std::string& uniform) const
 {
+    UniformLocation uniformLocation;
     const auto& vsUniforms = _vertexShader->getUniforms();
     const auto& vsIter = vsUniforms.find(uniform);
+    bool definedInVertex = false;
     if(vsIter != vsUniforms.end())
-        return vsIter->second.location;
-  
-    return -1;
-}
-
-int ProgramMTL::getFragmentUniformLocation(const std::string& uniform) const
-{
+    {
+        definedInVertex = true;
+        uniformLocation.shaderStage = ShaderStage::VERTEX;
+        uniformLocation.location = vsIter->second.location;
+    }
+    
     const auto& fsUniforms = _fragmentShader->getUniforms();
     const auto& fsIter = fsUniforms.find(uniform);
     if(fsIter != fsUniforms.end())
-        return fsIter->second.location;
+    {
+        uniformLocation.shaderStage = (definedInVertex) ? ShaderStage::VERTEX_AND_FRAGMENT : ShaderStage::FRAGMENT;
+        uniformLocation.location = fsIter->second.location;
+    }
     
-    return -1;
+    return uniformLocation;
 }
 
 const std::unordered_map<std::string, UniformInfo>& ProgramMTL::getVertexUniformInfos() const

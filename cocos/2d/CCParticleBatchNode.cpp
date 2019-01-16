@@ -39,16 +39,17 @@
 #include "base/ccUTF8.h"
 #include "base/ccUtils.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
 ParticleBatchNode::ParticleBatchNode()
 {
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
-    _mvpMatrixLocaiton = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    _programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    pipelineDescriptor.programState = _programState;
+    _mvpMatrixLocaiton = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
     
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
@@ -73,6 +74,7 @@ ParticleBatchNode::ParticleBatchNode()
 ParticleBatchNode::~ParticleBatchNode()
 {
     CC_SAFE_RELEASE(_textureAtlas);
+    CC_SAFE_RELEASE(_programState);
 }
 /*
  * creation with Texture2D
@@ -432,8 +434,8 @@ void ParticleBatchNode::draw(Renderer* renderer, const Mat4 & transform, uint32_
     const cocos2d::Mat4& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
     auto programState = _customCommand.getPipelineDescriptor().programState;
-    programState->setVertexUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(finalMat.m));
-    programState->setFragmentTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
+    programState->setUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(finalMat.m));
+    programState->setTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
 
     if (_textureAtlas->isDirty())
     {

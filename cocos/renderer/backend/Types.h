@@ -21,7 +21,8 @@ enum class BufferType : uint32_t
 enum class ShaderStage : uint32_t
 {
     VERTEX,
-    FRAGMENT
+    FRAGMENT,
+    VERTEX_AND_FRAGMENT
 };
 
 //TODO: simplify name
@@ -180,11 +181,17 @@ enum class CullMode: uint32_t
 
 struct UniformInfo
 {
-    int32_t count = 0;
+    int count = 0;
     int location = 0;
-    uint32_t type = 0;
+    unsigned int type = 0;
     bool isArray = false;
-    uint32_t bufferSize = 0;
+    unsigned int bufferSize = 0;
+};
+
+struct UniformLocation
+{
+    int location = -1;
+    ShaderStage shaderStage = ShaderStage::VERTEX;
 };
 
 CC_BACKEND_END

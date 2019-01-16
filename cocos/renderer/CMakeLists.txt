@@ -15,7 +15,6 @@ set(COCOS_RENDERER_HEADER
     renderer/CCRenderCommandPool.h
     renderer/CCRenderState.h
     renderer/CCRenderer.h
-    renderer/CCShaderCache.h
     renderer/CCTechnique.h
     renderer/CCTexture2D.h
     renderer/CCTextureAtlas.h
@@ -26,10 +25,8 @@ set(COCOS_RENDERER_HEADER
     renderer/CCVertexIndexBuffer.h
     renderer/CCVertexIndexData.h
     renderer/ccShaders.h
-    renderer/CCProgramState.h
 
     renderer/backend/Backend.h
-    renderer/backend/BindGroup.h
     renderer/backend/BlendState.h
     renderer/backend/Buffer.h
     renderer/backend/CommandBuffer.h
@@ -46,6 +43,8 @@ set(COCOS_RENDERER_HEADER
     renderer/backend/Texture.h
     renderer/backend/Types.h
     renderer/backend/VertexLayout.h
+    renderer/backend/ProgramState.h
+    renderer/backend/ShaderCache.h
     )
 
 set(COCOS_RENDERER_SRC
@@ -63,7 +62,6 @@ set(COCOS_RENDERER_SRC
     renderer/CCRenderCommand.cpp
     renderer/CCRenderState.cpp
     renderer/CCRenderer.cpp
-    renderer/CCShaderCache.cpp
     renderer/CCTechnique.cpp
     renderer/CCTexture2D.cpp
     renderer/CCTextureAtlas.cpp
@@ -74,10 +72,7 @@ set(COCOS_RENDERER_SRC
     renderer/CCVertexIndexBuffer.cpp
     renderer/CCVertexIndexData.cpp
     renderer/ccShaders.cpp
-    renderer/CCPipelineDescriptor.cpp
-    renderer/CCProgramState.cpp
 
-    renderer/backend/BindGroup.cpp
     renderer/backend/BlendState.cpp
     renderer/backend/CommandBuffer.cpp
     renderer/backend/DepthStencilState.cpp
@@ -88,6 +83,8 @@ set(COCOS_RENDERER_SRC
     renderer/backend/VertexLayout.cpp
     renderer/backend/ProgramCache.cpp
     renderer/backend/Program.cpp
+    renderer/backend/ProgramState.cpp
+    renderer/backend/ShaderCache.cpp
     )
 
 if(ANDROID OR WINDOWS) 

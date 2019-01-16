@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "base/ccUtils.h"
 #include "renderer/ccShaders.h"
 #include "renderer/CCRenderer.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
@@ -44,12 +44,10 @@ NS_CC_BEGIN
 AtlasNode::AtlasNode()
 {
     auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
-    pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
-    
-    pipelineDescriptor.name = "AtlasNode";
-    
-    _mvpMatrixLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    _programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    pipelineDescriptor.programState = _programState;
+    _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
   
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
@@ -71,6 +69,7 @@ AtlasNode::AtlasNode()
 AtlasNode::~AtlasNode()
 {
     CC_SAFE_RELEASE(_textureAtlas);
+    CC_SAFE_RELEASE(_programState);
 }
 
 AtlasNode * AtlasNode::create(const std::string& tile, int tileWidth, int tileHeight, int itemsToRender)
@@ -150,10 +149,10 @@ void AtlasNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
         return;
     
     auto programState = _quadCommand.getPipelineDescriptor().programState;
-    programState->setFragmentTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
+    programState->setTexture(_textureLocation, 0, _textureAtlas->getTexture()->getBackendTexture());
     
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-    programState->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
+    programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
     
     _quadCommand.init(_globalZOrder, _textureAtlas->getTexture(), _blendFunc, _textureAtlas->getQuads(), _quadsToDraw, transform, flags);
     renderer->addCommand(&_quadCommand);

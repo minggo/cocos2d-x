@@ -178,8 +178,9 @@ private:
     
     CustomCommand _customCommand;
     
-    int _mvpMatrixLocaiton = -1;
-    int _textureLocation = -1;
+    backend::UniformLocation _mvpMatrixLocaiton;
+    backend::UniformLocation _textureLocation;
+    ProgramState* _programState = nullptr;
 };
 
 // end of _2d group

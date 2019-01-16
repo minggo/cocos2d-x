@@ -342,6 +342,11 @@ protected:
     V2F_C4B_T2F *_bufferGLLine = nullptr;
 
     BlendFunc   _blendFunc;
+    
+    ProgramState* _programState = nullptr;
+    ProgramState* _programStatePoint = nullptr;
+    ProgramState* _programStateLine = nullptr;
+    
     CustomCommand _customCommand;
     CustomCommand _customCommandGLPoint;
     CustomCommand _customCommandGLLine;

@@ -16,6 +16,7 @@ public:
     virtual RenderPipeline* newRenderPipeline(const RenderPipelineDescriptor& descriptor) override;
 
 protected:
+    virtual ShaderModule* createShaderModule(ShaderStage stage, const std::string& source) override;
     virtual Program* createProgram(const std::string& vertexShader, const std::string& fragmentShader) override;
 
 };

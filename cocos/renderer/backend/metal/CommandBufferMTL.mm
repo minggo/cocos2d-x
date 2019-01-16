@@ -211,6 +211,7 @@ void CommandBufferMTL::setVertexBuffer(unsigned int index, Buffer* buffer)
 void CommandBufferMTL::setProgramState(ProgramState* programState)
 {
     CC_SAFE_RETAIN(programState);
+    CC_SAFE_RELEASE(_programState);
     _programState = programState;
 }
 
@@ -356,7 +357,7 @@ void CommandBufferMTL::setUniformBuffer() const
     }
 }
 
-uint32_t CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::vector<UniformBuffer>& unifornInfo) const
+unsigned int CommandBufferMTL::fillUniformBuffer(uint8_t* buffer, const std::vector<UniformBuffer>& unifornInfo) const
 {
     uint32_t offset = 0;
     for(const auto& iter : unifornInfo)

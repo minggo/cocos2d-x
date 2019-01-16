@@ -40,6 +40,7 @@ class CC_DLL StencilStateManager
 {
 public:
     StencilStateManager();
+    ~StencilStateManager();
     void onBeforeVisit(float globalZOrder);
     void onAfterDrawStencil();
     void onAfterVisit();
@@ -81,8 +82,9 @@ private:
     CallbackCommand _afterDrawStencilCmd;
     CallbackCommand _afterVisitCmd;
     
-    int _mvpMatrixLocaiton = -1;
-    int _colorUniformLocation = -1;
+    backend::UniformLocation _mvpMatrixLocaiton;
+    backend::UniformLocation _colorUniformLocation;
+    ProgramState* _programState = nullptr;
 };
 
 NS_CC_END

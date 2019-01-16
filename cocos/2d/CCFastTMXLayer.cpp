@@ -46,7 +46,7 @@ THE SOFTWARE.
 #include "renderer/backend/Buffer.h"
 #include "base/CCDirector.h"
 #include "base/ccUTF8.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 namespace experimental {
@@ -121,7 +121,10 @@ TMXLayer::~TMXLayer()
 
     //TODO coulsonwang
     for (auto& e : _customCommands)
+    {
+        CC_SAFE_RELEASE(e.second->getPipelineDescriptor().programState);
         delete e.second;
+    }
 }
 
 void TMXLayer::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
@@ -159,8 +162,8 @@ void TMXLayer::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
     {
         if (e.second->getIndexDrawCount() > 0)
         {
-            auto mvpmatrixLocation = e.second->getPipelineDescriptor().programState->getVertexUniformLocation("u_MVPMatrix");
-            e.second->getPipelineDescriptor().programState->setVertexUniform(mvpmatrixLocation, finalMat.m, sizeof(finalMat.m));
+            auto mvpmatrixLocation = e.second->getPipelineDescriptor().programState->getUniformLocation("u_MVPMatrix");
+            e.second->getPipelineDescriptor().programState->setUniform(mvpmatrixLocation, finalMat.m, sizeof(finalMat.m));
             renderer->addCommand(e.second);
         }
     }
@@ -410,17 +413,23 @@ void TMXLayer::updatePrimitives()
 
             if (_useAutomaticVertexZ)
             {
-                pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColorAlphaTest_frag);
-                _alphaValueLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_alpha_value");
-                pipelineDescriptor.programState->setFragmentUniform(_alphaValueLocation, &_alphaFuncValue, sizeof(_alphaFuncValue));
+                CC_SAFE_RELEASE(pipelineDescriptor.programState);
+                auto programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColorAlphaTest_frag);
+                pipelineDescriptor.programState = programState;
+                _alphaValueLocation = pipelineDescriptor.programState->getUniformLocation("u_alpha_value");
+                pipelineDescriptor.programState->setUniform(_alphaValueLocation, &_alphaFuncValue, sizeof(_alphaFuncValue));
+               
             }
             else
             {
-                pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
+                CC_SAFE_RELEASE(pipelineDescriptor.programState);
+                auto programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+                pipelineDescriptor.programState = programState;
+                
             }
-            _mvpMatrixLocaiton = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-            _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
-            pipelineDescriptor.programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+            _mvpMatrixLocaiton = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+            _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
+            pipelineDescriptor.programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
             command->init(_globalZOrder, blendfunc);
 
             _customCommands[iter.first] = command;

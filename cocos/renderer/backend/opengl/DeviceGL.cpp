@@ -43,6 +43,15 @@ Texture* DeviceGL::newTexture(const TextureDescriptor& descriptor)
     return new (std::nothrow) TextureGL(descriptor);
 }
 
+ShaderModule* DeviceGL::createShaderModule(ShaderStage stage, const std::string& source)
+{
+    auto ret = new (std::nothrow) ShaderModuleGL(stage, source);
+    if (ret)
+        ret->autorelease();
+
+    return ret;
+}
+
 DepthStencilState* DeviceGL::createDepthStencilState(const DepthStencilDescriptor& descriptor)
 {
     auto ret = new (std::nothrow) DepthStencilStateGL(descriptor);

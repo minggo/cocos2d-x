@@ -141,8 +141,9 @@ protected:
     bool _ignoreContentScaleFactor = false;
     
     QuadCommand _quadCommand;
-    int _textureLocation = -1;
-    int _mvpMatrixLocation = -1;
+    backend::UniformLocation _textureLocation;
+    backend::UniformLocation _mvpMatrixLocation;
+    ProgramState* _programState = nullptr;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(AtlasNode);

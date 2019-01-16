@@ -3,7 +3,6 @@
 #include "RenderPipelineGL.h"
 #include "TextureGL.h"
 #include "DepthStencilStateGL.h"
-#include "../BindGroup.h"
 #include "ProgramGL.h"
 #include "BlendStateGL.h"
 #include "base/ccMacros.h"
@@ -259,6 +258,7 @@ void CommandBufferGL::setVertexBuffer(unsigned int index, Buffer* buffer)
 void CommandBufferGL::setProgramState(ProgramState* programState)
 {
     CC_SAFE_RETAIN(programState);
+    CC_SAFE_RELEASE(_programState);
     _programState = programState;
 }
 
@@ -354,8 +354,8 @@ void CommandBufferGL::setUniforms(ProgramGL* program) const
 {
     if (_programState)
     {
-        const auto& vsUniformInfos = _programState->getVertexUniformInfos();
-        for(const auto& iter : vsUniformInfos)
+        const auto& uniformInfos = _programState->getVertexUniformInfos();
+        for(const auto& iter : uniformInfos)
         {
             const auto& uniformInfo = iter.uniformInfo;
             if(!iter.dirty)
@@ -367,21 +367,8 @@ void CommandBufferGL::setUniforms(ProgramGL* program) const
                        iter.data);
         }
         
-        const auto& fsUniformInfos = _programState->getFragmentUniformInfos();
-        for(const auto& iter : fsUniformInfos)
-        {
-            const auto& uniformInfo = iter.uniformInfo;
-            if(!iter.dirty)
-                continue;
-            setUniform(uniformInfo.isArray,
-                       uniformInfo.location,
-                       uniformInfo.count,
-                       uniformInfo.type,
-                       iter.data);
-        }
-        
-        const auto& fsTextureInfo = _programState->getFragmentTextureInfos();
-        for(const auto& iter : fsTextureInfo)
+        const auto& textureInfo = _programState->getVertexTextureInfos();
+        for(const auto& iter : textureInfo)
         {
             const auto& textures = iter.second.textures;
             const auto& slot = iter.second.slot;

@@ -266,8 +266,9 @@ protected:
     BlendFunc _blendFunc;
     QuadCommand _quadCommand;
     
-    int _mvpMatrixLocaiton = -1;
-    int _textureLocation = -1;
+    backend::UniformLocation _mvpMatrixLocaiton;
+    backend::UniformLocation _textureLocation;
+    ProgramState* _programState = nullptr;
 
     // all descendants: children, grand children, etc...
     // There is not need to retain/release these objects, since they are already retained by _children

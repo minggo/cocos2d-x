@@ -351,9 +351,10 @@ protected:
     float _alphaFuncValue = 0.f;
     std::unordered_map<int, CustomCommand*> _customCommands;
     
-    int _mvpMatrixLocaiton = -1;
-    int _textureLocation = -1;
-    int _alphaValueLocation = -1;
+    backend::UniformLocation _mvpMatrixLocaiton;
+    backend::UniformLocation _textureLocation;
+    backend::UniformLocation _alphaValueLocation;
+    ProgramState* _programState = nullptr;
 };
 
 // end of tilemap_parallax_nodes group

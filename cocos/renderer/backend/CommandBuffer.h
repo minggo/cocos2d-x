@@ -8,7 +8,7 @@
 #include "Types.h"
 #include "RenderPassDescriptor.h"
 #include "CCStdC.h"
-#include "renderer/CCProgramState.h"
+#include "ProgramState.h"
 
 CC_BACKEND_BEGIN
 

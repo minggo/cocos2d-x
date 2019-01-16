@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include "renderer/ccShaders.h"
 #include "renderer/backend/Device.h"
 #include "2d/CCCamera.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 // implementation of GridBase
@@ -108,9 +108,11 @@ bool GridBase::initWithSize(const Size& gridSize, Texture2D *texture, bool flipp
     _step.y = _gridRect.size.height/_gridSize.height;
 
     auto& pipelineDescriptor = _drawCommand.getPipelineDescriptor();
-    pipelineDescriptor.createProgramState(positionTexture_vert, positionTexture_frag);
-    _mvpMatrixLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    CC_SAFE_RELEASE(_programState);
+    _programState = new (std::nothrow) ProgramState(positionTexture_vert, positionTexture_frag);
+    pipelineDescriptor.programState = _programState;
+    _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
     
 #define VERTEX_POSITION_SIZE 3
 #define VERTEX_TEXCOORD_SIZE 2
@@ -132,6 +134,8 @@ GridBase::~GridBase(void)
 
     //TODO: ? why 2.0 comments this line:        setActive(false);
     CC_SAFE_RELEASE(_texture);
+    
+    CC_SAFE_RELEASE(_programState);
 }
 
 // properties
@@ -369,8 +373,8 @@ void Grid3D::blit()
     Director::getInstance()->getRenderer()->addCommand(&_drawCommand);
     cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto programState = _drawCommand.getPipelineDescriptor().programState;
-    programState->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
-    programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+    programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
+    programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
 }
 
 void Grid3D::calculateVertexPoints()
@@ -625,8 +629,8 @@ void TiledGrid3D::blit()
     Director::getInstance()->getRenderer()->addCommand(&_drawCommand);
     cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     auto programState = _drawCommand.getPipelineDescriptor().programState;
-    programState->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
-    programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+    programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
+    programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
 }
 
 void TiledGrid3D::calculateVertexPoints()

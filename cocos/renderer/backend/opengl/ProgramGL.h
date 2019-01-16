@@ -16,11 +16,11 @@ class ShaderModuleGL;
 
 struct AttributeInfo
 {
-    uint32_t location = 0;
-    uint32_t size = 0;
+    unsigned int location = 0;
+    unsigned int size = 0;
     GLenum type = GL_BYTE;
     GLsizei stride = 0;
-    uint32_t offset = 0;
+    unsigned int offset = 0;
     GLboolean needToBeNormallized = GL_FALSE;
 };
 
@@ -39,15 +39,14 @@ public:
     virtual const std::unordered_map<std::string, UniformInfo>& getVertexUniformInfos() const override;
     virtual const std::unordered_map<std::string, UniformInfo>& getFragmentUniformInfos() const override;
 
-    virtual int getVertexUniformLocation(const std::string& uniform) const override;
-    virtual int getFragmentUniformLocation(const std::string& uniform) const override;
-    
+    virtual UniformLocation getUniformLocation(const std::string& uniform) const override;
+
     virtual int getMaxVertexLocation() const override;
     virtual int getMaxFragmentLocation() const override;
 
 private:
     void compileProgram();
-    bool getAttributeLocation(const std::string& attributeName, uint32_t& location) const;
+    bool getAttributeLocation(const std::string& attributeName, unsigned int& location) const;
     void computeUniformInfos();
     
     GLuint _program = 0;

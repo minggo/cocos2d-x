@@ -42,7 +42,7 @@ THE SOFTWARE.
 #include "2d/CCCamera.h"
 #include "platform/CCFileUtils.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
@@ -335,6 +335,7 @@ Sprite::~Sprite()
     CC_SAFE_FREE(_trianglesIndex);
     CC_SAFE_RELEASE(_spriteFrame);
     CC_SAFE_RELEASE(_texture);
+    CC_SAFE_RELEASE(_programState);
 }
 
 /*
@@ -394,14 +395,14 @@ void Sprite::setVertexLayout()
 void Sprite::updateShaders(const char* vert, const char* frag, bool dirty)
 {
     auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
-    pipelineDescriptor.createProgramState(vert, frag);
+    CC_SAFE_RELEASE(_programState);
+    _programState = new (std::nothrow) ProgramState(vert, frag);
+    pipelineDescriptor.programState = _programState;
     
-    pipelineDescriptor.name = "ccSprite";
+    _mvpMatrixLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
+    _alphaTextureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture1");
     
-    _mvpMatrixLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
-    _alphaTextureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture1");
-
     setVertexLayout();
     _programStateDirty = dirty;
 }
@@ -446,11 +447,11 @@ void Sprite::setTexture(Texture2D *texture)
 void Sprite::updateProgramState()
 {
     auto programState = _trianglesCommand.getPipelineDescriptor().programState;
-    programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+    programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
     auto alphaTexture = _texture->getAlphaTexture();
     if(alphaTexture && alphaTexture->getBackendTexture())
     {
-        programState->setFragmentTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
+        programState->setTexture(_alphaTextureLocation, 1, alphaTexture->getBackendTexture());
     }
 }
 
@@ -1120,7 +1121,7 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     {
         const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         auto programState = _trianglesCommand.getPipelineDescriptor().programState;
-        programState->setVertexUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
+        programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
         if(_programStateDirty)
             updateProgramState();
         

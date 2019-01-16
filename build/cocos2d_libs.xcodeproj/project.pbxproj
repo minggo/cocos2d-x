@@ -2020,12 +2020,8 @@
 		ED28C24A219E629C0078D854 /* Macros.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C202219E629B0078D854 /* Macros.h */; };
 		ED28C24B219E629C0078D854 /* DepthStencilState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED28C203219E629B0078D854 /* DepthStencilState.cpp */; };
 		ED28C24C219E629C0078D854 /* DepthStencilState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED28C203219E629B0078D854 /* DepthStencilState.cpp */; };
-		ED28C24D219E629C0078D854 /* BindGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED28C204219E629B0078D854 /* BindGroup.cpp */; };
-		ED28C24E219E629C0078D854 /* BindGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED28C204219E629B0078D854 /* BindGroup.cpp */; };
 		ED28C24F219E629C0078D854 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C205219E629B0078D854 /* Texture.h */; };
 		ED28C250219E629C0078D854 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C205219E629B0078D854 /* Texture.h */; };
-		ED28C251219E629C0078D854 /* BindGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C206219E629B0078D854 /* BindGroup.h */; };
-		ED28C252219E629C0078D854 /* BindGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C206219E629B0078D854 /* BindGroup.h */; };
 		ED28C253219E629C0078D854 /* VertexLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C207219E629B0078D854 /* VertexLayout.h */; };
 		ED28C254219E629C0078D854 /* VertexLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = ED28C207219E629B0078D854 /* VertexLayout.h */; };
 		ED28C27F219E629C0078D854 /* CommandBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED28C21E219E629B0078D854 /* CommandBuffer.cpp */; };
@@ -3252,9 +3248,7 @@
 		ED28C201219E629B0078D854 /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		ED28C202219E629B0078D854 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		ED28C203219E629B0078D854 /* DepthStencilState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DepthStencilState.cpp; sourceTree = "<group>"; };
-		ED28C204219E629B0078D854 /* BindGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BindGroup.cpp; sourceTree = "<group>"; };
 		ED28C205219E629B0078D854 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
-		ED28C206219E629B0078D854 /* BindGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BindGroup.h; sourceTree = "<group>"; };
 		ED28C207219E629B0078D854 /* VertexLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexLayout.h; sourceTree = "<group>"; };
 		ED28C21E219E629B0078D854 /* CommandBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandBuffer.cpp; sourceTree = "<group>"; };
 		ED5C8CBC21C0B3C100F280A7 /* label_distanceFieldGlow.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = label_distanceFieldGlow.frag; sourceTree = "<group>"; };
@@ -5276,8 +5270,6 @@
 				46E21B4521B900C900430A43 /* StringUtils.cpp */,
 				46E21B4621B900C900430A43 /* StringUtils.h */,
 				ED28C1F5219E629B0078D854 /* Backend.h */,
-				ED28C204219E629B0078D854 /* BindGroup.cpp */,
-				ED28C206219E629B0078D854 /* BindGroup.h */,
 				ED28C1FE219E629B0078D854 /* BlendState.cpp */,
 				ED28C200219E629B0078D854 /* BlendState.h */,
 				ED28C201219E629B0078D854 /* Buffer.h */,
@@ -6145,7 +6137,6 @@
 				EDC78C6E21CA19FC00E1863C /* CCComBase.h in Headers */,
 				50ABBE6B1925AB6F00A911A9 /* CCEventListenerFocus.h in Headers */,
 				EDC78BF621CA19FB00E1863C /* CCInputDelegate.h in Headers */,
-				ED28C251219E629C0078D854 /* BindGroup.h in Headers */,
 				50ABBDA51925AB4100A911A9 /* CCQuadCommand.h in Headers */,
 				50643BD919BFAF4400EF68ED /* CCApplication.h in Headers */,
 				50ABBD3A1925AB0000A911A9 /* CCAffineTransform.h in Headers */,
@@ -7124,7 +7115,6 @@
 				EDC78BDB21CA19FB00E1863C /* CCProcessBase.h in Headers */,
 				50ABC01C1926664800A911A9 /* CCSAXParser.h in Headers */,
 				1A5FB7C51DF012D900C918C1 /* AudioMacros.h in Headers */,
-				ED28C252219E629C0078D854 /* BindGroup.h in Headers */,
 				EDC78BE321CA19FB00E1863C /* CCDataReaderHelper.h in Headers */,
 				503DD8F11926736A00CD74DD /* OpenGL_Internal-ios.h in Headers */,
 				50ABBDAA1925AB4100A911A9 /* CCRenderCommand.h in Headers */,
@@ -7375,7 +7365,6 @@
 				EDC78CD221CA19FC00E1863C /* CheckBoxReader.cpp in Sources */,
 				EDC78C8221CA19FC00E1863C /* GameNode3DReader.cpp in Sources */,
 				EDC78CD821CA19FC00E1863C /* Sprite3DReader.cpp in Sources */,
-				ED28C24D219E629C0078D854 /* BindGroup.cpp in Sources */,
 				1A5701EE180BCB8C0088DEC7 /* CCTransitionProgress.cpp in Sources */,
 				15FB20931AE7C57D00C31518 /* cdt.cc in Sources */,
 				EDC78D2A21CA19FC00E1863C /* CCSkin.cpp in Sources */,
@@ -7990,7 +7979,6 @@
 				B6DD2FC41B04825B00E47F5F /* DetourNavMesh.cpp in Sources */,
 				1A5701C8180BCB5A0088DEC7 /* CCLabelTextFormatter.cpp in Sources */,
 				EDC78CC921CA19FC00E1863C /* SingleNodeReader.cpp in Sources */,
-				ED28C24E219E629C0078D854 /* BindGroup.cpp in Sources */,
 				291901461B05895600F8B4BA /* CCNinePatchImageParser.cpp in Sources */,
 				4631CB4421AFD9F90000D408 /* UIEditBoxImpl-stub.cpp in Sources */,
 				4631CBB621AFD9FA0000D408 /* UITextBMFont.cpp in Sources */,

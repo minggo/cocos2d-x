@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include "renderer/CCTextureCache.h"
 #include "renderer/ccShaders.h"
 #include "renderer/backend/Program.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
@@ -149,6 +149,7 @@ TMXLayer::~TMXLayer()
     }
 
     CC_SAFE_FREE(_tiles);
+    CC_SAFE_RELEASE(_programState);
 }
 
 void TMXLayer::releaseMap()
@@ -252,11 +253,11 @@ void TMXLayer::parseInternalProperties()
             cocos2d::log("TODO in %s %s %d", __FILE__, __FUNCTION__, __LINE__);
             auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
             auto& vertexShader = pipelineDescriptor.programState->getProgram()->getVertexShader();
-            pipelineDescriptor.createProgramState(vertexShader, positionTextureColorAlphaTest_frag);
-            auto alphaValueLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_alpha_value");
-            pipelineDescriptor.programState->setFragmentUniform(alphaValueLocation, &alphaFuncValue, sizeof(alphaFuncValue));
-            
-            pipelineDescriptor.name = "TMXLayer::parseInternalProperties";
+            CC_SAFE_RELEASE(_programState);
+            _programState = new (std::nothrow) ProgramState(vertexShader, positionTextureColorAlphaTest_frag);
+            pipelineDescriptor.programState = _programState;
+            auto alphaValueLocation = pipelineDescriptor.programState->getUniformLocation("u_alpha_value");
+            pipelineDescriptor.programState->setUniform(alphaValueLocation, &alphaFuncValue, sizeof(alphaFuncValue));
         }
         else
         {

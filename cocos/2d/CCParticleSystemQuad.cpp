@@ -43,16 +43,17 @@ THE SOFTWARE.
 #include "base/CCEventDispatcher.h"
 #include "base/ccUTF8.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
 ParticleSystemQuad::ParticleSystemQuad()
 {
     auto& pipelieDescriptor = _quadCommand.getPipelineDescriptor();
-    pipelieDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
-    _mvpMatrixLocaiton = pipelieDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelieDescriptor.programState->getFragmentUniformLocation("u_texture");
+    _programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    pipelieDescriptor.programState = _programState;
+    _mvpMatrixLocaiton = pipelieDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelieDescriptor.programState->getUniformLocation("u_texture");
     
     //set vertexLayout according to V3F_C4B_T2F structure
 #define VERTEX_POSITION_SIZE 3
@@ -75,6 +76,7 @@ ParticleSystemQuad::~ParticleSystemQuad()
         CC_SAFE_FREE(_quads);
         CC_SAFE_FREE(_indices);
     }
+    CC_SAFE_RELEASE(_programState);
 }
 
 // implementation ParticleSystemQuad
@@ -439,10 +441,10 @@ void ParticleSystemQuad::draw(Renderer *renderer, const Mat4 &transform, uint32_
     if(_particleCount > 0)
     {
         auto programState = _quadCommand.getPipelineDescriptor().programState;
-        programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+        programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
         
         cocos2d::Mat4 projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
-        programState->setVertexUniform(_mvpMatrixLocaiton, projectionMat.m, sizeof(projectionMat.m));
+        programState->setUniform(_mvpMatrixLocaiton, projectionMat.m, sizeof(projectionMat.m));
         
         _quadCommand.init(_globalZOrder, _texture, _blendFunc, _quads, _particleCount, transform, flags);
         renderer->addCommand(&_quadCommand);

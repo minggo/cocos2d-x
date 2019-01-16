@@ -16,8 +16,7 @@ public:
     virtual const std::unordered_map<std::string, UniformInfo>& getVertexUniformInfos() const override;
     virtual const std::unordered_map<std::string, UniformInfo>& getFragmentUniformInfos() const override;
     
-    virtual int getVertexUniformLocation(const std::string& uniform) const override;
-    virtual int getFragmentUniformLocation(const std::string& uniform) const override;
+    virtual UniformLocation getUniformLocation(const std::string& uniform) const override;
     
     virtual ShaderModuleMTL* getVertexShader() const { return _vertexShader; }
     virtual ShaderModuleMTL* getFragmentShader() const { return _fragmentShader; }

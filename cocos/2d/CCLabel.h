@@ -791,12 +791,14 @@ protected:
     DrawNode* _underlineNode;
     bool _strikethroughEnabled;
     
-    int _mvpMatrixLocation = -1;
-    int _textureLocation = -1;
-    int _alphaTextureLocation = -1;
-    int _textColorLocation = -1;
-    int _effectColorLocation = -1;
-    int _effectTypeLocation = -1;
+    backend::UniformLocation _mvpMatrixLocation;
+    backend::UniformLocation _textureLocation;
+    backend::UniformLocation _alphaTextureLocation;
+    backend::UniformLocation _textColorLocation;
+    backend::UniformLocation _effectColorLocation;
+    backend::UniformLocation _effectTypeLocation;
+    
+    ProgramState* _programState = nullptr;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Label);

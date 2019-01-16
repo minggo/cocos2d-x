@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include "renderer/CCTexture2D.h"
 #include "renderer/CCRenderer.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
@@ -42,9 +42,10 @@ MotionStreak::MotionStreak()
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE_STRIP);
 
     auto& pipelineDescriptor = _customCommand.getPipelineDescriptor();
-    pipelineDescriptor.createProgramState(positionTextureColor_vert, positionTextureColor_frag);
-    _mvpMatrixLocaiton = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    _textureLocation = pipelineDescriptor.programState->getFragmentUniformLocation("u_texture");
+    _programState = new (std::nothrow) ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    pipelineDescriptor.programState = _programState;
+    _mvpMatrixLocaiton = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");
     
     auto& vertexLayout = pipelineDescriptor.vertexLayout;
     vertexLayout.setAtrribute("a_position", 0, backend::VertexFormat::FLOAT_R32G32, 0, false);
@@ -61,6 +62,7 @@ MotionStreak::~MotionStreak()
     CC_SAFE_FREE(_vertices);
     CC_SAFE_FREE(_colorPointer);
     CC_SAFE_FREE(_texCoords);
+    CC_SAFE_RELEASE(_programState);
 }
 
 MotionStreak* MotionStreak::create(float fade, float minSeg, float stroke, const Color3B& color, const std::string& path)
@@ -375,11 +377,11 @@ void MotionStreak::draw(Renderer *renderer, const Mat4 &transform, uint32_t flag
     renderer->addCommand(&_customCommand);
 
     auto programState = _customCommand.getPipelineDescriptor().programState;
-    programState->setFragmentTexture(_textureLocation, 0, _texture->getBackendTexture());
+    programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
 
     const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 finalMat = projectionMat * transform;
-    programState->setVertexUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(Mat4));
+    programState->setUniform(_mvpMatrixLocaiton, finalMat.m, sizeof(Mat4));
 
     unsigned int offset = 0;
     unsigned int vertexSize = sizeof(Vec2) + sizeof(Vec2) + sizeof(uint8_t) * 4;

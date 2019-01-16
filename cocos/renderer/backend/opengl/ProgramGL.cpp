@@ -112,12 +112,9 @@ namespace
 ProgramGL::ProgramGL(const std::string& vertexShader, const std::string& fragmentShader)
 : Program(vertexShader, fragmentShader)
 {
-    _vertexShaderModule = new (std::nothrow) ShaderModuleGL(backend::ShaderStage::VERTEX, vertexShader);
-    if(_vertexShaderModule)
-        _vertexShaderModule->autorelease();
-    _fragmentShaderModule = new (std::nothrow) ShaderModuleGL(backend::ShaderStage::FRAGMENT, fragmentShader);
-    if(_fragmentShaderModule)
-        _fragmentShaderModule->autorelease();
+    _vertexShaderModule = static_cast<ShaderModuleGL*>(ShaderCache::newVertexShaderModule(vertexShader));
+    _fragmentShaderModule = static_cast<ShaderModuleGL*>(ShaderCache::newFragmentShaderModule(fragmentShader));
+
     CC_SAFE_RETAIN(_vertexShaderModule);
     CC_SAFE_RETAIN(_fragmentShaderModule);
     compileProgram();
@@ -193,7 +190,7 @@ void ProgramGL::computeAttributeInfos(const RenderPipelineDescriptor& descriptor
     }
 }
 
-bool ProgramGL::getAttributeLocation(const std::string& attributeName, uint32_t& location) const
+bool ProgramGL::getAttributeLocation(const std::string& attributeName, unsigned int& location) const
 {
     GLint loc = glGetAttribLocation(_program, attributeName.c_str());
     if (-1 == loc)
@@ -241,16 +238,13 @@ void ProgramGL::computeUniformInfos()
         _maxLocation = _maxLocation <= uniform.location ? (uniform.location + 1) : _maxLocation;
     }
     free(uniformName);
-    }
-
-int ProgramGL::getVertexUniformLocation(const std::string& uniform) const
-{
-    return glGetUniformLocation(_program, uniform.c_str());
 }
 
-int ProgramGL::getFragmentUniformLocation(const std::string& uniform) const
+UniformLocation ProgramGL::getUniformLocation(const std::string& uniform) const
 {
-    return glGetUniformLocation(_program, uniform.c_str());
+    UniformLocation uniformLocation;
+    uniformLocation.location = glGetUniformLocation(_program, uniform.c_str());
+    return uniformLocation;
 }
 
 const std::unordered_map<std::string, UniformInfo>& ProgramGL::getVertexUniformInfos() const

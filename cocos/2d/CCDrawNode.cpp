@@ -36,7 +36,7 @@
 #include "base/ccUtils.h"
 #include "renderer/CCGLProgram.h"
 #include "renderer/ccShaders.h"
-#include "renderer/CCprogramState.h"
+#include "renderer/backend/ProgramState.h"
 
 NS_CC_BEGIN
 
@@ -129,6 +129,10 @@ DrawNode::~DrawNode()
     _bufferGLPoint = nullptr;
     free(_bufferGLLine);
     _bufferGLLine = nullptr;
+    
+    CC_SAFE_RELEASE(_programState);
+    CC_SAFE_RELEASE(_programStatePoint);
+    CC_SAFE_RELEASE(_programStateLine);
 }
 
 DrawNode* DrawNode::create(GLfloat defaultLineWidth)
@@ -204,17 +208,23 @@ bool DrawNode::init()
 
 void DrawNode::updateShader()
 {
-    _customCommand.getPipelineDescriptor().createProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    CC_SAFE_RELEASE(_programState);
+    _programState = new (std::nothrow) ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _customCommand.getPipelineDescriptor().programState = _programState;
     setVertexLayout(_customCommand);
     _customCommand.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommand.setPrimitiveType(CustomCommand::PrimitiveType::TRIANGLE);
 
-    _customCommandGLPoint.getPipelineDescriptor().createProgramState(positionColorTextureAsPointsize_vert, positionColor_frag);
+    CC_SAFE_RELEASE(_programStatePoint);
+    _programStatePoint = new (std::nothrow) ProgramState(positionColorTextureAsPointsize_vert, positionColor_frag);
+    _customCommandGLPoint.getPipelineDescriptor().programState = _programStatePoint;
     setVertexLayout(_customCommandGLPoint);
     _customCommandGLPoint.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLPoint.setPrimitiveType(CustomCommand::PrimitiveType::POINT);
 
-    _customCommandGLLine.getPipelineDescriptor().createProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    CC_SAFE_RELEASE(_programStateLine);
+    _programStateLine = new (std::nothrow) ProgramState(positionColorLengthTexture_vert, positionColorLengthTexture_frag);
+    _customCommandGLLine.getPipelineDescriptor().programState = _programStateLine;
     setVertexLayout(_customCommandGLLine);
     _customCommandGLLine.setDrawType(CustomCommand::DrawType::ARRAY);
     _customCommandGLLine.setPrimitiveType(CustomCommand::PrimitiveType::LINE);
@@ -266,13 +276,13 @@ void DrawNode::updateUniforms(const Mat4 &transform, CustomCommand& cmd)
     auto& pipelineDescriptor = cmd.getPipelineDescriptor();
     const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     Mat4 matrixMVP = matrixP * transform;
-    auto mvpLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_MVPMatrix");
-    pipelineDescriptor.programState->setVertexUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
+    auto mvpLocation = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
+    pipelineDescriptor.programState->setUniform(mvpLocation, matrixMVP.m, sizeof(matrixMVP.m));
 
     float alpha = _displayedOpacity / 255.0;
     Vec4 alpha4(alpha, 0, 0, 0);
-    auto alphaUniformLocation = pipelineDescriptor.programState->getVertexUniformLocation("u_alpha");
-    pipelineDescriptor.programState->setVertexUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
+    auto alphaUniformLocation = pipelineDescriptor.programState->getUniformLocation("u_alpha");
+    pipelineDescriptor.programState->setUniform(alphaUniformLocation, &alpha4, sizeof(alpha4));
 }
 
 void DrawNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)

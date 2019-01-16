@@ -8,6 +8,7 @@
 #include "DepthStencilState.h"
 #include "BlendState.h"
 #include "ProgramCache.h"
+#include "ShaderCache.h"
 
 #include "base/CCRef.h"
 
@@ -25,6 +26,8 @@ class Device : public cocos2d::Ref
 {
 public:
     friend class ProgramCache;
+    friend class ShaderCache;
+    
     static Device* getInstance();
     
     virtual ~Device() = default;
@@ -43,6 +46,9 @@ public:
     virtual RenderPipeline* newRenderPipeline(const RenderPipelineDescriptor& descriptor) = 0;
     
 protected:
+    // Create a auto released shader module.
+    virtual ShaderModule* createShaderModule(ShaderStage stage, const std::string& source) = 0;
+    // Create a auto released program.
     virtual Program* createProgram(const std::string& vertexShader, const std::string& fragmentShader) = 0;
 
 private:

@@ -6,7 +6,7 @@
 CC_BACKEND_BEGIN
 
 std::unordered_map<std::size_t, backend::Program*>  ProgramCache::_cachedPrograms;
-static ProgramCache *_sharedProgramCache = nullptr;
+ProgramCache* ProgramCache::_sharedProgramCache = nullptr;
 
 ProgramCache* ProgramCache::getInstance()
 {

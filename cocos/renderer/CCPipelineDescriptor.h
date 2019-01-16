@@ -29,7 +29,7 @@
 #include "renderer/backend/Texture.h"
 #include "renderer/backend/VertexLayout.h"
 #include "renderer/backend/RenderPassDescriptor.h"
-#include "CCProgramState.h"
+#include "renderer/backend/ProgramState.h"
 
 #include <string>
 
@@ -37,9 +37,6 @@ NS_CC_BEGIN
 
 struct CC_DLL PipelineDescriptor final
 {
-    ~PipelineDescriptor();
-    void createProgramState(const std::string& vertexShader, const std::string& fragmentShader);
-    
     ProgramState* programState = nullptr;
     backend::BlendDescriptor blendDescriptor;
     backend::RenderPassDescriptor renderPassDescriptor;
