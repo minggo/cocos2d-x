@@ -41,9 +41,6 @@ struct CC_DLL PipelineDescriptor final
     backend::BlendDescriptor blendDescriptor;
     backend::RenderPassDescriptor renderPassDescriptor;
     backend::VertexLayout vertexLayout;
-    
-    //for debug
-    std::string name;
 };
 
 NS_CC_END

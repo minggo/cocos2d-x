@@ -119,7 +119,6 @@ TMXLayer::~TMXLayer()
     CC_SAFE_RELEASE(_vertexBuffer);
     CC_SAFE_RELEASE(_indexBuffer);
 
-    //TODO coulsonwang
     for (auto& e : _customCommands)
     {
         CC_SAFE_RELEASE(e.second->getPipelineDescriptor().programState);
@@ -433,8 +432,6 @@ void TMXLayer::updatePrimitives()
             command->init(_globalZOrder, blendfunc);
 
             _customCommands[iter.first] = command;
-            
-            pipelineDescriptor.name = "TMXLayer::updatePrimitives";
         }
         else
         {
