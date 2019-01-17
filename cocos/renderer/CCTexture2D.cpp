@@ -321,7 +321,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 #ifdef CC_USE_METAL
         CCASSERT(convertedFormat == renderFormat, "PixelFormat convert failed!");
 #endif
-        pixelFormat = renderFormat;
+        if(convertedFormat == renderFormat) pixelFormat = renderFormat;
     }
 
     backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(pixelFormat);
