@@ -31,7 +31,7 @@ NewRendererTests::NewRendererTests()
 {
     ADD_TEST_CASE(NewSpriteTest);
     ADD_TEST_CASE(GroupCommandTest);
-    ADD_TEST_CASE(NewClippingNodeTest);
+//    ADD_TEST_CASE(NewClippingNodeTest); // When depth and stencil are used together, ...
     ADD_TEST_CASE(NewDrawNodeTest);
     ADD_TEST_CASE(NewCullingTest);
     ADD_TEST_CASE(VBOFullTest);
