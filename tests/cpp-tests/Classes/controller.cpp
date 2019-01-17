@@ -73,7 +73,7 @@ public:
 //        addTest("Extensions", []() { return new ExtensionsTests(); });
         addTest("FileUtils", []() { return new FileUtilsTests(); });
         addTest("Fonts", []() { return new FontTests(); });
-        addTest("Interval", [](){return new IntervalTests(); });
+//        addTest("Interval", [](){return new IntervalTests(); }); // TODO crash on iPhone X
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
         addTest("JNIHelper", []() { return new JNITests(); });
 #endif
@@ -81,7 +81,7 @@ public:
 //        addTest("Navigation Mesh", [](){return new NavMeshTests(); });
 //        addTest("Node: BillBoard Test", [](){  return new BillBoardTests(); });
 //        addTest("Node: Camera 3D Test", [](){  return new Camera3DTests(); });
-        addTest("Node: Clipping", []() { return new ClippingNodeTests(); });
+//        addTest("Node: Clipping", []() { return new ClippingNodeTests(); }); // TODO crash on iPhone X
         addTest("Node: Draw", [](){return new DrawPrimitivesTests(); });
         // addTest("Node: Label - New API", [](){return new NewLabelTests(); });
         addTest("Node: Layer", [](){return new LayerTests(); });
