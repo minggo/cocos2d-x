@@ -125,7 +125,7 @@ namespace backend { namespace PixelFormatUtils {
             *out16++ = (data[i] & 0x00F8) << 7    //R
             | (data[i] & 0x00F8) << 2             //G
             | (data[i] & 0x00F8) >> 3             //B
-            | (data[i + 1] & 0x0080) >> 8;          //A
+            | (data[i + 1] & 0x0080) << 8;          //A
         }
     }
     

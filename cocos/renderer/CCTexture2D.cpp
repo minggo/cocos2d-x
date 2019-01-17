@@ -298,16 +298,16 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 
 #ifdef CC_USE_METAL
     switch (pixelFormat) {
-    case PixelFormat::A8:
-    case PixelFormat::PVRTC4A:
-    case PixelFormat::PVRTC4:
-    case PixelFormat::PVRTC2A:
-    case PixelFormat::PVRTC2:
-        break;
-    default:
-        auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
-        CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
-        pixelFormat = renderFormat;
+        case PixelFormat::A8:
+        case PixelFormat::PVRTC4A:
+        case PixelFormat::PVRTC4:
+        case PixelFormat::PVRTC2A:
+        case PixelFormat::PVRTC2:
+            break;
+        default:
+            auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
+            CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
+            pixelFormat = renderFormat;
     }
 #endif
 
@@ -386,26 +386,26 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     switch (renderFormat)
     {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    case PixelFormat::RGB565:
-        renderFormat = PixelFormat::MTL_B5G6R5;
-        break;
-    case PixelFormat::RGBA4444:
-        renderFormat = PixelFormat::MTL_ABGR4;
-        break;
-    case PixelFormat::RGB5A1:
-        renderFormat = PixelFormat::MTL_BGR5A1;
-        break;
+        case PixelFormat::RGB565:
+            renderFormat = PixelFormat::MTL_B5G6R5;
+            break;
+        case PixelFormat::RGBA4444:
+            renderFormat = PixelFormat::MTL_ABGR4;
+            break;
+        case PixelFormat::RGB5A1:
+            renderFormat = PixelFormat::MTL_BGR5A1;
+            break;
 #else
-    case PixelFormat::RGB565:
-    case PixelFormat::RGB5A1:
-    case PixelFormat::RGBA4444:
+        case PixelFormat::RGB565:
+        case PixelFormat::RGB5A1:
+        case PixelFormat::RGBA4444:
 #endif
-    case PixelFormat::I8:
-    case PixelFormat::AI88:
-        renderFormat = PixelFormat::RGBA8888;
-        break;
-    default:
-        break;
+        case PixelFormat::I8:
+        case PixelFormat::AI88:
+            renderFormat = PixelFormat::RGBA8888;
+            break;
+        default:
+            break;
     }
 #endif
 
