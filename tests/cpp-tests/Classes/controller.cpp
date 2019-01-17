@@ -48,7 +48,7 @@ public:
         addTest("Actions - Basic", [](){ return new (std::nothrow) ActionsTests(); });
         addTest("Actions - Ease", [](){return new (std::nothrow) ActionsEaseTests(); });
         addTest("Actions - Progress", [](){return new (std::nothrow) ActionsProgressTests(); });
-//        addTest("Audio - CocosDenshion", []() { return new (std::nothrow) CocosDenshionTests(); });
+        addTest("Audio - CocosDenshion", []() { return new (std::nothrow) CocosDenshionTests(); }); // implement simple audio engine by audio engine
         addTest("Audio - NewAudioEngine", []() { return new (std::nothrow) AudioEngineTests(); });
 //#if CC_ENABLE_BOX2D_INTEGRATION
 //        addTest("Box2d - Basic", []() { return new (std::nothrow) Box2DTests(); });
@@ -126,7 +126,6 @@ public:
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
         addTest("Vibrate", []() { return new VibrateTests(); });
 #endif
-//        addTest("VR Test", []() { return new VRTests(); });
         addTest("Zwoptex", []() { return new ZwoptexTests(); });
         addTest("SpriteFrameCache", []() { return new SpriteFrameCacheTests(); });
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)

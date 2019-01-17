@@ -33,8 +33,6 @@ using namespace cocos2d::experimental;
 
 AudioEngineTests::AudioEngineTests()
 {
-    ADD_TEST_CASE(AudioIssue18597Test);
-    ADD_TEST_CASE(AudioIssue11143Test);
     ADD_TEST_CASE(AudioControlTest);
     ADD_TEST_CASE(AudioLoadTest);
     ADD_TEST_CASE(PlaySimultaneouslyTest);
@@ -51,6 +49,9 @@ AudioEngineTests::AudioEngineTests()
     ADD_TEST_CASE(AudioIssue16938Test);
     ADD_TEST_CASE(AudioPlayInFinishedCB);
     ADD_TEST_CASE(AudioUncacheInFinishedCB);
+
+    ADD_TEST_CASE(AudioIssue18597Test);
+    ADD_TEST_CASE(AudioIssue11143Test);
     
     //FIXME: Please keep AudioSwitchStateTest to the last position since this test case doesn't work well on each platforms.
     ADD_TEST_CASE(AudioSwitchStateTest);

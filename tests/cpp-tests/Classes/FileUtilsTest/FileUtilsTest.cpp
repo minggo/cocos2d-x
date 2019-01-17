@@ -509,8 +509,8 @@ std::string TestDirectoryFuncs::subtitle() const
 
 void TextWritePlist::onEnter()
 {
+    FileUtilsDemo::onEnter();
     //TODO: minggo
-//    FileUtilsDemo::onEnter();
 //    auto root = __Dictionary::create();
 //    auto string = __String::create("string element value");
 //    root->setObject(string, "string element key");
