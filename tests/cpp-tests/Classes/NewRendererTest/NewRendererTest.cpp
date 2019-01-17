@@ -39,8 +39,8 @@ NewRendererTests::NewRendererTests()
     ADD_TEST_CASE(CaptureNodeTest);
     ADD_TEST_CASE(BugAutoCulling);
     ADD_TEST_CASE(RendererBatchQuadTri);
-    ADD_TEST_CASE(RendererUniformBatch);
-    ADD_TEST_CASE(RendererUniformBatch2);
+    // ADD_TEST_CASE(RendererUniformBatch); // TODO shouldn't call OpenGL API directly
+    // ADD_TEST_CASE(RendererUniformBatch2);
 };
 
 std::string MultiSceneTest::title() const

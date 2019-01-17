@@ -127,9 +127,9 @@ public:
         addTest("Vibrate", []() { return new VibrateTests(); });
 #endif
         addTest("Zwoptex", []() { return new ZwoptexTests(); });
-        addTest("SpriteFrameCache", []() { return new SpriteFrameCacheTests(); });
+//        addTest("SpriteFrameCache", []() { return new SpriteFrameCacheTests(); }); // TODO
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        addTest("Window Test", []() { return new WindowTests(); });
+//        addTest("Window Test", []() { return new WindowTests(); }); // TODO wrong effect
 #endif
     }
 };
