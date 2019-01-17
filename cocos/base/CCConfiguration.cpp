@@ -115,7 +115,7 @@ std::string Configuration::getInfo() const
 void Configuration::gatherGPUInfo()
 {
     //support PVRTC/EAC/ETC2/ASTC/BC/YUV
-    //_supportsPVRTC = true;
+    _supportsPVRTC = true;
     _supportsETC1 = false; //support etc2;
 }
 #else

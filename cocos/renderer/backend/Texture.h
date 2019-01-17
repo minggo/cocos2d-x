@@ -31,11 +31,6 @@ public:
     inline TextureUsage getTextureUsage() const { return _textureUsage; }
     inline uint32_t getWidth() const { return _width; }
     inline uint32_t getHeight() const { return _height; }
-    inline uint8_t getBytesPerElement() 
-    {
-        assert(_bitsPerElement >= 8);
-        return _bitsPerElement / 8;
-    }
 protected:
     Texture(const TextureDescriptor& descriptor);
     virtual ~Texture();

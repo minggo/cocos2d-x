@@ -516,17 +516,8 @@ namespace backend { namespace PixelFormatUtils {
     }
     
     // BBBBBGGG GGGRRRRR -> BBBGGG GGGRRRRR
-    void convertRGB565ToB5G6R5(const unsigned char *data, ssize_t dataLen, unsigned char *out)
-    {
-        uint16_t *inData = (uint16_t*)data;
-        uint16_t *outData = (uint16_t*)out;
-        const uint16_t pixelLen = dataLen / 2;
-        //uint16_t pixel;
-        for (uint32_t i = 0; i < pixelLen; i++)
-        {
-            outData[i] = inData[i];
-        }
-    }
+    // void convertRGB565ToB5G6R5(const unsigned char *data, ssize_t dataLen, unsigned char *out)
+    
     
     void convertRGBA4444ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
     {
@@ -544,23 +535,8 @@ namespace backend { namespace PixelFormatUtils {
         
     }
     
-    void convertRGBA4444ToABGR4444(const unsigned char *data, ssize_t dataLen, unsigned char *out)
-    {
-        uint16_t *inData = (uint16_t*)data;
-        uint16_t *outData = (uint16_t*)out;
-        const uint16_t pixelLen = dataLen / 2;
-        uint16_t pixel, newPixel;
-        for (uint32_t i = 0; i < pixelLen; i++)
-        {
-            pixel = inData[i];
-            //newPixel = 0;
-            //newPixel |= ((pixel & 0xF000) >> 12);
-            //newPixel |= ((pixel & 0x0F00) >> 4);
-            //newPixel |= ((pixel & 0x00F0) << 4) ;
-            //newPixel |= ((pixel & 0x000F) << 12 );
-            outData[i] = pixel;
-        }
-    }
+    // AAAABBBBGGGGRRRR -> AAAABBBB GGGGRRRR
+    //void convertRGBA4444ToABGR4444(const unsigned char *data, ssize_t dataLen, unsigned char *out)
     
     void convertA8ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData)
     {
@@ -894,8 +870,9 @@ namespace backend { namespace PixelFormatUtils {
                 break;
             case PixelFormat::MTL_B5G6R5:
                 *outDataLen = dataLen;
-                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
-                convertRGB565ToB5G6R5(data, dataLen, *outData);
+                *outData = (unsigned char *)data;
+                // they are identical
+                //convertRGB565ToB5G6R5(data, dataLen, *outData);
                 break;
             default:
                 // unsupported conversion or don't need to convert
@@ -945,8 +922,8 @@ namespace backend { namespace PixelFormatUtils {
                 break;
             case PixelFormat::MTL_ABGR4:
                 *outDataLen = dataLen;
-                *outData = (unsigned char*)malloc(sizeof(unsigned char) * (*outDataLen));
-                convertRGBA4444ToABGR4444(data, dataLen, *outData);
+                *outData = (unsigned char *)data;
+                //convertRGBA4444ToABGR4444(data, dataLen, *outData);
                 break;
             default:
                 // unsupported conversion or don't need to convert

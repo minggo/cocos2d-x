@@ -89,7 +89,7 @@ TextureMTL::TextureMTL(id<MTLDevice> mtlDevice, const TextureDescriptor& descrip
         _bitsPerElement = 4 * 8;
     }
     
-    _bytesPerRow = getBytesPerElement() * descriptor.width;
+    _bytesPerRow = descriptor.width * _bitsPerElement / 8 ;
 }
 
 TextureMTL::~TextureMTL()
@@ -120,12 +120,15 @@ void TextureMTL::updateSubData(unsigned int xoffset, unsigned int yoffset, unsig
     uint8_t* convertedData = nullptr;
     bool converted = convertData(data,
                                  (uint32_t)(width * height),
+    
                                  _textureFormat, &convertedData);
+    
+    int bytesPerRow = _isCompressed ? 0 : _bytesPerRow;
     
     [_mtlTexture replaceRegion:region
                    mipmapLevel:0
                      withBytes:convertedData
-                   bytesPerRow:_bytesPerRow];
+                   bytesPerRow:bytesPerRow];
     
     if (converted)
         free(convertedData);

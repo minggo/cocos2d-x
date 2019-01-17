@@ -64,7 +64,6 @@ namespace backend {
 
         void convertRGB5A1ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
         void convertRGB565ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
-        void convertRGB565ToB5G6R5(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
         void convertA8ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
         void convertRGBA4444ToRGBA8888(const unsigned char* data, ssize_t dataLen, unsigned char* outData);
     };

@@ -299,6 +299,10 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
 #ifdef CC_USE_METAL
     switch (pixelFormat) {
     case PixelFormat::A8:
+    case PixelFormat::PVRTC4A:
+    case PixelFormat::PVRTC4:
+    case PixelFormat::PVRTC2A:
+    case PixelFormat::PVRTC2:
         break;
     default:
         auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
@@ -311,6 +315,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     CCASSERT(format != backend::StringUtils::PixelFormat::NONE, "PixelFormat should not be NONE");
     textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
     CCASSERT(textureDescriptor.textureFormat != backend::TextureFormat::NONE, "TextureFormat should not be NONE");
+    textureDescriptor.compressed = info.compressed;
     _texture = device->newTexture(textureDescriptor);
 
     _texture->updateData(outData);
@@ -717,6 +722,15 @@ const char* Texture2D::getStringForFormat() const
 
         case Texture2D::PixelFormat::ATC_INTERPOLATED_ALPHA:
             return "ATC_INTERPOLATED_ALPHA";
+        
+        case Texture2D::PixelFormat::MTL_ABGR4:
+            return "MTL_ABGR4";
+        
+        case Texture2D::PixelFormat::MTL_B5G6R5:
+            return "MTL_RGB565";
+        
+        case Texture2D::PixelFormat::MTL_BGR5A1:
+            return "MTL_BGR5A1";
             
         default:
             CCASSERT(false , "unrecognized pixel format");
