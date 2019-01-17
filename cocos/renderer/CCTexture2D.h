@@ -210,8 +210,22 @@ public:
      * @js NA
      * @lua NA
      */
-    bool initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize);
+    bool initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize) { return initWithData(data, dataLen, pixelFormat, pixelFormat, pixelsWide, pixelsHigh, contentSize);}
 
+    /** Initializes with a texture2d with data.
+     
+     @param data Specifies a pointer to the image data in memory.
+     @param dataLen The image data length.
+     @param pixelFormat The image pixelFormat.
+     @param renderFormat The format converted to.
+     @param pixelsWide The image width.
+     @param pixelsHigh The image height.
+     @param contentSize The image content size.
+     * @js NA
+     * @lua NA
+     */
+    bool initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, Texture2D::PixelFormat renderFormat, int pixelsWide, int pixelsHigh, const Size& contentSize);
+    
     /** Initializes with mipmaps. 
      
      @param mipmaps Specifies a pointer to the image data in memory.

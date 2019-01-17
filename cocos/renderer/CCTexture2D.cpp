@@ -234,7 +234,7 @@ bool Texture2D::hasPremultipliedAlpha() const
     return _hasPremultipliedAlpha;
 }
 
-bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& /*contentSize*/)
+bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, Texture2D::PixelFormat renderFormat, int pixelsWide, int pixelsHigh, const Size& /*contentSize*/)
 {
     CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
 
@@ -242,7 +242,7 @@ bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::Pixel
     MipmapInfo mipmap;
     mipmap.address = (unsigned char*)data;
     mipmap.len = static_cast<int>(dataLen);
-    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelFormat, pixelsWide, pixelsHigh);
+    return initWithMipmaps(&mipmap, 1, pixelFormat, renderFormat, pixelsWide, pixelsHigh);
 }
 
 bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, PixelFormat renderFormat, int pixelsWide, int pixelsHigh)
@@ -295,27 +295,43 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     ssize_t dataLen = mipmaps[0].len;
     unsigned char *outData = data;
     ssize_t outDataLen;
-
+    
+    bool needConversion = renderFormat != pixelFormat;
+    
+//#ifdef CC_USE_METAL
+//    //convert pixelformat if needs
+//    switch (pixelFormat) {
+//        case PixelFormat::A8:
+//        case PixelFormat::PVRTC4A:
+//        case PixelFormat::PVRTC4:
+//        case PixelFormat::PVRTC2A:
+//        case PixelFormat::PVRTC2:
+//        case PixelFormat::RGBA8888:
+//            //these pixel formats can be used directly, no conversion needed.
+//            needConversion = false ;
+//            break;
+//        default:
+//            needConversion = true;
+//    }
+//#endif
+    
+    if(needConversion)
+    {
+        auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
 #ifdef CC_USE_METAL
-    switch (pixelFormat) {
-        case PixelFormat::A8:
-        case PixelFormat::PVRTC4A:
-        case PixelFormat::PVRTC4:
-        case PixelFormat::PVRTC2A:
-        case PixelFormat::PVRTC2:
-            break;
-        default:
-            auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
-            CCASSERT(convertedFormat == renderFormat, "PixelFormat convert to RGBA8888 failure!");
-            pixelFormat = renderFormat;
-    }
+        CCASSERT(convertedFormat == renderFormat, "PixelFormat convert failed!");
 #endif
+        pixelFormat = renderFormat;
+    }
 
     backend::StringUtils::PixelFormat format = static_cast<backend::StringUtils::PixelFormat>(pixelFormat);
     CCASSERT(format != backend::StringUtils::PixelFormat::NONE, "PixelFormat should not be NONE");
+    
     textureDescriptor.textureFormat = backend::StringUtils::PixelFormat2TextureFormat(format);
     CCASSERT(textureDescriptor.textureFormat != backend::TextureFormat::NONE, "TextureFormat should not be NONE");
+    
     textureDescriptor.compressed = info.compressed;
+    
     _texture = device->newTexture(textureDescriptor);
 
     _texture->updateData(outData);
@@ -325,6 +341,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         outData = nullptr;
         outDataLen = 0;
     }
+    
     _contentSize = Size((float)pixelsWide, (float)pixelsHigh);
     _pixelsWide = pixelsWide;
     _pixelsHigh = pixelsHigh;
@@ -381,11 +398,24 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     PixelFormat      imagePixelFormat = image->getPixelFormat();
     size_t           tempDataLen = image->getDataLen();
 
+    
 #ifdef CC_USE_METAL
+    //compressed format does not need any conversion
+    switch (imagePixelFormat) {
+        case PixelFormat::PVRTC4A:
+        case PixelFormat::PVRTC4:
+        case PixelFormat::PVRTC2A:
+        case PixelFormat::PVRTC2:
+        case PixelFormat::A8:
+            renderFormat = imagePixelFormat;
+        default:
+            break;
+    }
     //override renderFormat
     switch (renderFormat)
     {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        //packed 16 bits pixels only supported on iOS
         case PixelFormat::RGB565:
             renderFormat = PixelFormat::MTL_B5G6R5;
             break;
@@ -416,6 +446,8 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
             CCLOG("cocos2d: WARNING: This image has more than 1 mipmaps and we will not convert the data format");
         }
 
+        //pixel format of data is not converted, renderFormat can be different from pixelFormat
+        //it will be done later
         initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getPixelFormat(), renderFormat, imageWidth, imageHeight);
         
         // set the premultiplied tag
@@ -429,7 +461,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         {
             CCLOG("cocos2d: WARNING: This image is compressed and we can't convert it for now");
         }
-
+        
         initWithData(tempData, tempDataLen, image->getPixelFormat(), imageWidth, imageHeight, imageSize);
         
         // set the premultiplied tag
@@ -439,23 +471,9 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     }
     else
     {
-        unsigned char* outTempData = nullptr;
-        ssize_t outTempDataLen = 0;
-
-        auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(tempData, tempDataLen, imagePixelFormat, renderFormat, &outTempData, &outTempDataLen);
-#ifdef CC_USE_METAL
-        CCASSERT(convertedFormat == renderFormat, "FORMAT convert failed!");
-#endif
-        renderFormat = convertedFormat;
-        initWithData(outTempData, outTempDataLen, renderFormat, imageWidth, imageHeight, imageSize);
-
-
-        if (outTempData != nullptr && outTempData != tempData)
-        {
-
-            free(outTempData);
-        }
-
+        //after conversion, renderFormat == pixelFormat of data
+        initWithData(tempData, tempDataLen, imagePixelFormat, renderFormat, imageWidth, imageHeight, imageSize);
+        
         // set the premultiplied tag
         _hasPremultipliedAlpha = image->hasPremultipliedAlpha();
         
