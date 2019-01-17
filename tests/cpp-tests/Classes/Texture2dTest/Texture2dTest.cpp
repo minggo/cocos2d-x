@@ -592,7 +592,6 @@ void TexturePVRRGBA5551::onEnter()
 {
     TextureDemo::onEnter();
     auto s = Director::getInstance()->getWinSize();
-    
     auto img = Sprite::create("Images/test_image_rgba5551.pvr");
     img->setPosition(Vec2( s.width/2.0f, s.height/2.0f));
     addChild(img);

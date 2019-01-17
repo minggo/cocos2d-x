@@ -395,7 +395,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
     case PixelFormat::RGB5A1:
     case PixelFormat::RGBA4444:
 #endif
-    //case PixelFormat::I8:
+    case PixelFormat::I8:
     case PixelFormat::AI88:
         renderFormat = PixelFormat::RGBA8888;
         break;
