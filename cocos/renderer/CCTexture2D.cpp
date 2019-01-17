@@ -296,26 +296,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     unsigned char *outData = data;
     ssize_t outDataLen;
     
-    bool needConversion = renderFormat != pixelFormat;
-    
-//#ifdef CC_USE_METAL
-//    //convert pixelformat if needs
-//    switch (pixelFormat) {
-//        case PixelFormat::A8:
-//        case PixelFormat::PVRTC4A:
-//        case PixelFormat::PVRTC4:
-//        case PixelFormat::PVRTC2A:
-//        case PixelFormat::PVRTC2:
-//        case PixelFormat::RGBA8888:
-//            //these pixel formats can be used directly, no conversion needed.
-//            needConversion = false ;
-//            break;
-//        default:
-//            needConversion = true;
-//    }
-//#endif
-    
-    if(needConversion)
+    if(renderFormat != pixelFormat) //need conversion
     {
         auto convertedFormat = backend::PixelFormatUtils::convertDataToFormat(data, dataLen, pixelFormat, renderFormat, &outData, &outDataLen);
 #ifdef CC_USE_METAL
@@ -400,7 +381,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 
     
 #ifdef CC_USE_METAL
-    //compressed format does not need any conversion
+    //compressed format does not need conversion
     switch (imagePixelFormat) {
         case PixelFormat::PVRTC4A:
         case PixelFormat::PVRTC4:
@@ -411,11 +392,11 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
         default:
             break;
     }
-    //override renderFormat
+    //override renderFormat, since some render format is not supported by metal
     switch (renderFormat)
     {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        //packed 16 bits pixels only supported on iOS
+        //packed 16 bits pixels only available on iOS
         case PixelFormat::RGB565:
             renderFormat = PixelFormat::MTL_B5G6R5;
             break;
@@ -432,6 +413,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
 #endif
         case PixelFormat::I8:
         case PixelFormat::AI88:
+            //TODO: conversion RGBA8888 -> I8(AI88) -> RGBA8888 may happends
             renderFormat = PixelFormat::RGBA8888;
             break;
         default:
