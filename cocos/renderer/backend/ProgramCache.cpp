@@ -33,6 +33,7 @@ ProgramCache::~ProgramCache()
         CC_SAFE_RELEASE(program.second);
     }
     CCLOGINFO("deallocing ProgramCache: %p", this);
+    ShaderCache::destroyInstance();
 }
 
 bool ProgramCache::init()
