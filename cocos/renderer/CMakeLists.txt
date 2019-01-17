@@ -85,7 +85,7 @@ set(COCOS_RENDERER_SRC
     renderer/backend/VertexLayout.cpp
     )
 
-if(ANDROID OR WINDOWS) 
+if(ANDROID OR WINDOWS OR LINUX) 
 
 list(APPEND COCOS_RENDERER_HEADER
     renderer/backend/opengl/BufferGL.h
