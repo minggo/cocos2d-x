@@ -115,7 +115,11 @@ std::string Configuration::getInfo() const
 void Configuration::gatherGPUInfo()
 {
     //support PVRTC/EAC/ETC2/ASTC/BC/YUV
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     _supportsPVRTC = true;
+#else
+    _supportsPVRTC = false;
+#endif
     _supportsETC1 = false; //support etc2;
 }
 #else
