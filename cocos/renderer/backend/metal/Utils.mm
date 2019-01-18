@@ -51,8 +51,6 @@ MTLPixelFormat Utils::toMTLPixelFormat(TextureFormat textureFormat)
             return MTLPixelFormatPVRTC_RGBA_2BPP;
         case TextureFormat::PVRTC2:
             return MTLPixelFormatPVRTC_RGB_2BPP;
-#else
-        case TextureFormat::RGBA4444:
 #endif
         case TextureFormat::R8G8B8A8:
             return MTLPixelFormatRGBA8Unorm;
@@ -67,6 +65,7 @@ MTLPixelFormat Utils::toMTLPixelFormat(TextureFormat textureFormat)
         case TextureFormat::SYSTEM_DEFAULT:
             return COLOR_ATTAHCMENT_PIXEL_FORMAT;
         case TextureFormat::NONE:
+        default:
             return MTLPixelFormatInvalid;
     }
 }

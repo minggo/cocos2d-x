@@ -32,6 +32,8 @@ namespace
                 return MTLSamplerMinMagFilterNearest;
             case SamplerFilter::LINEAR:
                 return MTLSamplerMinMagFilterLinear;
+            case SamplerFilter::DONT_CARE:
+                return MTLSamplerMinMagFilterNearest;
         }
     }
     
@@ -41,6 +43,8 @@ namespace
                 return MTLSamplerMipFilterNearest;
             case SamplerFilter::LINEAR:
                 return MTLSamplerMipFilterLinear;
+            case SamplerFiler::DONT_CARE:
+                return MTLSamplerMipFilterNearest;
         }
     }
     
@@ -120,9 +124,9 @@ void TextureMTL::updateSubData(unsigned int xoffset, unsigned int yoffset, unsig
     uint8_t* convertedData = nullptr;
     bool converted = convertData(data,
                                  (uint32_t)(width * height),
-    
                                  _textureFormat, &convertedData);
     
+    //when pixel format is a compressed one, bytePerRow should be set to ZERO
     int bytesPerRow = _isCompressed ? 0 : _bytesPerRow;
     
     [_mtlTexture replaceRegion:region
