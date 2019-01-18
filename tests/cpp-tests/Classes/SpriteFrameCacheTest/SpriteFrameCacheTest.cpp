@@ -83,7 +83,7 @@ void SpriteFrameCachePixelFormatTest::loadSpriteFrames(const std::string &file, 
     const double memorySize = 1.0 * texture->getBitsPerPixelForFormat() * texture->getContentSizeInPixels().width * texture->getContentSizeInPixels().height / bitsPerKB;
 #ifndef CC_USE_METAL
     CC_ASSERT(texture->getPixelFormat() == expectedFormat);
-#endif    
+#endif
     const std::string textureInfo = StringUtils::format("%s: %.2f KB\r\n", texture->getStringForFormat(), memorySize);
     infoLabel->setString(infoLabel->getString() + textureInfo);
     
