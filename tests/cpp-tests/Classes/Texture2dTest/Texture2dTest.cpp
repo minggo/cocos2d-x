@@ -60,10 +60,10 @@ Texture2DTests::Texture2DTests()
     ADD_TEST_CASE(TexturePVRRGBA4444v3);
     ADD_TEST_CASE(TexturePVRRGBA4444GZ);
     ADD_TEST_CASE(TexturePVRRGBA4444CCZ);
-//    ADD_TEST_CASE(TexturePVRRGBA5551); // TODO unfinished feature
-//    ADD_TEST_CASE(TexturePVRRGBA5551v3);
-//    ADD_TEST_CASE(TexturePVRRGB565);
-//    ADD_TEST_CASE(TexturePVRRGB565v3);
+    ADD_TEST_CASE(TexturePVRRGBA5551);
+    ADD_TEST_CASE(TexturePVRRGBA5551v3);
+    ADD_TEST_CASE(TexturePVRRGB565);
+    ADD_TEST_CASE(TexturePVRRGB565v3);
     ADD_TEST_CASE(TexturePVRRGB888);
     ADD_TEST_CASE(TexturePVRRGB888v3);
     ADD_TEST_CASE(TexturePVRA8);
@@ -82,31 +82,31 @@ Texture2DTests::Texture2DTests()
     ADD_TEST_CASE(TextureTGA);
     ADD_TEST_CASE(TextureWEBP);
     ADD_TEST_CASE(TextureWEBPNoAlpha)
-//    ADD_TEST_CASE(TexturePixelFormat); // TODO unfinished feature
-//    ADD_TEST_CASE(TextureBlend);
-//    ADD_TEST_CASE(TextureAsync);
-//    ADD_TEST_CASE(TextureGlClamp);
-//    ADD_TEST_CASE(TextureGlRepeat);
-//    ADD_TEST_CASE(TextureSizeTest);
-//    ADD_TEST_CASE(TextureCache1);
-//    ADD_TEST_CASE(TextureDrawAtPoint);
-//    ADD_TEST_CASE(TextureDrawInRect);
-//
-//    ADD_TEST_CASE(TextureETC1);
-//
-//    ADD_TEST_CASE(TextureS3TCDxt1);
-//    ADD_TEST_CASE(TextureS3TCDxt3);
-//    ADD_TEST_CASE(TextureS3TCDxt5);
-//    ADD_TEST_CASE(TextureS3TCWithNoMipmaps);
+    ADD_TEST_CASE(TexturePixelFormat);
+    ADD_TEST_CASE(TextureBlend);
+    ADD_TEST_CASE(TextureAsync);
+    ADD_TEST_CASE(TextureGlClamp);
+    ADD_TEST_CASE(TextureGlRepeat);
+    ADD_TEST_CASE(TextureSizeTest);
+    ADD_TEST_CASE(TextureCache1);
+    ADD_TEST_CASE(TextureDrawAtPoint);
+    ADD_TEST_CASE(TextureDrawInRect);
 
-//    ADD_TEST_CASE(TextureATITCRGB);
-//    ADD_TEST_CASE(TextureATITCExplicit);
-//    ADD_TEST_CASE(TextureATITCInterpolated);
-    
-//    ADD_TEST_CASE(TextureConvertRGB888);
-//    ADD_TEST_CASE(TextureConvertRGBA8888);
-//    ADD_TEST_CASE(TextureConvertI8);
-//    ADD_TEST_CASE(TextureConvertAI88);
+    ADD_TEST_CASE(TextureETC1);
+
+    ADD_TEST_CASE(TextureS3TCDxt1);
+    ADD_TEST_CASE(TextureS3TCDxt3);
+    ADD_TEST_CASE(TextureS3TCDxt5);
+    ADD_TEST_CASE(TextureS3TCWithNoMipmaps);
+
+    ADD_TEST_CASE(TextureATITCRGB);
+    ADD_TEST_CASE(TextureATITCExplicit);
+    ADD_TEST_CASE(TextureATITCInterpolated);
+
+    ADD_TEST_CASE(TextureConvertRGB888);
+    ADD_TEST_CASE(TextureConvertRGBA8888);
+    ADD_TEST_CASE(TextureConvertI8);
+    ADD_TEST_CASE(TextureConvertAI88);
 };
 
 //------------------------------------------------------------------
