@@ -43,7 +43,7 @@ namespace
                 return MTLSamplerMipFilterNearest;
             case SamplerFilter::LINEAR:
                 return MTLSamplerMipFilterLinear;
-            case SamplerFiler::DONT_CARE:
+            case SamplerFilter::DONT_CARE:
                 return MTLSamplerMipFilterNearest;
         }
     }
