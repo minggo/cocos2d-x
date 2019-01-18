@@ -15,12 +15,12 @@ set(COCOS_RENDERER_HEADER
     renderer/CCRenderCommandPool.h
     renderer/CCRenderState.h
     renderer/CCRenderer.h
-    renderer/CCShaderCache.h
     renderer/CCTechnique.h
     renderer/CCTexture2D.h
     renderer/CCTextureAtlas.h
     renderer/CCTextureCache.h
     renderer/CCTextureCube.h
+    renderer/CCTextureUtils.h
     renderer/CCTrianglesCommand.h
     renderer/CCVertexAttribBinding.h
     renderer/CCVertexIndexBuffer.h
@@ -28,12 +28,13 @@ set(COCOS_RENDERER_HEADER
     renderer/ccShaders.h
 
     renderer/backend/Backend.h
-    renderer/backend/BindGroup.h
     renderer/backend/BlendState.h
     renderer/backend/Buffer.h
     renderer/backend/CommandBuffer.h
     renderer/backend/DepthStencilState.h
     renderer/backend/Device.h
+    renderer/backend/Program.h
+    renderer/backend/ProgramCache.h
     renderer/backend/Macros.h
     renderer/backend/RenderPassDescriptor.h
     renderer/backend/RenderPipeline.h
@@ -43,6 +44,8 @@ set(COCOS_RENDERER_HEADER
     renderer/backend/Texture.h
     renderer/backend/Types.h
     renderer/backend/VertexLayout.h
+    renderer/backend/ProgramState.h
+    renderer/backend/ShaderCache.h
     )
 
 set(COCOS_RENDERER_SRC
@@ -60,19 +63,18 @@ set(COCOS_RENDERER_SRC
     renderer/CCRenderCommand.cpp
     renderer/CCRenderState.cpp
     renderer/CCRenderer.cpp
-    renderer/CCShaderCache.cpp
     renderer/CCTechnique.cpp
     renderer/CCTexture2D.cpp
     renderer/CCTextureAtlas.cpp
     renderer/CCTextureCache.cpp
     renderer/CCTextureCube.cpp
+    renderer/CCTextureUtils.cpp
     renderer/CCTrianglesCommand.cpp
     renderer/CCVertexAttribBinding.cpp
     renderer/CCVertexIndexBuffer.cpp
     renderer/CCVertexIndexData.cpp
     renderer/ccShaders.cpp
 
-    renderer/backend/BindGroup.cpp
     renderer/backend/BlendState.cpp
     renderer/backend/CommandBuffer.cpp
     renderer/backend/DepthStencilState.cpp
@@ -81,16 +83,20 @@ set(COCOS_RENDERER_SRC
     renderer/backend/StringUtils.cpp
     renderer/backend/Texture.cpp
     renderer/backend/VertexLayout.cpp
+    renderer/backend/ProgramCache.cpp
+    renderer/backend/Program.cpp
+    renderer/backend/ProgramState.cpp
+    renderer/backend/ShaderCache.cpp
     )
 
-if(ANDROID OR WINDOWS) 
+if(ANDROID OR WINDOWS OR LINUX) 
 
 list(APPEND COCOS_RENDERER_HEADER
     renderer/backend/opengl/BufferGL.h
     renderer/backend/opengl/CommandBufferGL.h
     renderer/backend/opengl/DepthStencilStateGL.h
     renderer/backend/opengl/DeviceGL.h
-    renderer/backend/opengl/Program.h
+    renderer/backend/opengl/ProgramGL.h
     renderer/backend/opengl/RenderPipelineGL.h
     renderer/backend/opengl/ShaderModuleGL.h
     renderer/backend/opengl/TextureGL.h
@@ -102,7 +108,7 @@ list(APPEND COCOS_RENDERER_SRC
     renderer/backend/opengl/CommandBufferGL.cpp
     renderer/backend/opengl/DepthStencilStateGL.cpp
     renderer/backend/opengl/DeviceGL.cpp
-    renderer/backend/opengl/Program.cpp
+    renderer/backend/opengl/ProgramGL.cpp
     renderer/backend/opengl/RenderPipelineGL.cpp
     renderer/backend/opengl/ShaderModuleGL.cpp
     renderer/backend/opengl/TextureGL.cpp
@@ -121,6 +127,7 @@ list(APPEND COCOS_RENDERER_HEADER
     renderer/backend/metal/ShaderModuleMTL.h
     renderer/backend/metal/TextureMTL.h
     renderer/backend/metal/Utils.h
+    renderer/backend/metal/ProgramMTL.h
 )
 
 list(APPEND COCOS_RENDERER_SRC
@@ -134,6 +141,7 @@ list(APPEND COCOS_RENDERER_SRC
     renderer/backend/metal/ShaderModuleMTL.mm
     renderer/backend/metal/TextureMTL.mm
     renderer/backend/metal/Utils.mm
+    renderer/backend/metal/ProgramMTL.mm
 )
 
 endif()

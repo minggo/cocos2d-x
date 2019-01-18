@@ -61,6 +61,7 @@ THE SOFTWARE.
 #include "base/CCAsyncTaskPool.h"
 #include "base/ObjectFactory.h"
 #include "platform/CCApplication.h"
+#include "renderer/backend/ProgramCache.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "base/CCScriptSupport.h"
@@ -378,7 +379,7 @@ void Director::setOpenGLView(GLView *openGLView)
         // Configuration. Gather GPU info
         Configuration *conf = Configuration::getInstance();
         //TODO: minggo
-//        conf->gatherGPUInfo();
+        conf->gatherGPUInfo();
         CCLOG("%s\n",conf->getInfo().c_str());
 
         if(_openGLView)
@@ -1048,6 +1049,8 @@ void Director::reset()
     GLProgramStateCache::destroyInstance();
     FileUtils::destroyInstance();
     AsyncTaskPool::destroyInstance();
+    backend::ProgramCache::destroyInstance();
+    
     
     // cocos2d-x specific data structures
     UserDefault::destroyInstance();
