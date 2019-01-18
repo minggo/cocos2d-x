@@ -528,10 +528,6 @@
 		40FE107221F073BF0061C04F /* CCControlSaturationBrightnessPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FE104421F070640061C04F /* CCControlSaturationBrightnessPicker.h */; };
 		40FE107321F073BF0061C04F /* CCControlPotentiometer.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FE104521F070640061C04F /* CCControlPotentiometer.h */; };
 		40FE107421F073BF0061C04F /* CCControlSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FE104621F070640061C04F /* CCControlSwitch.h */; };
-		460D4CCD21A54D650075726E /* CCShaderCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460D4CCB21A54D650075726E /* CCShaderCache.cpp */; };
-		460D4CCE21A54D650075726E /* CCShaderCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460D4CCB21A54D650075726E /* CCShaderCache.cpp */; };
-		460D4CCF21A54D650075726E /* CCShaderCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 460D4CCC21A54D650075726E /* CCShaderCache.h */; };
-		460D4CD021A54D650075726E /* CCShaderCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 460D4CCC21A54D650075726E /* CCShaderCache.h */; };
 		460D4CD321A5666E0075726E /* CCRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 460D4CD121A5666E0075726E /* CCRenderer.h */; };
 		460D4CD421A5666E0075726E /* CCRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 460D4CD121A5666E0075726E /* CCRenderer.h */; };
 		460D4CD521A5666E0075726E /* CCRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 460D4CD221A5666E0075726E /* CCRenderer.cpp */; };
@@ -2717,8 +2713,6 @@
 		40FE104421F070640061C04F /* CCControlSaturationBrightnessPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlSaturationBrightnessPicker.h; sourceTree = "<group>"; };
 		40FE104521F070640061C04F /* CCControlPotentiometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlPotentiometer.h; sourceTree = "<group>"; };
 		40FE104621F070640061C04F /* CCControlSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCControlSwitch.h; sourceTree = "<group>"; };
-		460D4CCB21A54D650075726E /* CCShaderCache.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CCShaderCache.cpp; sourceTree = "<group>"; };
-		460D4CCC21A54D650075726E /* CCShaderCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCShaderCache.h; sourceTree = "<group>"; };
 		460D4CD121A5666E0075726E /* CCRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCRenderer.h; sourceTree = "<group>"; };
 		460D4CD221A5666E0075726E /* CCRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCRenderer.cpp; sourceTree = "<group>"; };
 		460D4CF421ABD0C60075726E /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
@@ -7504,7 +7498,6 @@
 				EDC78CD221CA19FC00E1863C /* CheckBoxReader.cpp in Sources */,
 				EDC78C8221CA19FC00E1863C /* GameNode3DReader.cpp in Sources */,
 				EDC78CD821CA19FC00E1863C /* Sprite3DReader.cpp in Sources */,
-				ED28C24D219E629C0078D854 /* BindGroup.cpp in Sources */,
 				40FE105A21F070640061C04F /* CCControlSlider.cpp in Sources */,
 				1A5701EE180BCB8C0088DEC7 /* CCTransitionProgress.cpp in Sources */,
 				15FB20931AE7C57D00C31518 /* cdt.cc in Sources */,
@@ -8078,7 +8071,6 @@
 				EDC78BE721CA19FB00E1863C /* CCComController.cpp in Sources */,
 				4631CBB021AFD9FA0000D408 /* UIImageView.cpp in Sources */,
 				50ABBED81925AB6F00A911A9 /* ZipUtils.cpp in Sources */,
-				460D4CCE21A54D650075726E /* CCShaderCache.cpp in Sources */,
 				40FE105F21F073BF0061C04F /* CCControlUtils.cpp in Sources */,
 				EDC78C0D21CA19FB00E1863C /* CCFrame.cpp in Sources */,
 				EDC78CD321CA19FC00E1863C /* CheckBoxReader.cpp in Sources */,
