@@ -59,8 +59,7 @@ void ProgramCache::addProgram(const std::string& vertexShader, const std::string
 {
     std::string shaderSource = vertexShader + fragmentShader;
     auto key = std::hash<std::string>{}(shaderSource);
-    auto program = backend::Device::getInstance()->createProgram(vertexShader, fragmentShader);
-    CC_SAFE_RETAIN(program);
+    auto program = backend::Device::getInstance()->newProgram(vertexShader, fragmentShader);
     ProgramCache::_cachedPrograms.emplace(key, program);
 }
 
@@ -75,8 +74,7 @@ backend::Program* ProgramCache::newProgram(const std::string& vertexShader, cons
         return iter->second;
     }
     
-    auto program = backend::Device::getInstance()->createProgram(vertexShader, fragmentShader);
-    CC_SAFE_RETAIN(program);
+    auto program = backend::Device::getInstance()->newProgram(vertexShader, fragmentShader);
     ProgramCache::_cachedPrograms.emplace(key, program);
     
     return program;

@@ -47,9 +47,9 @@ public:
     
 protected:
     // Create a auto released shader module.
-    virtual ShaderModule* createShaderModule(ShaderStage stage, const std::string& source) = 0;
+    virtual ShaderModule* newShaderModule(ShaderStage stage, const std::string& source) = 0;
     // Create a auto released program.
-    virtual Program* createProgram(const std::string& vertexShader, const std::string& fragmentShader) = 0;
+    virtual Program* newProgram(const std::string& vertexShader, const std::string& fragmentShader) = 0;
 
 private:
     static Device* _instance;

@@ -31,8 +31,8 @@ public:
     inline id<MTLCommandQueue> getMTLCommandQueue() const { return _mtlCommandQueue; }
     
 protected:
-    virtual ShaderModule* createShaderModule(ShaderStage stage, const std::string& source) override;
-    virtual Program* createProgram(const std::string& vertexShader, const std::string& fragmentShader) override;
+    virtual ShaderModule* newShaderModule(ShaderStage stage, const std::string& source) override;
+    virtual Program* newProgram(const std::string& vertexShader, const std::string& fragmentShader) override;
     
 private:
     static CAMetalLayer* _metalLayer;

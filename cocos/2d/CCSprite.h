@@ -512,7 +512,7 @@ public:
     const std::string& getResourceName() const { return _fileName; }
     
     virtual void setVertexLayout();
-    virtual void updateShaders(const char* vert, const char* frag, bool dirty);
+    virtual void updateShaders(const char* vert, const char* frag);
 
 CC_CONSTRUCTOR_ACCESS :
 	/**
@@ -634,7 +634,7 @@ protected:
     virtual void flipX();
     virtual void flipY();
     
-    void updateProgramState();
+    virtual void updateProgramState();
 
     //
     // Data used when the sprite is rendered using a SpriteSheet
@@ -702,8 +702,6 @@ protected:
     int _fileType;
 
     bool _stretchEnabled;
-    
-    bool _programStateDirty = false;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Sprite);

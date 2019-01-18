@@ -260,7 +260,7 @@ protected:
     void swap(ssize_t oldIndex, ssize_t newIndex);
     void updateBlendFunc();
     
-    void createShaders();
+    virtual void updateShaders(const std::string& vertexShader, const std::string& fragmentShader);
 
     TextureAtlas *_textureAtlas = nullptr;
     BlendFunc _blendFunc;

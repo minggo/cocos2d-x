@@ -107,15 +107,16 @@ bool SpriteBatchNode::initWithTexture(Texture2D *tex, ssize_t capacity/* = DEFAU
 
     _descendants.reserve(capacity);
     
-    createShaders();
+    updateShaders(positionTextureColor_vert, positionTextureColor_frag);
     
     return true;
 }
 
-void SpriteBatchNode::createShaders()
+void SpriteBatchNode::updateShaders(const std::string &vertexShader, const std::string &fragmentShader)
 {
     auto& pipelineDescriptor = _quadCommand.getPipelineDescriptor();
-    _programState = new (std::nothrow) backend::ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+    CC_SAFE_RELEASE(_programState);
+    _programState = new (std::nothrow) backend::ProgramState(vertexShader, fragmentShader);
     pipelineDescriptor.programState = _programState;
     _mvpMatrixLocaiton = pipelineDescriptor.programState->getUniformLocation("u_MVPMatrix");
     _textureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture");

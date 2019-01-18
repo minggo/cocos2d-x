@@ -1530,7 +1530,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
         auto& pipelineShadow = _customCommandShadow.getPipelineDescriptor();
         pipelineShadow = pipelineDescriptor;
         pipelineShadow.programState = pipelineDescriptor.programState;
-        CC_SAFE_RETAIN(pipelineShadow.programState);
         const auto& matrixP = _director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         Mat4 matrixMVP = matrixP * _shadowTransform;
         pipelineShadow.programState->setUniform(_mvpMatrixLocation, matrixMVP.m, sizeof(matrixMVP.m));
@@ -1563,7 +1562,6 @@ void Label::updateEffectUniforms(TextureAtlas* textureAtlas, Renderer *renderer,
                     auto& pipelineOutline = _customCommandOutLine.getPipelineDescriptor();
                     pipelineOutline = pipelineDescriptor;
                     pipelineOutline.programState = pipelineDescriptor.programState;
-                    CC_SAFE_RETAIN(pipelineOutline.programState);
                     pipelineOutline.programState->setUniform(_effectColorLocation, &effectColor, sizeof(Vec4));
                     pipelineOutline.programState->setUniform(_effectTypeLocation, &effectType, sizeof(effectType));
                     _customCommandOutLine.init(_globalZOrder);
@@ -1670,7 +1668,6 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             auto& pipelineQuad = _quadCommand.getPipelineDescriptor();
             pipelineQuad = pipelineDescriptor;
             pipelineQuad.programState = pipelineDescriptor.programState;
-            CC_SAFE_RETAIN(pipelineQuad.programState);
             pipelineQuad.programState->setUniform(_mvpMatrixLocation, matrixProjection.m, sizeof(matrixProjection.m));
             pipelineQuad.programState->setTexture(_textureLocation, 0, texture->getBackendTexture());
             auto alphaTexture = textureAtlas->getTexture()->getAlphaTexture();

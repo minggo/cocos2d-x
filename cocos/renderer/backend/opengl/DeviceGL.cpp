@@ -43,13 +43,9 @@ Texture* DeviceGL::newTexture(const TextureDescriptor& descriptor)
     return new (std::nothrow) TextureGL(descriptor);
 }
 
-ShaderModule* DeviceGL::createShaderModule(ShaderStage stage, const std::string& source)
+ShaderModule* DeviceGL::newShaderModule(ShaderStage stage, const std::string& source)
 {
-    auto ret = new (std::nothrow) ShaderModuleGL(stage, source);
-    if (ret)
-        ret->autorelease();
-
-    return ret;
+    return new (std::nothrow) ShaderModuleGL(stage, source);
 }
 
 DepthStencilState* DeviceGL::createDepthStencilState(const DepthStencilDescriptor& descriptor)
@@ -75,13 +71,9 @@ RenderPipeline* DeviceGL::newRenderPipeline(const RenderPipelineDescriptor& desc
     return new (std::nothrow) RenderPipelineGL(descriptor);
 }
 
-Program* DeviceGL::createProgram(const std::string& vertexShader, const std::string& fragmentShader)
+Program* DeviceGL::newProgram(const std::string& vertexShader, const std::string& fragmentShader)
 {
-    auto ret = new (std::nothrow) ProgramGL(vertexShader, fragmentShader);
-    if (ret)
-        ret->autorelease();
-    
-    return ret;
+    return new (std::nothrow) ProgramGL(vertexShader, fragmentShader);
 }
 
 CC_BACKEND_END

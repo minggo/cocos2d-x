@@ -81,9 +81,7 @@ backend::ShaderModule* ShaderCache::newShaderModule(backend::ShaderStage stage, 
     if (_cachedShaders.end() != iter)
         return iter->second;
     
-    auto shader = backend::Device::getInstance()->createShaderModule(stage, shaderSource);
-    
-    CC_SAFE_RETAIN(shader);
+    auto shader = backend::Device::getInstance()->newShaderModule(stage, shaderSource);
     _cachedShaders.emplace(key, shader);
     
     return shader;

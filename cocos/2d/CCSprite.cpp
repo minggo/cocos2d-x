@@ -392,7 +392,7 @@ void Sprite::setVertexLayout()
     vertexLayout.setLayout(totalSize, backend::VertexStepMode::VERTEX);
 }
 
-void Sprite::updateShaders(const char* vert, const char* frag, bool dirty)
+void Sprite::updateShaders(const char* vert, const char* frag)
 {
     auto& pipelineDescriptor = _trianglesCommand.getPipelineDescriptor();
     CC_SAFE_RELEASE(_programState);
@@ -404,13 +404,13 @@ void Sprite::updateShaders(const char* vert, const char* frag, bool dirty)
     _alphaTextureLocation = pipelineDescriptor.programState->getUniformLocation("u_texture1");
     
     setVertexLayout();
-    _programStateDirty = dirty;
+    updateProgramState();
 }
 
 void Sprite::setTexture(Texture2D *texture)
 {
     auto isETC1 = texture && texture->getAlphaTextureName();
-    updateShaders(positionTextureColor_vert, (isETC1) ? etc1_frag : positionTextureColor_frag, false);
+    updateShaders(positionTextureColor_vert, (isETC1) ? etc1_frag : positionTextureColor_frag);
     
     CCASSERT(! _batchNode || (texture &&  texture == _batchNode->getTexture()), "CCSprite: Batched sprites should use the same texture as the batchnode");
     // accept texture==nil as argument
@@ -446,6 +446,11 @@ void Sprite::setTexture(Texture2D *texture)
 
 void Sprite::updateProgramState()
 {
+    if (_texture == nullptr || _texture->getBackendTexture() == nullptr)
+    {
+        return;
+    }
+    
     auto programState = _trianglesCommand.getPipelineDescriptor().programState;
     programState->setTexture(_textureLocation, 0, _texture->getBackendTexture());
     auto alphaTexture = _texture->getAlphaTexture();
@@ -1122,8 +1127,6 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
         const auto& projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
         auto programState = _trianglesCommand.getPipelineDescriptor().programState;
         programState->setUniform(_mvpMatrixLocation, projectionMat.m, sizeof(projectionMat.m));
-        if(_programStateDirty)
-            updateProgramState();
         
         _trianglesCommand.init(_globalZOrder,
                                _texture,

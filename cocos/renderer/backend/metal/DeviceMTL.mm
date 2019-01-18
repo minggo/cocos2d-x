@@ -68,13 +68,9 @@ Texture* DeviceMTL::newTexture(const TextureDescriptor& descriptor)
     return new (std::nothrow) TextureMTL(_mtlDevice, descriptor);
 }
 
-ShaderModule* DeviceMTL::createShaderModule(ShaderStage stage, const std::string& source)
+ShaderModule* DeviceMTL::newShaderModule(ShaderStage stage, const std::string& source)
 {
-    auto ret = new (std::nothrow) ShaderModuleMTL(_mtlDevice, stage, source);
-    if (ret)
-        ret->autorelease();
-    
-    return ret;
+    return new (std::nothrow) ShaderModuleMTL(_mtlDevice, stage, source);;
 }
 
 DepthStencilState* DeviceMTL::createDepthStencilState(const DepthStencilDescriptor& descriptor)
@@ -100,13 +96,9 @@ RenderPipeline* DeviceMTL::newRenderPipeline(const RenderPipelineDescriptor& des
     return new (std::nothrow) RenderPipelineMTL(_mtlDevice, descriptor);
 }
 
-Program* DeviceMTL::createProgram(const std::string& vertexShader, const std::string& fragmentShader)
+Program* DeviceMTL::newProgram(const std::string& vertexShader, const std::string& fragmentShader)
 {
-    auto ret = new (std::nothrow) ProgramMTL(_mtlDevice, vertexShader, fragmentShader);
-    if (ret)
-        ret->autorelease();
-    
-    return ret;
+    return new (std::nothrow) ProgramMTL(_mtlDevice, vertexShader, fragmentShader);
 }
 
 CC_BACKEND_END

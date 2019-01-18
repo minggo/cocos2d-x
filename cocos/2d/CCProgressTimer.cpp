@@ -44,11 +44,11 @@ const char kProgressTextureCoords = 0x4b;
 
 namespace
 {
-    void initPipelineDescriptor(cocos2d::CustomCommand& command, bool ridal, backend::ProgramState* programState)
+    void initPipelineDescriptor(cocos2d::CustomCommand& command, bool ridal)
     {
-        //TODO coulsonwang
         auto& pipelieDescriptor = command.getPipelineDescriptor();
-        programState = new (std::nothrow) backend::ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+        auto programState = new (std::nothrow) backend::ProgramState(positionTextureColor_vert, positionTextureColor_frag);
+        CC_SAFE_RELEASE(pipelieDescriptor.programState);
         pipelieDescriptor.programState = programState;
         
         //set vertexLayout according to V2F_C4B_T2F structure
@@ -100,8 +100,8 @@ bool ProgressTimer::initWithSprite(Sprite* sp)
 
     CC_SAFE_RELEASE(_programState);
     CC_SAFE_RELEASE(_programState2);
-    initPipelineDescriptor(_customCommand, true, _programState);
-    initPipelineDescriptor(_customCommand2, false, _programState2);
+    initPipelineDescriptor(_customCommand, true);
+    initPipelineDescriptor(_customCommand2, false);
     
     return true;
 }
@@ -109,8 +109,8 @@ bool ProgressTimer::initWithSprite(Sprite* sp)
 ProgressTimer::~ProgressTimer(void)
 {
     CC_SAFE_RELEASE(_sprite);
-    CC_SAFE_RELEASE(_programState);
-    CC_SAFE_RELEASE(_programState2);
+    CC_SAFE_RELEASE(_customCommand.getPipelineDescriptor().programState);
+    CC_SAFE_RELEASE(_customCommand2.getPipelineDescriptor().programState);
 }
 
 void ProgressTimer::setPercentage(float percentage)
