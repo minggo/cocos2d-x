@@ -1,10 +1,10 @@
 set(COCOS_EXTENSIONS_HEADER
     ../extensions/ExtensionMacros.h
-    # ../extensions/assets-manager/AssetsManagerEx.h
-    # ../extensions/assets-manager/Manifest.h
-    # ../extensions/assets-manager/CCEventListenerAssetsManagerEx.h
-    # ../extensions/assets-manager/AssetsManager.h
-    # ../extensions/assets-manager/CCEventAssetsManagerEx.h
+    ../extensions/assets-manager/AssetsManagerEx.h
+    ../extensions/assets-manager/Manifest.h
+    ../extensions/assets-manager/CCEventListenerAssetsManagerEx.h
+    ../extensions/assets-manager/AssetsManager.h
+    ../extensions/assets-manager/CCEventAssetsManagerEx.h
     # ../extensions/physics-nodes/CCPhysicsSprite.h
     # ../extensions/physics-nodes/CCPhysicsDebugNode.h
     # ../extensions/Particle3D/CCParticleSystem3D.h
@@ -180,11 +180,11 @@ set(COCOS_EXTENSIONS_HEADER
 
 set(COCOS_EXTENSIONS_SRC
 
-    # ../extensions/assets-manager/AssetsManager.cpp
-    # ../extensions/assets-manager/AssetsManagerEx.cpp
-    # ../extensions/assets-manager/CCEventAssetsManagerEx.cpp
-    # ../extensions/assets-manager/CCEventListenerAssetsManagerEx.cpp
-    # ../extensions/assets-manager/Manifest.cpp
+    ../extensions/assets-manager/AssetsManager.cpp
+    ../extensions/assets-manager/AssetsManagerEx.cpp
+    ../extensions/assets-manager/CCEventAssetsManagerEx.cpp
+    ../extensions/assets-manager/CCEventListenerAssetsManagerEx.cpp
+    ../extensions/assets-manager/Manifest.cpp
     ../extensions/GUI/CCControlExtension/CCControl.cpp
     ../extensions/GUI/CCControlExtension/CCControlButton.cpp
     ../extensions/GUI/CCControlExtension/CCControlColourPicker.cpp
