@@ -805,18 +805,20 @@ void Sprite3D::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     }
 }
 
-void Sprite3D::setProgramState(backend::ProgramState* glProgramState)
+void Sprite3D::setProgramState(backend::ProgramState* programState)
 {
+    //TODO
     //Node::setGLProgramState(glProgramState);
     for (auto state : _meshes) {
-        state->setProgramState(glProgramState);
+        state->setProgramState(programState);
     }
 }
-void Sprite3D::setProgram(const std::string &vertexShader, const std::string &fragmentShader)
-{
-    auto glProgramState = new backend::ProgramState(vertexShader, fragmentShader);
-    setProgramState(glProgramState);
-}
+//TODO add setProgram
+//void Sprite3D::setGLProgram(GLProgram* glprogram)
+//{
+//    auto glProgramState = GLProgramState::create(glprogram);
+//    setGLProgramState(glProgramState);
+//}
 
 void Sprite3D::setBlendFunc(const BlendFunc& blendFunc)
 {
