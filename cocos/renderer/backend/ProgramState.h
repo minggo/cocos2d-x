@@ -4,7 +4,6 @@
 #include <string>
 #include <unordered_map>
 #include <cstdint>
-
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"
 #include "renderer/backend/Types.h"
@@ -24,7 +23,6 @@ struct UniformBuffer
     UniformBuffer& operator =(UniformBuffer&& rhs);
     
     backend::UniformInfo uniformInfo;
-    bool dirty = false;
     std::vector<char> data;
 
 };

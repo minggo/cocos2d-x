@@ -371,7 +371,7 @@ void CommandBufferGL::setUniforms(ProgramGL* program) const
         for(const auto& iter : uniformInfos)
         {
             const auto& uniformInfo = iter.uniformInfo;
-            if(!iter.dirty)
+            if(uniformInfo.bufferSize <= 0)
                 continue;
             setUniform(uniformInfo.isArray,
                        uniformInfo.location,

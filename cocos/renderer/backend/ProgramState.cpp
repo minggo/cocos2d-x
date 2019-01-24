@@ -8,7 +8,6 @@ CC_BACKEND_BEGIN
 
 UniformBuffer::UniformBuffer(backend::UniformInfo _uniformInfo)
 : uniformInfo(_uniformInfo)
-, dirty(false)
 {
     if(uniformInfo.bufferSize > 0)
     {
@@ -22,7 +21,7 @@ UniformBuffer::~UniformBuffer()
 }
 
 UniformBuffer::UniformBuffer(const UniformBuffer &other):
-    uniformInfo(other.uniformInfo), dirty(true), data(other.data)
+    uniformInfo(other.uniformInfo), data(other.data)
 {
 }
 
@@ -31,7 +30,6 @@ UniformBuffer& UniformBuffer::operator=(const UniformBuffer& rhs)
     if (this != &rhs)
     {
         uniformInfo = rhs.uniformInfo;
-        dirty = true;
         data = rhs.data;
     }
 
@@ -43,7 +41,6 @@ UniformBuffer& UniformBuffer::operator=(UniformBuffer&& rhs)
     if (this != &rhs)
     {
         uniformInfo = rhs.uniformInfo;
-        dirty = true;
         data = std::move(rhs.data);
     }
 
@@ -200,7 +197,6 @@ void ProgramState::setVertexUniform(int location, const void* data, uint32_t siz
         return;
     
     _vertexUniformInfos[location].data.assign((char*)data, (char*)data + size);
-    _vertexUniformInfos[location].dirty = true;
 }
 
 void ProgramState::setFragmentUniform(int location, const void* data, uint32_t size)
@@ -208,7 +204,6 @@ void ProgramState::setFragmentUniform(int location, const void* data, uint32_t s
     if(location < 0)
         return;
     _fragmentUniformInfos[location].data.assign((char *)data, (char *)data + size);
-    _fragmentUniformInfos[location].dirty = true;
 }
 
 void ProgramState::setTexture(const backend::UniformLocation& uniformLocation, uint32_t slot, backend::Texture* texture)
