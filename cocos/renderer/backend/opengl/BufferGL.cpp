@@ -59,7 +59,7 @@ void BufferGL::updateSubData(void* data, unsigned int offset, unsigned int size)
         else
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
         }
         CHECK_GL_ERROR_DEBUG();
     }
