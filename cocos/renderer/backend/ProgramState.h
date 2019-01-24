@@ -15,7 +15,7 @@ class Texture;
 
 struct UniformBuffer
 {
-    UniformBuffer(backend::UniformInfo _uniformInfo);
+    UniformBuffer(const backend::UniformInfo& _uniformInfo);
     UniformBuffer() = default;
     UniformBuffer(const UniformBuffer& _uniformBuffer);
     UniformBuffer& operator =(const UniformBuffer& rhs);

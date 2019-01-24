@@ -6,7 +6,7 @@
 
 CC_BACKEND_BEGIN
 
-UniformBuffer::UniformBuffer(backend::UniformInfo _uniformInfo)
+UniformBuffer::UniformBuffer(const backend::UniformInfo &_uniformInfo)
 : uniformInfo(_uniformInfo)
 {
     if(uniformInfo.bufferSize > 0)
