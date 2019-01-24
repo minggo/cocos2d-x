@@ -9,27 +9,22 @@ function(cocos_copy_target_res cocos_target)
     foreach(cc_file ${opt_FILES})
         get_filename_component(file_name ${cc_file} NAME)
         add_custom_command(TARGET ${cocos_target} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E echo "copy-file file into Resources: ${file_name} ..."
+            COMMAND ${CMAKE_COMMAND} -E echo "copy file into Resources: ${file_name} ..."
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${cc_file} "${opt_COPY_TO}/${file_name}"
         )
     endforeach()
     # copy folders files
     foreach(cc_folder ${opt_FOLDERS})
-        # file(GLOB_RECURSE folder_files "${cc_folder}/*")
-        # get_filename_component(folder_abs_path ${cc_folder} ABSOLUTE)
-        # foreach(res_file ${folder_files})
-        #       get_filename_component(res_file_abs_path ${res_file} ABSOLUTE)
-        #      file(RELATIVE_PATH res_file_relat_path ${folder_abs_path} ${res_file_abs_path})
-        #      add_custom_command(TARGET ${cocos_target} POST_BUILD
-        #          COMMAND ${CMAKE_COMMAND} -E echo "copy-folder file into Resources: ${res_file_relat_path} ..."
-        #          COMMAND ${CMAKE_COMMAND} -E copy_if_different ${res_file} "${opt_COPY_TO}/${res_file_relat_path}"
-        #      )
-        # endforeach()
-
-        #file(COPY ${cc_folder} DESTINATION ${opt_COPY_TO})
-        add_custom_command(TARGET ${cocos_target} PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E echo "copy-folder file into Resources: ${opt_COPY_TO} ..."
-            COMMAND  ${CMAKE_COMMAND} -E copy_directory ${cc_folder} ${opt_COPY_TO})
+        file(GLOB_RECURSE folder_files "${cc_folder}/*")
+        get_filename_component(folder_abs_path ${cc_folder} ABSOLUTE)
+        foreach(res_file ${folder_files})
+            get_filename_component(res_file_abs_path ${res_file} ABSOLUTE)
+            file(RELATIVE_PATH res_file_relat_path ${folder_abs_path} ${res_file_abs_path})
+            add_custom_command(TARGET ${cocos_target} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E echo "copy file into Resources: ${res_file_relat_path} ..."
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different ${res_file} "${opt_COPY_TO}/${res_file_relat_path}"
+            )
+        endforeach()
     endforeach()
 endfunction()
 
