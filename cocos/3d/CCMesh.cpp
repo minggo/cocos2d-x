@@ -470,12 +470,6 @@ void Mesh::setMeshIndexData(MeshIndexData* subMesh)
 
 void Mesh::setProgramState(backend::ProgramState* programState)
 {
-    // XXX create dummy texture
-    //TODO minggo
-//    auto material = Material::createWithGLStateProgram(glProgramState);
-//    if (_material)
-//        material->setStateBlock(_material->getStateBlock());
-//    setMaterial(material);
     auto material = Material::createWithProgramState(programState);
     if (_material)
     {
@@ -486,10 +480,6 @@ void Mesh::setProgramState(backend::ProgramState* programState)
 
 backend::ProgramState* Mesh::getProgramState() const
 {
-//TODO minggo
-//    return _material ?
-//                _material->_currentTechnique->_passes.at(0)->getGLProgramState()
-//                : nullptr;
     return _material ? _material->_currentTechnique->_passes.at(0)->getProgramState() : nullptr;
 }
 
