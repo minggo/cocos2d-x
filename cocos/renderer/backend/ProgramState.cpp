@@ -2,6 +2,7 @@
 #include "renderer/backend/ProgramCache.h"
 #include "renderer/backend/Program.h"
 #include "renderer/backend/Texture.h"
+#include "renderer/backend/Types.h"
 
 CC_BACKEND_BEGIN
 
@@ -21,6 +22,23 @@ UniformBuffer::~UniformBuffer()
 {
     if (data)
         free(data);
+}
+
+UniformBuffer::UniformBuffer(const UniformBuffer &other):
+    uniformInfo(other.uniformInfo), dirty(true), data(nullptr)
+{
+}
+
+UniformBuffer& UniformBuffer::operator=(const UniformBuffer& rhs)
+{
+    if (this != &rhs)
+    {
+        uniformInfo = rhs.uniformInfo;
+        dirty = true;
+        data = nullptr;
+    }
+
+    return *this;
 }
 
 UniformBuffer& UniformBuffer::operator=(UniformBuffer&& rhs)
@@ -98,6 +116,10 @@ ProgramState::ProgramState(const std::string& vertexShader, const std::string& f
     }
 }
 
+ProgramState::ProgramState()
+{
+}
+
 ProgramState::~ProgramState()
 {
     CC_SAFE_RELEASE(_program);
@@ -108,13 +130,46 @@ ProgramState::~ProgramState()
     _fragmentTextureInfos.clear();
 }
 
+ProgramState *ProgramState::clone()
+{
+    ProgramState *cp = new ProgramState();
+    cp->_program = _program;
+    cp->_vertexUniformInfos = _vertexUniformInfos;
+    cp->_fragmentUniformInfos = _fragmentUniformInfos;
+    cp->_vertexTextureInfos = _vertexTextureInfos;
+    cp->_fragmentTextureInfos = _fragmentTextureInfos;
+
+    CC_SAFE_RETAIN(cp->_program);
+
+    for (auto &p : cp->_vertexUniformInfos)
+    {
+        p.dirty = true;
+        p.data = nullptr; //data should be reset after clone
+    }
+    for (auto &p : cp->_fragmentUniformInfos)
+    {
+        p.dirty = true;
+        p.data = nullptr;
+    }
+    for (auto &info : cp->_vertexTextureInfos)
+    {
+        info.second.retainTextures();
+    }
+    for (auto &info : cp->_fragmentTextureInfos)
+    {
+        info.second.retainTextures();
+    }
+    return cp;
+}
+
+
 void ProgramState::createVertexUniformBuffer()
 {
     const auto& vertexUniformInfos = _program->getVertexUniformInfos();
     for(const auto& uniformInfo : vertexUniformInfos)
     {
         if(uniformInfo.second.bufferSize)
-            _vertexUniformInfos[uniformInfo.second.location] = uniformInfo.second;
+            _vertexUniformInfos[uniformInfo.second.location] = uniformInfo.second; 
     }
 }
 

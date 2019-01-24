@@ -17,7 +17,8 @@ struct UniformBuffer
 {
     UniformBuffer(backend::UniformInfo _uniformInfo);
     UniformBuffer() = default;
-    UniformBuffer(const UniformBuffer& _uniformBuffer) = default;
+    UniformBuffer(const UniformBuffer& _uniformBuffer);
+    UniformBuffer& operator =(const UniformBuffer& rhs);
     ~UniformBuffer();
     UniformBuffer& operator =(UniformBuffer&& rhs);
     
@@ -30,6 +31,7 @@ struct TextureInfo
 {
     TextureInfo(const std::vector<uint32_t>& _slots, const std::vector<backend::Texture*> _textures);
     TextureInfo() = default;
+    TextureInfo(const TextureInfo &) = default;
     ~TextureInfo();
     TextureInfo& operator=(TextureInfo&& rhs);
     
@@ -46,6 +48,11 @@ public:
     ProgramState(const std::string& vertexShader, const std::string& fragmentShader);
     virtual ~ProgramState();
     
+    /***
+    *  deep clone ProgramState
+    */
+    ProgramState *clone();
+
     //get program
     backend::Program* getProgram() const { return _program; }
     
@@ -63,6 +70,9 @@ public:
     inline const std::unordered_map<int, TextureInfo>& getFragmentTextureInfos() const { return _fragmentTextureInfos; }
     
 protected:
+
+    ProgramState();
+
     void setVertexUniform(int location, const void* data, uint32_t size);
     void setFragmentUniform(int location, const void* data, uint32_t size);
     void createVertexUniformBuffer();
