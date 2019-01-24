@@ -377,7 +377,7 @@ void CommandBufferGL::setUniforms(ProgramGL* program) const
                        uniformInfo.location,
                        uniformInfo.count,
                        uniformInfo.type,
-                       iter.data);
+                       (void*)iter.data.data());
         }
         
         const auto& textureInfo = _programState->getVertexTextureInfos();

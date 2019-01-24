@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"
@@ -24,7 +25,8 @@ struct UniformBuffer
     
     backend::UniformInfo uniformInfo;
     bool dirty = false;
-    void* data = nullptr;
+    std::vector<char> data;
+
 };
 
 struct TextureInfo

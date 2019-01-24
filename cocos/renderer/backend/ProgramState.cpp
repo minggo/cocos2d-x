@@ -10,22 +10,19 @@ UniformBuffer::UniformBuffer(backend::UniformInfo _uniformInfo)
 : uniformInfo(_uniformInfo)
 , dirty(false)
 {
-    if(uniformInfo.bufferSize)
+    if(uniformInfo.bufferSize > 0)
     {
-        data = malloc(uniformInfo.bufferSize);
-        if (data)
-            memset(data, 0, uniformInfo.bufferSize);
+        data.resize(uniformInfo.bufferSize);
+        std::fill(data.begin(), data.end(), 0);
     }
 }
 
 UniformBuffer::~UniformBuffer()
 {
-    if (data)
-        free(data);
 }
 
 UniformBuffer::UniformBuffer(const UniformBuffer &other):
-    uniformInfo(other.uniformInfo), dirty(true), data(nullptr)
+    uniformInfo(other.uniformInfo), dirty(true), data(other.data)
 {
 }
 
@@ -35,7 +32,7 @@ UniformBuffer& UniformBuffer::operator=(const UniformBuffer& rhs)
     {
         uniformInfo = rhs.uniformInfo;
         dirty = true;
-        data = nullptr;
+        data = rhs.data;
     }
 
     return *this;
@@ -46,8 +43,8 @@ UniformBuffer& UniformBuffer::operator=(UniformBuffer&& rhs)
     if (this != &rhs)
     {
         uniformInfo = rhs.uniformInfo;
-        data = rhs.data;
-        rhs.data = nullptr;
+        dirty = true;
+        data = std::move(rhs.data);
     }
 
     return *this;
@@ -141,16 +138,6 @@ ProgramState *ProgramState::clone()
 
     CC_SAFE_RETAIN(cp->_program);
 
-    for (auto &p : cp->_vertexUniformInfos)
-    {
-        p.dirty = true;
-        p.data = nullptr; //data should be reset after clone
-    }
-    for (auto &p : cp->_fragmentUniformInfos)
-    {
-        p.dirty = true;
-        p.data = nullptr;
-    }
     for (auto &info : cp->_vertexTextureInfos)
     {
         info.second.retainTextures();
@@ -212,8 +199,7 @@ void ProgramState::setVertexUniform(int location, const void* data, uint32_t siz
     if(location < 0)
         return;
     
-    assert(size <= _vertexUniformInfos[location].uniformInfo.bufferSize);
-    memcpy(_vertexUniformInfos[location].data, data, size);
+    _vertexUniformInfos[location].data.assign((char*)data, (char*)data + size);
     _vertexUniformInfos[location].dirty = true;
 }
 
@@ -221,9 +207,7 @@ void ProgramState::setFragmentUniform(int location, const void* data, uint32_t s
 {
     if(location < 0)
         return;
-    
-    assert(size <= _fragmentUniformInfos[location].uniformInfo.bufferSize);
-    memcpy(_fragmentUniformInfos[location].data, data, size);
+    _fragmentUniformInfos[location].data.assign((char *)data, (char *)data + size);
     _fragmentUniformInfos[location].dirty = true;
 }
 

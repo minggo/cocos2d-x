@@ -303,6 +303,7 @@ public:
     */
     void setSamplerDescriptor(const backend::SamplerDescriptor& texParams);
     
+    //TODO: should be remove later
     void setTexParameters(const TexParams &params);
 
     /** Generates mipmap images for the texture.
