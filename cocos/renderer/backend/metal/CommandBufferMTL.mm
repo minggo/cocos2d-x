@@ -152,12 +152,12 @@ CommandBufferMTL::CommandBufferMTL(DeviceMTL* deviceMTL)
 
 CommandBufferMTL::~CommandBufferMTL()
 {
-    dispatch_semaphore_signal(_frameBoundarySemaphore);
+//    dispatch_semaphore_signal(_frameBoundarySemaphore);
 }
 
 void CommandBufferMTL::beginFrame()
 {
-    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
+//    dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
 
     _mtlCommandBuffer = [_mtlCommandQueue commandBuffer];
     [_mtlCommandBuffer retain];
@@ -255,11 +255,11 @@ void CommandBufferMTL::endFrame()
 {
     [_mtlCommandBuffer presentDrawable:DeviceMTL::getCurrentDrawable()];
 
-    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
-        // GPU work is complete
-        // Signal the semaphore to start the CPU work
-        dispatch_semaphore_signal(_frameBoundarySemaphore);
-    }];
+//    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
+//        // GPU work is complete
+//        // Signal the semaphore to start the CPU work
+//        dispatch_semaphore_signal(_frameBoundarySemaphore);
+//    }];
 
     [_mtlCommandBuffer commit];
     [_mtlCommandBuffer release];

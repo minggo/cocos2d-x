@@ -46,6 +46,7 @@ namespace backend
     class CommandBuffer;
     class RenderPipeline;
     class RenderPass;
+    class RenderPipelineDescriptor;
 }
 
 class EventListenerCustom;
@@ -287,9 +288,8 @@ protected:
 
     void fillVerticesAndIndices(const TrianglesCommand* cmd, unsigned int vertexBufferOffset);
     void beginRenderPass(RenderCommand*);
-    
     void setRenderPipeline(const PipelineDescriptor&, const backend::RenderPassDescriptor&);
-
+    backend::RenderPipeline* getRenderPipeline(backend::RenderPipelineDescriptor* descriptor);
 
     Viewport _viewport;
 
@@ -310,6 +310,9 @@ protected:
     backend::CommandBuffer* _commandBuffer = nullptr;
     backend::RenderPassDescriptor _renderPassDescriptor;
     backend::DepthStencilDescriptor _depthStencilDescriptor;
+
+    //TODO: should release memory if hit memory warning.
+    std::unordered_map<unsigned int, backend::RenderPipeline*> _renderPipelineCache;
 
     // Internal structure that has the information for the batches
     struct TriBatchToDraw

@@ -44,6 +44,7 @@
 #include "base/CCEventType.h"
 #include "2d/CCCamera.h"
 #include "2d/CCScene.h"
+#include "xxhash.h"
 
 #include "renderer/backend/Backend.h"
 
@@ -166,6 +167,8 @@ Renderer::Renderer()
     _renderGroups.push_back(defaultRenderQueue);
     _queuedTriangleCommands.reserve(BATCH_TRIAGCOMMAND_RESERVED_SIZE);
 
+    _renderPipelineCache.reserve(100);
+
     // for the batched TriangleCommand
     _triBatchesToDraw = (TriBatchToDraw*) malloc(sizeof(_triBatchesToDraw[0]) * _triBatchesToDrawCapacity);
 }
@@ -182,6 +185,9 @@ Renderer::~Renderer()
 #endif
     
     CC_SAFE_RELEASE(_commandBuffer);
+
+    for (auto pipeline :_renderPipelineCache)
+        pipeline.second->release();
 }
 
 void Renderer::init()
@@ -750,6 +756,34 @@ bool Renderer::checkVisibility(const Mat4 &transform, const Size &size)
     return true;
 }
 
+backend::RenderPipeline* Renderer::getRenderPipeline(backend::RenderPipelineDescriptor* descriptor)
+{
+    struct
+    {
+        void* program;
+        backend::TextureFormat colorAttachment;
+        backend::TextureFormat depthAttachment;
+        backend::TextureFormat stencilAttachment;
+    }hashMe;
+
+    memset(&hashMe, 0, sizeof(hashMe));
+    hashMe.program = (*descriptor).programState->getProgram();
+    hashMe.colorAttachment = (*descriptor).colorAttachmentsFormat[0];
+    hashMe.depthAttachment = (*descriptor).depthAttachmentFormat;
+    hashMe.stencilAttachment = (*descriptor).stencilAttachmentFormat;
+
+    unsigned int hash = XXH32((const void*)&hashMe, sizeof(hashMe), 0);
+    auto iter = _renderPipelineCache.find(hash);
+    if (_renderPipelineCache.end() == iter)
+    {
+        auto renderPipeline = backend::Device::getInstance()->newRenderPipeline(*descriptor);
+        _renderPipelineCache.emplace(hash, renderPipeline);
+        return renderPipeline;
+    }
+    else
+        return iter->second;
+}
+
 void Renderer::setRenderPipeline(const PipelineDescriptor& pipelineDescriptor, const backend::RenderPassDescriptor& renderPassDescriptor)
 {
     backend::RenderPipelineDescriptor renderPipelineDescriptor;
@@ -791,9 +825,10 @@ void Renderer::setRenderPipeline(const PipelineDescriptor& pipelineDescriptor, c
     }
 
     //FIXME: optimize it, cache the result as possible.
-    auto renderPipeline = device->newRenderPipeline(renderPipelineDescriptor);
-    _commandBuffer->setRenderPipeline(renderPipeline);
-    renderPipeline->release();
+//    auto renderPipeline = device->newRenderPipeline(renderPipelineDescriptor);
+//    _commandBuffer->setRenderPipeline(renderPipeline);
+//    renderPipeline->release();
+    _commandBuffer->setRenderPipeline(getRenderPipeline(&renderPipelineDescriptor));
 }
 
 void Renderer::beginRenderPass(RenderCommand* cmd)
