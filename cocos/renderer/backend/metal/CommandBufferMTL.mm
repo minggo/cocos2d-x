@@ -222,6 +222,10 @@ id<MTLRenderCommandEncoder> CommandBufferMTL::getRenderCommandEncoder(const Rend
     }
     else
     {
+        if(_mtlRenderEncoder != encoder)
+        {
+            [_mtlRenderEncoder endEncoding];
+        }
         _renderTargetHeight = (unsigned int)[[_renderTargetHeightCache objectForKey:hashObject] unsignedIntegerValue];
         return encoder;
     }
