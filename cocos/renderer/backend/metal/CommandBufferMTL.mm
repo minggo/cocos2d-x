@@ -206,10 +206,14 @@ id<MTLRenderCommandEncoder> CommandBufferMTL::getRenderCommandEncoder(const Rend
     
     unsigned int hash = XXH32((const void*)&hashMe, sizeof(hashMe), 0);
     NSNumber* hashObject = [NSNumber numberWithUnsignedInt:hash];
+    
     id<MTLRenderCommandEncoder> encoder = [_renderCommandEncoderCache objectForKey:hashObject];
     if(encoder == nil)
     {
         [_mtlRenderEncoder endEncoding];
+        [_renderCommandEncoderCache removeObjectForKey:[NSNumber numberWithUnsignedInteger:_prevHash]];
+        _prevHash = hash;
+        
         auto mtlDescriptor = toMTLRenderPassDescriptor(renderPassDescriptor);
         id<MTLRenderCommandEncoder> mtlRenderEncoder = [_mtlCommandBuffer renderCommandEncoderWithDescriptor:mtlDescriptor];
         [mtlRenderEncoder retain];
@@ -225,6 +229,8 @@ id<MTLRenderCommandEncoder> CommandBufferMTL::getRenderCommandEncoder(const Rend
         if(_mtlRenderEncoder != encoder)
         {
             [_mtlRenderEncoder endEncoding];
+            [_renderCommandEncoderCache removeObjectForKey:[NSNumber numberWithUnsignedInteger:_prevHash]];
+            _prevHash = hash;
         }
         _renderTargetHeight = (unsigned int)[[_renderTargetHeightCache objectForKey:hashObject] unsignedIntegerValue];
         return encoder;

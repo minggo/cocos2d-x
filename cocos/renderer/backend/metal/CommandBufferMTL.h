@@ -50,6 +50,7 @@ private:
     RenderPipelineMTL* _renderPipelineMTL = nullptr;
     ProgramState* _programState = nullptr;
     unsigned int _renderTargetHeight = 0;
+    unsigned int _prevHash = 0;
     
     dispatch_semaphore_t _frameBoundarySemaphore;
     
