@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "../Macros.h"
 #include "BufferManager.h"
+#include "xxhash.h"
 
 CC_BACKEND_BEGIN
 
@@ -148,11 +149,17 @@ CommandBufferMTL::CommandBufferMTL(DeviceMTL* deviceMTL)
 , _mtlCommandQueue(deviceMTL->getMTLCommandQueue())
 , _frameBoundarySemaphore(dispatch_semaphore_create(MAX_INFLIGHT_BUFFER))
 {
+    _renderCommandEncoderCache = [NSMutableDictionary dictionaryWithCapacity:100];
+    _renderTargetHeightCache = [NSMutableDictionary dictionaryWithCapacity:100];
+    [_renderCommandEncoderCache retain];
+    [_renderTargetHeightCache retain];
 }
 
 CommandBufferMTL::~CommandBufferMTL()
 {
 //    dispatch_semaphore_signal(_frameBoundarySemaphore);
+    [_renderCommandEncoderCache release];
+    [_renderTargetHeightCache release];
 }
 
 void CommandBufferMTL::beginFrame()
@@ -165,14 +172,64 @@ void CommandBufferMTL::beginFrame()
     BufferManager::beginFrame();
 }
 
+id<MTLRenderCommandEncoder> CommandBufferMTL::getRenderCommandEncoder(const RenderPassDescriptor& renderPassDescriptor)
+{
+    struct
+    {
+        float clearDepthValue = 0.f;
+        float clearStencilValue = 0.f;
+        std::array<float, 4> clearColorValue {{0.f, 0.f, 0.f, 0.f}}; // double-braces required in C++11
+        bool needColorAttachment = true;
+        bool needDepthAttachment = false;
+        bool needStencilAttachment = false;
+        bool needClearColor = false;
+        bool needClearDepth = false;
+        bool needClearStencil = false;
+        void* depthAttachmentTexture = nullptr;
+        void* stencilAttachmentTexture = nullptr;
+        void* colorAttachmentsTexture = nullptr;
+    }hashMe;
+    
+    memset(&hashMe, 0, sizeof(hashMe));
+    hashMe.clearDepthValue = renderPassDescriptor.clearDepthValue;
+    hashMe.clearStencilValue = renderPassDescriptor.clearStencilValue;
+    hashMe.clearColorValue = renderPassDescriptor.clearColorValue;
+    hashMe.needColorAttachment = renderPassDescriptor.needColorAttachment;
+    hashMe.needDepthAttachment = renderPassDescriptor.needDepthAttachment;
+    hashMe.needStencilAttachment = renderPassDescriptor.needStencilAttachment;
+    hashMe.needClearColor = renderPassDescriptor.needClearColor;
+    hashMe.needClearDepth = renderPassDescriptor.needClearDepth;
+    hashMe.needClearStencil = renderPassDescriptor.needClearStencil;
+    hashMe.depthAttachmentTexture = renderPassDescriptor.depthAttachmentTexture;
+    hashMe.stencilAttachmentTexture = renderPassDescriptor.stencilAttachmentTexture;
+    hashMe.colorAttachmentsTexture = renderPassDescriptor.colorAttachmentsTexture[0];
+    
+    unsigned int hash = XXH32((const void*)&hashMe, sizeof(hashMe), 0);
+    NSNumber* hashObject = [NSNumber numberWithUnsignedInt:hash];
+    id<MTLRenderCommandEncoder> encoder = [_renderCommandEncoderCache objectForKey:hashObject];
+    if(encoder == nil)
+    {
+        [_mtlRenderEncoder endEncoding];
+        auto mtlDescriptor = toMTLRenderPassDescriptor(renderPassDescriptor);
+        id<MTLRenderCommandEncoder> mtlRenderEncoder = [_mtlCommandBuffer renderCommandEncoderWithDescriptor:mtlDescriptor];
+        [mtlRenderEncoder retain];
+        [_renderCommandEncoderCache setObject:mtlRenderEncoder forKey:hashObject];
+        
+        _renderTargetHeight = (unsigned int)mtlDescriptor.colorAttachments[0].texture.height;
+        [_renderTargetHeightCache setObject:[NSNumber numberWithUnsignedInteger:_renderTargetHeight]  forKey:hashObject];
+        
+        return mtlRenderEncoder;
+    }
+    else
+    {
+        _renderTargetHeight = (unsigned int)[[_renderTargetHeightCache objectForKey:hashObject] unsignedIntegerValue];
+        return encoder;
+    }
+}
+
 void CommandBufferMTL::beginRenderPass(const RenderPassDescriptor& descriptor)
 {
-    auto mtlDescriptor = toMTLRenderPassDescriptor(descriptor);
-    _renderTargetHeight = (unsigned int)mtlDescriptor.colorAttachments[0].texture.height;
-    _mtlRenderEncoder = [_mtlCommandBuffer renderCommandEncoderWithDescriptor:mtlDescriptor];
-
-    [_mtlRenderEncoder retain];
-//    [_mtlRenderEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
+    _mtlRenderEncoder = getRenderCommandEncoder(descriptor);
 }
 
 void CommandBufferMTL::setRenderPipeline(RenderPipeline* renderPipeline)
@@ -247,12 +304,21 @@ void CommandBufferMTL::drawElements(PrimitiveType primitiveType, IndexFormat ind
 void CommandBufferMTL::endRenderPass()
 {
     afterDraw();
-    [_mtlRenderEncoder endEncoding];
-    [_mtlRenderEncoder release];
 }
 
 void CommandBufferMTL::endFrame()
 {
+    [_mtlRenderEncoder endEncoding];
+    
+    for(id key in _renderCommandEncoderCache)
+    {
+        id encoder = [_renderCommandEncoderCache objectForKey:key];
+        [encoder release];
+    }
+    [_renderCommandEncoderCache removeAllObjects];
+    [_renderTargetHeightCache removeAllObjects];
+    _mtlRenderEncoder = nil;
+
     [_mtlCommandBuffer presentDrawable:DeviceMTL::getCurrentDrawable()];
 
 //    [_mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {

@@ -39,6 +39,7 @@ private:
     void setUniformBuffer() const;
     unsigned int fillUniformBuffer(uint8_t* buffer, const std::vector<UniformBuffer>& unifornInfo) const;
     void afterDraw();
+    id<MTLRenderCommandEncoder> getRenderCommandEncoder(const RenderPassDescriptor& renderPassDescriptor);
     
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;
     id<MTLCommandQueue> _mtlCommandQueue = nil;
@@ -51,6 +52,9 @@ private:
     unsigned int _renderTargetHeight = 0;
     
     dispatch_semaphore_t _frameBoundarySemaphore;
+    
+    NSMutableDictionary* _renderTargetHeightCache = nullptr;
+    NSMutableDictionary* _renderCommandEncoderCache = nullptr;
 };
 
 CC_BACKEND_END
